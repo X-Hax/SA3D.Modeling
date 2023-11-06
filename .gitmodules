@@ -1,0 +1,3 @@
+[submodule "src/SA3D.ProjectConfigurations"]
+	path = src/SA3D.ProjectConfigurations
+	url = https://github.com/X-Hax/SA3D.ProjectConfigurations.git

@@ -1,0 +1,32 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Build Project and Publish
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: 'recursive'
+
+    - name: "Setup Library SDKs & Components"
+      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@main
+
+    - name: Build
+      run: dotnet build -c Release ./src
+
+    - name: "Upload Packages"
+      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/upload-packages@main
+      with:
+        nuget-key: ${{ secrets.NUGET_KEY }}
+        is-release: ${{ startsWith(github.ref, 'refs/tags/') }}
+        release-tag: ${{ github.ref_name }}

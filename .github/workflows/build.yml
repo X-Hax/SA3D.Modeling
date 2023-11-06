@@ -1,0 +1,27 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Build Project
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+  pull_request:
+    branches: [ "dev", "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: 'recursive'
+
+    - name: "Setup Library SDKs & Components"
+      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@main
+
+    - name: Build
+      run: dotnet build -c Release ./src

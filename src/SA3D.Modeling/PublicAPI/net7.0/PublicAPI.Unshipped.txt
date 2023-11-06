@@ -1,0 +1,1878 @@
+﻿abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.ByteSize.get -> uint
+abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+abstract SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Size.get -> ushort
+const SA3D.Modeling.Animation.Motion.StructSize = 16 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMaterial.StructSize = 20 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMesh.StructSize = 24 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMesh.StructSizeDX = 28 -> uint
+const SA3D.Modeling.Mesh.Buffer.BufferCorner.StructSize = 14 -> uint
+const SA3D.Modeling.Mesh.Buffer.BufferCorner.StructSizeNoColor = 10 -> uint
+const SA3D.Modeling.Mesh.Buffer.BufferMaterial.StructSize = 32 -> uint
+const SA3D.Modeling.ObjectData.Node.StructSize = 52 -> uint
+override SA3D.Modeling.Animation.Motion.ToString() -> string!
+override SA3D.Modeling.File.ModelFile.ToString() -> string!
+override SA3D.Modeling.Mesh.Attach.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.BasicAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+override SA3D.Modeling.Mesh.Basic.BasicAttach.CheckHasWeights() -> bool
+override SA3D.Modeling.Mesh.Basic.BasicAttach.Clone() -> SA3D.Modeling.Mesh.Attach!
+override SA3D.Modeling.Mesh.Basic.BasicAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Basic.BasicAttach.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Basic.BasicAttach.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.BasicMaterial.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Basic.BasicMaterial.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Basic.BasicMaterial.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.ToString() -> string!
+override SA3D.Modeling.Mesh.Buffer.BufferCorner.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Buffer.BufferCorner.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Buffer.BufferCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Buffer.BufferMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Buffer.BufferVertex.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Buffer.BufferVertex.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Buffer.BufferVertex.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.CheckHasWeights() -> bool
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.Clone() -> SA3D.Modeling.Mesh.Chunk.ChunkAttach!
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Chunk.ChunkAttach.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.ByteSize.get -> uint
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Size.get -> ushort
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Size.get -> ushort
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Clone() -> SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Size.get -> ushort
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ByteSize.get -> uint
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Clone() -> SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Size.get -> ushort
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.VertexChunk.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.CheckHasWeights() -> bool
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCAttach!
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Gamecube.GCAttach.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.GCCorner.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Gamecube.GCCorner.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Gamecube.GCCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.GCMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.GCPolygon.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Weighted.WeightedVertex.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Weighted.WeightedVertex.ToString() -> string!
+override SA3D.Modeling.ObjectData.LandEntry.ToString() -> string!
+override SA3D.Modeling.ObjectData.LandTable.ToString() -> string!
+override SA3D.Modeling.ObjectData.Node.ToString() -> string!
+override SA3D.Modeling.Structs.Bounds.ToString() -> string!
+override SA3D.Modeling.Structs.Color.Equals(object? obj) -> bool
+override SA3D.Modeling.Structs.Color.GetHashCode() -> int
+override SA3D.Modeling.Structs.Color.ToString() -> string!
+override SA3D.Modeling.Structs.PointerLUT.AddEntry(uint address, object! value) -> void
+override sealed SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.ByteSize.get -> uint
+SA3D.Modeling.Animation.EnumExtensions
+SA3D.Modeling.Animation.Frame
+SA3D.Modeling.Animation.Frame.Angle.get -> float?
+SA3D.Modeling.Animation.Frame.Angle.set -> void
+SA3D.Modeling.Animation.Frame.Color.get -> SA3D.Modeling.Structs.Color?
+SA3D.Modeling.Animation.Frame.Color.set -> void
+SA3D.Modeling.Animation.Frame.EulerRotation.get -> System.Numerics.Vector3?
+SA3D.Modeling.Animation.Frame.EulerRotation.set -> void
+SA3D.Modeling.Animation.Frame.Frame() -> void
+SA3D.Modeling.Animation.Frame.FrameTime.get -> float
+SA3D.Modeling.Animation.Frame.FrameTime.set -> void
+SA3D.Modeling.Animation.Frame.Intensity.get -> float?
+SA3D.Modeling.Animation.Frame.Intensity.set -> void
+SA3D.Modeling.Animation.Frame.Normal.get -> System.Numerics.Vector3[]?
+SA3D.Modeling.Animation.Frame.Normal.set -> void
+SA3D.Modeling.Animation.Frame.Point.get -> System.Numerics.Vector2?
+SA3D.Modeling.Animation.Frame.Point.set -> void
+SA3D.Modeling.Animation.Frame.Position.get -> System.Numerics.Vector3?
+SA3D.Modeling.Animation.Frame.Position.set -> void
+SA3D.Modeling.Animation.Frame.QuaternionRotation.get -> System.Numerics.Quaternion?
+SA3D.Modeling.Animation.Frame.QuaternionRotation.set -> void
+SA3D.Modeling.Animation.Frame.Roll.get -> float?
+SA3D.Modeling.Animation.Frame.Roll.set -> void
+SA3D.Modeling.Animation.Frame.Scale.get -> System.Numerics.Vector3?
+SA3D.Modeling.Animation.Frame.Scale.set -> void
+SA3D.Modeling.Animation.Frame.Spotlight.get -> SA3D.Modeling.Animation.Spotlight?
+SA3D.Modeling.Animation.Frame.Spotlight.set -> void
+SA3D.Modeling.Animation.Frame.Target.get -> System.Numerics.Vector3?
+SA3D.Modeling.Animation.Frame.Target.set -> void
+SA3D.Modeling.Animation.Frame.Vector.get -> System.Numerics.Vector3?
+SA3D.Modeling.Animation.Frame.Vector.set -> void
+SA3D.Modeling.Animation.Frame.Vertex.get -> System.Numerics.Vector3[]?
+SA3D.Modeling.Animation.Frame.Vertex.set -> void
+SA3D.Modeling.Animation.InterpolationMode
+SA3D.Modeling.Animation.InterpolationMode.Linear = 0 -> SA3D.Modeling.Animation.InterpolationMode
+SA3D.Modeling.Animation.InterpolationMode.Spline = 1 -> SA3D.Modeling.Animation.InterpolationMode
+SA3D.Modeling.Animation.InterpolationMode.User = 2 -> SA3D.Modeling.Animation.InterpolationMode
+SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Angle = 256 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.EulerRotation = 2 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Intensity = 1024 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.LightColor = 512 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Normal = 32 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Point = 4096 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Position = 1 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.QuaternionRotation = 8192 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Roll = 128 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Scale = 4 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Spot = 2048 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Target = 64 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Vector = 8 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.KeyframeAttributes.Vertex = 16 -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.Keyframes
+SA3D.Modeling.Animation.Keyframes.Angle.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.Animation.Keyframes.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! node, SA3D.Modeling.Animation.KeyframeAttributes targets, uint endFrame) -> void
+SA3D.Modeling.Animation.Keyframes.EulerRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.Animation.Keyframes.GetFrameAt(float frame) -> SA3D.Modeling.Animation.Frame
+SA3D.Modeling.Animation.Keyframes.HasKeyframes.get -> bool
+SA3D.Modeling.Animation.Keyframes.Intensity.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.Animation.Keyframes.KeyframeCount.get -> uint
+SA3D.Modeling.Animation.Keyframes.Keyframes() -> void
+SA3D.Modeling.Animation.Keyframes.LightColor.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Modeling.Structs.Color>!
+SA3D.Modeling.Animation.Keyframes.Normal.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>!>!
+SA3D.Modeling.Animation.Keyframes.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
+SA3D.Modeling.Animation.Keyframes.Point.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector2>!
+SA3D.Modeling.Animation.Keyframes.Position.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.Animation.Keyframes.QuaternionRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+SA3D.Modeling.Animation.Keyframes.Roll.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.Animation.Keyframes.Scale.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.Animation.Keyframes.Spot.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Modeling.Animation.Spotlight>!
+SA3D.Modeling.Animation.Keyframes.Target.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.Animation.Keyframes.Type.get -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.Keyframes.Vector.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.Animation.Keyframes.Vertex.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>!>!
+SA3D.Modeling.Animation.Keyframes.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Animation.KeyframeAttributes writeAttributes, SA3D.Modeling.Structs.PointerLUT! lut, bool shortRot = false) -> (uint address, uint count)[]!
+SA3D.Modeling.Animation.LandEntryMotion
+SA3D.Modeling.Animation.LandEntryMotion.Frame.get -> float
+SA3D.Modeling.Animation.LandEntryMotion.Frame.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.LandEntryMotion(float frame, float step, float maxFrame, SA3D.Modeling.Animation.NodeMotion! nodeMotion, uint textureListPointer) -> void
+SA3D.Modeling.Animation.LandEntryMotion.LandEntryMotion(float frame, float step, float maxFrame, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Animation.Motion! motion, uint textureListPointer) -> void
+SA3D.Modeling.Animation.LandEntryMotion.LandEntryMotion(float frame, float step, float maxFrame, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Animation.NodeMotion! nodeMotion, uint textureListPointer) -> void
+SA3D.Modeling.Animation.LandEntryMotion.MaxFrame.get -> float
+SA3D.Modeling.Animation.LandEntryMotion.MaxFrame.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.Animation.LandEntryMotion.Model.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.NodeMotion.get -> SA3D.Modeling.Animation.NodeMotion!
+SA3D.Modeling.Animation.LandEntryMotion.NodeMotion.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.Step.get -> float
+SA3D.Modeling.Animation.LandEntryMotion.Step.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.TextureListPointer.get -> uint
+SA3D.Modeling.Animation.LandEntryMotion.TextureListPointer.set -> void
+SA3D.Modeling.Animation.LandEntryMotion.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.Animation.LandEntryMotion.WriteData(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.Animation.Motion
+SA3D.Modeling.Animation.Motion.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Animation.KeyframeAttributes targetTypes, bool createKeyframes) -> void
+SA3D.Modeling.Animation.Motion.GetFrameCount() -> uint
+SA3D.Modeling.Animation.Motion.InterpolationMode.get -> SA3D.Modeling.Animation.InterpolationMode
+SA3D.Modeling.Animation.Motion.InterpolationMode.set -> void
+SA3D.Modeling.Animation.Motion.IsCameraMotion.get -> bool
+SA3D.Modeling.Animation.Motion.IsLightMotion.get -> bool
+SA3D.Modeling.Animation.Motion.IsNodeMotion.get -> bool
+SA3D.Modeling.Animation.Motion.IsShapeMotion.get -> bool
+SA3D.Modeling.Animation.Motion.IsSpotLightMotion.get -> bool
+SA3D.Modeling.Animation.Motion.Keyframes.get -> System.Collections.Generic.Dictionary<int, SA3D.Modeling.Animation.Keyframes!>!
+SA3D.Modeling.Animation.Motion.KeyframeTypes.get -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.Motion.Label.get -> string!
+SA3D.Modeling.Animation.Motion.Label.set -> void
+SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.get -> SA3D.Modeling.Animation.KeyframeAttributes
+SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.set -> void
+SA3D.Modeling.Animation.Motion.ModelCount.get -> uint
+SA3D.Modeling.Animation.Motion.ModelCount.set -> void
+SA3D.Modeling.Animation.Motion.Motion() -> void
+SA3D.Modeling.Animation.Motion.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
+SA3D.Modeling.Animation.Motion.ShortRot.get -> bool
+SA3D.Modeling.Animation.Motion.ShortRot.set -> void
+SA3D.Modeling.Animation.Motion.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.Animation.NodeMotion
+SA3D.Modeling.Animation.NodeMotion.Animation.get -> SA3D.Modeling.Animation.Motion!
+SA3D.Modeling.Animation.NodeMotion.Animation.set -> void
+SA3D.Modeling.Animation.NodeMotion.Label.get -> string!
+SA3D.Modeling.Animation.NodeMotion.Label.set -> void
+SA3D.Modeling.Animation.NodeMotion.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.Animation.NodeMotion.Model.set -> void
+SA3D.Modeling.Animation.NodeMotion.NodeMotion(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Animation.Motion! animation) -> void
+SA3D.Modeling.Animation.NodeMotion.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.Animation.Spotlight
+SA3D.Modeling.Animation.Spotlight.far -> float
+SA3D.Modeling.Animation.Spotlight.insideAngle -> float
+SA3D.Modeling.Animation.Spotlight.near -> float
+SA3D.Modeling.Animation.Spotlight.outsideAngle -> float
+SA3D.Modeling.Animation.Spotlight.Spotlight() -> void
+SA3D.Modeling.Animation.Spotlight.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils
+SA3D.Modeling.File.AnimationFile
+SA3D.Modeling.File.AnimationFile.Animation.get -> SA3D.Modeling.Animation.Motion!
+SA3D.Modeling.File.AnimationFile.MetaData.get -> SA3D.Modeling.File.MetaData!
+SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.File.AnimationFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.AnimationFile.WriteToFile(string! filepath) -> void
+SA3D.Modeling.File.LevelFile
+SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.LandTable!
+SA3D.Modeling.File.LevelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
+SA3D.Modeling.File.LevelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.File.LevelFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.LevelFile.WriteToFile(string! filepath) -> void
+SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.ActionName = 1094931534 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Animation = 1296649793 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Author = 1213486401 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Description = 1129530692 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.End = 4476485 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Label = 1279410508 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Morph = 1179799373 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.ObjectName = 1329744462 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Texture = 5784916 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaBlockType.Tool = 1280266068 -> SA3D.Modeling.File.MetaBlockType
+SA3D.Modeling.File.MetaData
+SA3D.Modeling.File.MetaData.ActionName.get -> string?
+SA3D.Modeling.File.MetaData.ActionName.set -> void
+SA3D.Modeling.File.MetaData.AnimFiles.get -> System.Collections.Generic.List<string!>!
+SA3D.Modeling.File.MetaData.Author.get -> string?
+SA3D.Modeling.File.MetaData.Author.set -> void
+SA3D.Modeling.File.MetaData.Description.get -> string?
+SA3D.Modeling.File.MetaData.Description.set -> void
+SA3D.Modeling.File.MetaData.Labels.get -> System.Collections.Generic.Dictionary<uint, string!>!
+SA3D.Modeling.File.MetaData.Labels.set -> void
+SA3D.Modeling.File.MetaData.MetaData() -> void
+SA3D.Modeling.File.MetaData.MorphFiles.get -> System.Collections.Generic.List<string!>!
+SA3D.Modeling.File.MetaData.ObjectName.get -> string?
+SA3D.Modeling.File.MetaData.ObjectName.set -> void
+SA3D.Modeling.File.MetaData.Other.get -> System.Collections.Generic.Dictionary<uint, byte[]!>!
+SA3D.Modeling.File.MetaData.Other.set -> void
+SA3D.Modeling.File.MetaData.Write(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.File.ModelFile
+SA3D.Modeling.File.ModelFile.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
+SA3D.Modeling.File.ModelFile.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.File.ModelFile.NJFile.get -> bool
+SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.File.ModelFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath) -> void
+SA3D.Modeling.Mesh.Attach
+SA3D.Modeling.Mesh.Attach.Attach() -> void
+SA3D.Modeling.Mesh.Attach.Attach(SA3D.Modeling.Mesh.Buffer.BufferMesh![]! meshdata) -> void
+SA3D.Modeling.Mesh.Attach.GetDisplayMeshes() -> (SA3D.Modeling.Mesh.Buffer.BufferMesh![]! opaque, SA3D.Modeling.Mesh.Buffer.BufferMesh![]! transparent)
+SA3D.Modeling.Mesh.Attach.Label.get -> string!
+SA3D.Modeling.Mesh.Attach.Label.set -> void
+SA3D.Modeling.Mesh.Attach.MeshBounds.get -> SA3D.Modeling.Structs.Bounds
+SA3D.Modeling.Mesh.Attach.MeshBounds.set -> void
+SA3D.Modeling.Mesh.Attach.MeshData.get -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
+SA3D.Modeling.Mesh.Attach.MeshData.set -> void
+SA3D.Modeling.Mesh.Attach.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.BASIC = 1 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.Buffer = 0 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.CHUNK = 2 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.GC = 3 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.Basic.BasicAttach
+SA3D.Modeling.Mesh.Basic.BasicAttach.BasicAttach(SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>! positions, SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>! normals, SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Basic.BasicMesh!>! meshes, SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Basic.BasicMaterial>! materials) -> void
+SA3D.Modeling.Mesh.Basic.BasicAttach.BasicAttach(System.Numerics.Vector3[]! positions, System.Numerics.Vector3[]! normals, SA3D.Modeling.Mesh.Basic.BasicMesh![]! meshes, SA3D.Modeling.Mesh.Basic.BasicMaterial[]! materials) -> void
+SA3D.Modeling.Mesh.Basic.BasicAttach.ConvertToBufferMeshData(bool optimize) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
+SA3D.Modeling.Mesh.Basic.BasicAttach.Materials.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Basic.BasicMaterial>!
+SA3D.Modeling.Mesh.Basic.BasicAttach.Meshes.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Basic.BasicMesh!>!
+SA3D.Modeling.Mesh.Basic.BasicAttach.Normals.get -> SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>!
+SA3D.Modeling.Mesh.Basic.BasicAttach.Positions.get -> SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>!
+SA3D.Modeling.Mesh.Basic.BasicMaterial
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Attributes.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Attributes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.BasicMaterial() -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.BasicMaterial(SA3D.Modeling.Mesh.Basic.BasicMaterial template) -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.ClampU.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.ClampU.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.ClampV.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.ClampV.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DiffuseColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DiffuseColor.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DoubleSided.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.DoubleSided.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.EnvironmentMap.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.EnvironmentMap.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.FilterMode.get -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.Basic.BasicMaterial.FilterMode.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.FlatShading.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.FlatShading.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.IgnoreLighting.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.IgnoreLighting.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.IgnoreSpecular.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.IgnoreSpecular.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MipmapDistanceMultiplier.get -> float
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MipmapDistanceMultiplier.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MirrorU.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MirrorU.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MirrorV.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.MirrorV.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.PickStatus.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.PickStatus.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SpecularColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SpecularColor.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SpecularExponent.get -> float
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SpecularExponent.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SuperSample.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.SuperSample.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureID.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureID.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UserAttributes.get -> byte
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UserAttributes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UseTexture.get -> bool
+SA3D.Modeling.Mesh.Basic.BasicMaterial.UseTexture.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh
+SA3D.Modeling.Mesh.Basic.BasicMesh.BasicMesh(SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType polygonType, SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon![]! polygons, ushort materialIndex, bool hasNormal, bool hasColor, bool hasTexcoords) -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.BasicMesh(ushort materialID, SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType polyType, SA3D.Common.Lookup.LabeledReadOnlyArray<SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>! polys, SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>? normals, SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Structs.Color>? colors, SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector2>? texcoords) -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.Clone() -> SA3D.Modeling.Mesh.Basic.BasicMesh!
+SA3D.Modeling.Mesh.Basic.BasicMesh.Colors.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Structs.Color>?
+SA3D.Modeling.Mesh.Basic.BasicMesh.Colors.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.MaterialIndex.get -> ushort
+SA3D.Modeling.Mesh.Basic.BasicMesh.MaterialIndex.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.Normals.get -> SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector3>?
+SA3D.Modeling.Mesh.Basic.BasicMesh.Normals.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.PolyAttributes.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMesh.PolyAttributes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.PolygonCornerCount.get -> int
+SA3D.Modeling.Mesh.Basic.BasicMesh.Polygons.get -> SA3D.Common.Lookup.LabeledReadOnlyArray<SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>!
+SA3D.Modeling.Mesh.Basic.BasicMesh.PolygonType.get -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.BasicMesh.Texcoords.get -> SA3D.Common.Lookup.ILabeledArray<System.Numerics.Vector2>?
+SA3D.Modeling.Mesh.Basic.BasicMesh.Texcoords.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.WriteData(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.WriteMeshset(SA3D.Common.IO.EndianStackWriter! writer, bool DX, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.BasicMultiPolygon() -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.BasicMultiPolygon(uint size, bool reversed) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.BasicMultiPolygon(ushort[]! indices, bool reversed) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Clone() -> object!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.GetEnumerator() -> System.Collections.Generic.IEnumerator<ushort>!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Indices.get -> ushort[]!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Indices.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.NumIndices.get -> int
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Reversed.get -> bool
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Reversed.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Size.get -> uint
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.this[int index].set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType.NPoly = 2 -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType.Quads = 1 -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType.Triangles = 0 -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType.TriangleStrips = 3 -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.BasicQuad() -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.BasicQuad(ushort index1, ushort index2, ushort index3, ushort index4) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Clone() -> object!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.GetEnumerator() -> System.Collections.Generic.IEnumerator<ushort>!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index1.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index1.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index2.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index2.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index3.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index3.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index4.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Index4.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.NumIndices.get -> int
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Size.get -> uint
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.this[int index].set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.BasicTriangle() -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.BasicTriangle(ushort index1, ushort index2, ushort index3) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Clone() -> object!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.GetEnumerator() -> System.Collections.Generic.IEnumerator<ushort>!
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index1.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index1.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index2.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index2.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index3.get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Index3.set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.NumIndices.get -> int
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Size.get -> uint
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.this[int index].set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.NumIndices.get -> int
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType type) -> SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.Size.get -> uint
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.this[int index].set -> void
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.DstAlpha = 6 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.DstAlphaInverted = 7 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.One = 1 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.Other = 2 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.OtherInverted = 3 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.SrcAlpha = 4 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.SrcAlphaInverted = 5 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.BlendMode.Zero = 0 -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Buffer.BufferCorner
+SA3D.Modeling.Mesh.Buffer.BufferCorner.BufferCorner() -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.BufferCorner(ushort vertexIndex) -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.BufferCorner(ushort vertexIndex, SA3D.Modeling.Structs.Color color, System.Numerics.Vector2 texcoord) -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.Color.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Buffer.BufferCorner.Color.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.Texcoord.get -> System.Numerics.Vector2
+SA3D.Modeling.Mesh.Buffer.BufferCorner.Texcoord.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.VertexIndex.get -> ushort
+SA3D.Modeling.Mesh.Buffer.BufferCorner.VertexIndex.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferCorner.Write(SA3D.Common.IO.EndianStackWriter! writer, bool writeColor) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Ambient.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Ambient.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.AnisotropicFiltering.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.AnisotropicFiltering.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Attributes.get -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Attributes.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.BackfaceCulling.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.BackfaceCulling.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.BufferMaterial() -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.BufferMaterial(SA3D.Modeling.Mesh.Buffer.BufferMaterial template) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.ClampU.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.ClampU.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.ClampV.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.ClampV.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.DestinationBlendmode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.DestinationBlendmode.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Diffuse.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Diffuse.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.get -> uint
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.get -> byte
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordID.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordSource.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordSource.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordType.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.HasAttributes(SA3D.Modeling.Mesh.Buffer.MaterialAttributes attrib) -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MipmapDistanceMultiplier.get -> float
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MipmapDistanceMultiplier.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MirrorU.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MirrorU.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MirrorV.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.MirrorV.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoAmbient.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoAmbient.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoLighting.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoLighting.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NormalMapping.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NormalMapping.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoSpecular.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoSpecular.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.SetAttributes(SA3D.Modeling.Mesh.Buffer.MaterialAttributes attrib, bool state) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.SourceBlendMode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.SourceBlendMode.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Specular.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Specular.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.SpecularExponent.get -> float
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.SpecularExponent.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.TextureFiltering.get -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.TextureFiltering.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.TextureIndex.get -> uint
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.TextureIndex.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.UseTexture.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.UseTexture.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMesh
+SA3D.Modeling.Mesh.Buffer.BufferMesh.BufferMesh(SA3D.Modeling.Mesh.Buffer.BufferMaterial material, SA3D.Modeling.Mesh.Buffer.BufferCorner[]! corners, uint[]? indexList, bool strippified, bool hasColors, ushort vertexReadOffset) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMesh.BufferMesh(SA3D.Modeling.Mesh.Buffer.BufferVertex[]! vertices, bool continueWeight, bool hasNormals, ushort vertexWriteOffset) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMesh.BufferMesh(SA3D.Modeling.Mesh.Buffer.BufferVertex[]? vertices, SA3D.Modeling.Mesh.Buffer.BufferMaterial material, SA3D.Modeling.Mesh.Buffer.BufferCorner[]? corners, uint[]? indexList, bool strippified, bool continueWeight, bool hasNormals, bool hasColors, ushort vertexWriteOffset, ushort vertexReadOffset) -> void
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Clone() -> SA3D.Modeling.Mesh.Buffer.BufferMesh!
+SA3D.Modeling.Mesh.Buffer.BufferMesh.ContinueWeight.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Corners.get -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]?
+SA3D.Modeling.Mesh.Buffer.BufferMesh.GetCornerTriangleList() -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]!
+SA3D.Modeling.Mesh.Buffer.BufferMesh.GetIndexTriangleList() -> uint[]!
+SA3D.Modeling.Mesh.Buffer.BufferMesh.HasColors.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMesh.HasNormals.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMesh.IndexList.get -> uint[]?
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Material.get -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
+SA3D.Modeling.Mesh.Buffer.BufferMesh.OptimizePolygons() -> void
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Strippified.get -> bool
+SA3D.Modeling.Mesh.Buffer.BufferMesh.VertexReadOffset.get -> ushort
+SA3D.Modeling.Mesh.Buffer.BufferMesh.VertexWriteOffset.get -> ushort
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Vertices.get -> SA3D.Modeling.Mesh.Buffer.BufferVertex[]?
+SA3D.Modeling.Mesh.Buffer.BufferMesh.Write(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.Mesh.Buffer.BufferVertex
+SA3D.Modeling.Mesh.Buffer.BufferVertex.BufferVertex() -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.BufferVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, ushort index) -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.BufferVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, ushort index, float weight) -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.BufferVertex(System.Numerics.Vector3 position, ushort index) -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Equals(SA3D.Modeling.Mesh.Buffer.BufferVertex other) -> bool
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Index.get -> ushort
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Index.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Normal.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Normal.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Position.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Weight.get -> float
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Weight.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferVertex.Write(SA3D.Common.IO.EndianStackWriter! writer, bool writeNormal) -> void
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.AnisotropicFiltering = 2 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.BackfaceCulling = 4096 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.ClampU = 4 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.ClampV = 8 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.Flat = 1024 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.MirrorU = 16 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.MirrorV = 32 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NoAmbient = 256 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NoLighting = 128 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NormalMapping = 64 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NoSpecular = 512 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.UseAlpha = 2048 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Buffer.MaterialAttributes.UseTexture = 1 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
+SA3D.Modeling.Mesh.Chunk.ChunkAttach
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.ChunkAttach(SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Chunk.VertexChunk?>? vertexChunks, SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Chunk.PolyChunk?>? polyChunks) -> void
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.ChunkAttach(SA3D.Modeling.Mesh.Chunk.VertexChunk?[]? vertexChunks, SA3D.Modeling.Mesh.Chunk.PolyChunk?[]? polyChunks) -> void
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.PolyChunks.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Chunk.PolyChunk?>?
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.PolyChunks.set -> void
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.VertexChunks.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Mesh.Chunk.VertexChunk?>?
+SA3D.Modeling.Mesh.Chunk.ChunkAttach.VertexChunks.set -> void
+SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions
+SA3D.Modeling.Mesh.Chunk.PolyChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Attributes.get -> byte
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Attributes.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunk.PolyChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Type.get -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Type.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.BitsChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.BlendAlphaChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.CacheListChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.List.get -> byte
+SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.List.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk.DrawListChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk.List.get -> byte
+SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk.List.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DX.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DX.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DY.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DY.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DZ.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.DZ.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.MaterialBumpChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UX.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UX.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UY.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UY.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UZ.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.UZ.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Ambient.get -> SA3D.Modeling.Structs.Color?
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Ambient.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Diffuse.get -> SA3D.Modeling.Structs.Color?
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Diffuse.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.MaterialChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Second.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Second.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Specular.get -> SA3D.Modeling.Structs.Color?
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Specular.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SpecularExponent.get -> byte
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SpecularExponent.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk.MipmapDistanceMultiplier.get -> float
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk.MipmapDistanceMultiplier.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk.MipmapDistanceMultiplierChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.SizedChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk.SpecularExponent.get -> byte
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk.SpecularExponent.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk.SpecularExponentChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.ChangeType(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.DoubleSide.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.DoubleSide.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.EnvironmentMapping.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.EnvironmentMapping.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.FlatShading.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.FlatShading.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.HasColors.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.HasHDTexcoords.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.HasNormals.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreAmbient.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreAmbient.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreLight.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreLight.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreSpecular.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IgnoreSpecular.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.RawSize.get -> uint
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.StripChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type, SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip[]! strips, int triangleAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.StripChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type, ushort stripCount, int triangleAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Strips.get -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip[]!
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TexcoordCount.get -> int
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TriangleAttributeCount.get -> int
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TriangleAttributeCount.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UnknownAttribute.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UnknownAttribute.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ClampU.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ClampU.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ClampV.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.ClampV.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Data.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.FilterMode.get -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.FilterMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MipmapDistanceMultiplier.get -> float
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MipmapDistanceMultiplier.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MirrorU.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MirrorU.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MirrorV.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.MirrorV.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Second.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Second.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.SuperSample.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.SuperSample.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.TextureChunk(bool second = false) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.TextureID.get -> ushort
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.TextureID.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.PolygonAttributeCount.get -> int
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.PolygonAttributeCount.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Polygons.get -> SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon![]!
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.RawSize.get -> uint
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.VolumeChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type, SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon![]! polygons, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.VolumeChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type, ushort polygonCount, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.BlendAlpha = 1 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.CacheList = 4 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.DrawList = 5 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.End = 255 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Ambient = 18 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Ambient2 = 26 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_AmbientSpecular = 22 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_AmbientSpecular2 = 30 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Bump = 24 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Diffuse = 17 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Diffuse2 = 25 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseAmbient = 19 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseAmbient2 = 27 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseAmbientSpecular = 23 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseAmbientSpecular2 = 31 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseSpecular = 21 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_DiffuseSpecular2 = 29 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Specular = 20 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Specular2 = 28 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.MipmapDistanceMultiplier = 2 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Null = 0 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.SpecularExponent = 3 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_Blank = 64 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_BlankDouble = 73 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_Color = 70 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_HDTex = 66 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_HDTexColor = 72 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_HDTexDouble = 75 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_HDTexNormal = 69 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_Normal = 67 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_Tex = 65 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_TexColor = 71 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_TexDouble = 74 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Strip_TexNormal = 68 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.TextureID = 8 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.TextureID2 = 9 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Volume_Polygon3 = 56 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Volume_Polygon4 = 57 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Volume_Strip = 58 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes1.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes1.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes2.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes3.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Attributes3.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.ChunkCorner() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Color.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Color.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Index.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Index.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Normal.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Normal.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Texcoord.get -> System.Numerics.Vector2
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Texcoord.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Texcoord2.get -> System.Numerics.Vector2
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.Texcoord2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.ChunkStrip() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.ChunkStrip(SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner[]! corners, bool reverse) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Clone() -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Corners.get -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner[]!
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Reversed.get -> bool
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Size(int texcoordCount, bool hasNormal, bool hasColor, int triangleAttributeCount) -> uint
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Write(SA3D.Common.IO.EndianStackWriter! writer, int texcoordCount, bool hdTexcoord, bool hasNormal, bool hasColor, int triangleAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Attributes.get -> uint
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Attributes.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, SA3D.Modeling.Structs.Color diffuse, SA3D.Modeling.Structs.Color specular) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, uint attribs) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, ushort index, float weight) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Diffuse.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Diffuse.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Index.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Index.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Normal.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Normal.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Position.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Specular.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Specular.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Weight.get -> float
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Weight.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute1.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute1.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute2.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute3.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Attribute3.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.ChunkVolumeQuad() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.ChunkVolumeQuad(ushort index1, ushort index2, ushort index3, ushort index4) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.ChunkVolumeQuad(ushort index1, ushort index2, ushort index3, ushort index4, ushort attribute1, ushort attribute2, ushort attribute3) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Clone() -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index1.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index1.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index2.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index3.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index3.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index4.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Index4.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.NumIndices.get -> int
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Size(int polygonAttributeCount) -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.this[int index].set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Write(SA3D.Common.IO.EndianStackWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.ChunkVolumeStrip() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.ChunkVolumeStrip(int size, bool reversed) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.ChunkVolumeStrip(ushort[]! indices, bool reversed) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Clone() -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Indices.get -> ushort[]!
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.NumIndices.get -> int
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Reversed.get -> bool
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Reversed.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Size(int polygonAttributeCount) -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.this[int index].set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.TriangleAttributes.get -> ushort[,]!
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Write(SA3D.Common.IO.EndianStackWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute1.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute1.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute2.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute3.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Attribute3.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.ChunkVolumeTriangle() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.ChunkVolumeTriangle(ushort index1, ushort index2, ushort index3) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.ChunkVolumeTriangle(ushort index1, ushort index2, ushort index3, ushort attribute1, ushort attribute2, ushort attribute3) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Clone() -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index1.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index1.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index2.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index2.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index3.get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Index3.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.NumIndices.get -> int
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Size(int polygonAttributeCount) -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.this[int index].set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Write(SA3D.Common.IO.EndianStackWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon.NumIndices.get -> int
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon.Size(int polygonAttributeCount) -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon.this[int index].get -> ushort
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon.this[int index].set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.IChunkVolumePolygon.Write(SA3D.Common.IO.EndianStackWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Attributes.get -> byte
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Clone() -> SA3D.Modeling.Mesh.Chunk.VertexChunk!
+SA3D.Modeling.Mesh.Chunk.VertexChunk.HasDiffuseColors.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.HasNormals.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.HasSpecularColors.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.HasWeight.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.IndexOffset.get -> ushort
+SA3D.Modeling.Mesh.Chunk.VertexChunk.IndexOffset.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Type.get -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunk.VertexChunk(SA3D.Modeling.Mesh.Chunk.VertexChunkType type, byte attributes, ushort indexOffset, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex[]! vertices) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.VertexChunk(SA3D.Modeling.Mesh.Chunk.VertexChunkType type, SA3D.Modeling.Mesh.Chunk.WeightStatus weightstatus, ushort indexOffset, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex[]! vertices) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Vertices.get -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex[]!
+SA3D.Modeling.Mesh.Chunk.VertexChunk.WeightStatus.get -> SA3D.Modeling.Mesh.Chunk.WeightStatus
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Attributes = 37 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Blank = 34 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.BlankVec4 = 32 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Diffuse = 35 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.DiffuseSpecular4 = 39 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.DiffuseSpecular5 = 38 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.End = 255 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Intensity = 40 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Normal = 41 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Normal32 = 48 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Normal32Diffuse = 49 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Normal32UserAttributes = 50 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalAttributes = 44 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalDiffuse = 42 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalDiffuseSpecular4 = 46 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalDiffuseSpecular5 = 45 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalIntensity = 47 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalUserAttributes = 43 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.NormalVec4 = 33 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.Null = 0 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.UserAttributes = 36 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.WeightStatus
+SA3D.Modeling.Mesh.Chunk.WeightStatus.End = 2 -> SA3D.Modeling.Mesh.Chunk.WeightStatus
+SA3D.Modeling.Mesh.Chunk.WeightStatus.Middle = 1 -> SA3D.Modeling.Mesh.Chunk.WeightStatus
+SA3D.Modeling.Mesh.Chunk.WeightStatus.Start = 0 -> SA3D.Modeling.Mesh.Chunk.WeightStatus
+SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.FilterMode.Bilinear = 1 -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.FilterMode.Blend = 3 -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.FilterMode.Nearest = 0 -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.FilterMode.Trilinear = 2 -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Float32 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGB565 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGB8 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA4 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA6 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA8 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBX8 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Signed16 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Signed8 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Unsigned16 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Unsigned8 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCEnumExtensions
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.Color0LargeIndex = 64 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.Color1LargeIndex = 256 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasColor0 = 128 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasColor1 = 512 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasNormal = 32 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasPosition = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasPositionMatrixID = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord0 = 2048 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord1 = 8192 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord2 = 32768 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord3 = 131072 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord4 = 524288 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord5 = 2097152 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord6 = 8388608 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord7 = 33554432 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.NormalLargeIndex = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.PositionLargeIndex = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.PositionMatrixIDLargeIndex = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord0LargeIndex = 1024 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord1LargeIndex = 4096 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord2LargeIndex = 16384 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord3LargeIndex = 65536 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord4LargeIndex = 262144 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord5LargeIndex = 1048576 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord6LargeIndex = 4194304 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord7LargeIndex = 16777216 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.AmbientColor = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.BlendAlpha = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.DiffuseColor = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.IndexFormat = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Lighting = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.SpecularColor = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Texcoord = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Texture = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Unknown = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.VertexFormat = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Lines = 168 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.LineStrip = 176 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Points = 184 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.TriangleFan = 160 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Triangles = 144 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.TriangleStrip = 152 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.ColorRGB = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.ColorRGBA = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalNBT = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalNBT3 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalXYZ = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.PositionXY = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.PositionXYZ = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.TexCoordU = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.TexCoordUV = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord0 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord1 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord2 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord3 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord4 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord5 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord6 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordMax = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordNull = 255 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Identity = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix0 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix1 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix2 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix3 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix4 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix5 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix6 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix8 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix.Matrix9 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Binormal = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord0 = 12 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord1 = 13 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord2 = 14 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord3 = 15 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord4 = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord5 = 17 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord6 = 18 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Color0 = 19 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Color1 = 20 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Normal = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Position = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Tangent = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord0 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord1 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord2 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord3 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord4 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord5 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord6 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord7 = 11 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump0 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump1 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump2 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump3 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump4 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump5 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump6 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump7 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Matrix2x4 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Matrix3x4 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.SRTG = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Mask = SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatV | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorV | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatU | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorU | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Unknown -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorU = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorV = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatU = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatV = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Unknown = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Color0 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Color1 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.End = 255 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Normal = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Position = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.PositionMatrixID = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord0 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord1 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord2 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord3 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord4 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord5 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord6 = 11 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord7 = 12 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.GCAttach
+SA3D.Modeling.Mesh.Gamecube.GCAttach.ConvertToBufferMeshData(bool optimize) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
+SA3D.Modeling.Mesh.Gamecube.GCAttach.GCAttach(System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType, SA3D.Modeling.Mesh.Gamecube.GCVertexSet!>! vertexData, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! opaqueMeshes, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! transprentMeshes) -> void
+SA3D.Modeling.Mesh.Gamecube.GCAttach.OpaqueMeshes.get -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
+SA3D.Modeling.Mesh.Gamecube.GCAttach.OpaqueMeshes.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCAttach.OptimizePolygons() -> void
+SA3D.Modeling.Mesh.Gamecube.GCAttach.OptimizeVertexData() -> void
+SA3D.Modeling.Mesh.Gamecube.GCAttach.TransparentMeshes.get -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
+SA3D.Modeling.Mesh.Gamecube.GCAttach.TransparentMeshes.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCAttach.VertexData.get -> System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType, SA3D.Modeling.Mesh.Gamecube.GCVertexSet!>!
+SA3D.Modeling.Mesh.Gamecube.GCCorner
+SA3D.Modeling.Mesh.Gamecube.GCCorner.Color0Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.Color0Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.Color1Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.Color1Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.GCCorner() -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.NormalIndex.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.NormalIndex.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionIndex.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionIndex.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionMatrixIDIndex.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionMatrixIDIndex.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord0Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord0Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord1Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord1Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord2Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord2Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord3Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord3Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord4Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord4Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord5Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord5Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord6Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord6Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord7Index.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord7Index.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCMesh
+SA3D.Modeling.Mesh.Gamecube.GCMesh.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCMesh!
+SA3D.Modeling.Mesh.Gamecube.GCMesh.GCMesh(SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter![]! parameters, SA3D.Modeling.Mesh.Gamecube.GCPolygon[]! polygons) -> void
+SA3D.Modeling.Mesh.Gamecube.GCMesh.IndexFormat.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat?
+SA3D.Modeling.Mesh.Gamecube.GCMesh.OptimizePolygons() -> void
+SA3D.Modeling.Mesh.Gamecube.GCMesh.Parameters.get -> SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter![]!
+SA3D.Modeling.Mesh.Gamecube.GCMesh.Parameters.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCMesh.Polygons.get -> SA3D.Modeling.Mesh.Gamecube.GCPolygon[]!
+SA3D.Modeling.Mesh.Gamecube.GCMesh.Polygons.set -> void
+SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteParameters(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.Mesh.Gamecube.GCMesh.WritePolygons(SA3D.Common.IO.EndianStackWriter! writer, ref SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> uint
+SA3D.Modeling.Mesh.Gamecube.GCPolygon
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCPolygon
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.Corners.get -> SA3D.Modeling.Mesh.Gamecube.GCCorner[]!
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.GCPolygon() -> void
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.GCPolygon(SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType type, SA3D.Modeling.Mesh.Gamecube.GCCorner[]! corners) -> void
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
+SA3D.Modeling.Mesh.Gamecube.GCPolygon.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> void
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ColorData.get -> SA3D.Modeling.Structs.Color[]!
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataLength.get -> int
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Optimize(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Gamecube.GCMesh!>? meshes) -> void
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructSize.get -> uint
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Vector2Data.get -> System.Numerics.Vector2[]!
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Vector3Data.get -> System.Numerics.Vector3[]!
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteData(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteHeader(SA3D.Common.IO.EndianStackWriter! writer, uint dataAddress) -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.AmbientColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.AmbientColor.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.GCAmbientColorParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.GCBlendAlphaParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.DiffuseColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.DiffuseColor.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.GCDiffuseColorParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.GCIndexFormatParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.IndexFormat.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.IndexFormat.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.GCLightingParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.LightingAttributes.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.LightingAttributes.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ShadowStencil.get -> byte
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ShadowStencil.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown1.get -> byte
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown1.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown2.get -> byte
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown2.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.GCSpecularColorParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.SpecularColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.SpecularColor.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.GCTexCoordParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexcoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordSource.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordSource.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordType.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.GCTextureParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.TextureID.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.TextureID.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Tiling.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Tiling.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.GCUnknownParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown1.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown1.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.get -> ushort
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Formatting.get -> byte
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Formatting.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.GCVertexFormatParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexDataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexDataType.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexStructType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexStructType.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexType.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Data.set -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter!
+SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Weighted.BufferMode
+SA3D.Modeling.Mesh.Weighted.BufferMode.Generate = 1 -> SA3D.Modeling.Mesh.Weighted.BufferMode
+SA3D.Modeling.Mesh.Weighted.BufferMode.GenerateOptimized = 2 -> SA3D.Modeling.Mesh.Weighted.BufferMode
+SA3D.Modeling.Mesh.Weighted.BufferMode.None = 0 -> SA3D.Modeling.Mesh.Weighted.BufferMode
+SA3D.Modeling.Mesh.Weighted.WeightedMesh
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.Clone() -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.DependingNodeIndices.get -> System.Collections.Generic.SortedSet<int>!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid() -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ForceVertexColors.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ForceVertexColors.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.HasColors.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.IsWeighted.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.get -> string?
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.Materials.get -> SA3D.Modeling.Mesh.Buffer.BufferMaterial[]!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.RootIndices.get -> System.Collections.Generic.HashSet<int>!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights) -> SA3D.Modeling.Mesh.Attach!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.TriangleSets.get -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.Vertices.get -> SA3D.Modeling.Mesh.Weighted.WeightedVertex[]!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.WriteSpecular.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.WriteSpecular.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Clone() -> SA3D.Modeling.Mesh.Weighted.WeightedVertex
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetFirstWeightIndex() -> int
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetLastWeightIndex() -> int
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetMaxWeightIndex() -> int
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetWeightCount() -> int
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetWeightMap() -> (int nodeIndex, float weight)[]!
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.IsWeighted() -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normal.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normal.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normalized() -> SA3D.Modeling.Mesh.Weighted.WeightedVertex
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Position.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.WeightedVertex() -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.WeightedVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal) -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.WeightedVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, float[]? weights) -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.WeightedVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, int nodeCount) -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.Weights.get -> float[]?
+SA3D.Modeling.ObjectData.Enums.EnumExtensions
+SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.Enums.LandtableAttributes.CustomDrawDistance = 4 -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.Enums.LandtableAttributes.EnableMotions = 1 -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.Enums.LandtableAttributes.LoadTexlist = 2 -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.Enums.LandtableAttributes.LoadTextureFile = 8 -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.ModelFormat.Buffer = 4 -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.ModelFormat.SA1 = 0 -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.ModelFormat.SA2 = 2 -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.ModelFormat.SA2B = 3 -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.ModelFormat.SADX = 1 -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.Clip = 256 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.Modifier = 512 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.NoAnimate = 64 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.NoMorph = 128 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.NoPosition = 1 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.NoRotation = 2 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.NoScale = 4 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.RotateZYX = 32 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.SkipChildren = 16 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.SkipDraw = 8 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.UseQuaternionRotation = 1024 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.RotationUpdateMode
+SA3D.Modeling.ObjectData.Enums.RotationUpdateMode.Keep = 2 -> SA3D.Modeling.ObjectData.Enums.RotationUpdateMode
+SA3D.Modeling.ObjectData.Enums.RotationUpdateMode.UpdateEuler = 1 -> SA3D.Modeling.ObjectData.Enums.RotationUpdateMode
+SA3D.Modeling.ObjectData.Enums.RotationUpdateMode.UpdateQuaternion = 0 -> SA3D.Modeling.ObjectData.Enums.RotationUpdateMode
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Accelerate = 2097152 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.BoundsRadiusSmall = 536870912 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.BoundsRadiusTiny = 1073741824 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.CannotLand = 64 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Chaos0Land = 8192 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Diggable = 256 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.DrawByMesh = 33554432 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.DynamicCollision = 134217728 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.EnableManipulation = 67108864 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Footprints = 1048576 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Gravity = 8388608 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Hurt = 65536 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.IncreasedAcceleration = 128 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.LowAcceleration = 16 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.LowDepth = 262144 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.NoAcceleration = 8 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.NoFriction = 4 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.NoZWrite = 16777216 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Solid = 1 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Stairs = 16384 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.TransformBounds = 268435456 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.TubeAcceleration = 131072 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Unclimbable = 4096 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Unknown11 = 2048 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Unknown15 = 32768 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Unknown19 = 524288 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Unknown9 = 512 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.UseSkyDrawDistance = 32 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Visible = 2147483648 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Water = 2 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.WaterCollision = 4194304 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes.Waterfall = 1024 -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.BoundsRadiusSmall = 536870912 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.BoundsRadiusTiny = 1073741824 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.CannotLand = 4096 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Diggable = 32 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.DynamicCollision = 134217728 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.EasyDraw = 16777216 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Footprints = 2048 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Gravity = 524288 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Hurt = 1024 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.IncreasedAcceleration = 2097152 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.LowAcceleration = 16 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.NoAcceleration = 8 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.NoFog = 4194304 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.NoFriction = 4 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.NoShadows = 32768 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Solid = 1 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Stairs = 256 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.TransformBounds = 268435456 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.TubeAcceleration = 1048576 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unclimbable = 128 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown14 = 16384 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown16 = 65536 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown17 = 131072 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown18 = 262144 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown25 = 33554432 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown26 = 67108864 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown6 = 64 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Unknown9 = 512 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.UseSkyDrawDistance = 8388608 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Visible = 2147483648 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.Water = 2 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes.WaterNoAlpha = 8192 -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Accelerate = 1024 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundsRadiusSmall = 32 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundsRadiusTiny = 64 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundTransforms = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.TransformBounds | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundsRadiusSmall | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundsRadiusTiny -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.CannotLand = 131072 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Chaos0Land = 1099511627776 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.CollisionMask = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundTransforms | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Collisions | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknowns | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Collisions = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Solid | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Water | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.WaterNoAlpha | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Accelerate | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.LowAcceleration | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoAcceleration | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.IncreasedAcceleration | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.TubeAcceleration | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoFriction | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.CannotLand | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Unclimbable | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Stairs | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Diggable | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Hurt | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.DynamicCollision | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.WaterCollision | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Gravity -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Diggable = 1048576 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.DrawByMesh = 137438953472 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.DynamicCollision = 4194304 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.EasyDraw = 34359738368 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.EnableManipulation = 274877906944 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Footprints = 1073741824 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Gravity = 16777216 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Hurt = 2097152 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.IncreasedAcceleration = 16384 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.LowAcceleration = 4096 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.LowDepth = 8589934592 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoAcceleration = 8192 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoFog = 4294967296 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoFriction = 65536 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoShadows = 2147483648 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoZWrite = 68719476736 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown11 = 9007199254740992 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown15 = 18014398509481984 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown19 = 36028797018963968 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown9 = 4503599627370496 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknowns = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown11 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown15 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknown19 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 = 288230376151711744 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 = 576460752303423488 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 = 1152921504606846976 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 = 2305843009213693952 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 = 4611686018427387904 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 = 9223372036854775808 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 = 72057594037927936 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 = 144115188075855872 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknowns = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Solid = 2 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Stairs = 524288 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.TransformBounds = 16 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.TubeAcceleration = 32768 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Unclimbable = 262144 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Unknowns = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknowns | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.UseSkyDrawDistance = 17179869184 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.ValidMask = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundTransforms | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Collisions | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Visuals | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknowns | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Visible = 1 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.VisualMask = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown26 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.BoundTransforms | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Visuals | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA1_Unknowns | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown6 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown9 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown14 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown16 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown17 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown18 | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.SA2_Unknown25 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Visuals = SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Visible | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Footprints | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoShadows | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoFog | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.LowDepth | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.UseSkyDrawDistance | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.EasyDraw | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.NoZWrite | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.DrawByMesh | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.EnableManipulation | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Waterfall | SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Chaos0Land -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Water = 4 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.WaterCollision = 8388608 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.Waterfall = 549755813888 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Enums.SurfaceAttributes.WaterNoAlpha = 8 -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.NewAttach.get -> SA3D.Modeling.Mesh.Attach?
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.OldAttach.get -> SA3D.Modeling.Mesh.Attach?
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventHandler
+SA3D.Modeling.ObjectData.Events.TransformSet
+SA3D.Modeling.ObjectData.Events.TransformSet.LocalMatrix.get -> System.Numerics.Matrix4x4
+SA3D.Modeling.ObjectData.Events.TransformSet.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Events.TransformSet.QuaternionRotation.get -> System.Numerics.Quaternion
+SA3D.Modeling.ObjectData.Events.TransformSet.Rotation.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Events.TransformSet.Scale.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Events.TransformSet.TransformSet() -> void
+SA3D.Modeling.ObjectData.Events.TransformSet.TransformSet(System.Numerics.Matrix4x4 matrix, System.Numerics.Vector3 position, System.Numerics.Vector3 rotation, System.Numerics.Quaternion quaternionRotation, System.Numerics.Vector3 scale) -> void
+SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventArgs
+SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventArgs.NewTransforms.get -> SA3D.Modeling.ObjectData.Events.TransformSet
+SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventArgs.OldTransforms.get -> SA3D.Modeling.ObjectData.Events.TransformSet
+SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventArgs.UpdatedValues.get -> SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventHandler
+SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.Events.UpdatedTransformValue.Position = 1 -> SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.Events.UpdatedTransformValue.RotateMode = 8 -> SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.Events.UpdatedTransformValue.Rotation = 2 -> SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.Events.UpdatedTransformValue.Scale = 4 -> SA3D.Modeling.ObjectData.Events.UpdatedTransformValue
+SA3D.Modeling.ObjectData.LandEntry
+SA3D.Modeling.ObjectData.LandEntry.BlockBit.get -> uint
+SA3D.Modeling.ObjectData.LandEntry.BlockBit.set -> void
+SA3D.Modeling.ObjectData.LandEntry.Copy() -> SA3D.Modeling.ObjectData.LandEntry!
+SA3D.Modeling.ObjectData.LandEntry.LandEntry(SA3D.Modeling.ObjectData.Node! node, SA3D.Modeling.ObjectData.Enums.SurfaceAttributes surfaceAttributes) -> void
+SA3D.Modeling.ObjectData.LandEntry.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.LandEntry.Model.set -> void
+SA3D.Modeling.ObjectData.LandEntry.ModelBounds.get -> SA3D.Modeling.Structs.Bounds
+SA3D.Modeling.ObjectData.LandEntry.ModelBounds.set -> void
+SA3D.Modeling.ObjectData.LandEntry.SurfaceAttributes.get -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.LandEntry.SurfaceAttributes.set -> void
+SA3D.Modeling.ObjectData.LandEntry.Unknown.get -> uint
+SA3D.Modeling.ObjectData.LandEntry.Unknown.set -> void
+SA3D.Modeling.ObjectData.LandEntry.UpdateBounds() -> void
+SA3D.Modeling.ObjectData.LandEntry.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> void
+SA3D.Modeling.ObjectData.LandTable
+SA3D.Modeling.ObjectData.LandTable.Attributes.get -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
+SA3D.Modeling.ObjectData.LandTable.Attributes.set -> void
+SA3D.Modeling.ObjectData.LandTable.BufferMeshData(bool optimize) -> void
+SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
+SA3D.Modeling.ObjectData.LandTable.DrawDistance.get -> float
+SA3D.Modeling.ObjectData.LandTable.DrawDistance.set -> void
+SA3D.Modeling.ObjectData.LandTable.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
+SA3D.Modeling.ObjectData.LandTable.Geometry.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.ObjectData.LandEntry!>!
+SA3D.Modeling.ObjectData.LandTable.Geometry.set -> void
+SA3D.Modeling.ObjectData.LandTable.GeometryAnimations.get -> SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Animation.LandEntryMotion!>!
+SA3D.Modeling.ObjectData.LandTable.GeometryAnimations.set -> void
+SA3D.Modeling.ObjectData.LandTable.Label.get -> string!
+SA3D.Modeling.ObjectData.LandTable.Label.set -> void
+SA3D.Modeling.ObjectData.LandTable.LandTable(SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.ObjectData.LandEntry!>! geometry, SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.Animation.LandEntryMotion!>! geometryAnimations, SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> void
+SA3D.Modeling.ObjectData.LandTable.LandTable(SA3D.Common.Lookup.ILabeledArray<SA3D.Modeling.ObjectData.LandEntry!>! geometry, SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> void
+SA3D.Modeling.ObjectData.LandTable.SortLandEntries() -> void
+SA3D.Modeling.ObjectData.LandTable.TexListPtr.get -> uint
+SA3D.Modeling.ObjectData.LandTable.TexListPtr.set -> void
+SA3D.Modeling.ObjectData.LandTable.TextureFileName.get -> string?
+SA3D.Modeling.ObjectData.LandTable.TextureFileName.set -> void
+SA3D.Modeling.ObjectData.LandTable.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.ObjectData.Node
+SA3D.Modeling.ObjectData.Node.AppendChild(SA3D.Modeling.ObjectData.Node! node) -> void
+SA3D.Modeling.ObjectData.Node.Attach.get -> SA3D.Modeling.Mesh.Attach?
+SA3D.Modeling.ObjectData.Node.Attach.set -> void
+SA3D.Modeling.ObjectData.Node.AttachCopy() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.Attributes.get -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Node.AutoNodeAttributes() -> void
+SA3D.Modeling.ObjectData.Node.BufferMeshData(bool optimize) -> void
+SA3D.Modeling.ObjectData.Node.CheckHasBranchAttaches() -> bool
+SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
+SA3D.Modeling.ObjectData.Node.Child.get -> SA3D.Modeling.ObjectData.Node?
+SA3D.Modeling.ObjectData.Node.ChildCount.get -> int
+SA3D.Modeling.ObjectData.Node.ClearAttachesFromTree() -> void
+SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
+SA3D.Modeling.ObjectData.Node.DeepAttachCopy() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.Detach() -> void
+SA3D.Modeling.ObjectData.Node.DetachChildren(bool remainSiblings) -> void
+SA3D.Modeling.ObjectData.Node.DetachSuccessors(bool remainSiblings) -> void
+SA3D.Modeling.ObjectData.Node.Duplicate() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.EulerRotation.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Node.EulerRotation.set -> void
+SA3D.Modeling.ObjectData.Node.GetAnimTreeNodeCount() -> int
+SA3D.Modeling.ObjectData.Node.GetAnimTreeNodeEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.ObjectData.Node.GetAnimTreeNodes() -> SA3D.Modeling.ObjectData.Node![]!
+SA3D.Modeling.ObjectData.Node.GetAttachFormat() -> SA3D.Modeling.Mesh.AttachFormat?
+SA3D.Modeling.ObjectData.Node.GetBranchNodeCount(bool includeSiblings) -> int
+SA3D.Modeling.ObjectData.Node.GetBranchNodeEnumerable(bool includeSiblings) -> System.Collections.Generic.IEnumerable<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.ObjectData.Node.GetBranchNodes(bool includeSiblings) -> SA3D.Modeling.ObjectData.Node![]!
+SA3D.Modeling.ObjectData.Node.GetChildren() -> SA3D.Modeling.ObjectData.Node![]!
+SA3D.Modeling.ObjectData.Node.GetEnumerator() -> System.Collections.Generic.IEnumerator<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.ObjectData.Node.GetMorphTreeNodeCount() -> int
+SA3D.Modeling.ObjectData.Node.GetMorphTreeNodeEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.ObjectData.Node.GetMorphTreeNodes() -> SA3D.Modeling.ObjectData.Node![]!
+SA3D.Modeling.ObjectData.Node.GetRootNode() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.GetRootParent() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.GetRootSibling() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.GetTreeAttachCount() -> int
+SA3D.Modeling.ObjectData.Node.GetTreeAttachEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Attach!>!
+SA3D.Modeling.ObjectData.Node.GetTreeAttaches() -> SA3D.Modeling.Mesh.Attach![]!
+SA3D.Modeling.ObjectData.Node.GetTreeNodeCount() -> int
+SA3D.Modeling.ObjectData.Node.GetTreeNodeEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.ObjectData.Node.GetTreeNodes() -> SA3D.Modeling.ObjectData.Node![]!
+SA3D.Modeling.ObjectData.Node.GetWorldMatrix() -> System.Numerics.Matrix4x4
+SA3D.Modeling.ObjectData.Node.GetWorldMatrixTree() -> (SA3D.Modeling.ObjectData.Node! node, System.Numerics.Matrix4x4 worldMatrix)[]!
+SA3D.Modeling.ObjectData.Node.GetWorldMatrixTreeEnumerator() -> System.Collections.Generic.IEnumerable<(SA3D.Modeling.ObjectData.Node! node, System.Numerics.Matrix4x4 worldMatrix)>!
+SA3D.Modeling.ObjectData.Node.GetWorldMatrixTreeLUT() -> System.Collections.Generic.Dictionary<SA3D.Modeling.ObjectData.Node!, System.Numerics.Matrix4x4>!
+SA3D.Modeling.ObjectData.Node.HasImmediates.get -> bool
+SA3D.Modeling.ObjectData.Node.HasSiblings.get -> bool
+SA3D.Modeling.ObjectData.Node.InsertAfter(SA3D.Modeling.ObjectData.Node! node) -> void
+SA3D.Modeling.ObjectData.Node.InsertBefore(SA3D.Modeling.ObjectData.Node! node) -> void
+SA3D.Modeling.ObjectData.Node.InsertChild(int index, SA3D.Modeling.ObjectData.Node! node) -> void
+SA3D.Modeling.ObjectData.Node.Label.get -> string!
+SA3D.Modeling.ObjectData.Node.Label.set -> void
+SA3D.Modeling.ObjectData.Node.LocalMatrix.get -> System.Numerics.Matrix4x4
+SA3D.Modeling.ObjectData.Node.Next.get -> SA3D.Modeling.ObjectData.Node?
+SA3D.Modeling.ObjectData.Node.NoAnimate.get -> bool
+SA3D.Modeling.ObjectData.Node.NoAnimate.set -> void
+SA3D.Modeling.ObjectData.Node.Node() -> void
+SA3D.Modeling.ObjectData.Node.NoMorph.get -> bool
+SA3D.Modeling.ObjectData.Node.NoMorph.set -> void
+SA3D.Modeling.ObjectData.Node.NoPosition.get -> bool
+SA3D.Modeling.ObjectData.Node.NoPosition.set -> void
+SA3D.Modeling.ObjectData.Node.NoRotation.get -> bool
+SA3D.Modeling.ObjectData.Node.NoRotation.set -> void
+SA3D.Modeling.ObjectData.Node.NoScale.get -> bool
+SA3D.Modeling.ObjectData.Node.NoScale.set -> void
+SA3D.Modeling.ObjectData.Node.OnAttachUpdated -> SA3D.Modeling.ObjectData.Events.AttachUpdatedEventHandler?
+SA3D.Modeling.ObjectData.Node.OnTransformsUpdated -> SA3D.Modeling.ObjectData.Events.TransformsUpdatedEventHandler?
+SA3D.Modeling.ObjectData.Node.Parent.get -> SA3D.Modeling.ObjectData.Node?
+SA3D.Modeling.ObjectData.Node.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Node.Position.set -> void
+SA3D.Modeling.ObjectData.Node.Previous.get -> SA3D.Modeling.ObjectData.Node?
+SA3D.Modeling.ObjectData.Node.QuaternionRotation.get -> System.Numerics.Quaternion
+SA3D.Modeling.ObjectData.Node.QuaternionRotation.set -> void
+SA3D.Modeling.ObjectData.Node.RotateZYX.get -> bool
+SA3D.Modeling.ObjectData.Node.Scale.get -> System.Numerics.Vector3
+SA3D.Modeling.ObjectData.Node.Scale.set -> void
+SA3D.Modeling.ObjectData.Node.SetAllNodeAttributes(SA3D.Modeling.ObjectData.Enums.NodeAttributes attributes, SA3D.Modeling.ObjectData.Enums.RotationUpdateMode rotationUpdateMode = SA3D.Modeling.ObjectData.Enums.RotationUpdateMode.UpdateEuler) -> void
+SA3D.Modeling.ObjectData.Node.SetChild(SA3D.Modeling.ObjectData.Node? node) -> void
+SA3D.Modeling.ObjectData.Node.SetNext(SA3D.Modeling.ObjectData.Node? node) -> void
+SA3D.Modeling.ObjectData.Node.SetRotationZYX(bool newValue, SA3D.Modeling.ObjectData.Enums.RotationUpdateMode mode = SA3D.Modeling.ObjectData.Enums.RotationUpdateMode.UpdateEuler) -> void
+SA3D.Modeling.ObjectData.Node.SimpleCopy() -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.SkipChildren.get -> bool
+SA3D.Modeling.ObjectData.Node.SkipChildren.set -> void
+SA3D.Modeling.ObjectData.Node.SkipDraw.get -> bool
+SA3D.Modeling.ObjectData.Node.SkipDraw.set -> void
+SA3D.Modeling.ObjectData.Node.this[int index].get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Node.UpdateTransforms(System.Numerics.Vector3? position, System.Numerics.Quaternion? quaternionRotation, System.Numerics.Vector3? scale) -> void
+SA3D.Modeling.ObjectData.Node.UpdateTransforms(System.Numerics.Vector3? position, System.Numerics.Vector3? eulerRotation, System.Numerics.Vector3? scale) -> void
+SA3D.Modeling.ObjectData.Node.UseQuaternionRotation.get -> bool
+SA3D.Modeling.ObjectData.Node.UseQuaternionRotation.set -> void
+SA3D.Modeling.ObjectData.Node.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.Strippify.TopologyException
+SA3D.Modeling.Strippify.TopologyException.TopologyException(string! msg) -> void
+SA3D.Modeling.Strippify.TriangleStrippifier
+SA3D.Modeling.Strippify.TriangleStrippifier.RaiseTopoError.get -> bool
+SA3D.Modeling.Strippify.TriangleStrippifier.RaiseTopoError.set -> void
+SA3D.Modeling.Strippify.TriangleStrippifier.Strippify(int[]! triangleList) -> int[]![]!
+SA3D.Modeling.Strippify.TriangleStrippifier.Strippify<T>(T[]! triangleList) -> T[]![]!
+SA3D.Modeling.Strippify.TriangleStrippifier.Strippify<T>(T[]! triangleList, out SA3D.Common.DistinctMap<T>! distinctMap) -> int[]![]!
+SA3D.Modeling.Strippify.TriangleStrippifier.StrippifyNoDegen<T>(T[]! triangleList, out bool[]! reversedStrips) -> T[]![]!
+SA3D.Modeling.Strippify.TriangleStrippifier.TriangleStrippifier(bool raiseTopoError = false) -> void
+SA3D.Modeling.Structs.Bounds
+SA3D.Modeling.Structs.Bounds.Bounds() -> void
+SA3D.Modeling.Structs.Bounds.Bounds(System.Numerics.Vector3 position, float radius) -> void
+SA3D.Modeling.Structs.Bounds.Matrix.get -> System.Numerics.Matrix4x4
+SA3D.Modeling.Structs.Bounds.Position.get -> System.Numerics.Vector3
+SA3D.Modeling.Structs.Bounds.Position.set -> void
+SA3D.Modeling.Structs.Bounds.Radius.get -> float
+SA3D.Modeling.Structs.Bounds.Radius.set -> void
+SA3D.Modeling.Structs.Bounds.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Structs.Color
+SA3D.Modeling.Structs.Color.Alpha.get -> byte
+SA3D.Modeling.Structs.Color.Alpha.set -> void
+SA3D.Modeling.Structs.Color.AlphaF.get -> float
+SA3D.Modeling.Structs.Color.AlphaF.set -> void
+SA3D.Modeling.Structs.Color.ARGB.get -> uint
+SA3D.Modeling.Structs.Color.ARGB.set -> void
+SA3D.Modeling.Structs.Color.ARGB4.get -> ushort
+SA3D.Modeling.Structs.Color.ARGB4.set -> void
+SA3D.Modeling.Structs.Color.Blue.get -> byte
+SA3D.Modeling.Structs.Color.Blue.set -> void
+SA3D.Modeling.Structs.Color.BlueF.get -> float
+SA3D.Modeling.Structs.Color.BlueF.set -> void
+SA3D.Modeling.Structs.Color.Color() -> void
+SA3D.Modeling.Structs.Color.Color(byte red, byte green, byte blue) -> void
+SA3D.Modeling.Structs.Color.Color(byte red, byte green, byte blue, byte alpha) -> void
+SA3D.Modeling.Structs.Color.Color(float red, float green, float blue) -> void
+SA3D.Modeling.Structs.Color.Color(float red, float green, float blue, float alpha) -> void
+SA3D.Modeling.Structs.Color.Color(System.Numerics.Vector4 vector) -> void
+SA3D.Modeling.Structs.Color.FloatVector.get -> System.Numerics.Vector4
+SA3D.Modeling.Structs.Color.FloatVector.set -> void
+SA3D.Modeling.Structs.Color.GetLuminance() -> float
+SA3D.Modeling.Structs.Color.Green.get -> byte
+SA3D.Modeling.Structs.Color.Green.set -> void
+SA3D.Modeling.Structs.Color.GreenF.get -> float
+SA3D.Modeling.Structs.Color.GreenF.set -> void
+SA3D.Modeling.Structs.Color.Hex.get -> string!
+SA3D.Modeling.Structs.Color.Hex.set -> void
+SA3D.Modeling.Structs.Color.Red.get -> byte
+SA3D.Modeling.Structs.Color.Red.set -> void
+SA3D.Modeling.Structs.Color.RedF.get -> float
+SA3D.Modeling.Structs.Color.RedF.set -> void
+SA3D.Modeling.Structs.Color.RGB565.get -> ushort
+SA3D.Modeling.Structs.Color.RGB565.set -> void
+SA3D.Modeling.Structs.Color.RGBA.get -> uint
+SA3D.Modeling.Structs.Color.RGBA.set -> void
+SA3D.Modeling.Structs.Color.SystemColor.get -> System.Drawing.Color
+SA3D.Modeling.Structs.Color.SystemColor.set -> void
+SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOType.ARGB4 = 2 -> SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOType.ARGB8_16 = 1 -> SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOType.ARGB8_32 = 0 -> SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOType.RGB565 = 3 -> SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOType.RGBA8 = 4 -> SA3D.Modeling.Structs.ColorIOType
+SA3D.Modeling.Structs.ColorIOTypeExtensions
+SA3D.Modeling.Structs.DebugStringExtensions
+SA3D.Modeling.Structs.EndianIOExtensions
+SA3D.Modeling.Structs.EndianIOExtensions.ReadValueAdvanceDelegate<T>
+SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>
+SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>
+SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.BAMS16 = 3 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.BAMS32 = 4 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.Float = 0 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.Integer = 2 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.Short = 1 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOTypeExtensions
+SA3D.Modeling.Structs.MatrixUtilities
+SA3D.Modeling.Structs.PointerLUT
+SA3D.Modeling.Structs.PointerLUT.Attaches.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.Attach!>!
+SA3D.Modeling.Structs.PointerLUT.Motions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Animation.Motion!>!
+SA3D.Modeling.Structs.PointerLUT.NodeMotions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Animation.NodeMotion!>!
+SA3D.Modeling.Structs.PointerLUT.Nodes.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.ObjectData.Node!>!
+SA3D.Modeling.Structs.PointerLUT.Other.get -> SA3D.Common.Lookup.PointerDictionary<object!>!
+SA3D.Modeling.Structs.PointerLUT.PointerLUT() -> void
+SA3D.Modeling.Structs.PointerLUT.PointerLUT(System.Collections.Generic.Dictionary<uint, string!>! labels) -> void
+SA3D.Modeling.Structs.PointerLUT.PolyChunks.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.Chunk.PolyChunk!>!
+SA3D.Modeling.Structs.QuaternionUtilities
+SA3D.Modeling.Structs.VectorUtilities
+static readonly SA3D.Modeling.Mesh.Basic.BasicMaterial.DefaultValues -> SA3D.Modeling.Mesh.Basic.BasicMaterial
+static readonly SA3D.Modeling.Mesh.Buffer.BufferMaterial.DefaultValues -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
+static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultColor -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultNormal -> System.Numerics.Vector3
+static readonly SA3D.Modeling.Mesh.Gamecube.GCVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.DefaultValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
+static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.DefaultValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter
+static readonly SA3D.Modeling.Strippify.TriangleStrippifier.Global -> SA3D.Modeling.Strippify.TriangleStrippifier!
+static readonly SA3D.Modeling.Structs.Color.ColorBlack -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Structs.Color.ColorBlue -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Structs.Color.ColorGreen -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Structs.Color.ColorRed -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Structs.Color.ColorTransparent -> SA3D.Modeling.Structs.Color
+static readonly SA3D.Modeling.Structs.Color.ColorWhite -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Animation.EnumExtensions.ChannelCount(this SA3D.Modeling.Animation.KeyframeAttributes attributes) -> int
+static SA3D.Modeling.Animation.Keyframes.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Animation.KeyframeAttributes type, SA3D.Modeling.Structs.PointerLUT! lut, bool shortRot = false) -> SA3D.Modeling.Animation.Keyframes!
+static SA3D.Modeling.Animation.LandEntryMotion.Read(SA3D.Common.IO.EndianStackReader! data, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Animation.LandEntryMotion!
+static SA3D.Modeling.Animation.LandEntryMotion.StructSize.get -> uint
+static SA3D.Modeling.Animation.Motion.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, uint modelCount, SA3D.Modeling.Structs.PointerLUT! lut, bool shortRot = false) -> SA3D.Modeling.Animation.Motion!
+static SA3D.Modeling.Animation.NodeMotion.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Animation.NodeMotion!
+static SA3D.Modeling.Animation.Spotlight.Distance(SA3D.Modeling.Animation.Spotlight from, SA3D.Modeling.Animation.Spotlight to) -> float
+static SA3D.Modeling.Animation.Spotlight.Lerp(SA3D.Modeling.Animation.Spotlight from, SA3D.Modeling.Animation.Spotlight to, float time) -> SA3D.Modeling.Animation.Spotlight
+static SA3D.Modeling.Animation.Spotlight.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Animation.Spotlight
+static SA3D.Modeling.Animation.Spotlight.StructSize.get -> uint
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(this SA3D.Modeling.Animation.Keyframes! keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.GetRotationMatrices(this SA3D.Modeling.Animation.Keyframes! keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>!
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToEuler(this SA3D.Modeling.Animation.Keyframes! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.MatrixToQuaternion(this SA3D.Modeling.Animation.Keyframes! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.QuaternionToEuler(this SA3D.Modeling.Animation.Keyframes! keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion) -> void
+static SA3D.Modeling.File.AnimationFile.CheckIsAnimationFile(byte[]! data) -> bool
+static SA3D.Modeling.File.AnimationFile.CheckIsAnimationFile(byte[]! data, uint address) -> bool
+static SA3D.Modeling.File.AnimationFile.CheckIsAnimationFile(SA3D.Common.IO.EndianStackReader! reader) -> bool
+static SA3D.Modeling.File.AnimationFile.CheckIsAnimationFile(SA3D.Common.IO.EndianStackReader! reader, uint address) -> bool
+static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data, uint address, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromFile(string! filepath, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> void
+static SA3D.Modeling.File.AnimationFile.WriteToData(SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
+static SA3D.Modeling.File.AnimationFile.WriteToFile(string! filepath, SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> void
+static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(byte[]! data) -> bool
+static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(byte[]! data, uint address) -> bool
+static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(SA3D.Common.IO.EndianStackReader! reader) -> bool
+static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(SA3D.Common.IO.EndianStackReader! reader, uint address) -> bool
+static SA3D.Modeling.File.LevelFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> void
+static SA3D.Modeling.File.LevelFile.WriteToData(SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
+static SA3D.Modeling.File.LevelFile.WriteToFile(string! filepath, SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> void
+static SA3D.Modeling.File.MetaData.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, int version, bool hasAnimMorphFiles) -> SA3D.Modeling.File.MetaData!
+static SA3D.Modeling.File.ModelFile.CheckIsModelFile(byte[]! data) -> bool
+static SA3D.Modeling.File.ModelFile.CheckIsModelFile(byte[]! data, uint address) -> bool
+static SA3D.Modeling.File.ModelFile.CheckIsModelFile(SA3D.Common.IO.EndianStackReader! reader) -> bool
+static SA3D.Modeling.File.ModelFile.CheckIsModelFile(SA3D.Common.IO.EndianStackReader! reader, uint address) -> bool
+static SA3D.Modeling.File.ModelFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
+static SA3D.Modeling.File.ModelFile.WriteToData(SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> byte[]!
+static SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
+static SA3D.Modeling.Mesh.Attach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!
+static SA3D.Modeling.Mesh.Attach.ReadBuffer(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!
+static SA3D.Modeling.Mesh.Basic.BasicAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, bool DX, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Basic.BasicAttach!
+static SA3D.Modeling.Mesh.Basic.BasicMaterial.operator !=(SA3D.Modeling.Mesh.Basic.BasicMaterial left, SA3D.Modeling.Mesh.Basic.BasicMaterial right) -> bool
+static SA3D.Modeling.Mesh.Basic.BasicMaterial.operator ==(SA3D.Modeling.Mesh.Basic.BasicMaterial left, SA3D.Modeling.Mesh.Basic.BasicMaterial right) -> bool
+static SA3D.Modeling.Mesh.Basic.BasicMaterial.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Basic.BasicMaterial
+static SA3D.Modeling.Mesh.Basic.BasicMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Basic.BasicMesh!
+static SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Read(SA3D.Common.IO.EndianStackReader! data, ref uint address) -> SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon
+static SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad
+static SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle
+static SA3D.Modeling.Mesh.Buffer.BufferCorner.operator !=(SA3D.Modeling.Mesh.Buffer.BufferCorner l, SA3D.Modeling.Mesh.Buffer.BufferCorner r) -> bool
+static SA3D.Modeling.Mesh.Buffer.BufferCorner.operator ==(SA3D.Modeling.Mesh.Buffer.BufferCorner l, SA3D.Modeling.Mesh.Buffer.BufferCorner r) -> bool
+static SA3D.Modeling.Mesh.Buffer.BufferCorner.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, bool hasColor) -> SA3D.Modeling.Mesh.Buffer.BufferCorner
+static SA3D.Modeling.Mesh.Buffer.BufferMaterial.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
+static SA3D.Modeling.Mesh.Buffer.BufferMesh.Optimize(System.Collections.Generic.IList<SA3D.Modeling.Mesh.Buffer.BufferMesh!>! input) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
+static SA3D.Modeling.Mesh.Buffer.BufferMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMesh!
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator !=(SA3D.Modeling.Mesh.Buffer.BufferVertex left, SA3D.Modeling.Mesh.Buffer.BufferVertex right) -> bool
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator *(float l, SA3D.Modeling.Mesh.Buffer.BufferVertex r) -> SA3D.Modeling.Mesh.Buffer.BufferVertex
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator *(SA3D.Modeling.Mesh.Buffer.BufferVertex l, float r) -> SA3D.Modeling.Mesh.Buffer.BufferVertex
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator +(SA3D.Modeling.Mesh.Buffer.BufferVertex l, SA3D.Modeling.Mesh.Buffer.BufferVertex r) -> SA3D.Modeling.Mesh.Buffer.BufferVertex
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator ==(SA3D.Modeling.Mesh.Buffer.BufferVertex left, SA3D.Modeling.Mesh.Buffer.BufferVertex right) -> bool
+static SA3D.Modeling.Mesh.Buffer.BufferVertex.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, bool hasNormal) -> SA3D.Modeling.Mesh.Buffer.BufferVertex
+static SA3D.Modeling.Mesh.Chunk.ChunkAttach.GetActivePolyChunks(SA3D.Modeling.ObjectData.Node! model) -> System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Chunk.ChunkAttach!, SA3D.Modeling.Mesh.Chunk.PolyChunk?[]!>!
+static SA3D.Modeling.Mesh.Chunk.ChunkAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.ChunkAttach!
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasAttributes(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasDiffuseColor(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasNormal(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasSpecularColor(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasWeights(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsNormal32(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsVec4(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasColor(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> ushort
+static SA3D.Modeling.Mesh.Chunk.PolyChunk.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk!
+static SA3D.Modeling.Mesh.Chunk.PolyChunk.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk?[]!
+static SA3D.Modeling.Mesh.Chunk.PolyChunk.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Chunk.PolyChunk?>! chunks, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.operator !=(SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner left, SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner right) -> bool
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.operator ==(SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner left, SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner right) -> bool
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, int texcoordCount, bool hdTexcoord, bool hasNormal, bool hasColor, int triangleAttributeCount) -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.operator !=(SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex left, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex right) -> bool
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.operator ==(SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex left, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex right) -> bool
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, int polygonAttributeCount) -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, int polygonAttributeCount) -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, int polygonAttributeCount) -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle
+static SA3D.Modeling.Mesh.Chunk.VertexChunk.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Mesh.Chunk.VertexChunk!
+static SA3D.Modeling.Mesh.Chunk.VertexChunk.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Chunk.VertexChunk?[]!
+static SA3D.Modeling.Mesh.Chunk.VertexChunk.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Chunk.VertexChunk?>! chunks) -> uint
+static SA3D.Modeling.Mesh.Gamecube.Enums.GCEnumExtensions.GetStructSize(SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType) -> uint
+static SA3D.Modeling.Mesh.Gamecube.GCAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Gamecube.GCAttach!
+static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator !=(SA3D.Modeling.Mesh.Gamecube.GCCorner left, SA3D.Modeling.Mesh.Gamecube.GCCorner right) -> bool
+static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator ==(SA3D.Modeling.Mesh.Gamecube.GCCorner left, SA3D.Modeling.Mesh.Gamecube.GCCorner right) -> bool
+static SA3D.Modeling.Mesh.Gamecube.GCMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, ref SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCMesh!
+static SA3D.Modeling.Mesh.Gamecube.GCMesh.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, int count) -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
+static SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteArrayContents(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! meshes) -> byte[]!
+static SA3D.Modeling.Mesh.Gamecube.GCPolygon.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCPolygon
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateColor0Set(SA3D.Modeling.Structs.Color[]! colors) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateNormalSet(System.Numerics.Vector3[]! normals) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreatePositionSet(System.Numerics.Vector3[]! positions) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateTexcoord0Set(System.Numerics.Vector2[]! texcoords) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet![]!
+static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCVertexSet![]! vertexSets) -> uint
+static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultColorParam -> ushort
+static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultNormalParam -> ushort
+static SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions.Write(this SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter! parameter, SA3D.Common.IO.EndianStackWriter! writer) -> void
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.Create(SA3D.Modeling.Mesh.Weighted.WeightedVertex[]! vertices, SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]! triangleSets, SA3D.Modeling.Mesh.Buffer.BufferMaterial[]! materials, bool hasColors) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid(ref SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> void
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.Attach! attach, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeAtRoots(SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeWeightedMeshes(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Weighted.WeightedMesh!>! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights = false) -> void
+static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator !=(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
+static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator ==(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.CheckIsCollision(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> bool
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.CheckIsVisual(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> bool
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.ToSA1(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.ToSA2(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.ToUniversal(this SA3D.Modeling.ObjectData.Enums.SA1SurfaceAttributes attributes) -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+static SA3D.Modeling.ObjectData.Enums.EnumExtensions.ToUniversal(this SA3D.Modeling.ObjectData.Enums.SA2SurfaceAttributes attributes) -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+static SA3D.Modeling.ObjectData.Events.TransformSet.FromNode(SA3D.Modeling.ObjectData.Node! node) -> SA3D.Modeling.ObjectData.Events.TransformSet
+static SA3D.Modeling.ObjectData.LandEntry.CreateWithAttach(SA3D.Modeling.Mesh.Attach! attach, SA3D.Modeling.ObjectData.Enums.SurfaceAttributes surfaceAttributes) -> SA3D.Modeling.ObjectData.LandEntry!
+static SA3D.Modeling.ObjectData.LandEntry.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat modelFormat, SA3D.Modeling.ObjectData.Enums.ModelFormat tableFormat, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.LandEntry!
+static SA3D.Modeling.ObjectData.LandTable.Read(SA3D.Common.IO.EndianStackReader! data, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.LandTable!
+static SA3D.Modeling.ObjectData.Node.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.Node!
+static SA3D.Modeling.Strippify.TriangleStrippifier.JoinedStripEnumerator<T>(T[]![]! strips, bool[]? reversed) -> System.Collections.Generic.IEnumerable<T>!
+static SA3D.Modeling.Strippify.TriangleStrippifier.JoinStrips<T>(T[]![]! strips, bool[]? reversed) -> T[]!
+static SA3D.Modeling.Structs.Bounds.FromPoints(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> SA3D.Modeling.Structs.Bounds
+static SA3D.Modeling.Structs.Bounds.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Structs.Bounds
+static SA3D.Modeling.Structs.Bounds.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Structs.Bounds
+static SA3D.Modeling.Structs.Color.Distance(SA3D.Modeling.Structs.Color from, SA3D.Modeling.Structs.Color to) -> float
+static SA3D.Modeling.Structs.Color.Lerp(SA3D.Modeling.Structs.Color from, SA3D.Modeling.Structs.Color to, float t) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator !=(SA3D.Modeling.Structs.Color l, SA3D.Modeling.Structs.Color r) -> bool
+static SA3D.Modeling.Structs.Color.operator *(float l, SA3D.Modeling.Structs.Color r) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator *(SA3D.Modeling.Structs.Color l, float r) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator +(SA3D.Modeling.Structs.Color l, SA3D.Modeling.Structs.Color r) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator -(SA3D.Modeling.Structs.Color l, SA3D.Modeling.Structs.Color r) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator /(SA3D.Modeling.Structs.Color l, float r) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.operator ==(SA3D.Modeling.Structs.Color l, SA3D.Modeling.Structs.Color r) -> bool
+static SA3D.Modeling.Structs.ColorIOTypeExtensions.GetByteSize(this SA3D.Modeling.Structs.ColorIOType type) -> int
+static SA3D.Modeling.Structs.DebugStringExtensions.DebugString(this float val) -> string!
+static SA3D.Modeling.Structs.DebugStringExtensions.DebugString(this System.Numerics.Quaternion quat) -> string!
+static SA3D.Modeling.Structs.DebugStringExtensions.DebugString(this System.Numerics.Vector2 vector) -> string!
+static SA3D.Modeling.Structs.DebugStringExtensions.DebugString(this System.Numerics.Vector3 vector) -> string!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueAdvanceDelegate<T>! read) -> T[]!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, uint elementByteSize, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>! read) -> T[]!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadArrayWithLUT<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueAdvanceDelegate<T>! read, SA3D.Common.Lookup.BaseLUT! lut) -> T[]!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadArrayWithLUT<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, uint elementByteSize, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>! read, SA3D.Common.Lookup.BaseLUT! lut) -> T[]!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadColor(this SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.ColorIOType type) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadColor(this SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.ColorIOType type) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadLabeledArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueAdvanceDelegate<T>! read, string! genPrefix, SA3D.Common.Lookup.BaseLUT! lut) -> SA3D.Common.Lookup.LabeledArray<T>!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadLabeledArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, uint elementByteSize, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>! read, string! genPrefix, SA3D.Common.Lookup.BaseLUT! lut) -> SA3D.Common.Lookup.LabeledArray<T>!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadLabeledReadOnlyArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueAdvanceDelegate<T>! read, string! genPrefix, SA3D.Common.Lookup.BaseLUT! lut) -> SA3D.Common.Lookup.LabeledReadOnlyArray<T>!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadLabeledReadOnlyArray<T>(this SA3D.Common.IO.EndianStackReader! reader, uint address, uint count, uint elementByteSize, SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>! read, string! genPrefix, SA3D.Common.Lookup.BaseLUT! lut) -> SA3D.Common.Lookup.LabeledReadOnlyArray<T>!
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadQuaternion(this SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> System.Numerics.Quaternion
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadQuaternion(this SA3D.Common.IO.EndianStackReader! reader, uint address) -> System.Numerics.Quaternion
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadVector2(this SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> System.Numerics.Vector2
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadVector2(this SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> System.Numerics.Vector2
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadVector3(this SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.EndianIOExtensions.ReadVector3(this SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteCollection<T>(this SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.ICollection<T>! values, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>! write) -> uint
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteCollection<T>(this SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.ICollection<T>! values, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>! write, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>? preWrite) -> uint
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteCollectionWithLUT<T>(this SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.ICollection<T>? values, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>! write, SA3D.Common.Lookup.BaseLUT! lut) -> uint
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteCollectionWithLUT<T>(this SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.ICollection<T>? values, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>! write, SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>? preWrite, SA3D.Common.Lookup.BaseLUT! lut) -> uint
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteColor(this SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.Color color, SA3D.Modeling.Structs.ColorIOType type) -> void
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteQuaternion(this SA3D.Common.IO.EndianStackWriter! writer, System.Numerics.Quaternion quaternion) -> void
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteVector2(this SA3D.Common.IO.EndianStackWriter! writer, System.Numerics.Vector2 vector2, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> void
+static SA3D.Modeling.Structs.EndianIOExtensions.WriteVector3(this SA3D.Common.IO.EndianStackWriter! writer, System.Numerics.Vector3 vector3, SA3D.Modeling.Structs.FloatIOType type = SA3D.Modeling.Structs.FloatIOType.Float) -> void
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetByteSize(this SA3D.Modeling.Structs.FloatIOType type) -> int
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetPrinter(this SA3D.Modeling.Structs.FloatIOType type) -> System.Func<float, string!>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetReader(this SA3D.Modeling.Structs.FloatIOType type) -> System.Func<SA3D.Common.IO.EndianStackReader!, uint, float>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetWriter(this SA3D.Modeling.Structs.FloatIOType type) -> System.Action<SA3D.Common.IO.EndianStackWriter!, float>!
+static SA3D.Modeling.Structs.MatrixUtilities.CreateRotationMatrix(System.Numerics.Vector3 rotation, bool ZYX) -> System.Numerics.Matrix4x4
+static SA3D.Modeling.Structs.MatrixUtilities.CreateTransformMatrix(System.Numerics.Vector3 position, System.Numerics.Quaternion rotation, System.Numerics.Vector3 scale) -> System.Numerics.Matrix4x4
+static SA3D.Modeling.Structs.MatrixUtilities.CreateTransformMatrix(System.Numerics.Vector3 position, System.Numerics.Vector3 rotation, System.Numerics.Vector3 scale, bool rotateZYX) -> System.Numerics.Matrix4x4
+static SA3D.Modeling.Structs.MatrixUtilities.GetNormalMatrix(this System.Numerics.Matrix4x4 matrix) -> System.Numerics.Matrix4x4
+static SA3D.Modeling.Structs.MatrixUtilities.ToCompatibleEuler(System.Numerics.Matrix4x4 matrix, System.Numerics.Vector3 previous, bool rotateZYX) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.MatrixUtilities.ToEuler(System.Numerics.Matrix4x4 matrix, bool rotateZYX) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.QuaternionUtilities.EulerToQuaternion(this System.Numerics.Vector3 rotation, bool rotateZYX) -> System.Numerics.Quaternion
+static SA3D.Modeling.Structs.QuaternionUtilities.QuaternionToCompatibleEuler(this System.Numerics.Quaternion rotation, System.Numerics.Vector3 previous, bool rotateZYX) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.QuaternionUtilities.QuaternionToEuler(this System.Numerics.Quaternion quaternion, bool rotateZYX) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.QuaternionUtilities.RealLerp(System.Numerics.Quaternion from, System.Numerics.Quaternion to, float t) -> System.Numerics.Quaternion
+static SA3D.Modeling.Structs.VectorUtilities.CalculateAverage(System.Numerics.Vector3[]! points) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.VectorUtilities.CalculateCenter(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.VectorUtilities.GreatestValue(this System.Numerics.Vector3 vector) -> float
+static SA3D.Modeling.Structs.VectorUtilities.NormalToXZAngles(this System.Numerics.Vector3 normal) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.VectorUtilities.XZAnglesToNormal(this System.Numerics.Vector3 rotation) -> System.Numerics.Vector3
+virtual SA3D.Modeling.Mesh.Attach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+virtual SA3D.Modeling.Mesh.Attach.CheckHasWeights() -> bool
+virtual SA3D.Modeling.Mesh.Attach.Clone() -> SA3D.Modeling.Mesh.Attach!
+virtual SA3D.Modeling.Mesh.Attach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
+virtual SA3D.Modeling.Mesh.Attach.RecalculateBounds() -> void
+virtual SA3D.Modeling.Mesh.Attach.WriteInternal(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.Clone() -> SA3D.Modeling.Mesh.Chunk.PolyChunk!
