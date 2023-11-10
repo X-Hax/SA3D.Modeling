@@ -91,6 +91,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <returns>The poly chunk that was read.</returns>
 		public static PolyChunk Read(EndianStackReader reader, ref uint address, PointerLUT lut)
 		{
+			uint chunkAddress = address;
 			ushort header = reader.ReadUShort(address);
 			PolyChunkType type = (PolyChunkType)(header & 0xFF);
 			byte attribs = (byte)(header >> 8);
@@ -105,23 +106,23 @@ namespace SA3D.Modeling.Mesh.Chunk
 			{
 				case PolyChunkType.BlendAlpha:
 					chunk = new BlendAlphaChunk();
-					address += 2;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.MipmapDistanceMultiplier:
 					chunk = new MipmapDistanceMultiplierChunk();
-					address += 2;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.SpecularExponent:
 					chunk = new SpecularExponentChunk();
-					address += 2;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.CacheList:
 					chunk = new CacheListChunk();
-					address += 2;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.DrawList:
 					chunk = new DrawListChunk();
-					address += 2;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.TextureID:
 				case PolyChunkType.TextureID2:
@@ -146,7 +147,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 					break;
 				case PolyChunkType.Material_Bump:
 					chunk = MaterialBumpChunk.Read(reader, address);
-					address += 16;
+					address += chunk.ByteSize;
 					break;
 				case PolyChunkType.Volume_Polygon3:
 				case PolyChunkType.Volume_Polygon4:
@@ -174,7 +175,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 
 			chunk.Attributes = attribs;
-			lut.PolyChunks.Add(address, chunk);
+			lut.PolyChunks.Add(chunkAddress, chunk);
 			return chunk;
 		}
 
