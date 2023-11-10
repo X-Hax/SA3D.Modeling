@@ -162,15 +162,15 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// </summary>
 		/// <param name="writer">The writer to write to.</param>
 		/// <param name="meshes">The meshes to write.</param>
-		/// <returns></returns>
-		public static byte[] WriteArrayContents(EndianStackWriter writer, GCMesh[] meshes)
+		/// <returns>The pointers and array sizes of the written contents.</returns>
+		public static uint[] WriteArrayContents(EndianStackWriter writer, GCMesh[] meshes)
 		{
-			uint[] headerData = new uint[meshes.Length * 4];
+			uint[] result = new uint[meshes.Length * 4];
 
 			for(int i = 0, h = 0; i < meshes.Length; i++, h += 4)
 			{
-				headerData[h] = meshes[i].WriteParameters(writer);
-				headerData[h + 1] = (uint)meshes[i].Parameters.Length;
+				result[h] = meshes[i].WriteParameters(writer);
+				result[h + 1] = (uint)meshes[i].Parameters.Length;
 			}
 
 			writer.Align(0x20);
@@ -180,12 +180,9 @@ namespace SA3D.Modeling.Mesh.Gamecube
 			for(int i = 0, h = 2; i < meshes.Length; i++, h += 4)
 			{
 				uint polyAddress = meshes[i].WritePolygons(writer, ref indexFormat);
-				headerData[h] = polyAddress;
-				headerData[h + 1] = writer.PointerPosition - polyAddress;
+				result[h] = polyAddress;
+				result[h + 1] = writer.PointerPosition - polyAddress;
 			}
-
-			byte[] result = new byte[headerData.Length * sizeof(uint)];
-			System.Buffer.BlockCopy(headerData, 0, result, 0, result.Length);
 
 			return result;
 		}

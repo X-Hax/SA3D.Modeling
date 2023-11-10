@@ -1775,7 +1775,7 @@ static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator !=(SA3D.Modeling.Mesh.Gamec
 static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator ==(SA3D.Modeling.Mesh.Gamecube.GCCorner left, SA3D.Modeling.Mesh.Gamecube.GCCorner right) -> bool
 static SA3D.Modeling.Mesh.Gamecube.GCMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, ref SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCMesh!
 static SA3D.Modeling.Mesh.Gamecube.GCMesh.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, int count) -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
-static SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteArrayContents(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! meshes) -> byte[]!
+static SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteArrayContents(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! meshes) -> uint[]!
 static SA3D.Modeling.Mesh.Gamecube.GCPolygon.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCPolygon
 static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateColor0Set(SA3D.Modeling.Structs.Color[]! colors) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
 static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateNormalSet(System.Numerics.Vector3[]! normals) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!

@@ -136,21 +136,27 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		{
 			uint vtxAddr = GCVertexSet.WriteArray(writer, VertexData.Values.ToArray());
 
-			byte[] opaqueMeshStructs = GCMesh.WriteArrayContents(writer, OpaqueMeshes);
-			byte[] transparentMeshStructs = GCMesh.WriteArrayContents(writer, TransparentMeshes);
+			uint[] opaqueMeshStructs = GCMesh.WriteArrayContents(writer, OpaqueMeshes);
+			uint[] transparentMeshStructs = GCMesh.WriteArrayContents(writer, TransparentMeshes);
 
 			uint opaqueAddress = 0;
 			if(opaqueMeshStructs.Length > 0)
 			{
 				opaqueAddress = writer.PointerPosition;
-				writer.Write(opaqueMeshStructs);
+				foreach(uint i in opaqueMeshStructs)
+				{
+					writer.WriteUInt(i);
+				}
 			}
 
 			uint transparentAddress = 0;
 			if(transparentMeshStructs.Length > 0)
 			{
 				transparentAddress = writer.PointerPosition;
-				writer.Write(transparentMeshStructs);
+				foreach(uint i in transparentMeshStructs)
+				{
+					writer.WriteUInt(i);
+				}
 			}
 
 			uint address = writer.PointerPosition;
