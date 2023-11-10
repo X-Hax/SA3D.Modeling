@@ -38,12 +38,12 @@ namespace SA3D.Modeling.Animation.Utilities
 
 		public static uint[] WriteVector3ArrayData(this EndianStackWriter writer, SortedDictionary<uint, ILabeledArray<Vector3>> dict, PointerLUT lut)
 		{
-			uint[] result = new uint[dict.Count];
+			uint[] result = new uint[dict.Count * 2];
 			int i = 0;
 
 			foreach(KeyValuePair<uint, ILabeledArray<Vector3>> pair in dict)
 			{
-				result[i] = pair.Key;
+				result[i++] = pair.Key;
 				result[i++] = lut.GetAddAddress(pair.Value, (array) =>
 				{
 					uint result = writer.PointerPosition;
@@ -55,7 +55,6 @@ namespace SA3D.Modeling.Animation.Utilities
 
 					return result;
 				});
-				i++;
 			}
 
 			return result;
