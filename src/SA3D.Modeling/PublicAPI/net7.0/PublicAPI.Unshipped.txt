@@ -242,13 +242,13 @@ SA3D.Modeling.File.AnimationFile
 SA3D.Modeling.File.AnimationFile.Animation.get -> SA3D.Modeling.Animation.Motion!
 SA3D.Modeling.File.AnimationFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
-SA3D.Modeling.File.AnimationFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.AnimationFile.WriteToBytes() -> byte[]!
 SA3D.Modeling.File.AnimationFile.WriteToFile(string! filepath) -> void
 SA3D.Modeling.File.LevelFile
 SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.LandTable!
 SA3D.Modeling.File.LevelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.LevelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
-SA3D.Modeling.File.LevelFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.LevelFile.WriteToBytes() -> byte[]!
 SA3D.Modeling.File.LevelFile.WriteToFile(string! filepath) -> void
 SA3D.Modeling.File.MetaBlockType
 SA3D.Modeling.File.MetaBlockType.ActionName = 1094931534 -> SA3D.Modeling.File.MetaBlockType
@@ -284,7 +284,7 @@ SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.ModelFile.Model.get -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.File.ModelFile.NJFile.get -> bool
 SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
-SA3D.Modeling.File.ModelFile.WriteToData() -> byte[]!
+SA3D.Modeling.File.ModelFile.WriteToBytes() -> byte[]!
 SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath) -> void
 SA3D.Modeling.Mesh.Attach
 SA3D.Modeling.Mesh.Attach.Attach() -> void
@@ -1689,13 +1689,13 @@ static SA3D.Modeling.File.AnimationFile.CheckIsAnimationFile(SA3D.Common.IO.Endi
 static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.AnimationFile!
 static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.AnimationFile!
 static SA3D.Modeling.File.AnimationFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
-static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.AnimationFile!
-static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.AnimationFile!
-static SA3D.Modeling.File.AnimationFile.ReadFromData(byte[]! data, uint address, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromBytes(byte[]! data) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromBytes(byte[]! data, uint address) -> SA3D.Modeling.File.AnimationFile!
+static SA3D.Modeling.File.AnimationFile.ReadFromBytes(byte[]! data, uint address, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
 static SA3D.Modeling.File.AnimationFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.AnimationFile!
 static SA3D.Modeling.File.AnimationFile.ReadFromFile(string! filepath, uint? nodeCount, bool shortRot) -> SA3D.Modeling.File.AnimationFile!
 static SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> void
-static SA3D.Modeling.File.AnimationFile.WriteToData(SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
+static SA3D.Modeling.File.AnimationFile.WriteToBytes(SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
 static SA3D.Modeling.File.AnimationFile.WriteToFile(string! filepath, SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData? metaData = null) -> void
 static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(byte[]! data) -> bool
 static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(byte[]! data, uint address) -> bool
@@ -1703,11 +1703,11 @@ static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(SA3D.Common.IO.EndianStackR
 static SA3D.Modeling.File.LevelFile.CheckIsLevelFile(SA3D.Common.IO.EndianStackReader! reader, uint address) -> bool
 static SA3D.Modeling.File.LevelFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.LevelFile!
 static SA3D.Modeling.File.LevelFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.LevelFile!
-static SA3D.Modeling.File.LevelFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.LevelFile!
-static SA3D.Modeling.File.LevelFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.ReadFromBytes(byte[]! data) -> SA3D.Modeling.File.LevelFile!
+static SA3D.Modeling.File.LevelFile.ReadFromBytes(byte[]! data, uint address) -> SA3D.Modeling.File.LevelFile!
 static SA3D.Modeling.File.LevelFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.LevelFile!
 static SA3D.Modeling.File.LevelFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> void
-static SA3D.Modeling.File.LevelFile.WriteToData(SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
+static SA3D.Modeling.File.LevelFile.WriteToBytes(SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> byte[]!
 static SA3D.Modeling.File.LevelFile.WriteToFile(string! filepath, SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData? metaData = null) -> void
 static SA3D.Modeling.File.MetaData.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, int version, bool hasAnimMorphFiles) -> SA3D.Modeling.File.MetaData!
 static SA3D.Modeling.File.ModelFile.CheckIsModelFile(byte[]! data) -> bool
@@ -1716,11 +1716,11 @@ static SA3D.Modeling.File.ModelFile.CheckIsModelFile(SA3D.Common.IO.EndianStackR
 static SA3D.Modeling.File.ModelFile.CheckIsModelFile(SA3D.Common.IO.EndianStackReader! reader, uint address) -> bool
 static SA3D.Modeling.File.ModelFile.Read(SA3D.Common.IO.EndianStackReader! reader) -> SA3D.Modeling.File.ModelFile!
 static SA3D.Modeling.File.ModelFile.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.ModelFile!
-static SA3D.Modeling.File.ModelFile.ReadFromData(byte[]! data) -> SA3D.Modeling.File.ModelFile!
-static SA3D.Modeling.File.ModelFile.ReadFromData(byte[]! data, uint address) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.ReadFromBytes(byte[]! data) -> SA3D.Modeling.File.ModelFile!
+static SA3D.Modeling.File.ModelFile.ReadFromBytes(byte[]! data, uint address) -> SA3D.Modeling.File.ModelFile!
 static SA3D.Modeling.File.ModelFile.ReadFromFile(string! filepath) -> SA3D.Modeling.File.ModelFile!
 static SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
-static SA3D.Modeling.File.ModelFile.WriteToData(SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> byte[]!
+static SA3D.Modeling.File.ModelFile.WriteToBytes(SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> byte[]!
 static SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
 static SA3D.Modeling.Mesh.Attach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!
 static SA3D.Modeling.Mesh.Attach.ReadBuffer(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!

@@ -89,7 +89,7 @@ namespace SA3D.Modeling.File
 		/// <returns>The level file that was read.</returns>
 		public static LevelFile ReadFromFile(string filepath)
 		{
-			return ReadFromData(System.IO.File.ReadAllBytes(filepath));
+			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath));
 		}
 
 		/// <summary>
@@ -97,9 +97,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <param name="data">The data to read.</param>
 		/// <returns>The level file that was read.</returns>
-		public static LevelFile ReadFromData(byte[] data)
+		public static LevelFile ReadFromBytes(byte[] data)
 		{
-			return ReadFromData(data, 0);
+			return ReadFromBytes(data, 0);
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace SA3D.Modeling.File
 		/// <param name="data">The data to read.</param>
 		/// <param name="address">Address at which to start reading.</param>
 		/// <returns>The level file that was read.</returns>
-		public static LevelFile ReadFromData(byte[] data, uint address)
+		public static LevelFile ReadFromBytes(byte[] data, uint address)
 		{
 			using(EndianStackReader reader = new(data))
 			{
@@ -186,9 +186,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public byte[] WriteToData()
+		public byte[] WriteToBytes()
 		{
-			return WriteToData(Level, MetaData);
+			return WriteToBytes(Level, MetaData);
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace SA3D.Modeling.File
 		/// <param name="metaData">The metadata to include.</param>
 		/// <returns>The written byte data.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static byte[] WriteToData(LandTable level, MetaData? metaData = null)
+		public static byte[] WriteToBytes(LandTable level, MetaData? metaData = null)
 		{
 			using(MemoryStream stream = new())
 			{

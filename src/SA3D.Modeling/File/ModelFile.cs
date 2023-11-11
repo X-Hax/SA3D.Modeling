@@ -109,7 +109,7 @@ namespace SA3D.Modeling.File
 		/// <returns>The model file that was read.</returns>
 		public static ModelFile ReadFromFile(string filepath)
 		{
-			return ReadFromData(System.IO.File.ReadAllBytes(filepath));
+			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath));
 		}
 
 		/// <summary>
@@ -117,9 +117,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <param name="data">Data to read.</param>
 		/// <returns>The model file that was read.</returns>
-		public static ModelFile ReadFromData(byte[] data)
+		public static ModelFile ReadFromBytes(byte[] data)
 		{
-			return ReadFromData(data, 0);
+			return ReadFromBytes(data, 0);
 		}
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace SA3D.Modeling.File
 		/// <param name="data">The data to read from.</param>
 		/// <param name="address">The address at which to start reading.</param>
 		/// <returns>The model file that was read.</returns>
-		public static ModelFile ReadFromData(byte[] data, uint address)
+		public static ModelFile ReadFromBytes(byte[] data, uint address)
 		{
 			using(EndianStackReader reader = new(data))
 			{
@@ -271,9 +271,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <exception cref="InvalidOperationException"></exception>
 		/// <returns>The written byte data.</returns>
-		public byte[] WriteToData()
+		public byte[] WriteToBytes()
 		{
-			return WriteToData(Model, NJFile, MetaData, Format);
+			return WriteToBytes(Model, NJFile, MetaData, Format);
 		}
 
 		/// <summary>
@@ -314,7 +314,7 @@ namespace SA3D.Modeling.File
 		/// <param name="format">The format to write in.</param>
 		/// <exception cref="InvalidOperationException"></exception>
 		/// <returns>The written byte data.</returns>
-		public static byte[] WriteToData(Node model, bool nj = false, MetaData? metaData = null, ModelFormat? format = null)
+		public static byte[] WriteToBytes(Node model, bool nj = false, MetaData? metaData = null, ModelFormat? format = null)
 		{
 			using(MemoryStream stream = new())
 			{

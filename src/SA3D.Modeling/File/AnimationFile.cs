@@ -79,7 +79,7 @@ namespace SA3D.Modeling.File
 		/// <returns>The animation file that was read.</returns>
 		public static AnimationFile ReadFromFile(string filepath)
 		{
-			return ReadFromData(System.IO.File.ReadAllBytes(filepath), 0);
+			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath), 0);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace SA3D.Modeling.File
 		/// <returns>The animation file that was read.</returns>
 		public static AnimationFile ReadFromFile(string filepath, uint? nodeCount, bool shortRot)
 		{
-			return ReadFromData(System.IO.File.ReadAllBytes(filepath), 0, nodeCount, shortRot);
+			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath), 0, nodeCount, shortRot);
 		}
 
 		/// <summary>
@@ -99,9 +99,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <param name="data">The data to read.</param>
 		/// <returns>The animation file that was read.</returns>
-		public static AnimationFile ReadFromData(byte[] data)
+		public static AnimationFile ReadFromBytes(byte[] data)
 		{
-			return ReadFromData(data, 0, null, false);
+			return ReadFromBytes(data, 0, null, false);
 		}
 
 		/// <summary>
@@ -110,9 +110,9 @@ namespace SA3D.Modeling.File
 		/// <param name="data">The data to read.</param>
 		/// <param name="address">Address at which to start reading.</param>
 		/// <returns>The animation file that was read.</returns>
-		public static AnimationFile ReadFromData(byte[] data, uint address)
+		public static AnimationFile ReadFromBytes(byte[] data, uint address)
 		{
-			return ReadFromData(data, address, null, false);
+			return ReadFromBytes(data, address, null, false);
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace SA3D.Modeling.File
 		/// <param name="nodeCount">Number of nodes in the targeted model node tree. <br/> Only acts as fallback, in case the file does not contain the value.</param>
 		/// <param name="shortRot">Whether euler rotations are stored in 16-bit instead of 32-bit. <br/> Only acts as fallback, in case the file does not contain the value.</param>
 		/// <returns>The animation file that was read.</returns>
-		public static AnimationFile ReadFromData(byte[] data, uint address, uint? nodeCount, bool shortRot)
+		public static AnimationFile ReadFromBytes(byte[] data, uint address, uint? nodeCount, bool shortRot)
 		{
 			using(EndianStackReader reader = new(data))
 			{
@@ -266,9 +266,9 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public byte[] WriteToData()
+		public byte[] WriteToBytes()
 		{
-			return WriteToData(Animation, MetaData);
+			return WriteToBytes(Animation, MetaData);
 		}
 
 		/// <summary>
@@ -305,7 +305,7 @@ namespace SA3D.Modeling.File
 		/// <param name="metaData">The metadata to include.</param>
 		/// <returns>The written byte data.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static byte[] WriteToData(Motion animation, MetaData? metaData = null)
+		public static byte[] WriteToBytes(Motion animation, MetaData? metaData = null)
 		{
 			using(MemoryStream stream = new())
 			{
