@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Matrix slot to use when using <see cref="GCTexCoordType.Matrix2x4"/> or <see cref="GCTexCoordType.Matrix3x4"/>.
 	/// </summary>
-	public enum GCTexcoordMatrix
+	public enum GCTexCoordMatrix
 	{
 		/// <summary>
 		/// First slot.

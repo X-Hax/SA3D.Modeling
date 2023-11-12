@@ -15,7 +15,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 			TexCoordID = GCTexCoordID.TexCoord0,
 			TexCoordType = GCTexCoordType.Matrix2x4,
 			TexCoordSource = GCTexCoordSource.TexCoord0,
-			MatrixID = GCTexcoordMatrix.Identity
+			MatrixID = GCTexCoordMatrix.Identity
 		};
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 			TexCoordID = GCTexCoordID.TexCoord0,
 			TexCoordType = GCTexCoordType.Matrix3x4,
 			TexCoordSource = GCTexCoordSource.Normal,
-			MatrixID = GCTexcoordMatrix.Matrix4
+			MatrixID = GCTexCoordMatrix.Matrix4
 		};
 
 
@@ -67,9 +67,9 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <summary>
 		/// Matrix slot to use when using <see cref="GCTexCoordType.Matrix2x4"/> or <see cref="GCTexCoordType.Matrix3x4"/>.
 		/// </summary>
-		public GCTexcoordMatrix MatrixID
+		public GCTexCoordMatrix MatrixID
 		{
-			readonly get => (GCTexcoordMatrix)(Data & 0xF);
+			readonly get => (GCTexCoordMatrix)(Data & 0xF);
 			set => Data = (Data & 0xFFFFFFF0) | (uint)value;
 		}
 

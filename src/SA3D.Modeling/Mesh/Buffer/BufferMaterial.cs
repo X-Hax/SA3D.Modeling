@@ -30,7 +30,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			GCTexCoordID = GCTexCoordID.TexCoord0,
 			GCTexCoordType = GCTexCoordType.Matrix2x4,
 			GCTexCoordSource = GCTexCoordSource.TexCoord0,
-			GCMatrixID = GCTexcoordMatrix.Identity,
+			GCMatrixID = GCTexCoordMatrix.Identity,
 		};
 
 		#region Storage properties
@@ -283,9 +283,9 @@ namespace SA3D.Modeling.Mesh.Buffer
 		/// <summary>
 		/// GC Specific: The ID of the matrix to use for generating the texture coordinates
 		/// </summary>
-		public GCTexcoordMatrix GCMatrixID
+		public GCTexCoordMatrix GCMatrixID
 		{
-			readonly get => (GCTexcoordMatrix)(GamecubeData & 0xF);
+			readonly get => (GCTexCoordMatrix)(GamecubeData & 0xF);
 			set
 			{
 				GamecubeData &= 0xFFFFFFF0;
