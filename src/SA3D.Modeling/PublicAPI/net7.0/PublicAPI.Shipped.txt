@@ -484,6 +484,7 @@ SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.get -> bool
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.set -> void
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.get -> uint
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.set -> void
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.get -> byte
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.set -> void
@@ -976,6 +977,18 @@ SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord6 = 6 -> SA3D.Modeling.Me
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordMax = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordNull = 255 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Identity = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix0 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix1 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix2 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix3 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix4 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix5 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix6 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix8 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix9 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Binormal = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
 SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord0 = 12 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
@@ -1156,6 +1169,7 @@ SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.get -> uint
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.GCTexCoordParameter() -> void
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.set -> void
