@@ -37,10 +37,19 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 			set => Data = (Data & 0xFFFFF8FF) | (((uint)value & 7) << 8);
 		}
 
+		/// <summary>
+		/// Whether to use blending.
+		/// </summary>
+		public bool UseAlpha
+		{
+			readonly get => (Data & 0x4000u) != 0;
+			set => Data = (Data & ~0x4000u) | (value ? 0x4000u : 0);
+		}
+
 		/// <inheritdoc/>
 		public override readonly string ToString()
 		{
-			return $"Blendalpha: {SourceAlpha} -> {DestinationAlpha}";
+			return $"Blendalpha: {UseAlpha} / {SourceAlpha} -> {DestinationAlpha}";
 		}
 	}
 }

@@ -160,13 +160,15 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 
 					if(first
+						|| activeMaterial.UseAlpha != material.UseAlpha
 						|| activeMaterial.SourceBlendMode != material.SourceBlendMode
 						|| activeMaterial.DestinationBlendmode != material.DestinationBlendmode)
 					{
 						parameters.Add(new GCBlendAlphaParameter()
 						{
 							SourceAlpha = material.SourceBlendMode,
-							DestinationAlpha = material.DestinationBlendmode
+							DestinationAlpha = material.DestinationBlendmode,
+							UseAlpha = material.UseAlpha
 						});
 					}
 
@@ -428,6 +430,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						case GCBlendAlphaParameter blendAlphaParam:
 							material.SourceBlendMode = blendAlphaParam.SourceAlpha;
 							material.DestinationBlendmode = blendAlphaParam.DestinationAlpha;
+							material.UseAlpha = blendAlphaParam.UseAlpha;
 							break;
 
 						case GCAmbientColorParameter ambientColorParam:
@@ -534,7 +537,6 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			material = new(BufferMaterial.DefaultValues)
 			{
-				NoSpecular = true,
 				NoLighting = colors != null
 			};
 
@@ -545,10 +547,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			material = new(BufferMaterial.DefaultValues)
 			{
-				NoSpecular = true,
-				NoLighting = colors != null,
-				UseAlpha = true,
-				BackfaceCulling = true
+				NoLighting = colors != null
 			};
 
 			foreach(GCMesh m in attach.TransparentMeshes)
