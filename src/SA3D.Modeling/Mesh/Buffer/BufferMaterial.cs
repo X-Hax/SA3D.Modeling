@@ -1,13 +1,14 @@
 ﻿using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Gamecube.Enums;
 using SA3D.Modeling.Structs;
+using System;
 
 namespace SA3D.Modeling.Mesh.Buffer
 {
 	/// <summary>
 	/// Rendering properties for a buffer mesh.
 	/// </summary>
-	public struct BufferMaterial
+	public struct BufferMaterial : IEquatable<BufferMaterial>
 	{
 		/// <summary>
 		/// Size of the structure in bytes.
@@ -389,6 +390,69 @@ namespace SA3D.Modeling.Mesh.Buffer
 			result.TextureFiltering = (FilterMode)(attributes >> 22);
 
 			return result;
+		}
+
+
+		/// <inheritdoc/>
+		public override readonly bool Equals(object? obj)
+		{
+			return obj is BufferMaterial material &&
+				   Diffuse.Equals(material.Diffuse) &&
+				   Specular.Equals(material.Specular) &&
+				   SpecularExponent == material.SpecularExponent &&
+				   Ambient.Equals(material.Ambient) &&
+				   TextureIndex == material.TextureIndex &&
+				   TextureFiltering == material.TextureFiltering &&
+				   MipmapDistanceMultiplier == material.MipmapDistanceMultiplier &&
+				   SourceBlendMode == material.SourceBlendMode &&
+				   DestinationBlendmode == material.DestinationBlendmode &&
+				   Attributes == material.Attributes &&
+				   GamecubeData == material.GamecubeData;
+		}
+
+		/// <inheritdoc/>
+		public override readonly int GetHashCode()
+		{
+			HashCode hash = new();
+			hash.Add(Diffuse);
+			hash.Add(Specular);
+			hash.Add(SpecularExponent);
+			hash.Add(Ambient);
+			hash.Add(TextureIndex);
+			hash.Add(TextureFiltering);
+			hash.Add(MipmapDistanceMultiplier);
+			hash.Add(SourceBlendMode);
+			hash.Add(DestinationBlendmode);
+			hash.Add(Attributes);
+			hash.Add(GamecubeData);
+			return hash.ToHashCode();
+		}
+
+		readonly bool IEquatable<BufferMaterial>.Equals(BufferMaterial other)
+		{
+			return Equals(other);
+		}
+
+		/// <summary>
+		/// Compares two materials for equality.
+		/// </summary>
+		/// <param name="l">Lefthand materials.</param>
+		/// <param name="r">Righthand materials.</param>
+		/// <returns>Whether the two materials are equal.</returns>
+		public static bool operator ==(BufferMaterial l, BufferMaterial r)
+		{
+			return l.Equals(r);
+		}
+
+		/// <summary>
+		/// Compares two materials for inequality.
+		/// </summary>
+		/// <param name="l">Lefthand materials.</param>
+		/// <param name="r">Righthand materials.</param>
+		/// <returns>Whether the two materials are inequal.</returns>
+		public static bool operator !=(BufferMaterial l, BufferMaterial r)
+		{
+			return !l.Equals(r);
 		}
 	}
 }
