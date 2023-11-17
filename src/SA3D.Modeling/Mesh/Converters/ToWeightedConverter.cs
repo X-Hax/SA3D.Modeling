@@ -1,5 +1,4 @@
-﻿using SA3D.Common;
-using SA3D.Modeling.Mesh.Buffer;
+﻿using SA3D.Modeling.Mesh.Buffer;
 using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData;
 using System;
@@ -408,45 +407,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				dependingRelativeNodeIndices = new(absoluteDepends.Select(x => x - rootNodeIndex));
 
 				vertices = EvaluateWeightVertices(dependingMeshNodeIndices, rootNodeIndex);
-
-				label = "";
-				string[] attachLabels = absoluteDepends.Select(x => _nodes[x].Attach!.Label).ToArray();
-				int longestLabel = attachLabels.Min(x => x.Length);
-				for(int i = 0; i < longestLabel; i++)
-				{
-					char? character = attachLabels[0][i];
-					for(int j = 1; j < attachLabels.Length; j++)
-					{
-						if(attachLabels[j][i] != character)
-						{
-							character = null;
-							break;
-						}
-					}
-
-					if(character == null)
-					{
-						break;
-					}
-
-					label += character;
-				}
-
-				if(label.Length == 0)
-				{
-					label = "Converted_" + StringExtensions.GenerateIdentifier();
-				}
-				else if(_output.Any(x => x.Label == label))
-				{
-					string baseLabel = label;
-					label += "_2";
-					int number = 3;
-					while(_output.Any(x => x.Label == label))
-					{
-						label = baseLabel + "_" + number;
-						number += 1;
-					}
-				}
+				label = _nodes[absoluteDepends.Max].Attach!.Label;
 			}
 
 			(BufferCorner[][] triangleSets, BufferMaterial[] materials, bool hasColors) = EvaluatePolygons();
