@@ -297,6 +297,11 @@ namespace SA3D.Modeling.Mesh.Buffer
 		#endregion
 
 		/// <summary>
+		/// Empty default constructor.
+		/// </summary>
+		public BufferMaterial() { }
+
+		/// <summary>
 		/// Creates a new buffer material from a template.
 		/// </summary>
 		/// <param name="template">The template to use.</param>
