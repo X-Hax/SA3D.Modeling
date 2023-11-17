@@ -28,6 +28,8 @@ override SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.ToString() -> string!
 override SA3D.Modeling.Mesh.Buffer.BufferCorner.Equals(object? obj) -> bool
 override SA3D.Modeling.Mesh.Buffer.BufferCorner.GetHashCode() -> int
 override SA3D.Modeling.Mesh.Buffer.BufferCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Buffer.BufferMaterial.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Buffer.BufferMaterial.GetHashCode() -> int
 override SA3D.Modeling.Mesh.Buffer.BufferMesh.ToString() -> string!
 override SA3D.Modeling.Mesh.Buffer.BufferVertex.Equals(object? obj) -> bool
 override SA3D.Modeling.Mesh.Buffer.BufferVertex.GetHashCode() -> int
@@ -100,6 +102,8 @@ override SA3D.Modeling.Mesh.Weighted.WeightedVertex.ToString() -> string!
 override SA3D.Modeling.ObjectData.LandEntry.ToString() -> string!
 override SA3D.Modeling.ObjectData.LandTable.ToString() -> string!
 override SA3D.Modeling.ObjectData.Node.ToString() -> string!
+override SA3D.Modeling.Structs.Bounds.Equals(object? obj) -> bool
+override SA3D.Modeling.Structs.Bounds.GetHashCode() -> int
 override SA3D.Modeling.Structs.Bounds.ToString() -> string!
 override SA3D.Modeling.Structs.Color.Equals(object? obj) -> bool
 override SA3D.Modeling.Structs.Color.GetHashCode() -> int
@@ -1130,6 +1134,8 @@ SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.GCBlendAlphaParamet
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.UseAlpha.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.get -> uint
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.set -> void
@@ -1736,6 +1742,8 @@ static SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Read(SA3D.Common.IO.Endian
 static SA3D.Modeling.Mesh.Buffer.BufferCorner.operator !=(SA3D.Modeling.Mesh.Buffer.BufferCorner l, SA3D.Modeling.Mesh.Buffer.BufferCorner r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferCorner.operator ==(SA3D.Modeling.Mesh.Buffer.BufferCorner l, SA3D.Modeling.Mesh.Buffer.BufferCorner r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferCorner.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, bool hasColor) -> SA3D.Modeling.Mesh.Buffer.BufferCorner
+static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator !=(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
+static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator ==(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.Optimize(System.Collections.Generic.IList<SA3D.Modeling.Mesh.Buffer.BufferMesh!>! input) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMesh!
@@ -1811,6 +1819,8 @@ static SA3D.Modeling.ObjectData.Node.Read(SA3D.Common.IO.EndianStackReader! read
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinedStripEnumerator<T>(T[]![]! strips, bool[]? reversed) -> System.Collections.Generic.IEnumerable<T>!
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinStrips<T>(T[]![]! strips, bool[]? reversed) -> T[]!
 static SA3D.Modeling.Structs.Bounds.FromPoints(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> SA3D.Modeling.Structs.Bounds
+static SA3D.Modeling.Structs.Bounds.operator !=(SA3D.Modeling.Structs.Bounds l, SA3D.Modeling.Structs.Bounds r) -> bool
+static SA3D.Modeling.Structs.Bounds.operator ==(SA3D.Modeling.Structs.Bounds l, SA3D.Modeling.Structs.Bounds r) -> bool
 static SA3D.Modeling.Structs.Bounds.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Structs.Bounds
 static SA3D.Modeling.Structs.Bounds.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Structs.Bounds
 static SA3D.Modeling.Structs.Color.Distance(SA3D.Modeling.Structs.Color from, SA3D.Modeling.Structs.Color to) -> float
