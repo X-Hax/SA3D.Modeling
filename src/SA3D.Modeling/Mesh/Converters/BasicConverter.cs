@@ -306,13 +306,54 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					BufferCorner[] strip = new BufferCorner[poly.Indices.Length];
 
-					for(int i = 0; i < strip.Length; i++, absoluteIndex++)
+					if(mesh.PolygonType == BasicPolygonType.NPoly)
 					{
-						strip[i] = new BufferCorner(
-							poly.Indices[i],
+						strip[0] = new BufferCorner(
+							poly.Indices[0],
 							mesh.Colors?[absoluteIndex] ?? BufferMesh.DefaultColor,
 							mesh.Texcoords?[absoluteIndex] ?? Vector2.Zero);
+
+						ushort beginIndex = 1;
+						ushort endIndex = (ushort)(poly.Indices.Length - 1);
+						bool fromEnd = false;
+
+						for(int i = 1; i < poly.Indices.Length; i++)
+						{
+							ushort stripIndex;
+
+							if(fromEnd)
+							{
+								stripIndex = endIndex;
+								endIndex--;
+							}
+							else
+							{
+								stripIndex = beginIndex;
+								beginIndex++;
+							}
+
+							fromEnd = !fromEnd;
+
+							strip[i] = new BufferCorner(
+								poly.Indices[stripIndex],
+								mesh.Colors?[absoluteIndex + stripIndex] ?? BufferMesh.DefaultColor,
+								mesh.Texcoords?[absoluteIndex + stripIndex] ?? Vector2.Zero);
+						}
+
+						absoluteIndex += strip.Length;
 					}
+					else
+					{
+						for(int i = 0; i < strip.Length; i++, absoluteIndex++)
+						{
+							strip[i] = new BufferCorner(
+								poly.Indices[i],
+								mesh.Colors?[absoluteIndex] ?? BufferMesh.DefaultColor,
+								mesh.Texcoords?[absoluteIndex] ?? Vector2.Zero);
+						}
+					}
+
+
 
 					strips[stripNum] = strip;
 					reversed[stripNum] = poly.Reversed;
