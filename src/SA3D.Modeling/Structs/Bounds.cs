@@ -1,4 +1,5 @@
 ﻿using SA3D.Common.IO;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -7,7 +8,7 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// Bounding sphere determining the bounds of an object in 3D space.
 	/// </summary>
-	public struct Bounds
+	public struct Bounds : IEquatable<Bounds>
 	{
 		private Vector3 _position;
 
@@ -120,6 +121,47 @@ namespace SA3D.Modeling.Structs
 		}
 
 		#endregion
+
+		/// <inheritdoc/>
+		public override readonly bool Equals(object? obj)
+		{
+			return obj is Bounds bounds &&
+				   Position.Equals(bounds.Position) &&
+				   Radius == bounds.Radius;
+		}
+
+		/// <inheritdoc/>
+		public override readonly int GetHashCode()
+		{
+			return HashCode.Combine(Position, Radius);
+		}
+
+		readonly bool IEquatable<Bounds>.Equals(Bounds other)
+		{
+			return Equals(other);
+		}
+
+		/// <summary>
+		/// Compares the components of 2 bounds for equality.
+		/// </summary>
+		/// <param name="l">Lefthand bounds.</param>
+		/// <param name="r">Righthand bounds.</param>
+		/// <returns>Whether the boundss are equal.</returns>
+		public static bool operator ==(Bounds l, Bounds r)
+		{
+			return l.Equals(r);
+		}
+
+		/// <summary>
+		/// Compares the components of 2 bounds for inequality.
+		/// </summary>
+		/// <param name="l">Lefthand bounds.</param>
+		/// <param name="r">Righthand bounds.</param>
+		/// <returns>Whether the boundss are inequal.</returns>
+		public static bool operator !=(Bounds l, Bounds r)
+		{
+			return !l.Equals(r);
+		}
 
 		/// <inheritdoc/>
 		public override readonly string ToString()
