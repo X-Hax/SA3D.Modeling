@@ -1205,8 +1205,6 @@ SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.get -> uint
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Formatting.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Formatting.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.GCVertexFormatParameter() -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexDataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType

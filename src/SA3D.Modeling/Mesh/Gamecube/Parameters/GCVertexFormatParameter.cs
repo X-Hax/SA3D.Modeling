@@ -41,7 +41,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		}
 
 		/// <summary>
-		/// Formatting info.
+		/// Additional attributes.
 		/// </summary>
 		public byte Attributes
 		{
