@@ -21,6 +21,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		{
 			DiffuseColor = Color.ColorWhite,
 			SpecularColor = Color.ColorWhite,
+			SpecularExponent = 11,
 			MipmapDistanceMultiplier = 1,
 			FilterMode = FilterMode.Bilinear,
 			UseTexture = true,
