@@ -1448,7 +1448,6 @@ SA3D.Modeling.ObjectData.LandTable
 SA3D.Modeling.ObjectData.LandTable.Attributes.get -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
 SA3D.Modeling.ObjectData.LandTable.Attributes.set -> void
 SA3D.Modeling.ObjectData.LandTable.BufferMeshData(bool optimize) -> void
-SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.LandTable.DrawDistance.get -> float
 SA3D.Modeling.ObjectData.LandTable.DrawDistance.set -> void
 SA3D.Modeling.ObjectData.LandTable.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
@@ -1479,7 +1478,6 @@ SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
 SA3D.Modeling.ObjectData.Node.Child.get -> SA3D.Modeling.ObjectData.Node?
 SA3D.Modeling.ObjectData.Node.ChildCount.get -> int
 SA3D.Modeling.ObjectData.Node.ClearAttachesFromTree() -> void
-SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.DeepAttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Detach() -> void

@@ -3,6 +3,7 @@ using SA3D.Common.Lookup;
 using SA3D.Modeling.Animation;
 using SA3D.Modeling.Mesh;
 using SA3D.Modeling.Mesh.Basic;
+using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.Structs;
 using System;
@@ -121,10 +122,11 @@ namespace SA3D.Modeling.ObjectData
 		/// Converts the the model data and land entry structure to a different model format.
 		/// </summary>
 		/// <param name="newFormat">The model format to convert to.</param>
+		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
 		/// <param name="optimize">Whether to optimize the converted model data.</param>
 		/// <param name="forceUpdate">Whether to convert data even if it already is the same format.</param>
 		/// <param name="updateBuffer">Whether to generate mesh data after conversion.</param>
-		public void ConvertToFormat(ModelFormat newFormat, bool optimize, bool forceUpdate = false, bool updateBuffer = false)
+		public void ConvertToFormat(ModelFormat newFormat, BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false)
 		{
 			if(newFormat == Format && !forceUpdate)
 			{
@@ -149,7 +151,7 @@ namespace SA3D.Modeling.ObjectData
 
 					if(node.Next != null || node.Child != null)
 					{
-						node.ConvertAttachFormat(format, optimize, false, forceUpdate, updateBuffer);
+						node.ConvertAttachFormat(format, bufferMode, optimize, false, forceUpdate, updateBuffer);
 					}
 
 					if(node.Attach == null)
@@ -163,7 +165,7 @@ namespace SA3D.Modeling.ObjectData
 					else
 					{
 						Attach previous = node.Attach;
-						node.ConvertAttachFormat(format, optimize, false, forceUpdate, updateBuffer);
+						node.ConvertAttachFormat(format, bufferMode, optimize, false, forceUpdate, updateBuffer);
 						convertedAttaches.Add(previous, node.Attach);
 					}
 				}

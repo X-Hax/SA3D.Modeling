@@ -1,7 +1,9 @@
 ﻿using SA3D.Modeling.Mesh;
 using SA3D.Modeling.Mesh.Converters;
+using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData.Events;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SA3D.Modeling.ObjectData
@@ -140,12 +142,14 @@ namespace SA3D.Modeling.ObjectData
 		/// Converts the entire Model to a different attach format.
 		/// </summary>
 		/// <param name="newAttachFormat">The attach format to convert to.</param>
-		/// <param name="optimize">Whether to optimize the converted data.</param>
+		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
+		/// <param name="optimize">Whether to optimize the new attach data.</param>
 		/// <param name="ignoreWeights">Convert regardless of weight information being lost.</param>
 		/// <param name="forceUpdate">Force conversion, even if the attach format ends up being the same.</param>
 		/// <param name="updateBuffer">Whether to generate buffer mesh data after conversion.</param>
 		public void ConvertAttachFormat(
 			AttachFormat newAttachFormat,
+			BufferMode bufferMode,
 			bool optimize,
 			bool ignoreWeights = false,
 			bool forceUpdate = false,
@@ -160,12 +164,37 @@ namespace SA3D.Modeling.ObjectData
 			if(newAttachFormat == AttachFormat.Buffer)
 			{
 				BufferMeshData(optimize);
+
+				Dictionary<Attach, Node> attachPairs = new();
+				foreach(Node node in GetTreeNodeEnumerable())
+				{
+					if(node.Attach != null)
+					{
+						attachPairs.Add(node.Attach, node);
+					}
+				}
+
+				ClearAttachesFromTree();
+
+				foreach(KeyValuePair<Attach, Node> pair in attachPairs)
+				{
+					if(pair.Key.MeshData.Length == 0)
+					{
+						continue;
+					}
+
+					pair.Value.Attach = new(pair.Key.MeshData)
+					{
+						Label = pair.Key.Label,
+						MeshBounds = pair.Key.MeshBounds
+					};
+				}
+
 				return;
 			}
 
 			Node rootNode = GetRootNode();
-
-			Mesh.Weighted.WeightedMesh[] weightedMeshes = ToWeightedConverter.ConvertToWeighted(rootNode);
+			WeightedMesh[] weightedMeshes = WeightedMesh.FromModel(rootNode, bufferMode);
 
 			if(weightedMeshes.Length == 0)
 			{
