@@ -18,8 +18,8 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// </summary>
 		public GCVertexType VertexType
 		{
-			readonly get => (GCVertexType)(Data >> 16);
-			set => Data = (Data & 0xFFFF) | ((uint)value << 16);
+			readonly get => (GCVertexType)((Data >> 16) & 0xFF);
+			set => Data = (Data & ~0xFF0000u) | ((uint)value << 16);
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		public GCStructType VertexStructType
 		{
 			readonly get => (GCStructType)((Data >> 12) & 0xF);
-			set => Data = (Data & 0xF000) | (((uint)value) << 12);
+			set => Data = (Data & ~0xF000u) | (((uint)value) << 12);
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		public GCDataType VertexDataType
 		{
 			readonly get => (GCDataType)((Data >> 8) & 0xF);
-			set => Data = (Data & 0xF00) | (((uint)value) << 8);
+			set => Data = (Data & ~0xF00u) | (((uint)value) << 8);
 		}
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		public byte Formatting
 		{
 			readonly get => (byte)(Data & 0xFF);
-			set => Data = (Data & 0xFFFFFF00) | value;
+			set => Data = (Data & ~0xFFu) | value;
 		}
 
 		/// <inheritdoc/>
