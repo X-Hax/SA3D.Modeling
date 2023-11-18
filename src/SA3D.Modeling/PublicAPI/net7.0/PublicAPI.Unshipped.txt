@@ -1,2 +1,4 @@
-﻿SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
+﻿SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Data.get -> System.Array?
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.GCVertexSet(SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType attribute, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType, SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, System.Array? data) -> void
+SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void

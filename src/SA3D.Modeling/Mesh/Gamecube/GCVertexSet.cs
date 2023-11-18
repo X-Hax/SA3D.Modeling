@@ -20,8 +20,6 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		public static readonly GCVertexSet EndVertexSet
 			= new(GCVertexType.End, default, default, null);
 
-		private Array? _data;
-
 		/// <summary>
 		/// The type of vertex data that is stored.
 		/// </summary>
@@ -42,6 +40,16 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// </summary>
 		public uint StructSize => GCEnumExtensions.GetStructSize(StructType, DataType);
 
+		/// <summary>
+		/// Raw Data behind the vertex set.
+		/// </summary>
+		public Array? Data { get; private set; }
+
+		/// <summary>
+		/// Number of entries in the data.
+		/// </summary>
+		public int DataLength
+			=> Data?.Length ?? 0;
 
 		/// <summary>
 		/// Vector3 data.
@@ -50,7 +58,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		{
 			get
 			{
-				if(_data is not Vector3[] v3data)
+				if(Data is not Vector3[] v3data)
 				{
 					throw new InvalidOperationException("VertexSet does not contain Vector3 data!");
 				}
@@ -66,7 +74,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		{
 			get
 			{
-				if(_data is not Vector2[] uvdata)
+				if(Data is not Vector2[] uvdata)
 				{
 					throw new InvalidOperationException("VertexSet does not contain Vector2 data!");
 				}
@@ -82,7 +90,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		{
 			get
 			{
-				if(_data is not Color[] coldata)
+				if(Data is not Color[] coldata)
 				{
 					throw new InvalidOperationException("VertexSet does not contain Color data!");
 				}
@@ -93,18 +101,23 @@ namespace SA3D.Modeling.Mesh.Gamecube
 
 
 		/// <summary>
-		/// Number of entries in the data.
+		/// Creates a new custom Vertex set.
 		/// </summary>
-		public int DataLength
-			=> _data?.Length ?? 0;
-
-
-		private GCVertexSet(GCVertexType attribute, GCDataType dataType, GCStructType structType, Array? data)
+		/// <param name="attribute">The type of vertex data that is stored.</param>
+		/// <param name="dataType">The datatype as which the data is stored.</param>
+		/// <param name="structType">The structure in which the data is stored.</param>
+		/// <param name="data">Raw Data behind the vertex set.</param>
+		public GCVertexSet(GCVertexType attribute, GCDataType dataType, GCStructType structType, Array? data)
 		{
 			Type = attribute;
 			DataType = dataType;
 			StructType = structType;
-			_data = data;
+			Data = data;
+
+			if(data is not Vector3[] or Vector2[] or Color[])
+			{
+				throw new ArgumentException("Data array has to hold either Vector3, Vector2 or Color!");
+			}
 		}
 
 
@@ -155,28 +168,28 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <exception cref="NotSupportedException"></exception>
 		public unsafe void Optimize(IEnumerable<GCMesh>? meshes)
 		{
-			if(_data == null)
+			if(Data == null)
 			{
 				return;
 			}
 
-			int prevLength = _data.Length;
+			int prevLength = Data.Length;
 
-			static int[]? OptimizeData<T>(T[] data, ref Array source) where T : IEquatable<T>
+			int[]? OptimizeData<T>(T[] data) where T : IEquatable<T>
 			{
 				if(data.TryCreateDistinctMap(out DistinctMap<T> mapping))
 				{
-					source = mapping.ValueArray;
+					Data = mapping.ValueArray;
 				}
 
 				return mapping.Map;
 			}
 
-			int[]? map = _data switch
+			int[]? map = Data switch
 			{
-				Vector3[] vector3Data => OptimizeData(vector3Data, ref _data),
-				Vector2[] vector2Data => OptimizeData(vector2Data, ref _data),
-				Color[] colorData => OptimizeData(colorData, ref _data),
+				Vector3[] vector3Data => OptimizeData(vector3Data),
+				Vector2[] vector2Data => OptimizeData(vector2Data),
+				Color[] colorData => OptimizeData(colorData),
 				_ => throw new NotSupportedException(),
 			};
 
@@ -207,7 +220,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 				}
 			}
 
-			if(prevLength > 256 && _data.Length <= 256)
+			if(prevLength > 256 && Data.Length <= 256)
 			{
 				GCIndexFormat useLargeIndex = (GCIndexFormat)(1 << (fieldOffset * 2));
 				GCIndexFormat hasData = (GCIndexFormat)((uint)useLargeIndex << 1);
@@ -439,7 +452,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <returns></returns>
 		public GCVertexSet Clone()
 		{
-			return new(Type, DataType, StructType, (Array?)_data?.Clone() ?? null);
+			return new(Type, DataType, StructType, (Array?)Data?.Clone() ?? null);
 		}
 
 		/// <inheritdoc/>
