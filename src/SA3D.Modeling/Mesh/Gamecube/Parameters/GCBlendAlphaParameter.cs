@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// Blend alpha parameter with default values.
 		/// </summary>
 		public static readonly GCBlendAlphaParameter DefaultBlendParameter
-			= new() { SourceAlpha = BlendMode.SrcAlpha, DestinationAlpha = BlendMode.SrcAlphaInverted };
+			= new() { SourceAlpha = BlendMode.SrcAlpha, DestinationAlpha = BlendMode.SrcAlphaInverted, UseAlpha = true };
 
 		/// <inheritdoc/>
 		public readonly GCParameterType Type => GCParameterType.BlendAlpha;
