@@ -20,17 +20,11 @@ namespace SA3D.Modeling.Mesh.Basic
 		public static readonly BasicMaterial DefaultValues = new()
 		{
 			DiffuseColor = Color.ColorWhite,
-			SpecularColor = new Color(0xFF, 0xFF, 0xFF, 0),
-			UseAlpha = true,
+			SpecularColor = Color.ColorWhite,
+			MipmapDistanceMultiplier = 1,
+			FilterMode = FilterMode.Bilinear,
 			UseTexture = true,
 			DoubleSided = true,
-			FlatShading = false,
-			IgnoreLighting = false,
-			ClampU = false,
-			ClampV = false,
-			MirrorU = false,
-			MirrorV = false,
-			EnvironmentMap = false,
 			DestinationAlpha = BlendMode.SrcAlphaInverted,
 			SourceAlpha = BlendMode.SrcAlpha,
 		};
