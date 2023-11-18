@@ -43,7 +43,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <summary>
 		/// Formatting info.
 		/// </summary>
-		public byte Formatting
+		public byte Attributes
 		{
 			readonly get => (byte)(Data & 0xFF);
 			set => Data = (Data & ~0xFFu) | value;
@@ -52,7 +52,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <inheritdoc/>
 		public override readonly string ToString()
 		{
-			return $"Vertex Format: {VertexType} - {VertexStructType} - {VertexDataType} - {Formatting:X2}";
+			return $"Vertex Format: {VertexType} - {VertexStructType} - {VertexDataType} - {Attributes:X2}";
 		}
 	}
 }

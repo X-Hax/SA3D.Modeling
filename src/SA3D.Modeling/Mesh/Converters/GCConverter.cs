@@ -417,10 +417,10 @@ namespace SA3D.Modeling.Mesh.Converters
 					{
 						case GCVertexFormatParameter vertexFormatParam:
 							if(vertexFormatParam.VertexType == GCVertexType.TexCoord0
-								&& (vertexFormatParam.Formatting & 0xF0) == 0)
+								&& (vertexFormatParam.Attributes & 0xF0) == 0)
 							{
-								uvFac = 1 << (vertexFormatParam.Formatting & 0x7);
-								if((vertexFormatParam.Formatting & 0x8) > 0)
+								uvFac = 1 << (vertexFormatParam.Attributes & 0x7);
+								if((vertexFormatParam.Attributes & 0x8) > 0)
 								{
 									uvFac = 1 / uvFac;
 								}
