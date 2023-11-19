@@ -1,4 +1,5 @@
-﻿using SA3D.Modeling.Structs;
+﻿using SA3D.Modeling.Mesh.Buffer;
+using SA3D.Modeling.Structs;
 using System;
 using System.Numerics;
 
@@ -9,6 +10,16 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 	/// </summary>
 	public struct ChunkVertex : IEquatable<ChunkVertex>
 	{
+		/// <summary>
+		/// Default chunk vertex values.
+		/// </summary>
+		public static readonly ChunkVertex DefaultValues = new()
+		{
+			Normal = BufferMesh.DefaultNormal,
+			Diffuse = BufferMesh.DefaultColor,
+			Specular = BufferMesh.DefaultColor,
+		};
+
 		/// <summary>
 		/// Position in 3D space.
 		/// </summary>
@@ -62,8 +73,8 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		{
 			Position = position;
 			Normal = normal;
-			Attributes = 0;
-			Weight = 1;
+			Diffuse = DefaultValues.Diffuse;
+			Specular = DefaultValues.Specular;
 		}
 
 		/// <summary>
@@ -76,8 +87,9 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		{
 			Position = position;
 			Normal = normal;
+			Diffuse = DefaultValues.Diffuse;
+			Specular = DefaultValues.Specular;
 			Attributes = attribs;
-			Weight = 1;
 		}
 
 		/// <summary>
@@ -91,6 +103,8 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		{
 			Position = position;
 			Normal = normal;
+			Diffuse = DefaultValues.Diffuse;
+			Specular = DefaultValues.Specular;
 			Index = index;
 			Weight = weight;
 		}
@@ -104,6 +118,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		public ChunkVertex(Vector3 position, Color diffuse, Color specular) : this()
 		{
 			Position = position;
+			Normal = DefaultValues.Normal;
 			Diffuse = diffuse;
 			Specular = specular;
 		}

@@ -4,3 +4,4 @@ SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.get ->
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.set -> void
 SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
+static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex
