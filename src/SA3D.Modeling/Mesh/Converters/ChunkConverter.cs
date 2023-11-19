@@ -130,11 +130,10 @@ namespace SA3D.Modeling.Mesh.Converters
 					for(int j = 0; j < bufferCorners.Length; j++)
 					{
 						BufferCorner bc = bufferCorners[j];
-						corners[j] = new()
-						{
-							Index = (ushort)vertices.Count,
-							Texcoord = bc.Texcoord
-						};
+						corners[j] = ChunkCorner.DefaultValues;
+						corners[j].Index = (ushort)vertices.Count;
+						corners[j].Texcoord = bc.Texcoord;
+						
 
 						WeightedVertex vertex = wba.Vertices[bc.VertexIndex];
 						vertices.Add(new(vertex.GetMaxWeightIndex(), vertex.Position, bc.Color));
@@ -387,11 +386,9 @@ namespace SA3D.Modeling.Mesh.Converters
 					for(int j = 0; j < bufferCorners.Length; j++)
 					{
 						BufferCorner bc = bufferCorners[j];
-						corners[j] = new()
-						{
-							Index = indexMap[bc.VertexIndex],
-							Texcoord = bc.Texcoord
-						};
+						corners[j] = ChunkCorner.DefaultValues;
+						corners[j].Index = indexMap[bc.VertexIndex];
+						corners[j].Texcoord = bc.Texcoord;
 					}
 
 					polyChunks.AddRange(CreateStripChunk(corners, wba.Materials[i], wba.WriteSpecular));
@@ -462,11 +459,9 @@ namespace SA3D.Modeling.Mesh.Converters
 						for(int j = 0; j < bufferCorners.Length; j++)
 						{
 							BufferCorner bc = bufferCorners[j];
-							corners[j] = new()
-							{
-								Index = (ushort)colorVertices.Count,
-								Texcoord = bc.Texcoord
-							};
+							corners[j] = ChunkCorner.DefaultValues;
+							corners[j].Index = (ushort)colorVertices.Count;
+							corners[j].Texcoord = bc.Texcoord;
 
 							WeightedVertex vertex = wba.Vertices[bc.VertexIndex];
 							colorVertices.Add(new(vertex.Position, bc.Color, Color.ColorWhite));
@@ -509,11 +504,9 @@ namespace SA3D.Modeling.Mesh.Converters
 						for(int j = 0; j < bufferCorners.Length; j++)
 						{
 							BufferCorner bc = bufferCorners[j];
-							corners[j] = new()
-							{
-								Index = bc.VertexIndex,
-								Texcoord = bc.Texcoord
-							};
+							corners[j] = ChunkCorner.DefaultValues;
+							corners[j].Index = bc.VertexIndex;
+							corners[j].Texcoord = bc.Texcoord;
 						}
 
 						cornerSets[i] = corners;

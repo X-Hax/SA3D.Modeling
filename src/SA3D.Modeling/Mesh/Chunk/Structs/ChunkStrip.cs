@@ -85,11 +85,9 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 
 			for(int i = 0; i < corners.Length; i++)
 			{
-				ChunkCorner c = new()
-				{
-					Index = reader.ReadUShort(address),
-					Color = Color.ColorWhite
-				};
+				ChunkCorner c = ChunkCorner.DefaultValues;
+				c.Index = reader.ReadUShort(address);
+
 				address += 2;
 
 				if(hasUV)
