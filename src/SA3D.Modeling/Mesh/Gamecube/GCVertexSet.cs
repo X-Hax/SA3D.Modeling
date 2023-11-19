@@ -114,7 +114,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 			StructType = structType;
 			Data = data;
 
-			if(data is not Vector3[] or Vector2[] or Color[])
+			if(data is not (null or Vector3[] or Vector2[] or Color[]))
 			{
 				throw new ArgumentException("Data array has to hold either Vector3, Vector2 or Color!");
 			}
