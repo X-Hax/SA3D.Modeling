@@ -283,7 +283,7 @@ namespace SA3D.Modeling.ObjectData
 				target = target.Next;
 			}
 
-			node.InsertAfter(target);
+			target.InsertAfter(node);
 		}
 
 		/// <summary>
