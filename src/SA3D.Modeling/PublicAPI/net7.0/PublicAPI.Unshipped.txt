@@ -1,11 +1,1 @@
-﻿SA3D.Modeling.File.AnimationFile.AnimationFile(SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData! metaData) -> void
-SA3D.Modeling.File.LevelFile.LevelFile(SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData! metaData) -> void
-SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.File.MetaData! metaData, bool nj) -> void
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Data.get -> System.Array?
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.GCVertexSet(SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType attribute, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType, SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, System.Array? data) -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.set -> void
-SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
-SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
-static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner
-static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex
+﻿

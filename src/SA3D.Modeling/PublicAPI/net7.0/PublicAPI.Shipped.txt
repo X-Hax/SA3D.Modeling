@@ -245,12 +245,14 @@ SA3D.Modeling.Animation.Spotlight.Write(SA3D.Common.IO.EndianStackWriter! writer
 SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils
 SA3D.Modeling.File.AnimationFile
 SA3D.Modeling.File.AnimationFile.Animation.get -> SA3D.Modeling.Animation.Motion!
+SA3D.Modeling.File.AnimationFile.AnimationFile(SA3D.Modeling.Animation.Motion! animation, SA3D.Modeling.File.MetaData! metaData) -> void
 SA3D.Modeling.File.AnimationFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.File.AnimationFile.WriteToBytes() -> byte[]!
 SA3D.Modeling.File.AnimationFile.WriteToFile(string! filepath) -> void
 SA3D.Modeling.File.LevelFile
 SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.LandTable!
+SA3D.Modeling.File.LevelFile.LevelFile(SA3D.Modeling.ObjectData.LandTable! level, SA3D.Modeling.File.MetaData! metaData) -> void
 SA3D.Modeling.File.LevelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.LevelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.File.LevelFile.WriteToBytes() -> byte[]!
@@ -287,6 +289,7 @@ SA3D.Modeling.File.ModelFile
 SA3D.Modeling.File.ModelFile.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
 SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.ModelFile.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.File.MetaData! metaData, bool nj) -> void
 SA3D.Modeling.File.ModelFile.NJFile.get -> bool
 SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.File.ModelFile.WriteToBytes() -> byte[]!
@@ -1108,8 +1111,10 @@ SA3D.Modeling.Mesh.Gamecube.GCPolygon.Write(SA3D.Common.IO.EndianStackWriter! wr
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ColorData.get -> SA3D.Modeling.Structs.Color[]!
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Data.get -> System.Array?
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataLength.get -> int
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
+SA3D.Modeling.Mesh.Gamecube.GCVertexSet.GCVertexSet(SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType attribute, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType, SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, System.Array? data) -> void
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Optimize(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Gamecube.GCMesh!>? meshes) -> void
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructSize.get -> uint
 SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
@@ -1203,6 +1208,8 @@ SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown1.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.get -> ushort
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.get -> byte
+SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.get -> uint
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.set -> void
 SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.GCVertexFormatParameter() -> void
@@ -1446,6 +1453,7 @@ SA3D.Modeling.ObjectData.LandTable
 SA3D.Modeling.ObjectData.LandTable.Attributes.get -> SA3D.Modeling.ObjectData.Enums.LandtableAttributes
 SA3D.Modeling.ObjectData.LandTable.Attributes.set -> void
 SA3D.Modeling.ObjectData.LandTable.BufferMeshData(bool optimize) -> void
+SA3D.Modeling.ObjectData.LandTable.ConvertToFormat(SA3D.Modeling.ObjectData.Enums.ModelFormat newFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.LandTable.DrawDistance.get -> float
 SA3D.Modeling.ObjectData.LandTable.DrawDistance.set -> void
 SA3D.Modeling.ObjectData.LandTable.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
@@ -1476,6 +1484,7 @@ SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
 SA3D.Modeling.ObjectData.Node.Child.get -> SA3D.Modeling.ObjectData.Node?
 SA3D.Modeling.ObjectData.Node.ChildCount.get -> int
 SA3D.Modeling.ObjectData.Node.ClearAttachesFromTree() -> void
+SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.DeepAttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Detach() -> void
@@ -1647,6 +1656,8 @@ static readonly SA3D.Modeling.Mesh.Basic.BasicMaterial.DefaultValues -> SA3D.Mod
 static readonly SA3D.Modeling.Mesh.Buffer.BufferMaterial.DefaultValues -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
 static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultColor -> SA3D.Modeling.Structs.Color
 static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultNormal -> System.Numerics.Vector3
+static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner
+static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex
 static readonly SA3D.Modeling.Mesh.Gamecube.GCVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
 static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter
 static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter
