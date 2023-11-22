@@ -24,7 +24,12 @@ namespace SA3D.Modeling.File
 		public MetaData MetaData { get; }
 
 
-		private AnimationFile(Motion animation, MetaData metaData)
+		/// <summary>
+		/// Creates a new animation file
+		/// </summary>
+		/// <param name="animation">Animation of the file.</param>
+		/// <param name="metaData">Metadata in the file.</param>
+		public AnimationFile(Motion animation, MetaData metaData)
 		{
 			Animation = animation;
 			MetaData = metaData;

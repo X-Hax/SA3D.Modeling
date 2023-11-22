@@ -15,27 +15,34 @@ namespace SA3D.Modeling.File
 	public class ModelFile
 	{
 		/// <summary>
-		/// Whether the file is an NJ binary
+		/// Whether the file is an NJ binary.
 		/// </summary>
 		public bool NJFile { get; }
 
 		/// <summary>
-		/// Attach format of the file
+		/// Attach format of the file.
 		/// </summary>
 		public ModelFormat Format { get; }
 
 		/// <summary>
-		/// Hierarchy tip of the file
+		/// Hierarchy tip of the file.
 		/// </summary>
 		public Node Model { get; }
 
 		/// <summary>
-		/// Meta data of the file
+		/// Meta data of the file.
 		/// </summary>
 		public MetaData MetaData { get; }
 
 
-		private ModelFile(ModelFormat format, Node model, MetaData metaData, bool nj)
+		/// <summary>
+		/// Creates a new model file.
+		/// </summary>
+		/// <param name="format">Whether the file is an NJ binary.</param>
+		/// <param name="model">Attach format of the file.</param>
+		/// <param name="metaData">Hierarchy tip of the file.</param>
+		/// <param name="nj">Meta data of the file.</param>
+		public ModelFile(ModelFormat format, Node model, MetaData metaData, bool nj)
 		{
 			Format = format;
 			Model = model;

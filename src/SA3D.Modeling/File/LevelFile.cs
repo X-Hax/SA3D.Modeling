@@ -19,12 +19,17 @@ namespace SA3D.Modeling.File
 		public LandTable Level { get; }
 
 		/// <summary>
-		/// MetaData of/for a LVL file
+		/// MetaData in the file.
 		/// </summary>
 		public MetaData MetaData { get; }
 
 
-		private LevelFile(LandTable level, MetaData metaData)
+		/// <summary>
+		/// Creates a new level file.
+		/// </summary>
+		/// <param name="level">Landtable of the file.</param>
+		/// <param name="metaData">MetaData in the file.</param>
+		public LevelFile(LandTable level, MetaData metaData)
 		{
 			Level = level;
 			MetaData = metaData;
