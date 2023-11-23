@@ -43,6 +43,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				IgnoreLighting = mat.NoLighting,
 				IgnoreSpecular = mat.NoSpecular,
+				FlatShading = mat.Flat,
 				UseTexture = mat.UseTexture,
 				EnvironmentMap = mat.NormalMapping
 			};
@@ -283,6 +284,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				NoLighting = mat.IgnoreLighting,
 				NoSpecular = mat.IgnoreSpecular,
+				Flat = mat.FlatShading,
 				UseTexture = mat.UseTexture,
 				NormalMapping = mat.EnvironmentMap
 			};
