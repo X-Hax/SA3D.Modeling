@@ -1,1 +1,2 @@
-﻿
+﻿SA3D.Modeling.Animation.Motion.NodeCount.get -> uint
+SA3D.Modeling.Animation.Motion.NodeCount.set -> void

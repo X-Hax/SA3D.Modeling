@@ -219,8 +219,6 @@ SA3D.Modeling.Animation.Motion.Label.get -> string!
 SA3D.Modeling.Animation.Motion.Label.set -> void
 SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.get -> SA3D.Modeling.Animation.KeyframeAttributes
 SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.set -> void
-SA3D.Modeling.Animation.Motion.ModelCount.get -> uint
-SA3D.Modeling.Animation.Motion.ModelCount.set -> void
 SA3D.Modeling.Animation.Motion.Motion() -> void
 SA3D.Modeling.Animation.Motion.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
 SA3D.Modeling.Animation.Motion.ShortRot.get -> bool

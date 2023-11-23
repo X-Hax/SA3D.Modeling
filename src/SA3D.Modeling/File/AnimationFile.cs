@@ -336,7 +336,7 @@ namespace SA3D.Modeling.File
 			// 4 bytes: metadata placeholder
 			writer.WriteEmpty(8);
 
-			uint animFileInfo = animation.ModelCount;
+			uint animFileInfo = animation.NodeCount;
 			if(animation.ShortRot)
 			{
 				animFileInfo |= (uint)Flag32.B31;

@@ -22,9 +22,9 @@ namespace SA3D.Modeling.Animation
 		public string Label { get; set; }
 
 		/// <summary>
-		/// Node in the models node tree that this animation targets.
+		/// Number of animated nodes in the model that this animation targets.
 		/// </summary>
-		public uint ModelCount { get; set; }
+		public uint NodeCount { get; set; }
 
 		/// <summary>
 		/// Intepolation mode between keyframes.
@@ -200,7 +200,7 @@ namespace SA3D.Modeling.Animation
 				KeyframeAttributes type = KeyframeTypes;
 				int channels = type.ChannelCount();
 
-				uint keyframeCount = uint.Max(ModelCount, (uint)Keyframes.Keys.Max() + 1u);
+				uint keyframeCount = uint.Max(NodeCount, (uint)Keyframes.Keys.Max() + 1u);
 
 				(uint address, uint count)[][] keyFrameLocations = new (uint addr, uint count)[keyframeCount][];
 
@@ -264,7 +264,7 @@ namespace SA3D.Modeling.Animation
 				Motion result = new()
 				{
 					InterpolationMode = mode,
-					ModelCount = modelCount,
+					NodeCount = modelCount,
 					ShortRot = shortRot,
 					ManualKeyframeTypes = keyframeType
 				};
@@ -286,7 +286,7 @@ namespace SA3D.Modeling.Animation
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return $"{Label} : {ModelCount} - {Keyframes.Count}";
+			return $"{Label} : {NodeCount} - {Keyframes.Count}";
 		}
 	}
 }
