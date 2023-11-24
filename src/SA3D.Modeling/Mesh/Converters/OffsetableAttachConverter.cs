@@ -1,6 +1,7 @@
 ﻿using SA3D.Common;
 using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -13,7 +14,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		protected abstract TResult ConvertWeighted(WeightedMesh wba, bool optimize);
 
-		protected abstract void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix);
+		protected abstract void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix, Matrix4x4 normalMatrix);
 
 		protected abstract TResult WeightedClone(string label, int vertexCount, int[] attachIndices, Attach[] attaches);
 
@@ -49,8 +50,9 @@ namespace SA3D.Modeling.Mesh.Converters
 							Matrix4x4 nodeMatrix = nodeMatrices[nodeIndex].worldMatrix;
 							Matrix4x4.Invert(nodeMatrix, out Matrix4x4 invNodeMatrix);
 							Matrix4x4 vertexMatrix = baseMatrix * invNodeMatrix;
+							Matrix4x4 normalMatrix = vertexMatrix.GetNormalMatrix();
 
-							CorrectSpace(attaches[i], vertexMatrix);
+							CorrectSpace(attaches[i], vertexMatrix, normalMatrix);
 						}
 
 						string label = result.Label;

@@ -174,7 +174,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				return result.ToArray();
 			}
 
-			protected override void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix)
+			protected override void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix, Matrix4x4 normalMatrix)
 			{
 				foreach(BufferMesh mesh in attach.MeshData)
 				{
@@ -188,7 +188,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						BufferVertex vertex = mesh.Vertices[j];
 
 						vertex.Position = Vector3.Transform(vertex.Position, vertexMatrix);
-						vertex.Normal = Vector3.TransformNormal(vertex.Normal, vertexMatrix);
+						vertex.Normal = Vector3.TransformNormal(vertex.Normal, normalMatrix);
 
 						mesh.Vertices[j] = vertex;
 					}

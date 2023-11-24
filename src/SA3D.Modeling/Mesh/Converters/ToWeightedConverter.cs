@@ -1,6 +1,7 @@
 ﻿using SA3D.Modeling.Mesh.Buffer;
 using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -258,6 +259,8 @@ namespace SA3D.Modeling.Mesh.Converters
 					vertexMatrix = worldMatrix * invbaseMatrix;
 				}
 
+				Matrix4x4 normalMatrix = vertexMatrix.GetNormalMatrix();
+
 				BufferMesh[] meshes = GetMeshData(meshNodeIndex);
 				int weightIndex = nodeIndex - baseNodeIndex;
 
@@ -282,7 +285,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						}
 
 						Vector3 pos = Vector3.Transform(vtx.Position, vertexMatrix) * vtx.Weight;
-						Vector3 nrm = Vector3.TransformNormal(vtx.Normal, vertexMatrix) * vtx.Weight;
+						Vector3 nrm = Vector3.TransformNormal(vtx.Normal, normalMatrix) * vtx.Weight;
 
 						if(bufferMesh.ContinueWeight)
 						{
@@ -313,6 +316,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			{
 				int vertexIndex = indices[i];
 				WeightedVertex vertex = vertexBuffer[vertexIndex];
+				vertex.Normal = Vector3.Normalize(vertex.Normal);
 				float sum = vertex.Weights?.Sum() ?? 1f;
 
 				if(sum != 1)
@@ -328,8 +332,6 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				resultVertices[i] = vertex;
 			}
-
-
 
 			return resultVertices;
 		}

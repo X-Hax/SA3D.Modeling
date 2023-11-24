@@ -584,7 +584,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				return new PolyChunk[] { materialChunk, textureChunk, stripchunk };
 			}
 
-			protected override void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix)
+			protected override void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix, Matrix4x4 normalMatrix)
 			{
 				ChunkAttach chunkAttach = (ChunkAttach)attach;
 				if(chunkAttach.VertexChunks == null)
@@ -604,7 +604,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						ChunkVertex vertex = vtxChunk.Vertices[j];
 
 						vertex.Position = Vector3.Transform(vertex.Position, vertexMatrix);
-						vertex.Normal = Vector3.TransformNormal(vertex.Normal, vertexMatrix);
+						vertex.Normal = Vector3.TransformNormal(vertex.Normal, normalMatrix);
 
 						vtxChunk.Vertices[j] = vertex;
 					}
