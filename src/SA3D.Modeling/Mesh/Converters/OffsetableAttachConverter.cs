@@ -53,6 +53,7 @@ namespace SA3D.Modeling.Mesh.Converters
 							Matrix4x4 normalMatrix = vertexMatrix.GetNormalMatrix();
 
 							CorrectSpace(attaches[i], vertexMatrix, normalMatrix);
+							attaches[i].RecalculateBounds();
 						}
 
 						string label = result.Label;

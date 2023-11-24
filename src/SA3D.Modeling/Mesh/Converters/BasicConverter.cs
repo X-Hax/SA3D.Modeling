@@ -241,6 +241,8 @@ namespace SA3D.Modeling.Mesh.Converters
 					result = OptimizeBasicVertices(result);
 				}
 
+				result.RecalculateBounds();
+
 				result.Label = weightedAttach.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier();
 
 				foreach(int index in weightedAttach.RootIndices)
