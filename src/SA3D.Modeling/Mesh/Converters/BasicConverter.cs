@@ -170,7 +170,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				return attach;
 			}
 
-			LabeledArray<Vector3> positions = new(attach.Positions.Label, distinctMap.Map!.Length);
+			LabeledArray<Vector3> positions = new(attach.Positions.Label, distinctMap.Values.Count);
 			LabeledArray<Vector3> normals = new(attach.Normals.Label, positions.Length);
 
 			for(int i = 0; i < positions.Length; i++)
