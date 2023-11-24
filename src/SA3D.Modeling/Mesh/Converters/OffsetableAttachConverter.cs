@@ -98,16 +98,22 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			for(int i = 0; i < nodeAttaches.Length; i++)
 			{
-				List<Attach> chunks = nodeAttaches[i];
-				Node node = nodeMatrices[i].node;
-				if(chunks.Count == 1)
+				List<Attach> attaches = nodeAttaches[i];
+
+				if(attaches.Count == 0)
 				{
-					node.Attach = chunks[0];
+					continue;
+				}
+
+				Node node = nodeMatrices[i].node;
+				if(attaches.Count == 1)
+				{
+					node.Attach = attaches[0];
 				}
 				else
 				{
-					string combinedLabel = string.Join('_', chunks.Select(x => x.Label));
-					node.Attach = CombineAttaches(chunks, combinedLabel);
+					string combinedLabel = string.Join('_', attaches.Select(x => x.Label));
+					node.Attach = CombineAttaches(attaches, combinedLabel);
 				}
 			}
 		}

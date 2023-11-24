@@ -65,7 +65,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 
 
 		/// <summary>
-		/// Returns a clone of the vertex
+		/// Returns a clone of the vertex with a normalized normal
 		/// </summary>
 		/// <returns></returns>
 		public readonly WeightedVertex Normalized()
@@ -221,6 +221,103 @@ namespace SA3D.Modeling.Mesh.Weighted
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Normalizes the weights.
+		/// </summary>
+		public readonly void NormalizeWeights()
+		{
+			if(Weights == null)
+			{
+				return;
+			}
+
+			float total = 0;
+
+			for(int i = 0; i < Weights.Length; i++)
+			{
+				total += Weights[i];
+			}
+
+			if(total == 1f)
+			{
+				return;
+			}
+
+			float fac = 1f / total;
+			for(int i = 0; i < Weights.Length; i++)
+			{
+				Weights[i] *= fac;
+			}
+		}
+
+		/// <summary>
+		/// Normalizes and rounds the weights so their packed (0 - 255 instead of 0.0 - 1.0) values add up to exactly 255.
+		/// </summary>
+		public readonly void NormalizedPackedWeights()
+		{
+			const float fac = 1f / 255f;
+
+			if(Weights == null)
+			{
+				return;
+			}
+
+			NormalizeWeights();
+
+			int[] packedWeights = new int[Weights.Length];
+			int total = 0;
+			int weightCount = 0;
+
+			for(int i = 0; i < Weights.Length; i++)
+			{
+				float weight = Weights[i];
+				if(weight == 0)
+				{
+					continue;
+				}
+
+				int packedWeight = (int)Math.Round(weight * 255f);
+				packedWeights[i] = packedWeight;
+				total += packedWeight;
+				weightCount++;
+			}
+
+			if(total != 255)
+			{
+				int dif = 255 - total;
+
+				int lowerDifPerVert = dif / weightCount;
+				int upperDifPerVert = lowerDifPerVert + (dif > 0 ? 1 : -1);
+				int upperDifVerts = int.Abs(dif) % weightCount;
+
+				int weightNum = 0;
+				for(int i = 0; i < packedWeights.Length; i++)
+				{
+					int packedWeight = packedWeights[i];
+					if(packedWeight != 0)
+					{
+						if(weightNum < upperDifVerts)
+						{
+							packedWeight += upperDifPerVert;
+						}
+						else
+						{
+							packedWeight += lowerDifPerVert;
+						}
+
+						packedWeights[i] = packedWeight;
+
+						weightNum++;
+					}
+				}
+			}
+
+			for(int i = 0; i < Weights.Length; i++)
+			{
+				Weights[i] = packedWeights[i] * fac;
+			}
 		}
 
 		#region Comparisons

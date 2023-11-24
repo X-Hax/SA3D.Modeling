@@ -133,7 +133,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						corners[j] = ChunkCorner.DefaultValues;
 						corners[j].Index = (ushort)vertices.Count;
 						corners[j].Texcoord = bc.Texcoord;
-						
+
 
 						WeightedVertex vertex = wba.Vertices[bc.VertexIndex];
 						vertices.Add(new(vertex.GetMaxWeightIndex(), vertex.Position, bc.Color));
@@ -236,6 +236,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				for(int i = 0; i < wba.Vertices.Length; i++)
 				{
 					WeightedVertex vtx = wba.Vertices[i];
+					vtx.NormalizedPackedWeights();
 					int weightCount = vtx.GetWeightCount();
 					if(weightCount == 0)
 					{
