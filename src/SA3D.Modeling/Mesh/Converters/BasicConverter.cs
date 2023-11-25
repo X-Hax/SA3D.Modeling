@@ -300,7 +300,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				IEnumerable<BasicMultiPolygon> polys = mesh.Polygons.Cast<BasicMultiPolygon>();
 
-				BufferCorner[][] strips = new BufferCorner[polys.Count()][];
+				BufferCorner[][] strips = new BufferCorner[mesh.Polygons.Length][];
 				bool[] reversed = new bool[strips.Length];
 
 				int stripNum = 0;
@@ -356,8 +356,6 @@ namespace SA3D.Modeling.Mesh.Converters
 								mesh.Texcoords?[absoluteIndex] ?? Vector2.Zero);
 						}
 					}
-
-
 
 					strips[stripNum] = strip;
 					reversed[stripNum] = poly.Reversed;

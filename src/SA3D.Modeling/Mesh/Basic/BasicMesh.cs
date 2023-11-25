@@ -224,6 +224,8 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// <returns>The read mesh.</returns>
 		public static BasicMesh Read(EndianStackReader reader, uint address, PointerLUT lut)
 		{
+			const float uvFac = 1f / 255f;
+
 			ushort header = reader.ReadUShort(address);
 			ushort materialID = (ushort)(header & 0x3FFFu);
 			BasicPolygonType polyType = (BasicPolygonType)(header >> 14);
@@ -257,9 +259,9 @@ namespace SA3D.Modeling.Mesh.Basic
 				return result;
 			}
 
-			LabeledArray<Vector3>? normals /****/ = ReadArray(0x0C, "polynormal_", 12, (r, p) => r.ReadVector3(p));
-			LabeledArray<Color>? colors /*******/ = ReadArray(0x10, "vcolor_", /**/ 4, (r, p) => r.ReadColor(p, ColorIOType.ARGB8_32));
-			LabeledArray<Vector2>? texcoords /**/ = ReadArray(0x14, "polynormal_", 08, (r, p) => r.ReadVector2(p, FloatIOType.Short) / 255f);
+			LabeledArray<Vector3>? normals /****/ = ReadArray(0x0C, "polynormal_", /**/ 12, (r, p) => r.ReadVector3(p));
+			LabeledArray<Color>? colors /*******/ = ReadArray(0x10, "vcolor_", /*******/ 4, (r, p) => r.ReadColor(p, ColorIOType.ARGB8_32));
+			LabeledArray<Vector2>? texcoords /**/ = ReadArray(0x14, "texcoords_", /****/ 4, (r, p) => r.ReadVector2(p, FloatIOType.Short) * uvFac);
 
 			//==================================================================
 
