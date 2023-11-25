@@ -612,14 +612,14 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			protected override ChunkResult WeightedClone(string label, int vertexCount, int[] attachIndices, Attach[] attaches)
+			protected override ChunkResult CreateWeightedResult(string label, int vertexCount, int[] attachIndices, Attach[] attaches)
 			{
 				return new(
 					label,
 					vertexCount,
 					true,
 					attachIndices,
-					attaches.Cast<ChunkAttach>().ToArray());
+					(ChunkAttach[])attaches);
 			}
 
 			protected override Attach CombineAttaches(List<Attach> attaches, string label)

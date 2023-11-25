@@ -195,7 +195,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			protected override BufferResult WeightedClone(string label, int vertexCount, int[] attachIndices, Attach[] attaches)
+			protected override BufferResult CreateWeightedResult(string label, int vertexCount, int[] attachIndices, Attach[] attaches)
 			{
 				return new(
 					label,

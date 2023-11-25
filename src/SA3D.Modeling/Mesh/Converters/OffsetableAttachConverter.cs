@@ -16,7 +16,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		protected abstract void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix, Matrix4x4 normalMatrix);
 
-		protected abstract TResult WeightedClone(string label, int vertexCount, int[] attachIndices, Attach[] attaches);
+		protected abstract TResult CreateWeightedResult(string label, int vertexCount, int[] attachIndices, Attach[] attaches);
 
 		protected abstract Attach CombineAttaches(List<Attach> attaches, string label);
 
@@ -35,11 +35,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					TResult result = ConvertWeighted(wba, optimize);
 
-					foreach(int rootIndex in wba.RootIndices)
+					void CorrectVertices(int rootIndex, int[] attachIndices, Attach[] attaches)
 					{
-						int[] attachIndices = new int[result.AttachIndices.Length];
-						Attach[] attaches = result.Attaches.ContentClone();
-
 						Matrix4x4 baseMatrix = nodeMatrices[rootIndex].worldMatrix;
 
 						for(int i = 0; i < attachIndices.Length; i++)
@@ -55,19 +52,37 @@ namespace SA3D.Modeling.Mesh.Converters
 							CorrectSpace(attaches[i], vertexMatrix, normalMatrix);
 							attaches[i].RecalculateBounds();
 						}
+					}
 
-						string label = result.Label;
-						if(wba.RootIndices.Count > 1)
+					if(wba.RootIndices.Count > 1)
+					{
+						foreach(int rootIndex in wba.RootIndices)
 						{
-							label += "_" + rootIndex;
+							string label = result.Label + '_' + rootIndex;
+							int[] attachIndices = new int[result.AttachIndices.Length];
+							Attach[] attaches = result.Attaches.ContentClone();
+
+							CorrectVertices(rootIndex, attachIndices, attaches);
+
+							results.Add(CreateWeightedResult(
+								label,
+								result.VertexCount,
+								attachIndices,
+								attaches));
+						}
+					}
+					else
+					{
+						int rootIndex = 0;
+						if(wba.RootIndices.Count > 0)
+						{
+							rootIndex = wba.RootIndices.First();
 						}
 
-						results.Add(WeightedClone(
-							label,
-							result.VertexCount,
-							attachIndices,
-							attaches));
+						CorrectVertices(rootIndex, result.AttachIndices, result.Attaches);
+						results.Add(result);
 					}
+
 				}
 			}
 
