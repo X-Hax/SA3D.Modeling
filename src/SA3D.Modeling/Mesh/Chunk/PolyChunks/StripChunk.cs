@@ -334,7 +334,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			return new(
 				Type,
 				Strips.ContentClone(),
-				TriangleAttributeCount);
+				TriangleAttributeCount)
+			{
+				Attributes = Attributes
+			};
 		}
 
 		/// <inheritdoc/>

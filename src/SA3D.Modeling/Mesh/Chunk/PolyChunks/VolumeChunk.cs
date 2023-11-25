@@ -159,7 +159,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <inheritdoc/>
 		public override VolumeChunk Clone()
 		{
-			return new(Type, Polygons.ContentClone(), PolygonAttributeCount);
+			return new(Type, Polygons.ContentClone(), PolygonAttributeCount)
+			{
+				Attributes = Attributes
+			};
 		}
 
 		/// <inheritdoc/>
