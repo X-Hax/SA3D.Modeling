@@ -451,7 +451,13 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <returns>The merged meshes.</returns>
 		public static WeightedMesh[] MergeAtRoots(WeightedMesh[] meshes)
 		{
-			List<WeightedMesh>?[] sharedRoots = new List<WeightedMesh>[meshes.Max(x => x.RootIndices.Max()) + 1];
+			if(meshes.Length == 0)
+			{
+				return meshes;
+			}
+
+			List<WeightedMesh>?[] sharedRoots = new List<WeightedMesh>[
+				meshes.Max(x => x.RootIndices.Count == 0 ? 0 : x.RootIndices.Max()) + 1];
 
 			foreach(WeightedMesh mesh in meshes)
 			{
