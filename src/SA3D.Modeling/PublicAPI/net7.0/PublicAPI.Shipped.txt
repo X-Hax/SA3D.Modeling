@@ -220,6 +220,8 @@ SA3D.Modeling.Animation.Motion.Label.set -> void
 SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.get -> SA3D.Modeling.Animation.KeyframeAttributes
 SA3D.Modeling.Animation.Motion.ManualKeyframeTypes.set -> void
 SA3D.Modeling.Animation.Motion.Motion() -> void
+SA3D.Modeling.Animation.Motion.NodeCount.get -> uint
+SA3D.Modeling.Animation.Motion.NodeCount.set -> void
 SA3D.Modeling.Animation.Motion.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
 SA3D.Modeling.Animation.Motion.ShortRot.get -> bool
 SA3D.Modeling.Animation.Motion.ShortRot.set -> void
@@ -1255,6 +1257,8 @@ SA3D.Modeling.Mesh.Weighted.WeightedVertex.IsWeighted() -> bool
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normal.get -> System.Numerics.Vector3
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normal.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.Normalized() -> SA3D.Modeling.Mesh.Weighted.WeightedVertex
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.NormalizedPackedWeights() -> void
+SA3D.Modeling.Mesh.Weighted.WeightedVertex.NormalizeWeights() -> void
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.Position.get -> System.Numerics.Vector3
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.Position.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedVertex.WeightedVertex() -> void

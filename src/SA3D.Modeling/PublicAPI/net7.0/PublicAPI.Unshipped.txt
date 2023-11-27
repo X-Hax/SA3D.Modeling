@@ -1,4 +1,1 @@
-﻿SA3D.Modeling.Animation.Motion.NodeCount.get -> uint
-SA3D.Modeling.Animation.Motion.NodeCount.set -> void
-SA3D.Modeling.Mesh.Weighted.WeightedVertex.NormalizedPackedWeights() -> void
-SA3D.Modeling.Mesh.Weighted.WeightedVertex.NormalizeWeights() -> void
+﻿
