@@ -2,6 +2,7 @@
 using SA3D.Modeling.Mesh.Converters;
 using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData.Events;
+using SA3D.Modeling.ObjectData.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,11 @@ namespace SA3D.Modeling.ObjectData
 		/// Raised when the attach of the node changes.
 		/// </summary>
 		public event AttachUpdatedEventHandler? OnAttachUpdated;
+
+		/// <summary>
+		/// Vertex welding info. Used for Deforming meshes with no native weight support.
+		/// </summary>
+		public VertexWelding[]? Welding { get; set; }
 
 
 		/// <summary>
