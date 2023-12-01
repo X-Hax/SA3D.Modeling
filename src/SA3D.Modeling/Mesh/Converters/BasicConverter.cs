@@ -19,6 +19,7 @@ namespace SA3D.Modeling.Mesh.Converters
 	/// </summary>
 	internal static class BasicConverter
 	{
+
 		#region Convert To Basic
 
 		private static BasicMaterial ConvertToBasicMaterial(BufferMaterial mat)
@@ -292,8 +293,10 @@ namespace SA3D.Modeling.Mesh.Converters
 			};
 		}
 
-		private static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList)
+		private static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified)
 		{
+			strippified = mesh.PolygonType is BasicPolygonType.TriangleStrips or BasicPolygonType.NPoly;
+
 			if(mesh.PolygonType is BasicPolygonType.NPoly or BasicPolygonType.TriangleStrips)
 			{
 				indexList = null;
@@ -423,8 +426,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					? attach.Materials[mesh.MaterialIndex]
 					: BasicMaterial.DefaultValues);
 
-				ConvertPolygons(mesh, out BufferCorner[] corners, out uint[]? indexList);
-				bool strippified = mesh.PolygonType is BasicPolygonType.TriangleStrips or BasicPolygonType.NPoly;
+				ConvertPolygons(mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified);
 
 				// first mesh includes vertex data
 				BufferMesh bmesh = meshes.Count == 0
@@ -439,7 +441,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				meshes.Add(bmesh);
 			}
 
-			return optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+			return BufferMesh.CompressLayout(meshes);
 		}
 
 		/// <summary>

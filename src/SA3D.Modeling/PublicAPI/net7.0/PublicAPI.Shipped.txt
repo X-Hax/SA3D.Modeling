@@ -1754,7 +1754,6 @@ static SA3D.Modeling.Mesh.Buffer.BufferCorner.Read(SA3D.Common.IO.EndianStackRea
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator !=(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator ==(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
-static SA3D.Modeling.Mesh.Buffer.BufferMesh.Optimize(System.Collections.Generic.IList<SA3D.Modeling.Mesh.Buffer.BufferMesh!>! input) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMesh!
 static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator !=(SA3D.Modeling.Mesh.Buffer.BufferVertex left, SA3D.Modeling.Mesh.Buffer.BufferVertex right) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator *(float l, SA3D.Modeling.Mesh.Buffer.BufferVertex r) -> SA3D.Modeling.Mesh.Buffer.BufferVertex

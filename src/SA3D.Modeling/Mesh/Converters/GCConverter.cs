@@ -369,7 +369,6 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 
-
 			float uvFac = 1;
 
 			List<BufferVertex> bufferVertices = new();
@@ -532,7 +531,14 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 				}
 
-				return new(material, corners.ToArray(), trianglelist.ToArray(), false, colors != null, 0);
+				BufferMesh mesh = new(material, corners.ToArray(), trianglelist.ToArray(), false, colors != null, 0);
+
+				if(optimize)
+				{
+					mesh.OptimizePolygons();
+				}
+
+				return mesh;
 			}
 
 			material = new(BufferMaterial.DefaultValues)
@@ -569,7 +575,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				vtxMesh.HasColors,
 				0, 0);
 
-			return optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+			return BufferMesh.CompressLayout(meshes);
 		}
 
 		public static void BufferGCModel(Node model, bool optimize)

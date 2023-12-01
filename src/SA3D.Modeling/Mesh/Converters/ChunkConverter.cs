@@ -806,15 +806,24 @@ namespace SA3D.Modeling.Mesh.Converters
 
 								if(corners.Length > 0)
 								{
+									BufferMesh mesh;
+
 									if(vertices != null)
 									{
-										meshes.Add(new BufferMesh(vertices, material, corners, null, true, continueWeight, hasVertexNormals, hasColor, vertexWriteOffset, 0));
+										mesh = new BufferMesh(vertices, material, corners, null, true, continueWeight, hasVertexNormals, hasColor, vertexWriteOffset, 0);
 										vertices = null;
 									}
 									else
 									{
-										meshes.Add(new BufferMesh(material, corners, null, true, hasColor, 0));
+										mesh = new BufferMesh(material, corners, null, true, hasColor, 0);
 									}
+
+									if(optimize)
+									{
+										mesh.OptimizePolygons();
+									}
+
+									meshes.Add(mesh);
 								}
 
 								break;
@@ -830,7 +839,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					meshes.Add(new BufferMesh(vertices, continueWeight, hasVertexNormals, vertexWriteOffset));
 				}
 
-				atc.MeshData = optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+				atc.MeshData = BufferMesh.CompressLayout(meshes);
 			}
 		}
 

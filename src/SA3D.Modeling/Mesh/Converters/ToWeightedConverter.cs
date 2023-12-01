@@ -166,17 +166,17 @@ namespace SA3D.Modeling.Mesh.Converters
 			return result.ToArray();
 		}
 
-		private int ComputeCommonNodeIndex(SortedSet<int> dependingNodeIndices)
+		public static int ComputeCommonNodeIndex(Node[] nodes, SortedSet<int> dependingNodeIndices)
 		{
 			Dictionary<Node, int> parentIndices = new();
-			for(int i = 0; i < _nodes.Length; i++)
+			for(int i = 0; i < nodes.Length; i++)
 			{
-				parentIndices.Add(_nodes[i], 0);
+				parentIndices.Add(nodes[i], 0);
 			}
 
 			foreach(int i in dependingNodeIndices)
 			{
-				Node? node = _nodes[i];
+				Node? node = nodes[i];
 				while(node != null)
 				{
 					parentIndices[node]++;
@@ -190,7 +190,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			{
 				if(t.Value == target)
 				{
-					return Array.IndexOf(_nodes, t.Key);
+					return Array.IndexOf(nodes, t.Key);
 				}
 			}
 
@@ -405,7 +405,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			else
 			{
 				SortedSet<int> absoluteDepends = new(dependingMeshNodeIndices.Select(x => _meshNodeIndexMapping[x]));
-				rootNodeIndex = ComputeCommonNodeIndex(absoluteDepends);
+				rootNodeIndex = ComputeCommonNodeIndex(_nodes, absoluteDepends);
 				dependingRelativeNodeIndices = new(absoluteDepends.Select(x => x - rootNodeIndex));
 
 				vertices = EvaluateWeightVertices(dependingMeshNodeIndices, rootNodeIndex);

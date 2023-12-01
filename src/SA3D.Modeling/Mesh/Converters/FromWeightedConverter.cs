@@ -89,15 +89,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					meshSets.Add((nodeIndex, vertexMeshes.ToArray()));
 				}
 
-				BufferMesh[] polyMeshes = GetPolygonMeshes(wba);
-
-				if(optimize)
-				{
-					foreach(BufferMesh polyMesh in polyMeshes)
-					{
-						polyMesh.OptimizePolygons();
-					}
-				}
+				BufferMesh[] polyMeshes = GetPolygonMeshes(wba, optimize);
 
 				int[] nodeIndices = new int[meshSets.Count];
 				Attach[] attaches = new Attach[meshSets.Count];
@@ -138,13 +130,13 @@ namespace SA3D.Modeling.Mesh.Converters
 					vertices[i] = new(wVert.Position, wVert.Normal, (ushort)i);
 				}
 
-				BufferMesh[] polygonMeshes = GetPolygonMeshes(wba);
+				BufferMesh[] polygonMeshes = GetPolygonMeshes(wba, optimize);
 
 				meshes.Add(new(vertices, false, true, 0));
 
 				meshes.AddRange(polygonMeshes);
 
-				BufferMesh[] result = BufferMesh.Optimize(meshes);
+				BufferMesh[] result = BufferMesh.CompressLayout(meshes);
 
 				return new(
 					wba.Label ?? "BUFFER_" + StringExtensions.GenerateIdentifier(),
@@ -154,12 +146,13 @@ namespace SA3D.Modeling.Mesh.Converters
 					new Attach[] { new(result) });
 			}
 
-			private static BufferMesh[] GetPolygonMeshes(WeightedMesh wba)
+			private static BufferMesh[] GetPolygonMeshes(WeightedMesh wba, bool optimize)
 			{
 				List<BufferMesh> result = new();
 
 				for(int i = 0; i < wba.TriangleSets.Length; i++)
 				{
+					wba.Materials[i].BackfaceCulling = false;
 					BufferMesh mesh = new(
 						wba.Materials[i],
 						(BufferCorner[])wba.TriangleSets[i].Clone(),
@@ -167,6 +160,11 @@ namespace SA3D.Modeling.Mesh.Converters
 						false,
 						wba.HasColors,
 						0);
+
+					if(optimize)
+					{
+						mesh.OptimizePolygons();
+					}
 
 					result.Add(mesh);
 				}
