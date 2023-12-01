@@ -265,7 +265,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		#region Convert to Buffer
 
-		private static BufferMaterial ConvertToBufferMaterial(BasicMaterial mat)
+		public static BufferMaterial ConvertToBufferMaterial(BasicMaterial mat)
 		{
 			return new(BufferMaterial.DefaultValues)
 			{
@@ -293,7 +293,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			};
 		}
 
-		private static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified)
+		public static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified)
 		{
 			strippified = mesh.PolygonType is BasicPolygonType.TriangleStrips or BasicPolygonType.NPoly;
 
@@ -451,9 +451,12 @@ namespace SA3D.Modeling.Mesh.Converters
 		/// <param name="optimize">Whether the buffer model should be optimized</param>
 		public static void BufferBasicModel(Node model, bool optimize = true)
 		{
-			foreach(Attach atc in model.GetTreeAttaches())
+			if(!WeldedBasicConverter.BufferWeldedBasicModel(model, optimize))
 			{
-				atc.MeshData = ConvertBasicToBuffer((BasicAttach)atc, optimize);
+				foreach(Attach atc in model.GetTreeAttaches())
+				{
+					atc.MeshData = ConvertBasicToBuffer((BasicAttach)atc, optimize);
+				}
 			}
 		}
 
