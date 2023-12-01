@@ -20,7 +20,6 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private (Matrix4x4 vertex, Matrix4x4 normal)[] _matrices;
 		private int _weightNum;
-		private int _meshSetCount;
 
 		private ushort[][] _vertexIndexMap;
 		private WeightedVertex[] _vertices;
@@ -83,7 +82,6 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				_vertexIndexMap[i] = new ushort[attach.Positions.Length];
-				_meshSetCount += attach.Meshes.Length;
 
 				int nodeIndex = _nodeIndices[node];
 				_relativeNodeIndices.Add(node, (nodeIndex - rootNodeIndex, i));
@@ -231,8 +229,8 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private void CollectPolygons()
 		{
-			_polygonCorners = new BufferCorner[_meshSetCount][];
-			_materials = new BufferMaterial[_meshSetCount];
+			List<List<BufferCorner>> polygonCorners = new();
+			List<BufferMaterial> materials = new();
 			_hasColors = false;
 
 			int meshIndex = 0;
@@ -253,10 +251,34 @@ namespace SA3D.Modeling.Mesh.Converters
 						corners[k].VertexIndex = vertexIndexMap[corners[k].VertexIndex];
 					}
 
-					_polygonCorners[meshIndex] = BufferMesh.GetCornerTriangleList(corners, indexList, strippified);
-					_materials[meshIndex] = BasicConverter.ConvertToBufferMaterial(attach.Materials[j]);
+					BufferMaterial material = BasicConverter.ConvertToBufferMaterial(attach.Materials[j]);
+					BufferCorner[] resultCorners = BufferMesh.GetCornerTriangleList(corners, indexList, strippified);
+
+					List<BufferCorner>? targetCorners = null;
+
+					for(int k = 0; k < materials.Count; k++)
+					{
+						if(materials[k] == material)
+						{
+							targetCorners = polygonCorners[k];
+							break;
+						}
+					}
+
+					if(targetCorners != null)
+					{
+						targetCorners.AddRange(resultCorners);
+					}
+					else
+					{
+						polygonCorners.Add(new(resultCorners));
+						materials.Add(material);
+					}
 				}
 			}
+
+			_polygonCorners = polygonCorners.Select(x => x.ToArray()).ToArray();
+			_materials = materials.ToArray();
 		}
 
 		private void RemoveUnusedVertices()
