@@ -245,7 +245,11 @@ namespace SA3D.Modeling.ObjectData
 					continue;
 				}
 
-				IEnumerable<Node> weldNodes = node.Welding.SelectMany(x => x.Welds.Select(x => x.SourceNode));
+				Weld[] t = node.Welding.SelectMany(x => x.Welds).ToArray();
+
+				IEnumerable<Node> weldNodes = node.Welding
+					.SelectMany(x => x.Welds)
+					.Select(x => x.SourceNode);
 
 				if(result.TryGetValue(node, out HashSet<Node>? links))
 				{
@@ -284,7 +288,17 @@ namespace SA3D.Modeling.ObjectData
 		{
 			Dictionary<Node, HashSet<Node>> weldLinks = GetTreeWeldingLinks(true);
 
-			HashSet<Node> treeNodes = GetTreeNodeEnumerable().ToHashSet();
+			Dictionary<Node, int> nodeIndices = new();
+			HashSet<Node> treeNodes = new();
+
+			int index = 0;
+			foreach(Node node in GetTreeNodeEnumerable())
+			{
+				nodeIndices.Add(node, index);
+				treeNodes.Add(node);
+				index++;
+			}
+
 			int notInTreeCount = weldLinks.Keys.Count(x => !treeNodes.Contains(x));
 			if(notInTreeCount > 0)
 			{
@@ -325,7 +339,7 @@ namespace SA3D.Modeling.ObjectData
 					}
 				}
 
-				result.Add(group.ToArray());
+				result.Add(group.OrderBy(x => nodeIndices[x]).ToArray());
 			}
 
 			return result.ToArray();
