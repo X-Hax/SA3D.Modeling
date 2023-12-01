@@ -34,6 +34,8 @@ SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex() -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex(uint destinationVertexIndex, SA3D.Modeling.File.Structs.MetaWeight[]! weights) -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.Weights.get -> SA3D.Modeling.File.Structs.MetaWeight[]!
 SA3D.Modeling.File.Structs.MetaWeightVertex.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.ObjectData.Node.GetTreeWeldingGroups(bool includeUnwelded) -> SA3D.Modeling.ObjectData.Node![]![]!
+SA3D.Modeling.ObjectData.Node.GetTreeWeldingLinks(bool twoway) -> System.Collections.Generic.Dictionary<SA3D.Modeling.ObjectData.Node!, System.Collections.Generic.HashSet<SA3D.Modeling.ObjectData.Node!>!>!
 SA3D.Modeling.ObjectData.Node.Welding.get -> SA3D.Modeling.ObjectData.Structs.VertexWelding[]?
 SA3D.Modeling.ObjectData.Node.Welding.set -> void
 SA3D.Modeling.ObjectData.Structs.VertexWelding

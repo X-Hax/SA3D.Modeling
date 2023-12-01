@@ -228,5 +228,107 @@ namespace SA3D.Modeling.ObjectData
 				BufferMeshData(optimize);
 			}
 		}
+
+
+		/// <summary>
+		/// Returns a dictionary of links between nodes that influence each other with welds.
+		/// </summary>
+		/// <param name="twoway">Whether to make all links twoay</param>
+		public Dictionary<Node, HashSet<Node>> GetTreeWeldingLinks(bool twoway)
+		{
+			Dictionary<Node, HashSet<Node>> result = new();
+
+			foreach(Node node in GetTreeNodeEnumerable())
+			{
+				if(node.Welding == null)
+				{
+					continue;
+				}
+
+				IEnumerable<Node> weldNodes = node.Welding.SelectMany(x => x.Welds.Select(x => x.SourceNode));
+
+				if(result.TryGetValue(node, out HashSet<Node>? links))
+				{
+					links.UnionWith(weldNodes);
+				}
+				else
+				{
+					links = weldNodes.ToHashSet();
+					result.Add(node, links);
+				}
+
+				if(twoway)
+				{
+					foreach(Node linkedNode in links)
+					{
+						if(!result.TryGetValue(linkedNode, out HashSet<Node>? targetLinks))
+						{
+							targetLinks = new();
+							result.Add(linkedNode, targetLinks);
+						}
+
+						targetLinks.Add(node);
+					}
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Returns groups of nodes in the tree that influence each others attaches via weldings.
+		/// </summary>
+		/// <param name="includeUnwelded">Create one-node groups for nodes that are not linked to other nodes. Otherwise ignore them</param>
+		/// <exception cref="InvalidOperationException"/>
+		public Node[][] GetTreeWeldingGroups(bool includeUnwelded)
+		{
+			Dictionary<Node, HashSet<Node>> weldLinks = GetTreeWeldingLinks(true);
+
+			HashSet<Node> treeNodes = GetTreeNodeEnumerable().ToHashSet();
+			int notInTreeCount = weldLinks.Keys.Count(x => !treeNodes.Contains(x));
+			if(notInTreeCount > 0)
+			{
+				throw new InvalidOperationException($"The welds reference {notInTreeCount} nodes that are not in the tree!");
+			}
+
+			List<Node[]> result = new();
+			while(treeNodes.Count > 0)
+			{
+				Node start = treeNodes.First();
+				treeNodes.Remove(start);
+
+				if(!weldLinks.ContainsKey(start))
+				{
+					if(includeUnwelded)
+					{
+						result.Add(new[] { start });
+					}
+
+					continue;
+				}
+
+				HashSet<Node> group = new();
+				Queue<Node> linkQueue = new();
+				linkQueue.Enqueue(start);
+
+				while(linkQueue.Count > 0)
+				{
+					Node node = linkQueue.Dequeue();
+					group.Add(node);
+
+					foreach(Node weldLink in weldLinks[node])
+					{
+						if(treeNodes.Remove(weldLink))
+						{
+							linkQueue.Enqueue(weldLink);
+						}
+					}
+				}
+
+				result.Add(group.ToArray());
+			}
+
+			return result.ToArray();
+		}
 	}
 }
