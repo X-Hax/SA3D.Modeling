@@ -7,7 +7,6 @@ using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Strippify;
 using SA3D.Modeling.Structs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -195,15 +194,48 @@ namespace SA3D.Modeling.Mesh.Converters
 			return new BasicAttach(positions, normals, attach.Meshes, attach.Materials);
 		}
 
+		public static BasicAttach CreateBasicAttach(WeightedVertex[] vertices, BufferCorner[][] triangleSets, BufferMaterial[] bMaterials, bool hasColors, string label)
+		{
+			Vector3[] positions = new Vector3[vertices.Length];
+			Vector3[] normals = new Vector3[positions.Length];
+			string identifier = StringExtensions.GenerateIdentifier();
+
+			for(int i = 0; i < positions.Length; i++)
+			{
+				WeightedVertex vtx = vertices[i];
+
+				positions[i] = vtx.Position;
+				normals[i] = vtx.Normal;
+			}
+
+			BasicMesh[] meshes = new BasicMesh[triangleSets.Length];
+			BasicMaterial[] materials = new BasicMaterial[meshes.Length];
+
+			for(int i = 0; i < meshes.Length; i++)
+			{
+				meshes[i] = ConvertToBasicMesh(triangleSets[i], hasColors, i, identifier);
+				materials[i] = ConvertToBasicMaterial(bMaterials[i]);
+			}
+
+			BasicAttach result = new(positions, normals, meshes, materials)
+			{
+				Label = label
+			};
+
+			result.RecalculateBounds();
+
+			return result;
+		}
+
 		public static void ConvertWeightedToBasic(
 			Node model,
 			WeightedMesh[] meshData,
-			bool optimize,
-			bool ignoreWeights)
+			bool optimize)
 		{
-			if(meshData.Any(x => x.IsWeighted) && !ignoreWeights)
+			if(meshData.Any(x => x.IsWeighted))
 			{
-				throw new FormatException("Model is weighted, cannot convert to BASIC format!");
+				ToWeldedBasicConverter.ConvertWeightedToWeldedBasic(model, meshData, optimize);
+				return;
 			}
 
 			Node[] nodes = model.GetTreeNodes();
@@ -211,55 +243,32 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			meshData = WeightedMesh.MergeAtRoots(meshData);
 
-			foreach(WeightedMesh weightedAttach in meshData)
+			foreach(WeightedMesh weightedMesh in meshData)
 			{
-				Vector3[] positions = new Vector3[weightedAttach.Vertices.Length];
-				Vector3[] normals = new Vector3[positions.Length];
-				string identifier = StringExtensions.GenerateIdentifier();
-
-				for(int i = 0; i < positions.Length; i++)
-				{
-					WeightedVertex vtx = weightedAttach.Vertices[i];
-
-					positions[i] = vtx.Position;
-					normals[i] = vtx.Normal;
-				}
-
-				// putting together polygons
-				BasicMesh[] meshes = new BasicMesh[weightedAttach.TriangleSets.Length];
-				BasicMaterial[] materials = new BasicMaterial[meshes.Length];
-
-				for(int i = 0; i < meshes.Length; i++)
-				{
-					meshes[i] = ConvertToBasicMesh(weightedAttach.TriangleSets[i], weightedAttach.HasColors, i, identifier);
-					materials[i] = ConvertToBasicMaterial(weightedAttach.Materials[i]);
-				}
-
-				BasicAttach result = new(positions, normals, meshes, materials);
+				BasicAttach result = CreateBasicAttach(
+					weightedMesh.Vertices,
+					weightedMesh.TriangleSets,
+					weightedMesh.Materials,
+					weightedMesh.HasColors,
+					weightedMesh.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier());
 
 				if(optimize)
 				{
 					result = OptimizeBasicVertices(result);
 				}
 
-				result.RecalculateBounds();
-
-				result.Label = weightedAttach.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier();
-
-				foreach(int index in weightedAttach.RootIndices)
+				foreach(int index in weightedMesh.RootIndices)
 				{
 					attaches[index] = result;
 				}
 			}
 
 			model.ClearAttachesFromTree();
+			model.ClearWeldingsFromTree();
 
 			for(int i = 0; i < nodes.Length; i++)
 			{
-				Node node = nodes[i];
-
-				node.Welding = null;
-				node.Attach = attaches[i];
+				nodes[i].Attach = attaches[i];
 			}
 		}
 
@@ -453,7 +462,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		/// <param name="optimize">Whether the buffer model should be optimized</param>
 		public static void BufferBasicModel(Node model, bool optimize = true)
 		{
-			if(!WeldedBasicConverter.BufferWeldedBasicModel(model, optimize))
+			if(!FromWeldedBasicConverter.BufferWeldedBasicModel(model, optimize))
 			{
 				foreach(Attach atc in model.GetTreeAttaches())
 				{

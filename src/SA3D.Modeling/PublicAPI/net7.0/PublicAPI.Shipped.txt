@@ -1240,7 +1240,6 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.get -> string?
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Materials.get -> SA3D.Modeling.Mesh.Buffer.BufferMaterial[]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.RootIndices.get -> System.Collections.Generic.HashSet<int>!
-SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights) -> SA3D.Modeling.Mesh.Attach!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.TriangleSets.get -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Vertices.get -> SA3D.Modeling.Mesh.Weighted.WeightedVertex[]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.WriteSpecular.get -> bool
@@ -1485,7 +1484,6 @@ SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
 SA3D.Modeling.ObjectData.Node.Child.get -> SA3D.Modeling.ObjectData.Node?
 SA3D.Modeling.ObjectData.Node.ChildCount.get -> int
 SA3D.Modeling.ObjectData.Node.ClearAttachesFromTree() -> void
-SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.DeepAttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Detach() -> void
@@ -1809,7 +1807,6 @@ static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.At
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeAtRoots(SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeWeightedMeshes(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Weighted.WeightedMesh!>! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
-static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights = false) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator !=(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator ==(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.ObjectData.Enums.EnumExtensions.CheckIsCollision(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> bool

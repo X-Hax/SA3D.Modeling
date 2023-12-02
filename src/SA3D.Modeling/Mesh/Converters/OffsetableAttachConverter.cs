@@ -111,11 +111,11 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 			model.ClearAttachesFromTree();
+			model.ClearWeldingsFromTree();
 
 			for(int i = 0; i < nodeAttaches.Length; i++)
 			{
 				Node node = nodeMatrices[i].node;
-				node.Welding = null;
 
 				List<Attach> attaches = nodeAttaches[i];
 

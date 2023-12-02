@@ -34,6 +34,9 @@ SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex() -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex(uint destinationVertexIndex, SA3D.Modeling.File.Structs.MetaWeight[]! weights) -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.Weights.get -> SA3D.Modeling.File.Structs.MetaWeight[]!
 SA3D.Modeling.File.Structs.MetaWeightVertex.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize) -> SA3D.Modeling.Mesh.Attach!
+SA3D.Modeling.ObjectData.Node.ClearWeldingsFromTree() -> void
+SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.GetTreeWeldingGroups(bool includeUnwelded) -> SA3D.Modeling.ObjectData.Node![]![]!
 SA3D.Modeling.ObjectData.Node.GetTreeWeldingLinks(bool twoway) -> System.Collections.Generic.Dictionary<SA3D.Modeling.ObjectData.Node!, System.Collections.Generic.HashSet<SA3D.Modeling.ObjectData.Node!>!>!
 SA3D.Modeling.ObjectData.Node.Welding.get -> SA3D.Modeling.ObjectData.Structs.VertexWelding[]?
@@ -61,6 +64,7 @@ static SA3D.Modeling.File.Structs.MetaWeightVertex.Read(SA3D.Common.IO.EndianSta
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.CompressLayout(System.Collections.Generic.IList<SA3D.Modeling.Mesh.Buffer.BufferMesh!>! input) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.GetCornerTriangleList(SA3D.Modeling.Mesh.Buffer.BufferCorner[]! corners, uint[]? indexList, bool strippified) -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]!
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.GetIndexTriangleList(SA3D.Modeling.Mesh.Buffer.BufferCorner[]! corners, uint[]? indexList, bool strippified) -> uint[]!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize) -> void
 static SA3D.Modeling.ObjectData.Structs.VertexWelding.operator !=(SA3D.Modeling.ObjectData.Structs.VertexWelding left, SA3D.Modeling.ObjectData.Structs.VertexWelding right) -> bool
 static SA3D.Modeling.ObjectData.Structs.VertexWelding.operator ==(SA3D.Modeling.ObjectData.Structs.VertexWelding left, SA3D.Modeling.ObjectData.Structs.VertexWelding right) -> bool
 static SA3D.Modeling.ObjectData.Structs.Weld.operator !=(SA3D.Modeling.ObjectData.Structs.Weld left, SA3D.Modeling.ObjectData.Structs.Weld right) -> bool

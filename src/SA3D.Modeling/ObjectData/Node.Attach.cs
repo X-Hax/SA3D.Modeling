@@ -150,14 +150,12 @@ namespace SA3D.Modeling.ObjectData
 		/// <param name="newAttachFormat">The attach format to convert to.</param>
 		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
 		/// <param name="optimize">Whether to optimize the new attach data.</param>
-		/// <param name="ignoreWeights">Convert regardless of weight information being lost.</param>
 		/// <param name="forceUpdate">Force conversion, even if the attach format ends up being the same.</param>
 		/// <param name="updateBuffer">Whether to generate buffer mesh data after conversion.</param>
 		public void ConvertAttachFormat(
 			AttachFormat newAttachFormat,
 			BufferMode bufferMode,
 			bool optimize,
-			bool ignoreWeights = false,
 			bool forceUpdate = false,
 			bool updateBuffer = false)
 		{
@@ -181,6 +179,7 @@ namespace SA3D.Modeling.ObjectData
 				}
 
 				ClearAttachesFromTree();
+				ClearWeldingsFromTree();
 
 				foreach(KeyValuePair<Attach, Node> pair in attachPairs)
 				{
@@ -210,13 +209,13 @@ namespace SA3D.Modeling.ObjectData
 			switch(newAttachFormat)
 			{
 				case AttachFormat.BASIC:
-					BasicConverter.ConvertWeightedToBasic(rootNode, weightedMeshes, optimize, ignoreWeights);
+					BasicConverter.ConvertWeightedToBasic(rootNode, weightedMeshes, optimize);
 					break;
 				case AttachFormat.CHUNK:
 					ChunkConverter.ConvertWeightedToChunk(rootNode, weightedMeshes, optimize);
 					break;
 				case AttachFormat.GC:
-					GCConverter.ConvertWeightedToGC(rootNode, weightedMeshes, optimize, ignoreWeights);
+					GCConverter.ConvertWeightedToGC(rootNode, weightedMeshes, optimize);
 					break;
 				case AttachFormat.Buffer:
 				default:
@@ -344,5 +343,17 @@ namespace SA3D.Modeling.ObjectData
 
 			return result.ToArray();
 		}
+
+		/// <summary>
+		/// Removes all welding from the entire node tree that this node belongs to.
+		/// </summary>
+		public void ClearWeldingsFromTree()
+		{
+			foreach(Node node in GetTreeNodeEnumerable())
+			{
+				node.Welding = null;
+			}
+		}
+	
 	}
 }

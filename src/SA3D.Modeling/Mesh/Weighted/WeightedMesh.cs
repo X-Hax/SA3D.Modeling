@@ -195,7 +195,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 			if(attachFormat == AttachFormat.BASIC && hasWelding)
 			{
 				Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
-				result = WeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups);
+				result = FromWeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups);
 			}
 			else
 			{
@@ -211,17 +211,16 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// </summary>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
-		/// <param name="ignoreWeights">Whether to ignore losing weight information.</param>
 		/// <returns>The converted attach.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public Attach ToAttach(AttachFormat format, bool optimize, bool ignoreWeights)
+		public Attach ToAttach(AttachFormat format, bool optimize)
 		{
 			HashSet<int> backup = new(RootIndices);
 			RootIndices.Clear();
 			RootIndices.Add(0);
 
 			Node dummy = new();
-			ToModel(dummy, new[] { this }, format, optimize, ignoreWeights);
+			ToModel(dummy, new[] { this }, format, optimize);
 
 			RootIndices.Clear();
 			RootIndices.UnionWith(backup);
@@ -236,8 +235,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <param name="meshes">Meshes to convert.</param>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
-		/// <param name="ignoreWeights">Whether to ignore losing weight information.</param>
-		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize, bool ignoreWeights = false)
+		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize)
 		{
 			EnsurePolygonsValid(ref meshes);
 
@@ -247,13 +245,13 @@ namespace SA3D.Modeling.Mesh.Weighted
 					FromWeightedConverter.Convert(model, meshes, optimize);
 					break;
 				case AttachFormat.BASIC:
-					BasicConverter.ConvertWeightedToBasic(model, meshes, optimize, ignoreWeights);
+					BasicConverter.ConvertWeightedToBasic(model, meshes, optimize);
 					break;
 				case AttachFormat.CHUNK:
 					ChunkConverter.ConvertWeightedToChunk(model, meshes, optimize);
 					break;
 				case AttachFormat.GC:
-					GCConverter.ConvertWeightedToGC(model, meshes, optimize, ignoreWeights);
+					GCConverter.ConvertWeightedToGC(model, meshes, optimize);
 					break;
 				default:
 					throw new ArgumentException("Invalid attach format.", nameof(format));

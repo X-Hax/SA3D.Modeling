@@ -18,13 +18,8 @@ namespace SA3D.Modeling.Mesh.Converters
 	/// </summary>
 	internal static class GCConverter
 	{
-		public static void ConvertWeightedToGC(Node model, WeightedMesh[] meshData, bool optimize, bool ignoreWeights)
+		public static void ConvertWeightedToGC(Node model, WeightedMesh[] meshData, bool optimize)
 		{
-			if(meshData.Any(x => x.IsWeighted) && !ignoreWeights)
-			{
-				throw new FormatException("Model is weighted, cannot convert to basic format!");
-			}
-
 			Node[] nodes = model.GetTreeNodes();
 			GCAttach[] attaches = new GCAttach[nodes.Length];
 			List<GCAttach> rootlessAttaches = new();
@@ -313,14 +308,12 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 			model.ClearAttachesFromTree();
+			model.ClearWeldingsFromTree();
 
 			// Linking the attaches to the nodes
 			for(int i = 0; i < nodes.Length; i++)
 			{
-				Node node = nodes[i];
-
-				node.Welding = null;
-				node.Attach = attaches[i];
+				nodes[i].Attach = attaches[i];
 			}
 		}
 

@@ -11,7 +11,7 @@ using SA3D.Modeling.Structs;
 
 namespace SA3D.Modeling.Mesh.Converters
 {
-	internal class WeldedBasicConverter
+	internal class FromWeldedBasicConverter
 	{
 		private readonly Node _rootNode;
 		private readonly Node[] _weldingGroups;
@@ -29,7 +29,8 @@ namespace SA3D.Modeling.Mesh.Converters
 		private BufferMaterial[] _materials;
 		private bool _hasColors;
 
-		public WeldedBasicConverter(Node rootNode, Node[] weldingGroups, Dictionary<Node, int> nodeIndices)
+
+		private FromWeldedBasicConverter(Node rootNode, Node[] weldingGroups, Dictionary<Node, int> nodeIndices)
 		{
 			_rootNode = rootNode;
 			_weldingGroups = weldingGroups;
@@ -47,7 +48,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		}
 
 
-		public WeightedMesh Process()
+		public WeightedMesh? Process()
 		{
 			SetupNodeIndices();
 			SetupMatrices();
@@ -58,6 +59,11 @@ namespace SA3D.Modeling.Mesh.Converters
 			CollectPolygons();
 
 			RemoveUnusedVertices();
+
+			if(_vertices.Length == 0)
+			{
+				return null;
+			}
 
 			WeightedMesh result = WeightedMesh.Create(_vertices, _polygonCorners, _materials, _hasColors);
 
@@ -316,6 +322,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 		}
 
+
 		public static WeightedMesh[] CreateWeightedFromWeldedBasicModel(Node model, Node[][] weldingGroups)
 		{
 			List<WeightedMesh> result = new();
@@ -355,8 +362,12 @@ namespace SA3D.Modeling.Mesh.Converters
 				SortedSet<int> dependencyNodes = new(group.Select(x => nodeIndices[x]));
 				int rootNodeIndex = ToWeightedConverter.ComputeCommonNodeIndex(nodes, dependencyNodes);
 
-				WeightedMesh mesh = new WeldedBasicConverter(nodes[rootNodeIndex], group, nodeIndices).Process();
-				result.Add(mesh);
+				WeightedMesh? mesh = new FromWeldedBasicConverter(nodes[rootNodeIndex], group, nodeIndices).Process();
+
+				if(mesh != null)
+				{
+					result.Add(mesh);
+				}
 			}
 
 			return result.ToArray();
@@ -405,11 +416,11 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			WeightedMesh.ToModel(model, weightedMeshes, AttachFormat.Buffer, optimize, false);
+			WeightedMesh.ToModel(model, weightedMeshes, AttachFormat.Buffer, optimize);
 
 			foreach(KeyValuePair<Node, BasicAttach> nodeAttach in attachLUT)
 			{
-				nodeAttach.Value.MeshData = nodeAttach.Key.Attach!.MeshData;
+				nodeAttach.Value.MeshData = nodeAttach.Key.Attach?.MeshData ?? Array.Empty<BufferMesh>();
 			}
 
 			model.ClearAttachesFromTree();
