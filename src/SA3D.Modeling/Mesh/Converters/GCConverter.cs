@@ -317,7 +317,10 @@ namespace SA3D.Modeling.Mesh.Converters
 			// Linking the attaches to the nodes
 			for(int i = 0; i < nodes.Length; i++)
 			{
-				nodes[i].Attach = attaches[i];
+				Node node = nodes[i];
+
+				node.Welding = null;
+				node.Attach = attaches[i];
 			}
 		}
 

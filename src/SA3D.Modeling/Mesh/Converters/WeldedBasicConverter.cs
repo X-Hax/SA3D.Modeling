@@ -391,11 +391,17 @@ namespace SA3D.Modeling.Mesh.Converters
 			WeightedMesh[] weightedMeshes = CreateWeightedFromWeldedBasicModel(model, weldingGroups);
 
 			Dictionary<Node, BasicAttach> attachLUT = new();
+			Dictionary<Node, VertexWelding[]> weldingLUT = new();
 			foreach(Node node in model.GetTreeNodeEnumerable())
 			{
 				if(node.Attach is BasicAttach atc)
 				{
 					attachLUT.Add(node, atc);
+				}
+
+				if(node.Welding != null)
+				{
+					weldingLUT.Add(node, node.Welding);
 				}
 			}
 
@@ -411,6 +417,12 @@ namespace SA3D.Modeling.Mesh.Converters
 			foreach(KeyValuePair<Node, BasicAttach> nodeAttach in attachLUT)
 			{
 				nodeAttach.Key.Attach = nodeAttach.Value;
+			}
+
+			// WeightedMesh.ToModel removes the weldings when converting to Buffer attaches. We need to re-add them
+			foreach(KeyValuePair<Node, VertexWelding[]> nodeWelding in weldingLUT)
+			{
+				nodeWelding.Key.Welding = nodeWelding.Value;
 			}
 
 			return true;

@@ -114,6 +114,9 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			for(int i = 0; i < nodeAttaches.Length; i++)
 			{
+				Node node = nodeMatrices[i].node;
+				node.Welding = null;
+
 				List<Attach> attaches = nodeAttaches[i];
 
 				if(attaches.Count == 0)
@@ -121,7 +124,6 @@ namespace SA3D.Modeling.Mesh.Converters
 					continue;
 				}
 
-				Node node = nodeMatrices[i].node;
 				if(attaches.Count == 1)
 				{
 					node.Attach = attaches[0];
