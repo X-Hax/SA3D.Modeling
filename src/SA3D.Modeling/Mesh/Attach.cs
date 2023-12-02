@@ -64,7 +64,7 @@ namespace SA3D.Modeling.Mesh
 		/// <returns>Whether the attaches mesh data has/relies on weights</returns>
 		public virtual bool CheckHasWeights()
 		{
-			return MeshData.Any(x => x.ContinueWeight || x.IndexList == null || x.IndexList.Length == 0);
+			return MeshData.Any(x => x.ContinueWeight || x.Corners == null);
 		}
 
 		/// <summary>

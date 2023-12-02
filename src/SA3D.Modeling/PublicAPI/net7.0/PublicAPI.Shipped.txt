@@ -14,7 +14,6 @@ override SA3D.Modeling.Animation.Motion.ToString() -> string!
 override SA3D.Modeling.File.ModelFile.ToString() -> string!
 override SA3D.Modeling.Mesh.Attach.ToString() -> string!
 override SA3D.Modeling.Mesh.Basic.BasicAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
-override SA3D.Modeling.Mesh.Basic.BasicAttach.CheckHasWeights() -> bool
 override SA3D.Modeling.Mesh.Basic.BasicAttach.Clone() -> SA3D.Modeling.Mesh.Attach!
 override SA3D.Modeling.Mesh.Basic.BasicAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
 override SA3D.Modeling.Mesh.Basic.BasicAttach.RecalculateBounds() -> void
