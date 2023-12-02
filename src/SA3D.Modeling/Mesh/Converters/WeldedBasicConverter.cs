@@ -316,15 +316,9 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 		}
 
-		public static bool BufferWeldedBasicModel(Node model, bool optimize = true)
+		public static WeightedMesh[] CreateWeightedFromWeldedBasicModel(Node model, Node[][] weldingGroups)
 		{
-			Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
-			if(weldingGroups.Length == 0)
-			{
-				return false;
-			}
-
-			List<WeightedMesh> weightedMeshes = new();
+			List<WeightedMesh> result = new();
 
 			Node[] nodes = model.GetTreeNodes();
 			Dictionary<Node, int> nodeIndices = new();
@@ -336,36 +330,24 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			HashSet<Node> groupedNodes = weldingGroups.SelectMany(x => x).ToHashSet();
 			Dictionary<BasicAttach, WeightedMesh> reusedMeshes = new();
-			Dictionary<Node, BasicAttach> attachLUT = new();
 
 			foreach(Node node in model.GetTreeNodeEnumerable())
 			{
-				if(node.Attach == null)
+				if(node.Attach == null || groupedNodes.Contains(node))
 				{
 					continue;
 				}
 
 				BasicAttach atc = (BasicAttach)node.Attach;
-				attachLUT.Add(node, atc);
-
-				if(groupedNodes.Contains(node))
-				{
-					continue;
-				}
 
 				if(!reusedMeshes.TryGetValue(atc, out WeightedMesh? mesh))
 				{
-					atc.MeshData = BasicConverter.ConvertBasicToBuffer(atc, optimize);
-
-					if(!groupedNodes.Contains(node))
-					{
-						mesh = WeightedMesh.FromAttach(atc, BufferMode.None);
-						reusedMeshes.Add(atc, mesh);
-						weightedMeshes.Add(mesh);
-					}
+					mesh = WeightedMesh.FromAttach(atc, BufferMode.None);
+					reusedMeshes.Add(atc, mesh);
+					result.Add(mesh);
 				}
 
-				mesh?.RootIndices.Add(nodeIndices[node]);
+				mesh.RootIndices.Add(nodeIndices[node]);
 			}
 
 			foreach(Node[] group in weldingGroups)
@@ -374,10 +356,50 @@ namespace SA3D.Modeling.Mesh.Converters
 				int rootNodeIndex = ToWeightedConverter.ComputeCommonNodeIndex(nodes, dependencyNodes);
 
 				WeightedMesh mesh = new WeldedBasicConverter(nodes[rootNodeIndex], group, nodeIndices).Process();
-				weightedMeshes.Add(mesh);
+				result.Add(mesh);
 			}
 
-			WeightedMesh.ToModel(model, weightedMeshes.ToArray(), AttachFormat.Buffer, optimize, false);
+			return result.ToArray();
+		}
+
+		public static bool BufferWeldedBasicModel(Node model, bool optimize)
+		{
+			Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
+			if(weldingGroups.Length == 0)
+			{
+				return false;
+			}
+
+			HashSet<Node> groupedNodes = weldingGroups.SelectMany(x => x).ToHashSet();
+			HashSet<BasicAttach> buffered = new();
+			foreach(Node node in model.GetTreeNodeEnumerable())
+			{
+				if(node.Attach == null || groupedNodes.Contains(node))
+				{
+					continue;
+				}
+
+				BasicAttach atc = (BasicAttach)node.Attach;
+
+				if(!buffered.Contains(atc))
+				{
+					buffered.Add(atc);
+					atc.MeshData = BasicConverter.ConvertBasicToBuffer(atc, optimize);
+				}
+			}
+
+			WeightedMesh[] weightedMeshes = CreateWeightedFromWeldedBasicModel(model, weldingGroups);
+
+			Dictionary<Node, BasicAttach> attachLUT = new();
+			foreach(Node node in model.GetTreeNodeEnumerable())
+			{
+				if(node.Attach is BasicAttach atc)
+				{
+					attachLUT.Add(node, atc);
+				}
+			}
+
+			WeightedMesh.ToModel(model, weightedMeshes, AttachFormat.Buffer, optimize, false);
 
 			foreach(KeyValuePair<Node, BasicAttach> nodeAttach in attachLUT)
 			{

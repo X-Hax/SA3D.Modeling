@@ -187,7 +187,21 @@ namespace SA3D.Modeling.Mesh.Weighted
 					break;
 			}
 
-			WeightedMesh[] result = ToWeightedConverter.ConvertToWeighted(model);
+			AttachFormat? attachFormat = model.GetAttachFormat();
+			bool hasWelding = model.GetTreeNodeEnumerable().Any(x => x.Welding != null);
+
+			WeightedMesh[] result;
+
+			if(attachFormat == AttachFormat.BASIC && hasWelding)
+			{
+				Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
+				result = WeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups);
+			}
+			else
+			{
+				result = ToWeightedConverter.ConvertToWeighted(model);
+			}
+
 			EnsurePolygonsValid(ref result);
 			return result;
 		}
