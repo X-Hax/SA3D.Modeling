@@ -23,7 +23,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			Diffuse = Color.ColorWhite,
 			Specular = Color.ColorWhite,
 			SpecularExponent = 11,
-			Ambient = Color.ColorBlack,
+			Ambient = Color.ColorWhite,
 			MipmapDistanceMultiplier = 1,
 			SourceBlendMode = BlendMode.SrcAlpha,
 			DestinationBlendmode = BlendMode.SrcAlphaInverted,
