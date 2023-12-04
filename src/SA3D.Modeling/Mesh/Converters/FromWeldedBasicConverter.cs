@@ -140,7 +140,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				for(int j = 0; j < newVertices.Length; j++)
 				{
 					Vector3 position = Vector3.Transform(attach.Positions[j], vertexMatrix);
-					Vector3 normal = Vector3.TransformNormal(attach.Normals[j], normalMatrix);
+					Vector3 normal = Vector3.Normalize(Vector3.TransformNormal(attach.Normals[j], normalMatrix));
 
 					WeightedVertex weightedVert = new(position, normal, _weightNum);
 					weightedVert.Weights![weightIndex] = 1;
@@ -189,6 +189,11 @@ namespace SA3D.Modeling.Mesh.Converters
 						{
 							destVertex.Weights![j] += sourceVertex.Weights[j] * weld.Weight;
 						}
+					}
+
+					if(vertexWelding.Welds.Length > 0)
+					{
+						destVertex.Normal = Vector3.Normalize(destVertex.Normal);
 					}
 
 					destWelded[vertexWelding.DestinationVertexIndex] = true;

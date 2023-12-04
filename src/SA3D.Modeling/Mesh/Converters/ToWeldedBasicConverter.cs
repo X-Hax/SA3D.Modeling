@@ -85,7 +85,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					WeightedVertex vertex = vertices[i];
 
 					vertex.Position = Vector3.Transform(vertex.Position, vertexMatrix);
-					vertex.Normal = Vector3.TransformNormal(vertex.Normal, normalMatrix);
+					vertex.Normal = Vector3.Normalize(Vector3.TransformNormal(vertex.Normal, normalMatrix));
 
 					vertices[i] = vertex;
 				}
