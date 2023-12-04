@@ -34,6 +34,8 @@ SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex() -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex(uint destinationVertexIndex, SA3D.Modeling.File.Structs.MetaWeight[]! weights) -> void
 SA3D.Modeling.File.Structs.MetaWeightVertex.Weights.get -> SA3D.Modeling.File.Structs.MetaWeight[]!
 SA3D.Modeling.File.Structs.MetaWeightVertex.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.TexcoordPrecisionLevel.get -> byte
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.TexcoordPrecisionLevel.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize) -> SA3D.Modeling.Mesh.Attach!
 SA3D.Modeling.ObjectData.Node.ClearWeldingsFromTree() -> void
 SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void

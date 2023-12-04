@@ -2,6 +2,9 @@
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Buffer;
 using SA3D.Modeling.Mesh.Converters;
+using SA3D.Modeling.Mesh.Gamecube;
+using SA3D.Modeling.Mesh.Gamecube.Enums;
+using SA3D.Modeling.Mesh.Gamecube.Parameters;
 using SA3D.Modeling.ObjectData;
 using System;
 using System.Collections.Generic;
@@ -65,6 +68,18 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// Whether Specular colors should be written to the models.
 		/// </summary>
 		public bool WriteSpecular { get; set; }
+
+		/// <summary>
+		/// Texture coordinate precision level. Every level higher allows for double the previous precision, but also reduces range by half.
+		/// <br/> Supported:
+		/// <br/> - Basic: 0
+		/// <br/> - Chunk: 0 or 2
+		/// <br/> - Gamecube: 0-7
+		/// <br/> - Buffer: Unaffected
+		/// <br/>
+		/// <br/> When converting, the lowest supported precision is used.
+		/// </summary>
+		public byte TexcoordPrecisionLevel { get; set; }
 
 
 		internal WeightedMesh(
@@ -175,6 +190,11 @@ namespace SA3D.Modeling.Mesh.Weighted
 		public static WeightedMesh[] FromModel(Node model, BufferMode bufferMode)
 		{
 			AttachFormat? attachFormat = model.GetAttachFormat();
+			if(attachFormat == null)
+			{
+				return Array.Empty<WeightedMesh>();
+			}
+
 			bool hasWelding = model.GetTreeNodeEnumerable().Any(x => x.Welding != null);
 
 			WeightedMesh[] result;
@@ -200,10 +220,77 @@ namespace SA3D.Modeling.Mesh.Weighted
 				}
 
 				result = ToWeightedConverter.ConvertToWeighted(model);
+				GetTexcoordPrecisionLevel(model, result, attachFormat.Value);
 			}
 
 			EnsurePolygonsValid(ref result);
 			return result;
+		}
+
+		private static void GetTexcoordPrecisionLevel(Node model, WeightedMesh[] meshes, AttachFormat format)
+		{
+			Node[] nodes = model.GetTreeNodes();
+
+			switch(format)
+			{
+				case AttachFormat.GC:
+					foreach(WeightedMesh mesh in meshes)
+					{
+						GCAttach atc = (GCAttach)nodes[mesh.RootIndices.First()].Attach!;
+
+						byte texcoordPrecision = 255;
+						if(atc.OpaqueMeshes.Length != 0)
+						{
+							GCVertexFormatParameter[] vtxParams = atc.OpaqueMeshes
+								.SelectMany(x => x.Parameters)
+								.Select(x => x)
+								.OfType<GCVertexFormatParameter>()
+								.Where(x => x.VertexType == GCVertexType.TexCoord0)
+								.ToArray();
+
+							if(vtxParams.Length != 1)
+							{
+								continue;
+							}
+
+							mesh.TexcoordPrecisionLevel = vtxParams[0].Attributes;
+						}
+
+						if(atc.TransparentMeshes.Length != 0)
+						{
+							GCVertexFormatParameter[] vtxParams = atc.TransparentMeshes
+								.SelectMany(x => x.Parameters)
+								.Select(x => x)
+								.OfType<GCVertexFormatParameter>()
+								.Where(x => x.VertexType == GCVertexType.TexCoord0)
+								.ToArray();
+
+							if(vtxParams.Length != 1)
+							{
+								continue;
+							}
+
+							byte newPrecision = vtxParams[0].Attributes;
+							if(texcoordPrecision == 255)
+							{
+								mesh.TexcoordPrecisionLevel = newPrecision;
+							}
+							else if(texcoordPrecision != newPrecision)
+							{
+								mesh.TexcoordPrecisionLevel = 0;
+								continue;
+							}
+						}
+					}
+
+					break;
+				case AttachFormat.CHUNK: // theoretically you can do it for chunk, but its very annoying
+				case AttachFormat.Buffer:
+				case AttachFormat.BASIC:
+				default:
+					break;
+			}
+
 		}
 
 		/// <summary>
