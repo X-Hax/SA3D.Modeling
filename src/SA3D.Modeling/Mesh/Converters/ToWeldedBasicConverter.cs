@@ -19,7 +19,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			public WeightedVertex[] vertices;
 			public ushort[]? vertexMap;
 			public ushort[]? invVertexMap;
-			public ushort[]? polygonRelevantVertexIndices;
+			public HashSet<ushort>? polygonRelevantVertexIndices;
 			public BufferCorner[][] triangleSets;
 			public BufferMaterial[] materials;
 			public int relativeNodeIndex;
@@ -27,7 +27,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			public ushort vertexOffset;
 
-			public MeshContainer(WeightedMesh source, WeightedVertex[] vertices, ushort[]? vertexMap, ushort[]? invVertexMap, ushort[]? polygonRelevantVertexIndices, BufferCorner[][] triangleSets, BufferMaterial[] materials, int relativeNodeIndex)
+			public MeshContainer(WeightedMesh source, WeightedVertex[] vertices, ushort[]? vertexMap, ushort[]? invVertexMap, HashSet<ushort>? polygonRelevantVertexIndices, BufferCorner[][] triangleSets, BufferMaterial[] materials, int relativeNodeIndex)
 			{
 				this.source = source;
 				this.vertices = vertices;
@@ -258,7 +258,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 				}
 
-				WeightedVertex[] vertices = ProcessTiangleSetVertices(weightedMesh.Vertices, tmpCorners, i, out ushort[]? polygonVertexIndices, out ushort[]? vertexIndexMap);
+				WeightedVertex[] vertices = ProcessTiangleSetVertices(weightedMesh.Vertices, tmpCorners, i, out HashSet<ushort>? polygonVertexIndices, out ushort[]? vertexIndexMap);
 
 				if(tmpCorners.Count > 0 || vertices.Length > 0)
 				{
@@ -363,11 +363,12 @@ namespace SA3D.Modeling.Mesh.Converters
 			return result;
 		}
 
-		private WeightedVertex[] ProcessTiangleSetVertices(WeightedVertex[] vertices, List<BufferCorner[]> triangleSets, int targetWeightIndex, out ushort[]? polygonVertexIndices, out ushort[]? vertexIndexMap)
+		private WeightedVertex[] ProcessTiangleSetVertices(WeightedVertex[] vertices, List<BufferCorner[]> triangleSets, int targetWeightIndex, out HashSet<ushort>? polygonVertexIndices, out ushort[]? vertexIndexMap)
 		{
 			HashSet<ushort> vertexIndexSet = triangleSets
 				.SelectMany(x => x)
 				.Select(x => x.VertexIndex)
+				.Order()
 				.ToHashSet();
 
 			if(vertexIndexSet.Count == vertices.Length)
@@ -378,7 +379,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 			else
 			{
-				polygonVertexIndices = vertexIndexSet.Order().ToArray();
+				polygonVertexIndices = new(vertexIndexSet);
 			}
 
 			for(ushort i = 0; i < vertices.Length; i++)
@@ -503,10 +504,20 @@ namespace SA3D.Modeling.Mesh.Converters
 						}
 
 						MeshContainer sourceContainer = sourceContainers[i];
+
 						uint sourceVertexIndex = sourceContainer.vertexMap?[vertexIndex] ?? vertexIndex;
 						sourceVertexIndex += sourceContainer.vertexOffset;
 
-						welds.Add(new(sourceNodes[i], sourceVertexIndex, weight));
+						if(i < container.relativeNodeIndex && sourceContainer.polygonRelevantVertexIndices?.Contains(vertexIndex) == true)
+						{
+							welds.Clear();
+							welds.Add(new(sourceNodes[i], sourceVertexIndex, 1));
+							break;
+						}
+						else
+						{
+							welds.Add(new(sourceNodes[i], sourceVertexIndex, weight));
+						}
 					}
 
 					targetVertexIndex += container.vertexOffset;

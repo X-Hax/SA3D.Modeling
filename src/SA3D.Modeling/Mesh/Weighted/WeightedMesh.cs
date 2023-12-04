@@ -170,23 +170,10 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// Converts buffer meshdata from attaches of a model to weighted meshes.
 		/// </summary>
 		/// <param name="model">Model to convert.</param>
-		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
+		/// <param name="bufferMode">How to handle buffered mesh data of the model (if needed for conversion).</param>
 		/// <returns>The converted weighted meshes.</returns>
 		public static WeightedMesh[] FromModel(Node model, BufferMode bufferMode)
 		{
-			switch(bufferMode)
-			{
-				case BufferMode.Generate:
-					model.BufferMeshData(false);
-					break;
-				case BufferMode.GenerateOptimized:
-					model.BufferMeshData(true);
-					break;
-				case BufferMode.None:
-				default:
-					break;
-			}
-
 			AttachFormat? attachFormat = model.GetAttachFormat();
 			bool hasWelding = model.GetTreeNodeEnumerable().Any(x => x.Welding != null);
 
@@ -195,10 +182,23 @@ namespace SA3D.Modeling.Mesh.Weighted
 			if(attachFormat == AttachFormat.BASIC && hasWelding)
 			{
 				Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
-				result = FromWeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups);
+				result = FromWeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups, bufferMode);
 			}
 			else
 			{
+				switch(bufferMode)
+				{
+					case BufferMode.Generate:
+						model.BufferMeshData(false);
+						break;
+					case BufferMode.GenerateOptimized:
+						model.BufferMeshData(true);
+						break;
+					case BufferMode.None:
+					default:
+						break;
+				}
+
 				result = ToWeightedConverter.ConvertToWeighted(model);
 			}
 

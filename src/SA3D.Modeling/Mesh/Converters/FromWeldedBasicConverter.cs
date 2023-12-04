@@ -8,6 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System;
 using SA3D.Modeling.Structs;
+using SA3D.Common;
 
 namespace SA3D.Modeling.Mesh.Converters
 {
@@ -21,9 +22,11 @@ namespace SA3D.Modeling.Mesh.Converters
 		private (Matrix4x4 vertex, Matrix4x4 normal)[] _matrices;
 		private int _weightNum;
 
+		private WeightedVertex[][] _vertices;
+		private bool[][] _welded;
+
+		private WeightedVertex[] _outVertices;
 		private ushort[][] _vertexIndexMap;
-		private WeightedVertex[] _vertices;
-		private bool[] _welded;
 
 		private BufferCorner[][] _polygonCorners;
 		private BufferMaterial[] _materials;
@@ -39,10 +42,11 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			_matrices = Array.Empty<(Matrix4x4 vertex, Matrix4x4 normal)>();
 
-			_vertexIndexMap = Array.Empty<ushort[]>();
-			_vertices = Array.Empty<WeightedVertex>();
-			_welded = Array.Empty<bool>();
+			_vertices = Array.Empty<WeightedVertex[]>();
+			_welded = Array.Empty<bool[]>();
 
+			_outVertices = Array.Empty<WeightedVertex>();
+			_vertexIndexMap = Array.Empty<ushort[]>();
 			_polygonCorners = Array.Empty<BufferCorner[]>();
 			_materials = Array.Empty<BufferMaterial>();
 		}
@@ -54,6 +58,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			SetupMatrices();
 
 			CollectVertices();
+			InsertWeldings();
 			MergeWelds();
 
 			CollectPolygons();
@@ -65,7 +70,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				return null;
 			}
 
-			WeightedMesh result = WeightedMesh.Create(_vertices, _polygonCorners, _materials, _hasColors);
+			WeightedMesh result = WeightedMesh.Create(_outVertices, _polygonCorners, _materials, _hasColors);
 
 			result.Label = _weldingGroups[^1].Attach!.Label;
 			result.RootIndices.Add(_nodeIndices[_rootNode]);
@@ -76,7 +81,6 @@ namespace SA3D.Modeling.Mesh.Converters
 		private void SetupNodeIndices()
 		{
 			int rootNodeIndex = _nodeIndices[_rootNode];
-			_vertexIndexMap = new ushort[_weldingGroups.Length][];
 
 			for(int i = 0; i < _weldingGroups.Length; i++)
 			{
@@ -86,8 +90,6 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					throw new InvalidOperationException($"Node \"{node.Label}\" has no basic attach!");
 				}
-
-				_vertexIndexMap[i] = new ushort[attach.Positions.Length];
 
 				int nodeIndex = _nodeIndices[node];
 				_relativeNodeIndices.Add(node, (nodeIndex - rootNodeIndex, i));
@@ -123,10 +125,9 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private void CollectVertices()
 		{
-			_vertices = new WeightedVertex[_vertexIndexMap.Sum(x => x.Length)];
-			_welded = new bool[_vertices.Length];
+			_vertices = new WeightedVertex[_weldingGroups.Length][];
 
-			for(int i = 0, vertexOffset = 0; i < _weldingGroups.Length; i++)
+			for(int i = 0; i < _weldingGroups.Length; i++)
 			{
 				Node node = _weldingGroups[i];
 				BasicAttach attach = (BasicAttach)node.Attach!;
@@ -134,86 +135,101 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				int weightIndex = _relativeNodeIndices[node].weightIndex;
 
-				ushort[] vertexIndexMap = new ushort[attach.Positions.Length];
-				_vertexIndexMap[i] = vertexIndexMap;
+				WeightedVertex[] newVertices = new WeightedVertex[attach.Positions.Length];
 
-				for(int j = 0; j < vertexIndexMap.Length; j++)
+				for(int j = 0; j < newVertices.Length; j++)
 				{
 					Vector3 position = Vector3.Transform(attach.Positions[j], vertexMatrix);
 					Vector3 normal = Vector3.TransformNormal(attach.Normals[j], normalMatrix);
 
 					WeightedVertex weightedVert = new(position, normal, _weightNum);
 					weightedVert.Weights![weightIndex] = 1;
-					_vertices[j + vertexOffset] = weightedVert;
-
-					vertexIndexMap[j] = (ushort)(j + vertexOffset);
+					newVertices[j] = weightedVert;
 				}
 
-				InsertWeldings(node, weightIndex, vertexIndexMap);
-
-				vertexOffset += vertexIndexMap.Length;
+				_vertices[i] = newVertices;
 			}
 		}
 
-		private void InsertWeldings(Node node, int weightIndex, ushort[] vertexIndexMap)
+		private void InsertWeldings()
 		{
-			if(node.Welding == null)
+			_welded = new bool[_vertices.Length][];
+
+			for(int i = 0; i < _weldingGroups.Length; i++)
 			{
-				return;
-			}
+				Node node = _weldingGroups[i];
 
-			foreach(VertexWelding vertexWelding in node.Welding)
-			{
-				uint destIndex = vertexIndexMap[vertexWelding.DestinationVertexIndex];
-				WeightedVertex destVertex = _vertices[destIndex];
-				_welded[destIndex] = true;
-
-				destVertex.Position = default;
-				destVertex.Normal = default;
-				destVertex.Weights![weightIndex] = 0;
-
-				foreach(Weld weld in vertexWelding.Welds)
+				if(node.Welding == null)
 				{
-					(int sourceWeightIndex, int sourceGroupIndex) = _relativeNodeIndices[weld.SourceNode];
-					destVertex.Weights![sourceWeightIndex] = weld.Weight;
-
-					(Matrix4x4 sourceVertexMatrix, Matrix4x4 sourceNormalMatrix) = _matrices[sourceGroupIndex];
-
-					BasicAttach sourceAttach = (BasicAttach)weld.SourceNode.Attach!;
-					Vector3 sourcePosition = Vector3.Transform(sourceAttach.Positions[(ushort)weld.VertexIndex], sourceVertexMatrix);
-					Vector3 sourceNormal = Vector3.TransformNormal(sourceAttach.Normals[(ushort)weld.VertexIndex], sourceNormalMatrix);
-
-					destVertex.Position += sourcePosition * weld.Weight;
-					destVertex.Normal += sourceNormal * weld.Weight;
+					_welded[i] = new bool[_vertices[i].Length];
+					continue;
 				}
 
-				_vertices[destIndex] = destVertex;
+				WeightedVertex[] destVertices = _vertices[i].ContentClone();
+				bool[] destWelded = new bool[destVertices.Length];
+
+				foreach(VertexWelding vertexWelding in node.Welding)
+				{
+					WeightedVertex destVertex = destVertices[vertexWelding.DestinationVertexIndex];
+
+					destVertex.Position = default;
+					destVertex.Normal = default;
+					Array.Clear(destVertex.Weights!);
+
+					foreach(Weld weld in vertexWelding.Welds)
+					{
+						(int sourceWeightIndex, int sourceGroupIndex) = _relativeNodeIndices[weld.SourceNode];
+
+						WeightedVertex sourceVertex = _vertices[sourceGroupIndex][weld.VertexIndex];
+
+						destVertex.Position += sourceVertex.Position * weld.Weight;
+						destVertex.Normal += sourceVertex.Normal * weld.Weight;
+
+						for(int j = 0; j < sourceVertex.Weights!.Length; j++)
+						{
+							destVertex.Weights![j] += sourceVertex.Weights[j] * weld.Weight;
+						}
+					}
+
+					destWelded[vertexWelding.DestinationVertexIndex] = true;
+					destVertices[vertexWelding.DestinationVertexIndex] = destVertex;
+				}
+
+				_vertices[i] = destVertices;
+				_welded[i] = destWelded;
 			}
 		}
 
 		private void MergeWelds()
 		{
-			Dictionary<int, int> mergeMapping = new();
+			Dictionary<ushort, ushort> mergeMapping = new();
+			_outVertices = _vertices.SelectMany(x => x).ToArray();
+			bool[] resultWelded = _welded.SelectMany(x => x).ToArray();
 
-			for(int i = 0; i < _vertices.Length; i++)
+			for(ushort i = 0; i < _outVertices.Length; i++)
 			{
-				if(!_welded[i])
+				if(!resultWelded[i])
 				{
 					continue;
 				}
 
-				WeightedVertex vertex = _vertices[i];
+				WeightedVertex vertex = _outVertices[i];
 
-				for(int j = 0; j < _vertices.Length; j++)
+				for(ushort j = 0; j < _outVertices.Length; j++)
 				{
-					WeightedVertex other = _vertices[j];
+					if(i == j || (resultWelded[j] && j > i))
+					{
+						continue;
+					}
+
+					WeightedVertex other = _outVertices[j];
 
 					bool useable =
 						Vector3.Distance(other.Position, vertex.Position) < 0.0001f
 						&& Vector3.Distance(other.Normal, vertex.Normal) < 0.0001f
 						&& Enumerable.SequenceEqual(vertex.Weights!, other.Weights!);
 
-					if(useable && i != j && ((_welded[j] && j < i) || !_welded[j]))
+					if(useable)
 					{
 						mergeMapping.Add(i, j);
 						break;
@@ -221,15 +237,25 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			foreach(ushort[] item in _vertexIndexMap)
+			CreateVerteIndexMap(mergeMapping);
+		}
+
+		private void CreateVerteIndexMap(Dictionary<ushort, ushort> mergeMapping)
+		{
+			_vertexIndexMap = new ushort[_vertices.Length][];
+			ushort vertexIndex = 0;
+			for(int i = 0; i < _vertices.Length; i++)
 			{
-				for(int i = 0; i < item.Length; i++)
+				ushort[] indexMap = new ushort[_vertices[i].Length];
+
+				for(int j = 0; j < indexMap.Length; j++, vertexIndex++)
 				{
-					if(mergeMapping.TryGetValue(item[i], out int newIndex))
-					{
-						item[i] = (ushort)newIndex;
-					}
+					indexMap[j] = mergeMapping.TryGetValue(vertexIndex, out ushort newIndex)
+						? newIndex
+						: vertexIndex;
 				}
+
+				_vertexIndexMap[i] = indexMap;
 			}
 		}
 
@@ -294,11 +320,11 @@ namespace SA3D.Modeling.Mesh.Converters
 				.Select(x => x.VertexIndex)
 				.ToHashSet();
 
-			List<WeightedVertex> newVertices = new(_vertices);
-			ushort[] map = new ushort[_vertices.Length];
+			List<WeightedVertex> newVertices = new(_outVertices);
+			ushort[] map = new ushort[_outVertices.Length];
 
 			ushort realIndex = (ushort)(usedVertices.Count - 1);
-			for(int i = _vertices.Length - 1; i >= 0; i--)
+			for(int i = _outVertices.Length - 1; i >= 0; i--)
 			{
 				if(!usedVertices.Contains((ushort)i))
 				{
@@ -311,7 +337,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			_vertices = newVertices.ToArray();
+			_outVertices = newVertices.ToArray();
 
 			foreach(BufferCorner[] corners in _polygonCorners)
 			{
@@ -323,7 +349,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		}
 
 
-		public static WeightedMesh[] CreateWeightedFromWeldedBasicModel(Node model, Node[][] weldingGroups)
+		public static WeightedMesh[] CreateWeightedFromWeldedBasicModel(Node model, Node[][] weldingGroups, BufferMode bufferMode)
 		{
 			List<WeightedMesh> result = new();
 
@@ -349,7 +375,8 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				if(!reusedMeshes.TryGetValue(atc, out WeightedMesh? mesh))
 				{
-					mesh = WeightedMesh.FromAttach(atc, BufferMode.None);
+					mesh = WeightedMesh.FromAttach(atc, bufferMode);
+
 					reusedMeshes.Add(atc, mesh);
 					result.Add(mesh);
 				}
@@ -382,24 +409,8 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 			HashSet<Node> groupedNodes = weldingGroups.SelectMany(x => x).ToHashSet();
-			HashSet<BasicAttach> buffered = new();
-			foreach(Node node in model.GetTreeNodeEnumerable())
-			{
-				if(node.Attach == null || groupedNodes.Contains(node))
-				{
-					continue;
-				}
 
-				BasicAttach atc = (BasicAttach)node.Attach;
-
-				if(!buffered.Contains(atc))
-				{
-					buffered.Add(atc);
-					atc.MeshData = BasicConverter.ConvertBasicToBuffer(atc, optimize);
-				}
-			}
-
-			WeightedMesh[] weightedMeshes = CreateWeightedFromWeldedBasicModel(model, weldingGroups);
+			WeightedMesh[] weightedMeshes = CreateWeightedFromWeldedBasicModel(model, weldingGroups, optimize ? BufferMode.GenerateOptimized : BufferMode.Generate);
 
 			Dictionary<Node, BasicAttach> attachLUT = new();
 			Dictionary<Node, VertexWelding[]> weldingLUT = new();
