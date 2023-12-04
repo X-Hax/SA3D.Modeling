@@ -52,6 +52,7 @@ SA3D.Modeling.ObjectData.Structs.Weld.VertexIndex.get -> uint
 SA3D.Modeling.ObjectData.Structs.Weld.Weight.get -> float
 SA3D.Modeling.ObjectData.Structs.Weld.Weld() -> void
 SA3D.Modeling.ObjectData.Structs.Weld.Weld(SA3D.Modeling.ObjectData.Node! sourceNode, uint vertexIndex, float weight) -> void
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EnsurePositiveEulerRotationAngles(SA3D.Modeling.Animation.Keyframes! keyframes) -> void
 static SA3D.Modeling.File.Structs.MetaWeight.operator !=(SA3D.Modeling.File.Structs.MetaWeight left, SA3D.Modeling.File.Structs.MetaWeight right) -> bool
 static SA3D.Modeling.File.Structs.MetaWeight.operator ==(SA3D.Modeling.File.Structs.MetaWeight left, SA3D.Modeling.File.Structs.MetaWeight right) -> bool
 static SA3D.Modeling.File.Structs.MetaWeight.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.Structs.MetaWeight

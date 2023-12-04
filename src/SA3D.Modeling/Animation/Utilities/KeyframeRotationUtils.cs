@@ -5,6 +5,7 @@ using System.Numerics;
 using Matrix4x4KF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>;
 using QuaternionKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>;
 using EulerKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>;
+using System.Linq;
 
 namespace SA3D.Modeling.Animation.Utilities
 {
@@ -429,5 +430,55 @@ namespace SA3D.Modeling.Animation.Utilities
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Adjusts euler rotation keyframes so that they only consist of positive values.
+		/// </summary>
+		/// <param name="keyframes">The keyframes to adjust.</param>
+		public static void EnsurePositiveEulerRotationAngles(Keyframes keyframes)
+		{
+			if(keyframes.EulerRotation.Count == 0)
+			{
+				return;
+			}
+
+			float lowestX = 0;
+			float lowestY = 0;
+			float lowestZ = 0;
+
+			foreach(Vector3 eulerRotation in keyframes.EulerRotation.Values)
+			{
+				if(eulerRotation.X < lowestX)
+				{
+					lowestX = eulerRotation.X;
+				}
+
+				if(eulerRotation.Y < lowestY)
+				{
+					lowestY = eulerRotation.Y;
+				}
+
+				if(eulerRotation.Z < lowestZ)
+				{
+					lowestZ = eulerRotation.Z;
+				}
+			}
+
+			if(lowestX >= 0 && lowestY >= 0 && lowestZ >= 0)
+			{
+				return;
+			}
+
+			Vector3 addVector = new(
+				float.Max(0, float.Floor(lowestX / float.Tau) * -float.Tau),
+				float.Max(0, float.Floor(lowestY / float.Tau) * -float.Tau),
+				float.Max(0, float.Floor(lowestZ / float.Tau) * -float.Tau)
+			);
+
+			foreach(KeyValuePair<uint, Vector3> keyframe in keyframes.EulerRotation.ToArray())
+			{
+				keyframes.EulerRotation[keyframe.Key] = keyframe.Value + addVector;
+			}
+		}
 	}
 }
