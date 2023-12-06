@@ -207,5 +207,47 @@ namespace SA3D.Modeling.ObjectData
 			return result;
 		}
 
+		/// <summary>
+		/// Ensures that all euler angles in <see cref="EulerRotation"/> are not smaller than 0.
+		/// </summary>
+		public void EnsurePositiveEulerAngles()
+		{
+			Vector3 rotation = EulerRotation;
+			bool changed = false;
+
+			if(rotation.X < 0)
+			{
+				rotation.X += float.Max(0, float.Floor(rotation.X / float.Tau) * -float.Tau);
+				changed = true;
+			}
+
+			if(rotation.Y < 0)
+			{
+				rotation.Y += float.Max(0, float.Floor(rotation.Y / float.Tau) * -float.Tau);
+				changed = true;
+			}
+
+			if(rotation.Z < 0)
+			{
+				rotation.Z += float.Max(0, float.Floor(rotation.Z / float.Tau) * -float.Tau);
+				changed = true;
+			}
+
+			if(changed)
+			{
+				EulerRotation = rotation;
+			}
+		}
+
+		/// <summary>
+		/// Ensures for the entire node tree that all euler angles in <see cref="EulerRotation"/> are not smaller than 0.
+		/// </summary>
+		public void EnsurePositiveEulerAnglesTree()
+		{
+			foreach(Node node in GetTreeNodeEnumerable())
+			{
+				node.EnsurePositiveEulerAngles();
+			}
+		}
 	}
 }

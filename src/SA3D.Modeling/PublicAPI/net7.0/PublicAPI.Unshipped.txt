@@ -39,6 +39,8 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.TexcoordPrecisionLevel.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize) -> SA3D.Modeling.Mesh.Attach!
 SA3D.Modeling.ObjectData.Node.ClearWeldingsFromTree() -> void
 SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool forceUpdate = false, bool updateBuffer = false) -> void
+SA3D.Modeling.ObjectData.Node.EnsurePositiveEulerAngles() -> void
+SA3D.Modeling.ObjectData.Node.EnsurePositiveEulerAnglesTree() -> void
 SA3D.Modeling.ObjectData.Node.GetTreeWeldingGroups(bool includeUnwelded) -> SA3D.Modeling.ObjectData.Node![]![]!
 SA3D.Modeling.ObjectData.Node.GetTreeWeldingLinks(bool twoway) -> System.Collections.Generic.Dictionary<SA3D.Modeling.ObjectData.Node!, System.Collections.Generic.HashSet<SA3D.Modeling.ObjectData.Node!>!>!
 SA3D.Modeling.ObjectData.Node.Welding.get -> SA3D.Modeling.ObjectData.Structs.VertexWelding[]?
