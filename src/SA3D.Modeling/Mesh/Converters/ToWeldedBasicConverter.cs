@@ -16,37 +16,53 @@ namespace SA3D.Modeling.Mesh.Converters
 		private class MeshContainer
 		{
 			public WeightedMesh source;
+			public int[]? sharedVertexmap;
+
 			public WeightedVertex[] vertices;
-			public ushort[]? vertexMap;
-			public ushort[]? invVertexMap;
-			public HashSet<ushort>? polygonRelevantVertexIndices;
+
+			/// <summary>
+			/// <see cref="vertices"/> index -> Source vertex index
+			/// </summary>
+			public ushort[]? polyVertexMap;
+
+			/// <summary>
+			/// Source vertex index -> <see cref="vertices"/>
+			/// </summary>
+			public ushort[]? weightVertexMap;
+
+			/// <summary>
+			/// Polygons with already translated vertex indices.
+			/// </summary>
 			public BufferCorner[][] triangleSets;
 			public BufferMaterial[] materials;
-			public int relativeNodeIndex;
+
+			/// <summary>
+			/// Index to the root node.
+			/// </summary>
 			public int rootNodeIndex;
+
+			/// <summary>
+			/// Node index relative to the root node
+			/// </summary>
+			public int relativeNodeIndex;
 
 			public ushort vertexOffset;
 
-			public MeshContainer(WeightedMesh source, WeightedVertex[] vertices, ushort[]? vertexMap, ushort[]? invVertexMap, HashSet<ushort>? polygonRelevantVertexIndices, BufferCorner[][] triangleSets, BufferMaterial[] materials, int relativeNodeIndex)
+			public MeshContainer(
+				WeightedMesh source,
+				int[]? sharedVertexmap,
+				WeightedVertex[] vertices,
+				ushort[]? polyVertexMap,
+				ushort[]? weightVertexMap,
+				BufferCorner[][] triangleSets,
+				BufferMaterial[] materials,
+				int relativeNodeIndex)
 			{
 				this.source = source;
+				this.sharedVertexmap = sharedVertexmap;
 				this.vertices = vertices;
-				this.vertexMap = vertexMap;
-
-				if(invVertexMap == null && vertexMap != null)
-				{
-					invVertexMap = new ushort[vertexMap.Max() + 1];
-					for(ushort i = 0; i < vertexMap.Length; i++)
-					{
-						invVertexMap[vertexMap[i]] = i;
-					}
-				}
-				else
-				{
-					this.invVertexMap = invVertexMap;
-				}
-
-				this.polygonRelevantVertexIndices = polygonRelevantVertexIndices;
+				this.polyVertexMap = polyVertexMap;
+				this.weightVertexMap = weightVertexMap;
 				this.triangleSets = triangleSets;
 				this.materials = materials;
 				this.relativeNodeIndex = relativeNodeIndex;
@@ -108,10 +124,6 @@ namespace SA3D.Modeling.Mesh.Converters
 			_model = model;
 			_meshData = meshData;
 			_optimize = optimize;
-			if(_optimize)
-			{
-
-			}
 
 			_nodesMatrices = _model.GetWorldMatrixTree();
 
@@ -126,23 +138,22 @@ namespace SA3D.Modeling.Mesh.Converters
 		{
 			foreach(WeightedMesh weightedMesh in _meshData)
 			{
-				if(weightedMesh.IsWeighted)
-				{
-					SplitWeightedMesh(weightedMesh);
-				}
-				else
-				{
-					MeshContainer container = new(
-						weightedMesh,
-						weightedMesh.Vertices,
-						null, null, null,
-						weightedMesh.TriangleSets,
-						weightedMesh.Materials,
-						0);
+				MeshContainer[] containers = weightedMesh.IsWeighted
+					? SplitWeightedMesh(weightedMesh, _optimize)
+					: new[] { new MeshContainer(
+							weightedMesh,
+							null,
+							weightedMesh.Vertices,
+							null, null,
+							weightedMesh.TriangleSets,
+							weightedMesh.Materials,
+							0)};
 
-					foreach(int index in weightedMesh.RootIndices)
+				foreach(int index in weightedMesh.RootIndices)
+				{
+					foreach(MeshContainer container in containers)
 					{
-						AddContainer(index, container, index);
+						AddContainer(index + container.relativeNodeIndex, container, index);
 					}
 				}
 			}
@@ -159,6 +170,9 @@ namespace SA3D.Modeling.Mesh.Converters
 					continue;
 				}
 
+				Node node = _nodesMatrices[i].node;
+				node.Welding = AssembleVertexWelding(containers);
+
 				WeightedVertex[] vertices;
 				BufferCorner[][] triangleSets;
 				BufferMaterial[] materials;
@@ -169,7 +183,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					MeshContainer container = containers[0];
 
-					vertices = container.vertices;
+					vertices = container.vertices.ToArray();
 					triangleSets = container.triangleSets;
 					materials = container.materials;
 					hasColors = container.source.HasColors;
@@ -186,9 +200,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						out label);
 				}
 
-				Node node = _nodesMatrices[i].node;
 				node.Attach = BasicConverter.CreateBasicAttach(vertices, triangleSets, materials, hasColors, label);
-				node.Welding = AssembleVertexWelding(containers);
 			}
 		}
 
@@ -205,16 +217,16 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			MeshContainer newContainer = new(
 				container.source,
-				(WeightedVertex[])container.vertices.Clone(),
-				container.vertexMap,
-				container.invVertexMap,
-				container.polygonRelevantVertexIndices,
+				container.sharedVertexmap,
+				container.vertices,
+				container.polyVertexMap,
+				container.weightVertexMap,
 				container.triangleSets.ContentClone(),
 				container.materials,
 				container.relativeNodeIndex)
 			{
 				rootNodeIndex = rootIndex,
-				vertexOffset = vertexOffset
+				vertexOffset = vertexOffset,
 			};
 
 			if(newContainer.relativeNodeIndex != 0)
@@ -238,15 +250,35 @@ namespace SA3D.Modeling.Mesh.Converters
 			_nodeMeshContainers[index].Add(newContainer);
 		}
 
-		private void SplitWeightedMesh(WeightedMesh weightedMesh)
+		private static MeshContainer[] SplitWeightedMesh(WeightedMesh weightedMesh, bool optimize)
 		{
-			BufferCorner[]?[,] splitPolygons = SplitPolygonsByWeights(weightedMesh);
+			int maxIndex = weightedMesh.DependingNodeIndices.Max;
+			int nodeCount = maxIndex + 1;
+
+			//[relative node index, triangle set index] = null | Triangle set
+			BufferCorner[]?[,] splitPolygons = new BufferCorner[nodeCount, weightedMesh.TriangleSets.Length][];
+			int[] sharedVertexmap = new int[weightedMesh.Vertices.Length];
+
+			if(optimize)
+			{
+				SplitPolygonsByWeights(weightedMesh, splitPolygons);
+				GetSharedVertexMap(splitPolygons, sharedVertexmap);
+			}
+			else
+			{
+				for(int i = 0; i < weightedMesh.TriangleSets.Length; i++)
+				{
+					splitPolygons[maxIndex, i] = weightedMesh.TriangleSets[i];
+				}
+
+				Array.Fill(sharedVertexmap, -1);
+			}
 
 			List<BufferCorner[]> tmpCorners = new();
 			List<BufferMaterial> tmpMaterials = new();
-			Dictionary<int, MeshContainer> containers = new();
+			List<MeshContainer> containers = new();
 
-			for(int i = 0; i < splitPolygons.GetLength(0); i++)
+			for(int i = 0; i < nodeCount; i++)
 			{
 				for(int j = 0; j < weightedMesh.TriangleSets.Length; j++)
 				{
@@ -258,46 +290,29 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 				}
 
-				WeightedVertex[] vertices = ProcessTiangleSetVertices(weightedMesh.Vertices, tmpCorners, i, out HashSet<ushort>? polygonVertexIndices, out ushort[]? vertexIndexMap);
+				MeshContainer? container = AssembleVertices(
+					weightedMesh,
+					i,
+					sharedVertexmap,
+					tmpCorners,
+					tmpMaterials);
 
-				if(tmpCorners.Count > 0 || vertices.Length > 0)
+				if(container != null)
 				{
-					BufferCorner[][] triangleSets = tmpCorners.ToArray();
-					BufferMaterial[] materials = tmpMaterials.ToArray();
-
-					MeshContainer container = new(
-						weightedMesh,
-						vertices,
-						vertexIndexMap,
-						null,
-						polygonVertexIndices,
-						triangleSets,
-						materials,
-						i);
-
-					containers.Add(i, container);
-
-					tmpCorners.Clear();
-					tmpMaterials.Clear();
+					containers.Add(container);
 				}
+
+				tmpCorners.Clear();
+				tmpMaterials.Clear();
 			}
 
-			foreach(int index in weightedMesh.RootIndices)
-			{
-				foreach(KeyValuePair<int, MeshContainer> container in containers)
-				{
-					AddContainer(index + container.Key, container.Value, index);
-				}
-			}
+			return containers.ToArray();
 		}
 
-		private BufferCorner[]?[,] SplitPolygonsByWeights(WeightedMesh weightedMesh)
+		private static void SplitPolygonsByWeights(WeightedMesh weightedMesh, BufferCorner[]?[,] result)
 		{
-			int weightNum = weightedMesh.DependingNodeIndices.Max + 1;
+			int weightNum = result.GetLength(0);
 			float[] weightSum = new float[weightNum];
-
-			//[relative node index, triangle set index] = null | Triangle set
-			BufferCorner[]?[,] result = new BufferCorner[weightNum, weightedMesh.TriangleSets.Length][];
 			List<BufferCorner>[] meshSplitPolygons = new List<BufferCorner>[weightNum];
 
 			for(int i = 0; i < weightNum; i++)
@@ -359,66 +374,125 @@ namespace SA3D.Modeling.Mesh.Converters
 					polygons.Clear();
 				}
 			}
-
-			return result;
 		}
 
-		private WeightedVertex[] ProcessTiangleSetVertices(WeightedVertex[] vertices, List<BufferCorner[]> triangleSets, int targetWeightIndex, out HashSet<ushort>? polygonVertexIndices, out ushort[]? vertexIndexMap)
+		/// <summary>
+		/// Fills a mapping for all vertices that are used for polygons in multiples attaches where: 
+		/// <br/> [source vertex index] = index of the first node that uses the vertex
+		/// </summary>
+		private static void GetSharedVertexMap(BufferCorner[]?[,] polygons, int[] result)
 		{
-			HashSet<ushort> vertexIndexSet = triangleSets
+			int[,] counts = new int[result.Length, 2];
+			int meshCount = polygons.GetLength(1);
+			HashSet<ushort> usedIndices = new();
+
+			for(int i = polygons.GetLength(0) - 1; i >= 0; i--)
+			{
+				usedIndices.Clear();
+				for(int j = 0; j < meshCount; j++)
+				{
+					BufferCorner[]? corners = polygons[i, j];
+					if(corners != null)
+					{
+						usedIndices.UnionWith(corners.Select(x => x.VertexIndex));
+					}
+				}
+
+				foreach(ushort vertexIndex in usedIndices)
+				{
+					counts[vertexIndex, 0]++;
+					counts[vertexIndex, 1] = i;
+				}
+			}
+
+			for(int i = 0; i < result.Length; i++)
+			{
+				result[i] = counts[i, 0] <= 1
+					? -1
+					: counts[i, 1];
+			}
+
+		}
+
+		private static MeshContainer? AssembleVertices(
+			WeightedMesh source,
+			int relativeNodeIndex,
+			int[] sharedVertexmap,
+			List<BufferCorner[]> triangleSets,
+			List<BufferMaterial> materials)
+		{
+			/****************/
+			// Evaluating polygon vertices
+
+			HashSet<ushort> polygonVertexIndices = triangleSets
 				.SelectMany(x => x)
 				.Select(x => x.VertexIndex)
 				.Order()
 				.ToHashSet();
 
-			if(vertexIndexSet.Count == vertices.Length)
+			ushort[] polygonVertexMap = new ushort[polygonVertexIndices.Count];
+			ushort[] vertexIndexMap = new ushort[source.Vertices.Length];
+			List<WeightedVertex> vertices = new();
+
+			foreach(ushort index in polygonVertexIndices)
 			{
-				vertexIndexMap = null;
-				polygonVertexIndices = null;
-				return vertices;
-			}
-			else
-			{
-				polygonVertexIndices = new(vertexIndexSet);
+				polygonVertexMap[vertices.Count] = index;
+				vertexIndexMap[index] = (ushort)vertices.Count;
+				vertices.Add(source.Vertices[index]);
 			}
 
-			for(ushort i = 0; i < vertices.Length; i++)
+			foreach(BufferCorner[] corners in triangleSets)
 			{
-				if(vertices[i].Weights![targetWeightIndex] > 0f)
+				for(int i = 0; i < corners.Length; i++)
 				{
-					vertexIndexSet.Add(i);
+					corners[i].VertexIndex = vertexIndexMap[corners[i].VertexIndex];
 				}
 			}
 
-			ushort[] vertexIndices = vertexIndexSet.Order().ToArray();
-			if(vertexIndices.Length == vertices.Length)
-			{
-				vertexIndexMap = null;
-				return vertices;
-			}
+			/****************/
+			// Evaluating Weighted vertices
 
-			WeightedVertex[] usedVertices = new WeightedVertex[vertexIndices.Length];
-			vertexIndexMap = new ushort[vertices.Length];
+			List<WeightedVertex> weightVertexIndices = new();
 
-			for(ushort i = 0; i < vertexIndices.Length; i++)
+			for(ushort i = 0; i < source.Vertices.Length; i++)
 			{
-				int vertexIndex = vertexIndices[i];
-				vertexIndexMap[vertexIndex] = i;
-				usedVertices[i] = vertices[vertexIndex];
-			}
+				WeightedVertex vertex = source.Vertices[i];
 
-			foreach(BufferCorner[] triangleSet in triangleSets)
-			{
-				for(int i = 0; i < triangleSet.Length; i++)
+				if(vertex.Weights![relativeNodeIndex] == 0)
 				{
-					triangleSet[i].VertexIndex = vertexIndexMap[triangleSet[i].VertexIndex];
+					continue;
+				}
+
+				int sharedIndex = sharedVertexmap[i];
+				bool contains = polygonVertexIndices.Contains(i);
+
+				if(!contains || (sharedIndex != -1 && sharedIndex < relativeNodeIndex))
+				{
+					vertexIndexMap[i] = (ushort)vertices.Count;
+					vertices.Add(vertex);
 				}
 			}
 
-			return usedVertices;
+			/****************/
+			// Evaluating container
+
+			if(vertices.Count == 0)
+			{
+				return null;
+			}
+
+			return new MeshContainer(
+				source,
+				sharedVertexmap,
+				vertices.ToArray(),
+				polygonVertexMap,
+				vertexIndexMap,
+				triangleSets.ToArray(),
+				materials.ToArray(),
+				relativeNodeIndex);
 		}
 
-		private void MergeContainers(
+		private static void MergeContainers(
 			List<MeshContainer> containers,
 			out WeightedVertex[] vertices,
 			out BufferCorner[][] triangleSets,
@@ -445,21 +519,13 @@ namespace SA3D.Modeling.Mesh.Converters
 			label = containers[^1].GetLabel();
 		}
 
-		private static IEnumerable<ushort> UShortEnumerable(ushort length)
-		{
-			for(ushort i = 0; i < length; i++)
-			{
-				yield return i;
-			}
-		}
-
 		private VertexWelding[]? AssembleVertexWelding(List<MeshContainer> containers)
 		{
 			List<VertexWelding> welding = new();
 
 			foreach(MeshContainer container in containers)
 			{
-				if(!container.source.IsWeighted || container.triangleSets.Length == 0)
+				if(container.polyVertexMap == null)
 				{
 					continue;
 				}
@@ -478,49 +544,51 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 				}
 
-				IEnumerable<ushort> vertexIndices =
-					container.polygonRelevantVertexIndices
-					?? UShortEnumerable((ushort)container.vertices.Length);
-
-				foreach(ushort vertexIndex in vertexIndices)
+				for(uint i = 0; i < container.polyVertexMap.Length; i++)
 				{
-					// Note: polygon indices have never been converted to the local index.
-
-					ushort targetVertexIndex = container.vertexMap?[vertexIndex] ?? vertexIndex;
-					WeightedVertex vertex = container.vertices[targetVertexIndex];
+					WeightedVertex vertex = container.vertices[i];
 					if(vertex.Weights![container.relativeNodeIndex] == 1)
 					{
 						continue;
 					}
 
 					List<Weld> welds = new();
+					ushort sourceVertexIndex = container.polyVertexMap[i];
+					uint targetVertexIndex = i + container.vertexOffset;
 
-					for(int i = 0; i < vertex.Weights.Length; i++)
+					void AddWeld(int nodeIndex, float weight)
 					{
-						float weight = vertex.Weights[i];
-						if(weight == 0)
+						uint weightIndex;
+						if(nodeIndex == container.relativeNodeIndex)
 						{
-							continue;
-						}
-
-						MeshContainer sourceContainer = sourceContainers[i];
-
-						uint sourceVertexIndex = sourceContainer.vertexMap?[vertexIndex] ?? vertexIndex;
-						sourceVertexIndex += sourceContainer.vertexOffset;
-
-						if(i < container.relativeNodeIndex && sourceContainer.polygonRelevantVertexIndices?.Contains(vertexIndex) == true)
-						{
-							welds.Clear();
-							welds.Add(new(sourceNodes[i], sourceVertexIndex, 1));
-							break;
+							weightIndex = targetVertexIndex;
 						}
 						else
 						{
-							welds.Add(new(sourceNodes[i], sourceVertexIndex, weight));
+							MeshContainer sourceContainer = sourceContainers[nodeIndex];
+							weightIndex = (uint)(sourceContainer.weightVertexMap![sourceVertexIndex] + sourceContainer.vertexOffset);
+						}
+
+						welds.Add(new(sourceNodes[nodeIndex], weightIndex, weight));
+					}
+
+					int sharedIndex = container.sharedVertexmap![sourceVertexIndex];
+					if(sharedIndex != -1 && sharedIndex < container.relativeNodeIndex)
+					{
+						AddWeld(sharedIndex, 1);
+					}
+					else
+					{
+						for(int j = 0; j < vertex.Weights.Length; j++)
+						{
+							float weight = vertex.Weights[j];
+							if(weight > 0)
+							{
+								AddWeld(j, weight);
+							}
 						}
 					}
 
-					targetVertexIndex += container.vertexOffset;
 					welding.Add(new(targetVertexIndex, welds.ToArray()));
 				}
 			}
