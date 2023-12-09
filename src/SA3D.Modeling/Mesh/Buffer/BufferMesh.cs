@@ -185,34 +185,32 @@ namespace SA3D.Modeling.Mesh.Buffer
 		/// <summary>
 		/// Compiles the triangle list of indices to <see cref="Corners"/>.
 		/// </summary>
+		/// <param name="corners">Polygon corners.</param>
+		/// <param name="indexList">Index list combining polygon corners into triangles. If null, uses corners in order.</param>
+		/// <param name="strippified">Whether <paramref name="indexList"/> / <paramref name="corners"/> is made up of one big triangle strip, instead of individual triangles.</param>
 		/// <returns>The index triangle list.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public uint[] GetIndexTriangleList()
+		public static uint[] GetIndexTriangleList(BufferCorner[] corners, uint[]? indexList, bool strippified)
 		{
-			if(Corners == null)
-			{
-				throw new InvalidOperationException("The mesh contains no polygon information.");
-			}
-
 			uint[] result;
 
-			if(IndexList == null)
+			if(indexList == null)
 			{
-				if(Strippified)
+				if(strippified)
 				{
 					List<uint> triangles = new();
 
 					bool rev = false;
 
-					for(uint i = 2; i < Corners.Length; i++, rev = !rev)
+					for(uint i = 2; i < corners.Length; i++, rev = !rev)
 					{
 						uint i1 = i - 2;
 						uint i2 = i - 1;
 						uint i3 = i;
 
-						BufferCorner c1 = Corners[i1];
-						BufferCorner c2 = Corners[i2];
-						BufferCorner c3 = Corners[i3];
+						BufferCorner c1 = corners[i1];
+						BufferCorner c2 = corners[i2];
+						BufferCorner c3 = corners[i3];
 
 						if(c1.VertexIndex == c2.VertexIndex
 						   || c2.VertexIndex == c3.VertexIndex
@@ -239,7 +237,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 				}
 				else
 				{
-					result = new uint[Corners.Length];
+					result = new uint[corners.Length];
 					for(uint i = 0; i < result.Length; i++)
 					{
 						result[i] = i;
@@ -248,16 +246,16 @@ namespace SA3D.Modeling.Mesh.Buffer
 			}
 			else
 			{
-				if(Strippified)
+				if(strippified)
 				{
 					List<uint> triangles = new();
 					bool rev = false;
 
-					for(int i = 2; i < IndexList.Length; i++, rev = !rev)
+					for(int i = 2; i < indexList.Length; i++, rev = !rev)
 					{
-						uint i1 = IndexList[i - 2];
-						uint i2 = IndexList[i - 1];
-						uint i3 = IndexList[i];
+						uint i1 = indexList[i - 2];
+						uint i2 = indexList[i - 1];
+						uint i3 = indexList[i];
 
 						if(i1 == i2 || i2 == i3 || i3 == i1)
 						{
@@ -283,13 +281,128 @@ namespace SA3D.Modeling.Mesh.Buffer
 				}
 				else
 				{
-					// fast copy
-					result = IndexList.ToArray();
+					result = (uint[])indexList.Clone();
 				}
 
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Compiles the triangle list of indices to the specified corners.
+		/// </summary>
+		/// <param name="corners">Polygon corners.</param>
+		/// <param name="indexList">Index list combining polygon corners into triangles. If null, uses corners in order.</param>
+		/// <param name="strippified">Whether <paramref name="indexList"/> / <paramref name="corners"/> is made up of one big triangle strip, instead of individual triangles.</param>
+		/// <returns>The index triangle list.</returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public static BufferCorner[] GetCornerTriangleList(BufferCorner[] corners, uint[]? indexList, bool strippified)
+		{
+			BufferCorner[] result;
+
+			if(indexList == null)
+			{
+				if(strippified)
+				{
+					List<BufferCorner> triangles = new();
+					bool rev = false;
+
+					for(uint i = 2; i < corners.Length; i++, rev = !rev)
+					{
+						BufferCorner c1 = corners[i - 2];
+						BufferCorner c2 = corners[i - 1];
+						BufferCorner c3 = corners[i];
+
+						if(c1.VertexIndex == c2.VertexIndex
+						   || c2.VertexIndex == c3.VertexIndex
+						   || c3.VertexIndex == c1.VertexIndex)
+						{
+							continue;
+						}
+
+						if(rev)
+						{
+							triangles.Add(c2);
+							triangles.Add(c1);
+							triangles.Add(c3);
+						}
+						else
+						{
+							triangles.Add(c1);
+							triangles.Add(c2);
+							triangles.Add(c3);
+						}
+					}
+
+					result = triangles.ToArray();
+				}
+				else
+				{
+					result = (BufferCorner[])corners.Clone();
+				}
+			}
+			else
+			{
+				if(strippified)
+				{
+					List<BufferCorner> triangles = new();
+					bool rev = false;
+
+					for(uint i = 2; i < indexList.Length; i++, rev = !rev)
+					{
+						uint i1 = indexList[i - 2];
+						uint i2 = indexList[i - 1];
+						uint i3 = indexList[i];
+
+						if(i1 == i2 || i2 == i3 || i3 == i1)
+						{
+							continue;
+						}
+
+						if(rev)
+						{
+							triangles.Add(corners[i2]);
+							triangles.Add(corners[i1]);
+							triangles.Add(corners[i3]);
+						}
+						else
+						{
+							triangles.Add(corners[i1]);
+							triangles.Add(corners[i2]);
+							triangles.Add(corners[i3]);
+						}
+					}
+
+					result = triangles.ToArray();
+				}
+				else
+				{
+					result = new BufferCorner[indexList.Length];
+					for(int i = 0; i < result.Length; i++)
+					{
+						result[i] = corners[indexList[i]];
+					}
+				}
+			}
+
+			return result;
+		}
+
+
+		/// <summary>
+		/// Compiles the triangle list of indices to <see cref="Corners"/>.
+		/// </summary>
+		/// <returns>The index triangle list.</returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public uint[] GetIndexTriangleList()
+		{
+			if(Corners == null)
+			{
+				throw new InvalidOperationException("The mesh contains no polygon information.");
+			}
+
+			return GetIndexTriangleList(Corners, IndexList, Strippified);
 		}
 
 		/// <summary>
@@ -304,95 +417,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 				throw new InvalidOperationException("The mesh contains no polygon information.");
 			}
 
-			BufferCorner[] result;
-
-			if(IndexList == null)
-			{
-				if(Strippified)
-				{
-					List<BufferCorner> triangles = new();
-					bool rev = false;
-
-					for(uint i = 2; i < Corners.Length; i++, rev = !rev)
-					{
-						BufferCorner c1 = Corners[i - 2];
-						BufferCorner c2 = Corners[i - 1];
-						BufferCorner c3 = Corners[i];
-
-						if(c1.VertexIndex == c2.VertexIndex
-						   || c2.VertexIndex == c3.VertexIndex
-						   || c3.VertexIndex == c1.VertexIndex)
-						{
-							continue;
-						}
-
-						if(rev)
-						{
-							triangles.Add(c2);
-							triangles.Add(c1);
-							triangles.Add(c3);
-						}
-						else
-						{
-							triangles.Add(c1);
-							triangles.Add(c2);
-							triangles.Add(c3);
-						}
-					}
-
-					result = triangles.ToArray();
-				}
-				else
-				{
-					// fast copy
-					result = Corners.ToArray();
-				}
-			}
-			else
-			{
-				if(Strippified)
-				{
-					List<BufferCorner> triangles = new();
-					bool rev = false;
-
-					for(uint i = 2; i < IndexList.Length; i++, rev = !rev)
-					{
-						uint i1 = IndexList[i - 2];
-						uint i2 = IndexList[i - 1];
-						uint i3 = IndexList[i];
-
-						if(i1 == i2 || i2 == i3 || i3 == i1)
-						{
-							continue;
-						}
-
-						if(rev)
-						{
-							triangles.Add(Corners[i2]);
-							triangles.Add(Corners[i1]);
-							triangles.Add(Corners[i3]);
-						}
-						else
-						{
-							triangles.Add(Corners[i1]);
-							triangles.Add(Corners[i2]);
-							triangles.Add(Corners[i3]);
-						}
-					}
-
-					result = triangles.ToArray();
-				}
-				else
-				{
-					result = new BufferCorner[IndexList.Length];
-					for(int i = 0; i < result.Length; i++)
-					{
-						result[i] = Corners[IndexList[i]];
-					}
-				}
-			}
-
-			return result;
+			return GetCornerTriangleList(Corners, IndexList, Strippified);
 		}
 
 		/// <summary>
@@ -407,35 +432,16 @@ namespace SA3D.Modeling.Mesh.Buffer
 
 			BufferCorner[] corners = GetCornerTriangleList();
 
-			// filter degenerate triangles
-			int newArraySize = corners.Length;
-			for(int i = 0; i < newArraySize; i += 3)
-			{
-				ushort index1 = corners[i].VertexIndex;
-				ushort index2 = corners[i + 1].VertexIndex;
-				ushort index3 = corners[i + 2].VertexIndex;
-
-				if(index1 == index2 || index2 == index3 || index3 == index1)
-				{
-					corners[i] = corners[newArraySize - 3];
-					corners[i + 1] = corners[newArraySize - 2];
-					corners[i + 2] = corners[newArraySize - 1];
-					i -= 3;
-					newArraySize -= 3;
-				}
-			}
-
-			if(newArraySize == 0)
+			if(corners.Length == 0)
 			{
 				Corners = null;
 				IndexList = null;
 				Material = default;
 				HasColors = false;
+				Strippified = false;
 				VertexReadOffset = 0;
 				return;
 			}
-
-			Array.Resize(ref corners, newArraySize);
 
 			if(!corners.TryCreateDistinctMap(out DistinctMap<BufferCorner> distinctMap))
 			{
@@ -487,19 +493,17 @@ namespace SA3D.Modeling.Mesh.Buffer
 		}
 
 		/// <summary>
-		/// Optimizes a collection of buffer meshes by optimizing the polygons and combining vertex and poly data between meshes.
+		/// Compresses a collection of buffer meshes by combining vertex and poly data between meshes.
 		/// <br/> Reuses arrays and buffermeshes.
 		/// </summary>
 		/// <param name="input">The collection to optimize</param>
 		/// <returns>The optimized buffermeshes.</returns>
-		public static BufferMesh[] Optimize(IList<BufferMesh> input)
+		public static BufferMesh[] CompressLayout(IList<BufferMesh> input)
 		{
 			List<BufferMesh> result = new();
 
 			foreach(BufferMesh mesh in input)
 			{
-				mesh.OptimizePolygons();
-
 				if(mesh.Vertices != null)
 				{
 					result.Add(mesh);
@@ -513,6 +517,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 					prev.IndexList = mesh.IndexList;
 					prev.Material = mesh.Material;
 					prev.HasColors = mesh.HasColors;
+					prev.Strippified = mesh.Strippified;
 					prev.VertexReadOffset = mesh.VertexReadOffset;
 				}
 				else

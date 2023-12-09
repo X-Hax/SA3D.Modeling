@@ -1,4 +1,5 @@
 ﻿using SA3D.Common.IO;
+using SA3D.Modeling.File.Structs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,6 +49,11 @@ namespace SA3D.Modeling.File
 		public List<string> MorphFiles { get; }
 
 		/// <summary>
+		/// Metadata weights for advanced BASIC welding.
+		/// </summary>
+		public List<MetaWeightNode> MetaWeights { get; }
+
+		/// <summary>
 		/// Other chunk blocks that have no implementation.
 		/// </summary>
 		public Dictionary<uint, byte[]> Other { get; set; }
@@ -62,6 +68,7 @@ namespace SA3D.Modeling.File
 			MorphFiles = new();
 			Other = new();
 			Labels = new();
+			MetaWeights = new();
 		}
 
 
@@ -168,6 +175,13 @@ namespace SA3D.Modeling.File
 				case MetaBlockType.Tool:
 					break;
 				case MetaBlockType.Texture:
+					break;
+				case MetaBlockType.Weight:
+					while(reader.ReadUInt(address) != uint.MaxValue)
+					{
+						MetaWeights.Add(MetaWeightNode.Read(reader, ref address));
+					}
+
 					break;
 				case MetaBlockType.End:
 					break;
@@ -302,6 +316,19 @@ namespace SA3D.Modeling.File
 			if(MorphFiles?.Count > 0)
 			{
 				WriteStringList(writer, MetaBlockType.Morph, MorphFiles);
+			}
+
+			if(MetaWeights.Count > 0)
+			{
+				WriteBlock(writer, MetaBlockType.Weight, () =>
+				{
+					foreach(MetaWeightNode node in MetaWeights)
+					{
+						node.Write(writer);
+					}
+
+					writer.WriteUInt(uint.MaxValue);
+				});
 			}
 
 			WriteStringBlock(writer, MetaBlockType.Author, Author);

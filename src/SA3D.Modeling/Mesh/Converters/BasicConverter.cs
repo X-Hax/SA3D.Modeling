@@ -7,7 +7,6 @@ using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Strippify;
 using SA3D.Modeling.Structs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -19,6 +18,7 @@ namespace SA3D.Modeling.Mesh.Converters
 	/// </summary>
 	internal static class BasicConverter
 	{
+
 		#region Convert To Basic
 
 		private static BasicMaterial ConvertToBasicMaterial(BufferMaterial mat)
@@ -194,15 +194,48 @@ namespace SA3D.Modeling.Mesh.Converters
 			return new BasicAttach(positions, normals, attach.Meshes, attach.Materials);
 		}
 
+		public static BasicAttach CreateBasicAttach(WeightedVertex[] vertices, BufferCorner[][] triangleSets, BufferMaterial[] bMaterials, bool hasColors, string label)
+		{
+			Vector3[] positions = new Vector3[vertices.Length];
+			Vector3[] normals = new Vector3[positions.Length];
+			string identifier = StringExtensions.GenerateIdentifier();
+
+			for(int i = 0; i < positions.Length; i++)
+			{
+				WeightedVertex vtx = vertices[i];
+
+				positions[i] = vtx.Position;
+				normals[i] = vtx.Normal;
+			}
+
+			BasicMesh[] meshes = new BasicMesh[triangleSets.Length];
+			BasicMaterial[] materials = new BasicMaterial[meshes.Length];
+
+			for(int i = 0; i < meshes.Length; i++)
+			{
+				meshes[i] = ConvertToBasicMesh(triangleSets[i], hasColors, i, identifier);
+				materials[i] = ConvertToBasicMaterial(bMaterials[i]);
+			}
+
+			BasicAttach result = new(positions, normals, meshes, materials)
+			{
+				Label = label
+			};
+
+			result.RecalculateBounds();
+
+			return result;
+		}
+
 		public static void ConvertWeightedToBasic(
 			Node model,
 			WeightedMesh[] meshData,
-			bool optimize,
-			bool ignoreWeights)
+			bool optimize)
 		{
-			if(meshData.Any(x => x.IsWeighted) && !ignoreWeights)
+			if(meshData.Any(x => x.IsWeighted))
 			{
-				throw new FormatException("Model is weighted, cannot convert to BASIC format!");
+				ToWeldedBasicConverter.ConvertWeightedToWeldedBasic(model, meshData, optimize);
+				return;
 			}
 
 			Node[] nodes = model.GetTreeNodes();
@@ -210,50 +243,29 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			meshData = WeightedMesh.MergeAtRoots(meshData);
 
-			foreach(WeightedMesh weightedAttach in meshData)
+			foreach(WeightedMesh weightedMesh in meshData)
 			{
-				Vector3[] positions = new Vector3[weightedAttach.Vertices.Length];
-				Vector3[] normals = new Vector3[positions.Length];
-				string identifier = StringExtensions.GenerateIdentifier();
-
-				for(int i = 0; i < positions.Length; i++)
-				{
-					WeightedVertex vtx = weightedAttach.Vertices[i];
-
-					positions[i] = vtx.Position;
-					normals[i] = vtx.Normal;
-				}
-
-				// putting together polygons
-				BasicMesh[] meshes = new BasicMesh[weightedAttach.TriangleSets.Length];
-				BasicMaterial[] materials = new BasicMaterial[meshes.Length];
-
-				for(int i = 0; i < meshes.Length; i++)
-				{
-					meshes[i] = ConvertToBasicMesh(weightedAttach.TriangleSets[i], weightedAttach.HasColors, i, identifier);
-					materials[i] = ConvertToBasicMaterial(weightedAttach.Materials[i]);
-				}
-
-				BasicAttach result = new(positions, normals, meshes, materials);
+				BasicAttach result = CreateBasicAttach(
+					weightedMesh.Vertices,
+					weightedMesh.TriangleSets,
+					weightedMesh.Materials,
+					weightedMesh.HasColors,
+					weightedMesh.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier());
 
 				if(optimize)
 				{
 					result = OptimizeBasicVertices(result);
 				}
 
-				result.RecalculateBounds();
-
-				result.Label = weightedAttach.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier();
-
-				foreach(int index in weightedAttach.RootIndices)
+				foreach(int index in weightedMesh.RootIndices)
 				{
 					attaches[index] = result;
 				}
 			}
 
 			model.ClearAttachesFromTree();
+			model.ClearWeldingsFromTree();
 
-			// Linking the attaches to the nodes
 			for(int i = 0; i < nodes.Length; i++)
 			{
 				nodes[i].Attach = attaches[i];
@@ -264,7 +276,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		#region Convert to Buffer
 
-		private static BufferMaterial ConvertToBufferMaterial(BasicMaterial mat)
+		public static BufferMaterial ConvertToBufferMaterial(BasicMaterial mat)
 		{
 			return new(BufferMaterial.DefaultValues)
 			{
@@ -292,8 +304,10 @@ namespace SA3D.Modeling.Mesh.Converters
 			};
 		}
 
-		private static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList)
+		public static void ConvertPolygons(BasicMesh mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified)
 		{
+			strippified = mesh.PolygonType is BasicPolygonType.TriangleStrips or BasicPolygonType.NPoly;
+
 			if(mesh.PolygonType is BasicPolygonType.NPoly or BasicPolygonType.TriangleStrips)
 			{
 				indexList = null;
@@ -423,8 +437,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					? attach.Materials[mesh.MaterialIndex]
 					: BasicMaterial.DefaultValues);
 
-				ConvertPolygons(mesh, out BufferCorner[] corners, out uint[]? indexList);
-				bool strippified = mesh.PolygonType is BasicPolygonType.TriangleStrips or BasicPolygonType.NPoly;
+				ConvertPolygons(mesh, out BufferCorner[] corners, out uint[]? indexList, out bool strippified);
 
 				// first mesh includes vertex data
 				BufferMesh bmesh = meshes.Count == 0
@@ -439,7 +452,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				meshes.Add(bmesh);
 			}
 
-			return optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+			return BufferMesh.CompressLayout(meshes);
 		}
 
 		/// <summary>
@@ -449,9 +462,12 @@ namespace SA3D.Modeling.Mesh.Converters
 		/// <param name="optimize">Whether the buffer model should be optimized</param>
 		public static void BufferBasicModel(Node model, bool optimize = true)
 		{
-			foreach(Attach atc in model.GetTreeAttaches())
+			if(!FromWeldedBasicConverter.BufferWeldedBasicModel(model, optimize))
 			{
-				atc.MeshData = ConvertBasicToBuffer((BasicAttach)atc, optimize);
+				foreach(Attach atc in model.GetTreeAttaches())
+				{
+					atc.MeshData = ConvertBasicToBuffer((BasicAttach)atc, optimize);
+				}
 			}
 		}
 

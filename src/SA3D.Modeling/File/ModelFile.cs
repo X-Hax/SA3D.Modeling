@@ -6,6 +6,8 @@ using SA3D.Common.IO;
 using System.IO;
 using System;
 using static SA3D.Modeling.File.FileHeaders;
+using SA3D.Modeling.File.Structs;
+using SA3D.Modeling.ObjectData.Structs;
 
 namespace SA3D.Modeling.File
 {
@@ -257,9 +259,53 @@ namespace SA3D.Modeling.File
 			uint modelAddr = reader.ReadPointer(address + 8);
 			Node model = Node.Read(reader, modelAddr, format, lut);
 
+			if(metaData.MetaWeights.Count > 0)
+			{
+				CreateWeldings(metaData, lut);
+			}
+
 			reader.ImageBase = prevImageBase;
 
 			return new(format, model, metaData, false);
+		}
+
+		private static void CreateWeldings(MetaData metadata, PointerLUT lut)
+		{
+			foreach(MetaWeightNode metaWeightNode in metadata.MetaWeights)
+			{
+				if(!lut.Nodes.TryGetValue(metaWeightNode.NodePointer, out Node? node))
+				{
+					throw new InvalidDataException($"Metadata has weights for a node at {metaWeightNode.NodePointer:X8}, but no node has been read at that address!");
+				}
+
+				VertexWelding[] vertexWelds = new VertexWelding[metaWeightNode.VertexWeights.Length];
+
+				for(int i = 0; i < vertexWelds.Length; i++)
+				{
+					MetaWeightVertex metaWeightVertex = metaWeightNode.VertexWeights[i];
+
+					Weld[] welds = new Weld[metaWeightVertex.Weights.Length];
+
+					for(int j = 0; j < welds.Length; j++)
+					{
+						MetaWeight metaWeight = metaWeightVertex.Weights[j];
+
+						if(!lut.Nodes.TryGetValue(metaWeight.NodePointer, out Node? sourceNode))
+						{
+							throw new InvalidDataException($"Metadata draws weight influence from a node at {metaWeightNode.NodePointer:X8}, but no node has been read at that address!");
+						}
+
+						welds[j] = new(sourceNode, metaWeight.VertexIndex, metaWeight.Weight);
+					}
+
+					vertexWelds[i] = new(metaWeightVertex.DestinationVertexIndex, welds);
+				}
+
+				Array.Sort(vertexWelds, (a, b) => a.DestinationVertexIndex.CompareTo(b.DestinationVertexIndex));
+
+				node.Welding = vertexWelds;
+			}
+
 		}
 
 
@@ -425,6 +471,9 @@ namespace SA3D.Modeling.File
 
 			metadata ??= new();
 			metadata.Labels = lut.Labels.GetDictFrom();
+
+			CreateMetaWeights(model, metadata, lut);
+
 			uint metadataAddress = metadata.Write(writer);
 
 			uint end = writer.Position;
@@ -432,6 +481,45 @@ namespace SA3D.Modeling.File
 			writer.WriteUInt(modelAddress);
 			writer.WriteUInt(metadataAddress);
 			writer.Seek(end, SeekOrigin.Begin);
+		}
+
+		private static void CreateMetaWeights(Node model, MetaData metadata, PointerLUT lut)
+		{
+			metadata.MetaWeights.Clear();
+			Node[] nodes = model.GetTreeNodes();
+
+			foreach(Node node in nodes)
+			{
+				if(node.Welding == null)
+				{
+					continue;
+				}
+
+				uint nodePointer = lut.Nodes.GetAddress(node)!.Value;
+				MetaWeightVertex[] metaWeightVertices = new MetaWeightVertex[node.Welding.Length];
+
+				for(int i = 0; i < metaWeightVertices.Length; i++)
+				{
+					VertexWelding vertexWelding = node.Welding[i];
+
+					MetaWeight[] metaWeights = new MetaWeight[vertexWelding.Welds.Length];
+					for(int j = 0; j < metaWeights.Length; j++)
+					{
+						Weld weld = vertexWelding.Welds[j];
+
+						if(!lut.Nodes.TryGetAddress(weld.SourceNode, out uint sourceNodePointer))
+						{
+							throw new InvalidDataException($"Source node \"{weld.SourceNode.Label}\" is not part of the model that is being written!");
+						}
+
+						metaWeights[j] = new MetaWeight(sourceNodePointer, weld.VertexIndex, weld.Weight);
+					}
+
+					metaWeightVertices[i] = new(vertexWelding.DestinationVertexIndex, metaWeights);
+				}
+
+				metadata.MetaWeights.Add(new(nodePointer, metaWeightVertices));
+			}
 		}
 
 

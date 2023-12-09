@@ -94,12 +94,6 @@ namespace SA3D.Modeling.Mesh.Basic
 		}
 
 		/// <inheritdoc/>
-		public override bool CheckHasWeights()
-		{
-			return false;
-		}
-
-		/// <inheritdoc/>
 		public override void RecalculateBounds()
 		{
 			MeshBounds = Bounds.FromPoints(Positions);

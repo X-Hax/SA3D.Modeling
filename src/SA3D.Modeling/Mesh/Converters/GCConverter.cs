@@ -18,13 +18,8 @@ namespace SA3D.Modeling.Mesh.Converters
 	/// </summary>
 	internal static class GCConverter
 	{
-		public static void ConvertWeightedToGC(Node model, WeightedMesh[] meshData, bool optimize, bool ignoreWeights)
+		public static void ConvertWeightedToGC(Node model, WeightedMesh[] meshData, bool optimize)
 		{
-			if(meshData.Any(x => x.IsWeighted) && !ignoreWeights)
-			{
-				throw new FormatException("Model is weighted, cannot convert to basic format!");
-			}
-
 			Node[] nodes = model.GetTreeNodes();
 			GCAttach[] attaches = new GCAttach[nodes.Length];
 			List<GCAttach> rootlessAttaches = new();
@@ -51,6 +46,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					cornerCount += weightedMesh.TriangleSets[i].Length;
 				}
 
+				float uvFac = 1 << byte.Clamp(weightedMesh.TexcoordPrecisionLevel, 0, 7);
 				Vector2[] texcoordData = new Vector2[cornerCount];
 				Color[] colorData = new Color[cornerCount];
 				GCCorner[][] polygonData = new GCCorner[weightedMesh.TriangleSets.Length][];
@@ -64,7 +60,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					{
 						BufferCorner bcorner = bufferCorners[j];
 
-						texcoordData[cornerIndex] = bcorner.Texcoord;
+						texcoordData[cornerIndex] = bcorner.Texcoord * uvFac;
 						colorData[cornerIndex] = bcorner.Color;
 
 						meshCorners[j] = new GCCorner()
@@ -115,12 +111,19 @@ namespace SA3D.Modeling.Mesh.Converters
 
 						foreach(GCVertexSet set in vertexData)
 						{
-							parameters.Add(new GCVertexFormatParameter()
+							GCVertexFormatParameter param = new()
 							{
 								VertexType = set.Type,
 								VertexStructType = set.StructType,
 								VertexDataType = set.DataType
-							});
+							};
+
+							if(param.VertexType is >= GCVertexType.TexCoord0 and <= GCVertexType.TexCoord7)
+							{
+								param.Attributes = byte.Min(7, weightedMesh.TexcoordPrecisionLevel);
+							}
+
+							parameters.Add(param);
 
 							uint flag = 1u << ((int)set.Type * 2);
 
@@ -313,6 +316,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 			model.ClearAttachesFromTree();
+			model.ClearWeldingsFromTree();
 
 			// Linking the attaches to the nodes
 			for(int i = 0; i < nodes.Length; i++)
@@ -367,7 +371,6 @@ namespace SA3D.Modeling.Mesh.Converters
 			{
 				throw new NullReferenceException("Mandatory positions dont exit");
 			}
-
 
 
 			float uvFac = 1;
@@ -532,7 +535,14 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 				}
 
-				return new(material, corners.ToArray(), trianglelist.ToArray(), false, colors != null, 0);
+				BufferMesh mesh = new(material, corners.ToArray(), trianglelist.ToArray(), false, colors != null, 0);
+
+				if(optimize)
+				{
+					mesh.OptimizePolygons();
+				}
+
+				return mesh;
 			}
 
 			material = new(BufferMaterial.DefaultValues)
@@ -569,7 +579,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				vtxMesh.HasColors,
 				0, 0);
 
-			return optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+			return BufferMesh.CompressLayout(meshes);
 		}
 
 		public static void BufferGCModel(Node model, bool optimize)

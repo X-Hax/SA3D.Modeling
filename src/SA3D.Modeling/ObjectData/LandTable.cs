@@ -151,7 +151,7 @@ namespace SA3D.Modeling.ObjectData
 
 					if(node.Next != null || node.Child != null)
 					{
-						node.ConvertAttachFormat(format, bufferMode, optimize, false, forceUpdate, updateBuffer);
+						node.ConvertAttachFormat(format, bufferMode, optimize, forceUpdate, updateBuffer);
 					}
 
 					if(node.Attach == null)
@@ -165,7 +165,7 @@ namespace SA3D.Modeling.ObjectData
 					else
 					{
 						Attach previous = node.Attach;
-						node.ConvertAttachFormat(format, bufferMode, optimize, false, forceUpdate, updateBuffer);
+						node.ConvertAttachFormat(format, bufferMode, optimize, forceUpdate, updateBuffer);
 						convertedAttaches.Add(previous, node.Attach);
 					}
 				}

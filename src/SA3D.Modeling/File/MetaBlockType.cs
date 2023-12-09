@@ -51,6 +51,11 @@
 		ObjectName = 0x4F424A4E,
 
 		/// <summary>
+		/// BASIC weights
+		/// </summary>
+		Weight = 0x54484757,
+
+		/// <summary>
 		/// End marker.
 		/// </summary>
 		End = 0x444E45

@@ -2,6 +2,9 @@
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Buffer;
 using SA3D.Modeling.Mesh.Converters;
+using SA3D.Modeling.Mesh.Gamecube;
+using SA3D.Modeling.Mesh.Gamecube.Enums;
+using SA3D.Modeling.Mesh.Gamecube.Parameters;
 using SA3D.Modeling.ObjectData;
 using System;
 using System.Collections.Generic;
@@ -65,6 +68,18 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// Whether Specular colors should be written to the models.
 		/// </summary>
 		public bool WriteSpecular { get; set; }
+
+		/// <summary>
+		/// Texture coordinate precision level. Every level higher allows for double the previous precision, but also reduces range by half.
+		/// <br/> Supported:
+		/// <br/> - Basic: 0
+		/// <br/> - Chunk: 0 or 2
+		/// <br/> - Gamecube: 0-7
+		/// <br/> - Buffer: Unaffected
+		/// <br/>
+		/// <br/> When converting, the lowest supported precision is used.
+		/// </summary>
+		public byte TexcoordPrecisionLevel { get; set; }
 
 
 		internal WeightedMesh(
@@ -170,26 +185,112 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// Converts buffer meshdata from attaches of a model to weighted meshes.
 		/// </summary>
 		/// <param name="model">Model to convert.</param>
-		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
+		/// <param name="bufferMode">How to handle buffered mesh data of the model (if needed for conversion).</param>
 		/// <returns>The converted weighted meshes.</returns>
 		public static WeightedMesh[] FromModel(Node model, BufferMode bufferMode)
 		{
-			switch(bufferMode)
+			AttachFormat? attachFormat = model.GetAttachFormat();
+			if(attachFormat == null)
 			{
-				case BufferMode.Generate:
-					model.BufferMeshData(false);
+				return Array.Empty<WeightedMesh>();
+			}
+
+			bool hasWelding = model.GetTreeNodeEnumerable().Any(x => x.Welding != null);
+
+			WeightedMesh[] result;
+
+			if(attachFormat == AttachFormat.BASIC && hasWelding)
+			{
+				Node[][] weldingGroups = model.GetTreeWeldingGroups(false);
+				result = FromWeldedBasicConverter.CreateWeightedFromWeldedBasicModel(model, weldingGroups, bufferMode);
+			}
+			else
+			{
+				switch(bufferMode)
+				{
+					case BufferMode.Generate:
+						model.BufferMeshData(false);
+						break;
+					case BufferMode.GenerateOptimized:
+						model.BufferMeshData(true);
+						break;
+					case BufferMode.None:
+					default:
+						break;
+				}
+
+				result = ToWeightedConverter.ConvertToWeighted(model);
+				GetTexcoordPrecisionLevel(model, result, attachFormat.Value);
+			}
+
+			EnsurePolygonsValid(ref result);
+			return result;
+		}
+
+		private static void GetTexcoordPrecisionLevel(Node model, WeightedMesh[] meshes, AttachFormat format)
+		{
+			Node[] nodes = model.GetTreeNodes();
+
+			switch(format)
+			{
+				case AttachFormat.GC:
+					foreach(WeightedMesh mesh in meshes)
+					{
+						GCAttach atc = (GCAttach)nodes[mesh.RootIndices.First()].Attach!;
+
+						byte texcoordPrecision = 255;
+						if(atc.OpaqueMeshes.Length != 0)
+						{
+							GCVertexFormatParameter[] vtxParams = atc.OpaqueMeshes
+								.SelectMany(x => x.Parameters)
+								.Select(x => x)
+								.OfType<GCVertexFormatParameter>()
+								.Where(x => x.VertexType == GCVertexType.TexCoord0)
+								.ToArray();
+
+							if(vtxParams.Length != 1)
+							{
+								continue;
+							}
+
+							mesh.TexcoordPrecisionLevel = vtxParams[0].Attributes;
+						}
+
+						if(atc.TransparentMeshes.Length != 0)
+						{
+							GCVertexFormatParameter[] vtxParams = atc.TransparentMeshes
+								.SelectMany(x => x.Parameters)
+								.Select(x => x)
+								.OfType<GCVertexFormatParameter>()
+								.Where(x => x.VertexType == GCVertexType.TexCoord0)
+								.ToArray();
+
+							if(vtxParams.Length != 1)
+							{
+								continue;
+							}
+
+							byte newPrecision = vtxParams[0].Attributes;
+							if(texcoordPrecision == 255)
+							{
+								mesh.TexcoordPrecisionLevel = newPrecision;
+							}
+							else if(texcoordPrecision != newPrecision)
+							{
+								mesh.TexcoordPrecisionLevel = 0;
+								continue;
+							}
+						}
+					}
+
 					break;
-				case BufferMode.GenerateOptimized:
-					model.BufferMeshData(true);
-					break;
-				case BufferMode.None:
+				case AttachFormat.CHUNK: // theoretically you can do it for chunk, but its very annoying
+				case AttachFormat.Buffer:
+				case AttachFormat.BASIC:
 				default:
 					break;
 			}
 
-			WeightedMesh[] result = ToWeightedConverter.ConvertToWeighted(model);
-			EnsurePolygonsValid(ref result);
-			return result;
 		}
 
 		/// <summary>
@@ -197,17 +298,16 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// </summary>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
-		/// <param name="ignoreWeights">Whether to ignore losing weight information.</param>
 		/// <returns>The converted attach.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public Attach ToAttach(AttachFormat format, bool optimize, bool ignoreWeights)
+		public Attach ToAttach(AttachFormat format, bool optimize)
 		{
 			HashSet<int> backup = new(RootIndices);
 			RootIndices.Clear();
 			RootIndices.Add(0);
 
 			Node dummy = new();
-			ToModel(dummy, new[] { this }, format, optimize, ignoreWeights);
+			ToModel(dummy, new[] { this }, format, optimize);
 
 			RootIndices.Clear();
 			RootIndices.UnionWith(backup);
@@ -222,8 +322,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <param name="meshes">Meshes to convert.</param>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
-		/// <param name="ignoreWeights">Whether to ignore losing weight information.</param>
-		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize, bool ignoreWeights = false)
+		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize)
 		{
 			EnsurePolygonsValid(ref meshes);
 
@@ -233,13 +332,13 @@ namespace SA3D.Modeling.Mesh.Weighted
 					FromWeightedConverter.Convert(model, meshes, optimize);
 					break;
 				case AttachFormat.BASIC:
-					BasicConverter.ConvertWeightedToBasic(model, meshes, optimize, ignoreWeights);
+					BasicConverter.ConvertWeightedToBasic(model, meshes, optimize);
 					break;
 				case AttachFormat.CHUNK:
 					ChunkConverter.ConvertWeightedToChunk(model, meshes, optimize);
 					break;
 				case AttachFormat.GC:
-					GCConverter.ConvertWeightedToGC(model, meshes, optimize, ignoreWeights);
+					GCConverter.ConvertWeightedToGC(model, meshes, optimize);
 					break;
 				default:
 					throw new ArgumentException("Invalid attach format.", nameof(format));

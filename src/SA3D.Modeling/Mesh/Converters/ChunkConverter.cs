@@ -201,7 +201,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						corners[j].Index = (ushort)sortedVertMap[index];
 					}
 
-					polyChunks.AddRange(CreateStripChunk(corners, wba.Materials[i], wba.WriteSpecular));
+					polyChunks.AddRange(CreateStripChunk(corners, wba.Materials[i], wba.WriteSpecular, wba.TexcoordPrecisionLevel));
 				}
 
 				// assemble the attaches
@@ -392,7 +392,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						corners[j].Texcoord = bc.Texcoord;
 					}
 
-					polyChunks.AddRange(CreateStripChunk(corners, wba.Materials[i], wba.WriteSpecular));
+					polyChunks.AddRange(CreateStripChunk(corners, wba.Materials[i], wba.WriteSpecular, wba.TexcoordPrecisionLevel));
 				}
 
 				// assemble the attaches
@@ -518,7 +518,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				List<PolyChunk> polyChunks = new();
 				for(int i = 0; i < cornerSets.Length; i++)
 				{
-					polyChunks.AddRange(CreateStripChunk(cornerSets[i], wba.Materials[i], wba.WriteSpecular));
+					polyChunks.AddRange(CreateStripChunk(cornerSets[i], wba.Materials[i], wba.WriteSpecular, wba.TexcoordPrecisionLevel));
 				}
 
 				return new(
@@ -533,7 +533,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					});
 			}
 
-			private static PolyChunk[] CreateStripChunk(ChunkCorner[] corners, BufferMaterial material, bool writeSpecular)
+			private static PolyChunk[] CreateStripChunk(ChunkCorner[] corners, BufferMaterial material, bool writeSpecular, byte texcoordPrecision)
 			{
 				ChunkCorner[][] stripCorners = TriangleStrippifier.Global.StrippifyNoDegen(corners, out bool[] reversed);
 				ChunkStrip[] strips = new ChunkStrip[stripCorners.Length];
@@ -544,7 +544,11 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				bool hasUV = material.UseTexture && !material.NormalMapping;
-				PolyChunkType stripType = hasUV ? PolyChunkType.Strip_Tex : PolyChunkType.Strip_Blank;
+				PolyChunkType stripType = !hasUV
+					? PolyChunkType.Strip_Blank
+					: texcoordPrecision >= 2
+					? PolyChunkType.Strip_HDTex
+					: PolyChunkType.Strip_Tex;
 
 				StripChunk stripchunk = new(stripType, strips, 0)
 				{
@@ -806,15 +810,24 @@ namespace SA3D.Modeling.Mesh.Converters
 
 								if(corners.Length > 0)
 								{
+									BufferMesh mesh;
+
 									if(vertices != null)
 									{
-										meshes.Add(new BufferMesh(vertices, material, corners, null, true, continueWeight, hasVertexNormals, hasColor, vertexWriteOffset, 0));
+										mesh = new BufferMesh(vertices, material, corners, null, true, continueWeight, hasVertexNormals, hasColor, vertexWriteOffset, 0);
 										vertices = null;
 									}
 									else
 									{
-										meshes.Add(new BufferMesh(material, corners, null, true, hasColor, 0));
+										mesh = new BufferMesh(material, corners, null, true, hasColor, 0);
 									}
+
+									if(optimize)
+									{
+										mesh.OptimizePolygons();
+									}
+
+									meshes.Add(mesh);
 								}
 
 								break;
@@ -830,7 +843,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					meshes.Add(new BufferMesh(vertices, continueWeight, hasVertexNormals, vertexWriteOffset));
 				}
 
-				atc.MeshData = optimize ? BufferMesh.Optimize(meshes) : meshes.ToArray();
+				atc.MeshData = BufferMesh.CompressLayout(meshes);
 			}
 		}
 
