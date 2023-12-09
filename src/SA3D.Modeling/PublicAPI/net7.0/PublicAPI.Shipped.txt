@@ -3,6 +3,7 @@ abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.ByteSize.get -> uint
 abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.InternalWrite(SA3D.Common.IO.EndianStackWriter! writer) -> void
 abstract SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Size.get -> ushort
 const SA3D.Modeling.Animation.Motion.StructSize = 16 -> uint
+const SA3D.Modeling.File.Structs.MetaWeight.StructSize = 12 -> uint
 const SA3D.Modeling.Mesh.Basic.BasicMaterial.StructSize = 20 -> uint
 const SA3D.Modeling.Mesh.Basic.BasicMesh.StructSize = 24 -> uint
 const SA3D.Modeling.Mesh.Basic.BasicMesh.StructSizeDX = 28 -> uint
@@ -12,8 +13,18 @@ const SA3D.Modeling.Mesh.Buffer.BufferMaterial.StructSize = 32 -> uint
 const SA3D.Modeling.ObjectData.Node.StructSize = 52 -> uint
 override SA3D.Modeling.Animation.Motion.ToString() -> string!
 override SA3D.Modeling.File.ModelFile.ToString() -> string!
+override SA3D.Modeling.File.Structs.MetaWeight.Equals(object? obj) -> bool
+override SA3D.Modeling.File.Structs.MetaWeight.GetHashCode() -> int
+override SA3D.Modeling.File.Structs.MetaWeight.ToString() -> string!
+override SA3D.Modeling.File.Structs.MetaWeightNode.Equals(object? obj) -> bool
+override SA3D.Modeling.File.Structs.MetaWeightNode.GetHashCode() -> int
+override SA3D.Modeling.File.Structs.MetaWeightNode.ToString() -> string!
+override SA3D.Modeling.File.Structs.MetaWeightVertex.Equals(object? obj) -> bool
+override SA3D.Modeling.File.Structs.MetaWeightVertex.GetHashCode() -> int
+override SA3D.Modeling.File.Structs.MetaWeightVertex.ToString() -> string!
 override SA3D.Modeling.Mesh.Attach.ToString() -> string!
 override SA3D.Modeling.Mesh.Basic.BasicAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+override SA3D.Modeling.Mesh.Basic.BasicAttach.CheckHasWeights() -> bool
 override SA3D.Modeling.Mesh.Basic.BasicAttach.Clone() -> SA3D.Modeling.Mesh.Attach!
 override SA3D.Modeling.Mesh.Basic.BasicAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
 override SA3D.Modeling.Mesh.Basic.BasicAttach.RecalculateBounds() -> void
@@ -101,6 +112,11 @@ override SA3D.Modeling.Mesh.Weighted.WeightedVertex.ToString() -> string!
 override SA3D.Modeling.ObjectData.LandEntry.ToString() -> string!
 override SA3D.Modeling.ObjectData.LandTable.ToString() -> string!
 override SA3D.Modeling.ObjectData.Node.ToString() -> string!
+override SA3D.Modeling.ObjectData.Structs.VertexWelding.Equals(object? obj) -> bool
+override SA3D.Modeling.ObjectData.Structs.VertexWelding.GetHashCode() -> int
+override SA3D.Modeling.ObjectData.Structs.VertexWelding.ToString() -> string!
+override SA3D.Modeling.ObjectData.Structs.Weld.Equals(object? obj) -> bool
+override SA3D.Modeling.ObjectData.Structs.Weld.GetHashCode() -> int
 override SA3D.Modeling.Structs.Bounds.Equals(object? obj) -> bool
 override SA3D.Modeling.Structs.Bounds.GetHashCode() -> int
 override SA3D.Modeling.Structs.Bounds.ToString() -> string!
@@ -293,6 +309,25 @@ SA3D.Modeling.File.ModelFile.NJFile.get -> bool
 SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.File.ModelFile.WriteToBytes() -> byte[]!
 SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath) -> void
+SA3D.Modeling.File.Structs.MetaWeight
+SA3D.Modeling.File.Structs.MetaWeight.MetaWeight() -> void
+SA3D.Modeling.File.Structs.MetaWeight.MetaWeight(uint nodePointer, uint vertexIndex, float weight) -> void
+SA3D.Modeling.File.Structs.MetaWeight.NodePointer.get -> uint
+SA3D.Modeling.File.Structs.MetaWeight.VertexIndex.get -> uint
+SA3D.Modeling.File.Structs.MetaWeight.Weight.get -> float
+SA3D.Modeling.File.Structs.MetaWeight.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.File.Structs.MetaWeightNode
+SA3D.Modeling.File.Structs.MetaWeightNode.MetaWeightNode() -> void
+SA3D.Modeling.File.Structs.MetaWeightNode.MetaWeightNode(uint nodePointer, SA3D.Modeling.File.Structs.MetaWeightVertex[]! vertexWeights) -> void
+SA3D.Modeling.File.Structs.MetaWeightNode.NodePointer.get -> uint
+SA3D.Modeling.File.Structs.MetaWeightNode.VertexWeights.get -> SA3D.Modeling.File.Structs.MetaWeightVertex[]!
+SA3D.Modeling.File.Structs.MetaWeightNode.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
+SA3D.Modeling.File.Structs.MetaWeightVertex
+SA3D.Modeling.File.Structs.MetaWeightVertex.DestinationVertexIndex.get -> uint
+SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex() -> void
+SA3D.Modeling.File.Structs.MetaWeightVertex.MetaWeightVertex(uint destinationVertexIndex, SA3D.Modeling.File.Structs.MetaWeight[]! weights) -> void
+SA3D.Modeling.File.Structs.MetaWeightVertex.Weights.get -> SA3D.Modeling.File.Structs.MetaWeight[]!
+SA3D.Modeling.File.Structs.MetaWeightVertex.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.Mesh.Attach
 SA3D.Modeling.Mesh.Attach.Attach() -> void
 SA3D.Modeling.Mesh.Attach.Attach(SA3D.Modeling.Mesh.Buffer.BufferMesh![]! meshdata) -> void
@@ -1240,6 +1275,7 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.get -> string?
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Materials.get -> SA3D.Modeling.Mesh.Buffer.BufferMaterial[]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.RootIndices.get -> System.Collections.Generic.HashSet<int>!
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights) -> SA3D.Modeling.Mesh.Attach!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.TriangleSets.get -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Vertices.get -> SA3D.Modeling.Mesh.Weighted.WeightedVertex[]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.WriteSpecular.get -> bool
@@ -1484,6 +1520,7 @@ SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
 SA3D.Modeling.ObjectData.Node.Child.get -> SA3D.Modeling.ObjectData.Node?
 SA3D.Modeling.ObjectData.Node.ChildCount.get -> int
 SA3D.Modeling.ObjectData.Node.ClearAttachesFromTree() -> void
+SA3D.Modeling.ObjectData.Node.ConvertAttachFormat(SA3D.Modeling.Mesh.AttachFormat newAttachFormat, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode, bool optimize, bool ignoreWeights = false, bool forceUpdate = false, bool updateBuffer = false) -> void
 SA3D.Modeling.ObjectData.Node.DeepAttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Detach() -> void
@@ -1563,6 +1600,17 @@ SA3D.Modeling.ObjectData.Node.UpdateTransforms(System.Numerics.Vector3? position
 SA3D.Modeling.ObjectData.Node.UseQuaternionRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.UseQuaternionRotation.set -> void
 SA3D.Modeling.ObjectData.Node.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
+SA3D.Modeling.ObjectData.Structs.VertexWelding
+SA3D.Modeling.ObjectData.Structs.VertexWelding.DestinationVertexIndex.get -> uint
+SA3D.Modeling.ObjectData.Structs.VertexWelding.VertexWelding() -> void
+SA3D.Modeling.ObjectData.Structs.VertexWelding.VertexWelding(uint destinationVertexIndex, SA3D.Modeling.ObjectData.Structs.Weld[]! welds) -> void
+SA3D.Modeling.ObjectData.Structs.VertexWelding.Welds.get -> SA3D.Modeling.ObjectData.Structs.Weld[]!
+SA3D.Modeling.ObjectData.Structs.Weld
+SA3D.Modeling.ObjectData.Structs.Weld.SourceNode.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.Structs.Weld.VertexIndex.get -> uint
+SA3D.Modeling.ObjectData.Structs.Weld.Weight.get -> float
+SA3D.Modeling.ObjectData.Structs.Weld.Weld() -> void
+SA3D.Modeling.ObjectData.Structs.Weld.Weld(SA3D.Modeling.ObjectData.Node! sourceNode, uint vertexIndex, float weight) -> void
 SA3D.Modeling.Strippify.TopologyException
 SA3D.Modeling.Strippify.TopologyException.TopologyException(string! msg) -> void
 SA3D.Modeling.Strippify.TriangleStrippifier
@@ -1682,6 +1730,7 @@ static SA3D.Modeling.Animation.Spotlight.Distance(SA3D.Modeling.Animation.Spotli
 static SA3D.Modeling.Animation.Spotlight.Lerp(SA3D.Modeling.Animation.Spotlight from, SA3D.Modeling.Animation.Spotlight to, float time) -> SA3D.Modeling.Animation.Spotlight
 static SA3D.Modeling.Animation.Spotlight.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Animation.Spotlight
 static SA3D.Modeling.Animation.Spotlight.StructSize.get -> uint
+static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EnsurePositiveEulerRotationAngles(SA3D.Modeling.Animation.Keyframes! keyframes, bool forBAMS) -> void
 static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
 static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
 static SA3D.Modeling.Animation.Utilities.KeyframeRotationUtils.EulerToQuaternion(this SA3D.Modeling.Animation.Keyframes! keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler) -> void
@@ -1735,6 +1784,15 @@ static SA3D.Modeling.File.ModelFile.ReadFromFile(string! filepath) -> SA3D.Model
 static SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
 static SA3D.Modeling.File.ModelFile.WriteToBytes(SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> byte[]!
 static SA3D.Modeling.File.ModelFile.WriteToFile(string! filepath, SA3D.Modeling.ObjectData.Node! model, bool nj = false, SA3D.Modeling.File.MetaData? metaData = null, SA3D.Modeling.ObjectData.Enums.ModelFormat? format = null) -> void
+static SA3D.Modeling.File.Structs.MetaWeight.operator !=(SA3D.Modeling.File.Structs.MetaWeight left, SA3D.Modeling.File.Structs.MetaWeight right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeight.operator ==(SA3D.Modeling.File.Structs.MetaWeight left, SA3D.Modeling.File.Structs.MetaWeight right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeight.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.File.Structs.MetaWeight
+static SA3D.Modeling.File.Structs.MetaWeightNode.operator !=(SA3D.Modeling.File.Structs.MetaWeightNode left, SA3D.Modeling.File.Structs.MetaWeightNode right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeightNode.operator ==(SA3D.Modeling.File.Structs.MetaWeightNode left, SA3D.Modeling.File.Structs.MetaWeightNode right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeightNode.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.File.Structs.MetaWeightNode
+static SA3D.Modeling.File.Structs.MetaWeightVertex.operator !=(SA3D.Modeling.File.Structs.MetaWeightVertex left, SA3D.Modeling.File.Structs.MetaWeightVertex right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeightVertex.operator ==(SA3D.Modeling.File.Structs.MetaWeightVertex left, SA3D.Modeling.File.Structs.MetaWeightVertex right) -> bool
+static SA3D.Modeling.File.Structs.MetaWeightVertex.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.File.Structs.MetaWeightVertex
 static SA3D.Modeling.Mesh.Attach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!
 static SA3D.Modeling.Mesh.Attach.ReadBuffer(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Attach!
 static SA3D.Modeling.Mesh.Basic.BasicAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, bool DX, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Basic.BasicAttach!
@@ -1751,6 +1809,7 @@ static SA3D.Modeling.Mesh.Buffer.BufferCorner.Read(SA3D.Common.IO.EndianStackRea
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator !=(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.operator ==(SA3D.Modeling.Mesh.Buffer.BufferMaterial l, SA3D.Modeling.Mesh.Buffer.BufferMaterial r) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferMaterial.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMaterial
+static SA3D.Modeling.Mesh.Buffer.BufferMesh.Optimize(System.Collections.Generic.IList<SA3D.Modeling.Mesh.Buffer.BufferMesh!>! input) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
 static SA3D.Modeling.Mesh.Buffer.BufferMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Buffer.BufferMesh!
 static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator !=(SA3D.Modeling.Mesh.Buffer.BufferVertex left, SA3D.Modeling.Mesh.Buffer.BufferVertex right) -> bool
 static SA3D.Modeling.Mesh.Buffer.BufferVertex.operator *(float l, SA3D.Modeling.Mesh.Buffer.BufferVertex r) -> SA3D.Modeling.Mesh.Buffer.BufferVertex
@@ -1807,6 +1866,7 @@ static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.At
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeAtRoots(SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeWeightedMeshes(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Weighted.WeightedMesh!>! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, bool ignoreWeights = false) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator !=(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator ==(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.ObjectData.Enums.EnumExtensions.CheckIsCollision(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> bool
@@ -1820,6 +1880,10 @@ static SA3D.Modeling.ObjectData.LandEntry.CreateWithAttach(SA3D.Modeling.Mesh.At
 static SA3D.Modeling.ObjectData.LandEntry.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat modelFormat, SA3D.Modeling.ObjectData.Enums.ModelFormat tableFormat, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.LandEntry!
 static SA3D.Modeling.ObjectData.LandTable.Read(SA3D.Common.IO.EndianStackReader! data, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.LandTable!
 static SA3D.Modeling.ObjectData.Node.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.ObjectData.Node!
+static SA3D.Modeling.ObjectData.Structs.VertexWelding.operator !=(SA3D.Modeling.ObjectData.Structs.VertexWelding left, SA3D.Modeling.ObjectData.Structs.VertexWelding right) -> bool
+static SA3D.Modeling.ObjectData.Structs.VertexWelding.operator ==(SA3D.Modeling.ObjectData.Structs.VertexWelding left, SA3D.Modeling.ObjectData.Structs.VertexWelding right) -> bool
+static SA3D.Modeling.ObjectData.Structs.Weld.operator !=(SA3D.Modeling.ObjectData.Structs.Weld left, SA3D.Modeling.ObjectData.Structs.Weld right) -> bool
+static SA3D.Modeling.ObjectData.Structs.Weld.operator ==(SA3D.Modeling.ObjectData.Structs.Weld left, SA3D.Modeling.ObjectData.Structs.Weld right) -> bool
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinedStripEnumerator<T>(T[]![]! strips, bool[]? reversed) -> System.Collections.Generic.IEnumerable<T>!
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinStrips<T>(T[]![]! strips, bool[]? reversed) -> T[]!
 static SA3D.Modeling.Structs.Bounds.FromPoints(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> SA3D.Modeling.Structs.Bounds
