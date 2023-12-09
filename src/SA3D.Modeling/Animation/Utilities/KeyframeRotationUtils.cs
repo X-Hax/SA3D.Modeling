@@ -6,6 +6,7 @@ using Matrix4x4KF = System.Collections.Generic.SortedDictionary<uint, System.Num
 using QuaternionKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>;
 using EulerKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>;
 using System.Linq;
+using SA3D.Common;
 
 namespace SA3D.Modeling.Animation.Utilities
 {
@@ -435,12 +436,14 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// Adjusts euler rotation keyframes so that they only consist of positive values.
 		/// </summary>
 		/// <param name="keyframes">The keyframes to adjust.</param>
-		public static void EnsurePositiveEulerRotationAngles(Keyframes keyframes)
+		/// <param name="forBAMS">Keyframes target BAMS and rotations should be handled as such.</param>
+		public static void EnsurePositiveEulerRotationAngles(Keyframes keyframes, bool forBAMS)
 		{
 			if(keyframes.EulerRotation.Count == 0)
 			{
 				return;
 			}
+
 
 			float lowestX = 0;
 			float lowestY = 0;
@@ -464,7 +467,30 @@ namespace SA3D.Modeling.Animation.Utilities
 				}
 			}
 
-			if(lowestX >= 0 && lowestY >= 0 && lowestZ >= 0)
+			if(forBAMS)
+			{
+				float minRad = MathHelper.BAMSToRad(-1);
+
+				if(lowestX > minRad)
+				{
+					lowestX = 0;
+				}
+
+				if(lowestY > minRad)
+				{
+					lowestY = 0;
+				}
+
+				if(lowestZ > minRad)
+				{
+					lowestZ = 0;
+				}
+			}
+
+
+			if(lowestX >= 0
+				&& lowestY >= 0
+				&& lowestZ >= 0)
 			{
 				return;
 			}
