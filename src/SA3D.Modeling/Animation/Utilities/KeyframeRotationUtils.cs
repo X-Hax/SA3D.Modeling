@@ -6,7 +6,6 @@ using Matrix4x4KF = System.Collections.Generic.SortedDictionary<uint, System.Num
 using QuaternionKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>;
 using EulerKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>;
 using System.Linq;
-using SA3D.Common;
 
 namespace SA3D.Modeling.Animation.Utilities
 {
@@ -469,7 +468,7 @@ namespace SA3D.Modeling.Animation.Utilities
 
 			if(forBAMS)
 			{
-				float minRad = MathHelper.BAMSToRad(-1);
+				float minRad = BAMSFHelper.BAMSFToRad(-1);
 
 				if(lowestX > minRad)
 				{

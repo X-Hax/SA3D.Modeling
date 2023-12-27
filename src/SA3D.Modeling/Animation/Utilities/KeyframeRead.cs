@@ -4,7 +4,6 @@ using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using static SA3D.Common.MathHelper;
 
 namespace SA3D.Modeling.Animation.Utilities
 {
@@ -112,7 +111,9 @@ namespace SA3D.Modeling.Animation.Utilities
 			for(int i = 0; i < count; i++)
 			{
 				uint frame = reader.ReadUInt(address);
-				float value = BAMS ? BAMSToRad(reader.ReadInt(address + 4)) : reader.ReadFloat(address + 4);
+				float value = BAMS
+					? BAMSFHelper.BAMSFToRad(reader.ReadInt(address + 4))
+					: reader.ReadFloat(address + 4);
 				address += 8;
 				dictionary.Add(frame, value);
 			}

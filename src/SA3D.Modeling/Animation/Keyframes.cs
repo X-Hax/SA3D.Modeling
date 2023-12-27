@@ -342,7 +342,7 @@ namespace SA3D.Modeling.Animation
 						writer.WriteVector3Set(Position, FloatIOType.Float);
 						break;
 					case KeyframeAttributes.EulerRotation:
-						writer.WriteVector3Set(EulerRotation, shortRot ? FloatIOType.BAMS16 : FloatIOType.BAMS32);
+						writer.WriteVector3Set(EulerRotation, shortRot ? FloatIOType.BAMS16F : FloatIOType.BAMS32F);
 						break;
 					case KeyframeAttributes.Scale:
 						writer.WriteVector3Set(Scale, FloatIOType.Float);
@@ -419,7 +419,7 @@ namespace SA3D.Modeling.Animation
 							reader.ReadVector3Set(setAddress, frameCount, result.Position, FloatIOType.Float);
 							break;
 						case KeyframeAttributes.EulerRotation:
-							reader.ReadVector3Set(setAddress, frameCount, result.EulerRotation, shortRot ? FloatIOType.BAMS16 : FloatIOType.BAMS32);
+							reader.ReadVector3Set(setAddress, frameCount, result.EulerRotation, shortRot ? FloatIOType.BAMS16F : FloatIOType.BAMS32F);
 							break;
 						case KeyframeAttributes.Scale:
 							reader.ReadVector3Set(setAddress, frameCount, result.Scale, FloatIOType.Float);

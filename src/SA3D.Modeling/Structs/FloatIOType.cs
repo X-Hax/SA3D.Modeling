@@ -26,14 +26,24 @@ namespace SA3D.Modeling.Structs
 		Integer,
 
 		/// <summary>
-		/// Interpret (Radians) as a 16 Bit BAMS angle.
+		/// Interpret (Radians) as a 16 Bit BAMS angle with 360° = 0x10000.
 		/// </summary>
 		BAMS16,
 
 		/// <summary>
-		/// Interpret (Radians) as 32 Bit BAMS angle.
+		/// Interpret (Radians) as 32 Bit BAMS angle with 360° = 0x10000.
 		/// </summary>
-		BAMS32
+		BAMS32,
+
+		/// <summary>
+		/// Interpret (Radians) as a 16 Bit BAMS angle with 360° = 0xFFFF.
+		/// </summary>
+		BAMS16F,
+
+		/// <summary>
+		/// Interpret (Radians) as 32 Bit BAMS angle with 360° = 0xFFFF.
+		/// </summary>
+		BAMS32F,
 	}
 
 	/// <summary>
@@ -55,6 +65,8 @@ namespace SA3D.Modeling.Structs
 				FloatIOType.Integer => 4,
 				FloatIOType.BAMS16 => 2,
 				FloatIOType.BAMS32 => 4,
+				FloatIOType.BAMS16F => 2,
+				FloatIOType.BAMS32F => 4,
 				_ => throw new ArgumentException("Type invalid.", nameof(type)),
 			};
 		}
@@ -67,6 +79,7 @@ namespace SA3D.Modeling.Structs
 		/// <exception cref="ArgumentException"></exception>
 		public static Func<float, string> GetPrinter(this FloatIOType type)
 		{
+
 			static string GetText(float value)
 			{
 				return value.ToString("F5", CultureInfo.InvariantCulture) + "f";
@@ -92,6 +105,16 @@ namespace SA3D.Modeling.Structs
 				return ((uint)MathHelper.RadToBAMS(value)).ToCHex();
 			}
 
+			static string GetBAMSF16Text(float value)
+			{
+				return ((ushort)BAMSFHelper.RadToBAMSF(value)).ToCHex();
+			}
+
+			static string GetBAMSF32Text(float value)
+			{
+				return ((uint)BAMSFHelper.RadToBAMSF(value)).ToCHex();
+			}
+
 			return type switch
 			{
 				FloatIOType.Short => GetShortText,
@@ -99,6 +122,8 @@ namespace SA3D.Modeling.Structs
 				FloatIOType.Integer => GetIntegerText,
 				FloatIOType.BAMS16 => GetBAMS16Text,
 				FloatIOType.BAMS32 => GetBAMS32Text,
+				FloatIOType.BAMS16F => GetBAMSF16Text,
+				FloatIOType.BAMS32F => GetBAMSF32Text,
 				_ => throw new ArgumentException("Type invalid", nameof(type)),
 			};
 		}
@@ -136,6 +161,16 @@ namespace SA3D.Modeling.Structs
 				writer.WriteInt(MathHelper.RadToBAMS(value));
 			}
 
+			static void WriteBAMSF16(EndianStackWriter writer, float value)
+			{
+				writer.WriteShort((short)BAMSFHelper.RadToBAMSF(value));
+			}
+
+			static void WriteBAMSF32(EndianStackWriter writer, float value)
+			{
+				writer.WriteInt(BAMSFHelper.RadToBAMSF(value));
+			}
+
 			return type switch
 			{
 				FloatIOType.Float => WriteFloat,
@@ -143,6 +178,8 @@ namespace SA3D.Modeling.Structs
 				FloatIOType.Integer => WriteInteger,
 				FloatIOType.BAMS16 => WriteBAMS16,
 				FloatIOType.BAMS32 => WriteBAMS32,
+				FloatIOType.BAMS16F => WriteBAMSF16,
+				FloatIOType.BAMS32F => WriteBAMSF32,
 				_ => throw new ArgumentException("Type invalid", nameof(type)),
 			};
 		}
@@ -180,6 +217,16 @@ namespace SA3D.Modeling.Structs
 				return MathHelper.BAMSToRad(reader.ReadInt(address));
 			}
 
+			static float ReadBAMSF16(EndianStackReader reader, uint address)
+			{
+				return BAMSFHelper.BAMSFToRad(reader.ReadShort(address));
+			}
+
+			static float ReadBAMSF32(EndianStackReader reader, uint address)
+			{
+				return BAMSFHelper.BAMSFToRad(reader.ReadInt(address));
+			}
+
 			return type switch
 			{
 				FloatIOType.Float => ReadFloat,
@@ -187,6 +234,8 @@ namespace SA3D.Modeling.Structs
 				FloatIOType.Integer => ReadInteger,
 				FloatIOType.BAMS16 => ReadBAMS16,
 				FloatIOType.BAMS32 => ReadBAMS32,
+				FloatIOType.BAMS16F => ReadBAMSF16,
+				FloatIOType.BAMS32F => ReadBAMSF32,
 				_ => throw new ArgumentException("Type invalid", nameof(type)),
 			};
 		}

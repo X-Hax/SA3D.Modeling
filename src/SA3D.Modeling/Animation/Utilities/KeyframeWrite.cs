@@ -1,5 +1,4 @@
-﻿using SA3D.Common;
-using SA3D.Common.IO;
+﻿using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
@@ -75,7 +74,7 @@ namespace SA3D.Modeling.Animation.Utilities
 				writer.WriteUInt(pair.Key);
 				if(BAMS)
 				{
-					writer.WriteInt(MathHelper.RadToBAMS(pair.Value));
+					writer.WriteInt(BAMSFHelper.RadToBAMSF(pair.Value));
 				}
 				else
 				{
