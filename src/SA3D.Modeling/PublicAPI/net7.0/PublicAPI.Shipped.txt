@@ -178,6 +178,7 @@ SA3D.Modeling.Animation.KeyframeAttributes.Vector = 8 -> SA3D.Modeling.Animation
 SA3D.Modeling.Animation.KeyframeAttributes.Vertex = 16 -> SA3D.Modeling.Animation.KeyframeAttributes
 SA3D.Modeling.Animation.Keyframes
 SA3D.Modeling.Animation.Keyframes.Angle.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.Animation.Keyframes.EnsureKeyframes(SA3D.Modeling.Animation.KeyframeAttributes targets, uint endFrame) -> void
 SA3D.Modeling.Animation.Keyframes.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! node, SA3D.Modeling.Animation.KeyframeAttributes targets, uint endFrame) -> void
 SA3D.Modeling.Animation.Keyframes.EulerRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
 SA3D.Modeling.Animation.Keyframes.GetFrameAt(float frame) -> SA3D.Modeling.Animation.Frame
@@ -218,6 +219,7 @@ SA3D.Modeling.Animation.LandEntryMotion.TextureListPointer.set -> void
 SA3D.Modeling.Animation.LandEntryMotion.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Structs.PointerLUT! lut) -> void
 SA3D.Modeling.Animation.LandEntryMotion.WriteData(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.Structs.PointerLUT! lut) -> void
 SA3D.Modeling.Animation.Motion
+SA3D.Modeling.Animation.Motion.EnsureKeyframes(SA3D.Modeling.Animation.KeyframeAttributes targetTypes) -> void
 SA3D.Modeling.Animation.Motion.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Animation.KeyframeAttributes targetTypes, bool createKeyframes) -> void
 SA3D.Modeling.Animation.Motion.GetFrameCount() -> uint
 SA3D.Modeling.Animation.Motion.InterpolationMode.get -> SA3D.Modeling.Animation.InterpolationMode
@@ -1631,6 +1633,7 @@ SA3D.Modeling.Strippify.TriangleStrippifier.Strippify<T>(T[]! triangleList) -> T
 SA3D.Modeling.Strippify.TriangleStrippifier.Strippify<T>(T[]! triangleList, out SA3D.Common.DistinctMap<T>! distinctMap) -> int[]![]!
 SA3D.Modeling.Strippify.TriangleStrippifier.StrippifyNoDegen<T>(T[]! triangleList, out bool[]! reversedStrips) -> T[]![]!
 SA3D.Modeling.Strippify.TriangleStrippifier.TriangleStrippifier(bool raiseTopoError = false) -> void
+SA3D.Modeling.Structs.BAMSFHelper
 SA3D.Modeling.Structs.Bounds
 SA3D.Modeling.Structs.Bounds.Bounds() -> void
 SA3D.Modeling.Structs.Bounds.Bounds(System.Numerics.Vector3 position, float radius) -> void
@@ -1692,7 +1695,9 @@ SA3D.Modeling.Structs.EndianIOExtensions.ReadValueDelegate<T>
 SA3D.Modeling.Structs.EndianIOExtensions.WriteValueDelegate<T>
 SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.BAMS16 = 3 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.BAMS16F = 5 -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.BAMS32 = 4 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.BAMS32F = 6 -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.Float = 0 -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.Integer = 2 -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.Short = 1 -> SA3D.Modeling.Structs.FloatIOType
@@ -1724,6 +1729,8 @@ static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Defau
 static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
 static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.DefaultValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter
 static readonly SA3D.Modeling.Strippify.TriangleStrippifier.Global -> SA3D.Modeling.Strippify.TriangleStrippifier!
+static readonly SA3D.Modeling.Structs.BAMSFHelper.BAMSF2Deg -> float
+static readonly SA3D.Modeling.Structs.BAMSFHelper.BAMSF2Rad -> float
 static readonly SA3D.Modeling.Structs.Color.ColorBlack -> SA3D.Modeling.Structs.Color
 static readonly SA3D.Modeling.Structs.Color.ColorBlue -> SA3D.Modeling.Structs.Color
 static readonly SA3D.Modeling.Structs.Color.ColorGreen -> SA3D.Modeling.Structs.Color
@@ -1898,6 +1905,10 @@ static SA3D.Modeling.ObjectData.Structs.Weld.operator !=(SA3D.Modeling.ObjectDat
 static SA3D.Modeling.ObjectData.Structs.Weld.operator ==(SA3D.Modeling.ObjectData.Structs.Weld left, SA3D.Modeling.ObjectData.Structs.Weld right) -> bool
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinedStripEnumerator<T>(T[]![]! strips, bool[]? reversed) -> System.Collections.Generic.IEnumerable<T>!
 static SA3D.Modeling.Strippify.TriangleStrippifier.JoinStrips<T>(T[]![]! strips, bool[]? reversed) -> T[]!
+static SA3D.Modeling.Structs.BAMSFHelper.BAMSFToDeg(int BAMS) -> float
+static SA3D.Modeling.Structs.BAMSFHelper.BAMSFToRad(int BAMS) -> float
+static SA3D.Modeling.Structs.BAMSFHelper.DegToBAMSF(float deg) -> int
+static SA3D.Modeling.Structs.BAMSFHelper.RadToBAMSF(float rad) -> int
 static SA3D.Modeling.Structs.Bounds.FromPoints(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> SA3D.Modeling.Structs.Bounds
 static SA3D.Modeling.Structs.Bounds.operator !=(SA3D.Modeling.Structs.Bounds l, SA3D.Modeling.Structs.Bounds r) -> bool
 static SA3D.Modeling.Structs.Bounds.operator ==(SA3D.Modeling.Structs.Bounds l, SA3D.Modeling.Structs.Bounds r) -> bool
