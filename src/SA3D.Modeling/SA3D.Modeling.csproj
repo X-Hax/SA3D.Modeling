@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SA3D.Common" Version="1.4.4" />
+		<PackageReference Include="SA3D.Common" Version="1.4.5" />
 	</ItemGroup>
 
 </Project>
