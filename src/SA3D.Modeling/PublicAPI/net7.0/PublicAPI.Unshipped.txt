@@ -1,4 +1,5 @@
-﻿SA3D.Modeling.Structs.BAMSFHelper
+﻿SA3D.Modeling.Animation.Keyframes.EnsureKeyframes(SA3D.Modeling.Animation.KeyframeAttributes targets, uint endFrame) -> void
+SA3D.Modeling.Structs.BAMSFHelper
 SA3D.Modeling.Structs.FloatIOType.BAMS16F = 5 -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.Structs.FloatIOType.BAMS32F = 6 -> SA3D.Modeling.Structs.FloatIOType
 static readonly SA3D.Modeling.Structs.BAMSFHelper.BAMSF2Deg -> float

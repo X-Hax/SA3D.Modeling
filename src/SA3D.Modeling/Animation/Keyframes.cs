@@ -295,6 +295,48 @@ namespace SA3D.Modeling.Animation
 			Ensure(Scale, KeyframeAttributes.Scale, node.Scale);
 		}
 
+		/// <summary>
+		/// Ensures that specified keyframe types have start- and end-frames
+		/// </summary>
+		/// <param name="targets">Keyframe types to target.</param>
+		/// <param name="endFrame">The frame until which keyframes need to exist.</param>
+		public void EnsureKeyframes(KeyframeAttributes targets, uint endFrame)
+		{
+			void Ensure<T>(SortedDictionary<uint, T> keyframes, KeyframeAttributes type, T value)
+			{
+				if(!targets.HasFlag(type))
+				{
+					return;
+				}
+
+				if(!keyframes.ContainsKey(0))
+				{
+					keyframes.Add(0, value);
+				}
+
+				if(keyframes.Keys.Max() < endFrame)
+				{
+					keyframes.Add(endFrame, value);
+				}
+			}
+
+			Ensure(Position, KeyframeAttributes.Position, Vector3.Zero);
+			Ensure(EulerRotation, KeyframeAttributes.EulerRotation, Vector3.Zero);
+			Ensure(Scale, KeyframeAttributes.Scale, Vector3.One);
+			Ensure(Vector, KeyframeAttributes.Vector, default);
+			Ensure(Vertex, KeyframeAttributes.Vertex, new LabeledArray<Vector3>(0));
+			Ensure(Normal, KeyframeAttributes.Normal, new LabeledArray<Vector3>(0));
+			Ensure(Target, KeyframeAttributes.Target, Vector3.Zero);
+			Ensure(Roll, KeyframeAttributes.Roll, 0);
+			Ensure(Angle, KeyframeAttributes.Angle, 0);
+			Ensure(LightColor, KeyframeAttributes.LightColor, default);
+			Ensure(Intensity, KeyframeAttributes.Intensity, default);
+			Ensure(Spot, KeyframeAttributes.Spot, default);
+			Ensure(Point, KeyframeAttributes.Point, default);
+			Ensure(QuaternionRotation, KeyframeAttributes.QuaternionRotation, Quaternion.Identity);
+
+		}
+
 
 		/// <summary>
 		/// Writes the keyframe set to an endian stack writer.
