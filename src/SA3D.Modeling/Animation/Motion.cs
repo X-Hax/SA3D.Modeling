@@ -149,7 +149,7 @@ namespace SA3D.Modeling.Animation
 		}
 
 		/// <summary>
-		/// Ensures that the transform propertie of all nodes in a model tree have start- and end-frames.
+		/// Ensures that the transform properties of all nodes in a model tree have start- and end-frames.
 		/// </summary>
 		/// <param name="model">Any node from a tree for which keyframes should be ensured..</param>
 		/// <param name="targetTypes">Keyframe types to target.</param>
@@ -187,6 +187,18 @@ namespace SA3D.Modeling.Animation
 			}
 		}
 
+		/// <summary>
+		/// Ensures that specified keyframe types of all keyframes have start- and end-frames.
+		/// </summary>
+		/// <param name="targetTypes">Keyframe types to target.</param>
+		public void EnsureKeyframes(KeyframeAttributes targetTypes)
+		{
+			uint maxFrame = GetFrameCount() - 1;
+			foreach(Keyframes kf in Keyframes.Values)
+			{
+				kf.EnsureKeyframes(targetTypes, maxFrame);
+			}
+		}
 
 		/// <summary>
 		/// Writes the motion to an endian stack writer.
