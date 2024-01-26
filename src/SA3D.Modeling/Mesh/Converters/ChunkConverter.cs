@@ -838,7 +838,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				}
 
-				if(vertices != null)
+				if(vertices != null && vertices.Length != 0)
 				{
 					meshes.Add(new BufferMesh(vertices, continueWeight, hasVertexNormals, vertexWriteOffset));
 				}
