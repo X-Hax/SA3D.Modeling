@@ -10,10 +10,21 @@ namespace SA3D.Modeling.Animation.Utilities
 	{
 		public static void WriteVector3Set(this EndianStackWriter writer, SortedDictionary<uint, Vector3> dict, FloatIOType ioType)
 		{
-			foreach(KeyValuePair<uint, Vector3> pair in dict)
+			if(ioType is FloatIOType.BAMS16 or FloatIOType.BAMS16F or FloatIOType.Short)
 			{
-				writer.WriteUInt(pair.Key);
-				writer.WriteVector3(pair.Value, ioType);
+				foreach(KeyValuePair<uint, Vector3> pair in dict)
+				{
+					writer.WriteUShort((ushort)pair.Key);
+					writer.WriteVector3(pair.Value, ioType);
+				}
+			}
+			else
+			{
+				foreach(KeyValuePair<uint, Vector3> pair in dict)
+				{
+					writer.WriteUInt(pair.Key);
+					writer.WriteVector3(pair.Value, ioType);
+				}
 			}
 		}
 

@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Animation.Utilities
 	{
 		public static void ReadVector3Set(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Vector3> dictionary, FloatIOType type)
 		{
-			if(type == FloatIOType.BAMS16)
+			if(type is FloatIOType.BAMS16 or FloatIOType.BAMS16F or FloatIOType.Short)
 			{
 				for(int i = 0; i < count; i++)
 				{
