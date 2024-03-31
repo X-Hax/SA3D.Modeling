@@ -1,1 +1,2 @@
-﻿
+﻿SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.File.MetaData! metaData, bool nj, SA3D.Texturing.Texname.TextureNameList? textureNames) -> void
+SA3D.Modeling.File.ModelFile.TextureNames.get -> SA3D.Texturing.Texname.TextureNameList?

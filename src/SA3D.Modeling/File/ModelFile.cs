@@ -8,6 +8,7 @@ using System;
 using static SA3D.Modeling.File.FileHeaders;
 using SA3D.Modeling.File.Structs;
 using SA3D.Modeling.ObjectData.Structs;
+using SA3D.Texturing.Texname;
 
 namespace SA3D.Modeling.File
 {
@@ -32,6 +33,11 @@ namespace SA3D.Modeling.File
 		public Node Model { get; }
 
 		/// <summary>
+		/// Texture name list from NJ files
+		/// </summary>
+		public TextureNameList? TextureNames { get; }
+
+		/// <summary>
 		/// Meta data of the file.
 		/// </summary>
 		public MetaData MetaData { get; }
@@ -44,12 +50,14 @@ namespace SA3D.Modeling.File
 		/// <param name="model">Attach format of the file.</param>
 		/// <param name="metaData">Hierarchy tip of the file.</param>
 		/// <param name="nj">Meta data of the file.</param>
-		public ModelFile(ModelFormat format, Node model, MetaData metaData, bool nj)
+		/// <param name="textureNames">Texture name list of the file.</param>
+		public ModelFile(ModelFormat format, Node model, MetaData metaData, bool nj, TextureNameList? textureNames)
 		{
 			Format = format;
 			Model = model;
 			MetaData = metaData;
 			NJFile = nj;
+			TextureNames = textureNames;
 		}
 
 
@@ -88,9 +96,13 @@ namespace SA3D.Modeling.File
 		/// <param name="address">Address at which to check.</param>
 		public static bool CheckIsModelFile(EndianStackReader reader, uint address)
 		{
+			bool njFile = reader.ReadUShort(address) is NJ or GJ;
+			reader.PushBigEndian(njFile && reader.CheckBigEndian32(address + 8));
+
 			try
 			{
-				_ = GetNJModelBlockAddress(reader, address);
+				_ = GetNJModelBlockAddress(reader, address, out _);
+				reader.PopEndian();
 				return true;
 			}
 			catch(FormatException) { }
@@ -104,8 +116,11 @@ namespace SA3D.Modeling.File
 				case BUFMDL:
 					break;
 				default:
+					reader.PopEndian();
 					return false;
 			}
+
+			reader.PopEndian();
 
 			return reader[address + 7] <= CurrentModelVersion;
 		}
@@ -163,11 +178,12 @@ namespace SA3D.Modeling.File
 		/// <returns>The model file that was read.</returns>
 		public static ModelFile Read(EndianStackReader reader, uint address)
 		{
-			reader.PushBigEndian(false);
+			bool njFile = reader.ReadUShort(address) is NJ or GJ;
+			reader.PushBigEndian(njFile && reader.CheckBigEndian32(address + 8));
 
 			try
 			{
-				return reader.ReadUShort(address) is NJ or GJ
+				return njFile
 					? ReadNJ(reader, address)
 					: ReadSA(reader, address);
 			}
@@ -178,19 +194,21 @@ namespace SA3D.Modeling.File
 		}
 
 
-		private static uint GetNJModelBlockAddress(EndianStackReader reader, uint address)
+		private static uint GetNJModelBlockAddress(EndianStackReader reader, uint address, out ushort blockHeader)
 		{
 			uint blockAddress = address;
 			while(address < reader.Length + 8)
 			{
+				reader.PushBigEndian(false);
+				uint fullheader = reader.ReadUInt(blockAddress);
 				ushort njHeader = reader.ReadUShort(blockAddress);
+				blockHeader = reader.ReadUShort(blockAddress + 2);
+				reader.PopEndian();
 
-				if(njHeader is not NJ or GJ)
+				if(njHeader is not NJ or GJ && fullheader is not POF0)
 				{
 					throw new FormatException("Malformatted NJ data.");
 				}
-
-				ushort blockHeader = reader.ReadUShort(blockAddress + 2);
 
 				if(blockHeader is BM or CM)
 				{
@@ -204,15 +222,50 @@ namespace SA3D.Modeling.File
 			throw new FormatException("No model block found");
 		}
 
+		private static bool GetNJTextureNameBlockAddress(EndianStackReader reader, uint address, out uint texturelistBlockAddress)
+		{
+			uint blockAddress = address;
+			while(address < reader.Length + 8)
+			{
+				reader.PushBigEndian(false);
+				uint fullheader = reader.ReadUInt(blockAddress);
+				ushort njHeader = reader.ReadUShort(blockAddress);
+				ushort blockHeader = reader.ReadUShort(blockAddress + 2);
+				reader.PopEndian();
+
+				if(njHeader is not NJ or GJ && fullheader is not POF0)
+				{
+					throw new FormatException("Malformatted NJ data.");
+				}
+
+				if(blockHeader is TL)
+				{
+					texturelistBlockAddress = blockAddress;
+					return true;
+				}
+
+				uint blockSize = reader.ReadUInt(blockAddress + 4);
+				blockAddress += 8 + blockSize;
+			}
+
+			texturelistBlockAddress = 0;
+			return false;
+		}
+
 		private static ModelFile ReadNJ(EndianStackReader reader, uint address)
 		{
-			uint blockAddress = GetNJModelBlockAddress(reader, address);
-			ushort blockHeader = reader.ReadUShort(blockAddress + 2);
+			TextureNameList? textureNames = null;
+			if(GetNJTextureNameBlockAddress(reader, address, out uint texturelistBlockAddress))
+			{
+				uint textureListAddress = texturelistBlockAddress + 8;
+				reader.ImageBase = unchecked((uint)-textureListAddress);
+				textureNames = TextureNameList.Read(reader, textureListAddress, new());
+				reader.ImageBase = 0;
+			}
+
+			uint blockAddress = GetNJModelBlockAddress(reader, address, out ushort blockHeader);
 
 			uint modelAddress = blockAddress + 8;
-			bool fileEndian = reader.CheckBigEndian32(modelAddress);
-			reader.PushBigEndian(fileEndian);
-
 			reader.ImageBase = unchecked((uint)-modelAddress);
 
 			ModelFormat format = blockHeader switch
@@ -224,7 +277,7 @@ namespace SA3D.Modeling.File
 
 			Node model = Node.Read(reader, modelAddress, format, new());
 
-			return new(format, model, new(), true);
+			return new(format, model, new(), true, textureNames);
 		}
 
 		private static ModelFile ReadSA(EndianStackReader reader, uint address)
@@ -266,7 +319,7 @@ namespace SA3D.Modeling.File
 
 			reader.ImageBase = prevImageBase;
 
-			return new(format, model, metaData, false);
+			return new(format, model, metaData, false, null);
 		}
 
 		private static void CreateWeldings(MetaData metadata, PointerLUT lut)

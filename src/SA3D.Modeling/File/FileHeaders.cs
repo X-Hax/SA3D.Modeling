@@ -86,9 +86,20 @@
 		public const ushort BM = (ushort)0x4D42u;
 
 		/// <summary>
-		/// NM (motion) file header.
+		/// Texture list block header
+		/// </summary>
+		public const ushort TL = (ushort)0x4C54u;
+
+		/// <summary>
+		/// NM (motion) block header.
 		/// </summary>
 		public const uint NMDM = 0x4D444D4Eu;
+
+		/// <summary>
+		/// Point of 0 block header
+		/// </summary>
+		public const uint POF0 = 0x30464F50u;
+
 		#endregion
 	}
 }

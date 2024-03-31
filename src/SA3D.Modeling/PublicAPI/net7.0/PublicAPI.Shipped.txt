@@ -307,7 +307,6 @@ SA3D.Modeling.File.ModelFile
 SA3D.Modeling.File.ModelFile.Format.get -> SA3D.Modeling.ObjectData.Enums.ModelFormat
 SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData!
 SA3D.Modeling.File.ModelFile.Model.get -> SA3D.Modeling.ObjectData.Node!
-SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Enums.ModelFormat format, SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.File.MetaData! metaData, bool nj) -> void
 SA3D.Modeling.File.ModelFile.NJFile.get -> bool
 SA3D.Modeling.File.ModelFile.Write(SA3D.Common.IO.EndianStackWriter! writer) -> void
 SA3D.Modeling.File.ModelFile.WriteToBytes() -> byte[]!
