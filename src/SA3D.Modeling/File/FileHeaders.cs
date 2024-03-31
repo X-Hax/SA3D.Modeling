@@ -1,4 +1,6 @@
-﻿namespace SA3D.Modeling.File
+﻿using System.Collections.Generic;
+
+namespace SA3D.Modeling.File
 {
 	internal class FileHeaders
 	{
@@ -96,10 +98,14 @@
 		public const uint NMDM = 0x4D444D4Eu;
 
 		/// <summary>
-		/// Point of 0 block header
+		/// Texture list block header in a hashset for finding the block
 		/// </summary>
-		public const uint POF0 = 0x30464F50u;
+		public static readonly HashSet<ushort> TextureListBlockHeaders = new() { TL };
 
+		/// <summary>
+		/// model block headers in a hashset for finding the block
+		/// </summary>
+		public static readonly HashSet<ushort> ModelBlockHeaders = new() { CM, BM };
 		#endregion
 	}
 }

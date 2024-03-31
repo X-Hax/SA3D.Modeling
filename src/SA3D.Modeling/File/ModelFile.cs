@@ -9,6 +9,7 @@ using static SA3D.Modeling.File.FileHeaders;
 using SA3D.Modeling.File.Structs;
 using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Texturing.Texname;
+using System.Collections.Generic;
 
 namespace SA3D.Modeling.File
 {
@@ -99,30 +100,32 @@ namespace SA3D.Modeling.File
 			bool njFile = reader.ReadUShort(address) is NJ or GJ;
 			reader.PushBigEndian(njFile && reader.CheckBigEndian32(address + 8));
 
-			try
-			{
-				_ = GetNJModelBlockAddress(reader, address, out _);
-				reader.PopEndian();
-				return true;
-			}
-			catch(FormatException) { }
+			bool result;
 
-			switch(reader.ReadULong(address) & HeaderMask)
+			if(FindNJBlockAddress(reader, address, ModelBlockHeaders, out _, out _))
 			{
-				case SA1MDL:
-				case SADXMDL:
-				case SA2MDL:
-				case SA2BMDL:
-				case BUFMDL:
-					break;
-				default:
-					reader.PopEndian();
-					return false;
+				result = true;
 			}
+			else
+			{
+				switch(reader.ReadULong(address) & HeaderMask)
+				{
+					case SA1MDL:
+					case SADXMDL:
+					case SA2MDL:
+					case SA2BMDL:
+					case BUFMDL:
+						result = reader[address + 7] <= CurrentModelVersion;
+						break;
+					default:
+						result = false;
+						break;
+				}
+			}
+
 
 			reader.PopEndian();
-
-			return reader[address + 7] <= CurrentModelVersion;
+			return result;
 		}
 
 
@@ -193,77 +196,50 @@ namespace SA3D.Modeling.File
 			}
 		}
 
-
-		private static uint GetNJModelBlockAddress(EndianStackReader reader, uint address, out ushort blockHeader)
+		private static bool FindNJBlockAddress(EndianStackReader reader, uint address, HashSet<ushort> targetType, out ushort blockHeader, out uint blockAddress)
 		{
-			uint blockAddress = address;
-			while(address < reader.Length + 8)
+			blockAddress = address;
+			while(blockAddress < reader.Length + 8)
 			{
 				reader.PushBigEndian(false);
-				uint fullheader = reader.ReadUInt(blockAddress);
 				ushort njHeader = reader.ReadUShort(blockAddress);
 				blockHeader = reader.ReadUShort(blockAddress + 2);
 				reader.PopEndian();
 
-				if(njHeader is not NJ or GJ && fullheader is not POF0)
+				if(njHeader is NJ or GJ && targetType.Contains(blockHeader))
 				{
-					throw new FormatException("Malformatted NJ data.");
-				}
-
-				if(blockHeader is BM or CM)
-				{
-					return blockAddress;
-				}
-
-				uint blockSize = reader.ReadUInt(blockAddress + 4);
-				blockAddress += 8 + blockSize;
-			}
-
-			throw new FormatException("No model block found");
-		}
-
-		private static bool GetNJTextureNameBlockAddress(EndianStackReader reader, uint address, out uint texturelistBlockAddress)
-		{
-			uint blockAddress = address;
-			while(address < reader.Length + 8)
-			{
-				reader.PushBigEndian(false);
-				uint fullheader = reader.ReadUInt(blockAddress);
-				ushort njHeader = reader.ReadUShort(blockAddress);
-				ushort blockHeader = reader.ReadUShort(blockAddress + 2);
-				reader.PopEndian();
-
-				if(njHeader is not NJ or GJ && fullheader is not POF0)
-				{
-					throw new FormatException("Malformatted NJ data.");
-				}
-
-				if(blockHeader is TL)
-				{
-					texturelistBlockAddress = blockAddress;
 					return true;
 				}
 
 				uint blockSize = reader.ReadUInt(blockAddress + 4);
+				if((njHeader == 0 && blockHeader == 0) || blockSize == 0)
+				{
+					break;
+				}
+
 				blockAddress += 8 + blockSize;
 			}
 
-			texturelistBlockAddress = 0;
+			blockHeader = 0;
+			blockAddress = 0;
 			return false;
 		}
 
 		private static ModelFile ReadNJ(EndianStackReader reader, uint address)
 		{
+			if(!FindNJBlockAddress(reader, address, ModelBlockHeaders, out ushort blockHeader, out uint blockAddress))
+			{
+				throw new FormatException("No model block found");
+			}
+
 			TextureNameList? textureNames = null;
-			if(GetNJTextureNameBlockAddress(reader, address, out uint texturelistBlockAddress))
+			if(FindNJBlockAddress(reader, address, TextureListBlockHeaders, out _, out uint texturelistBlockAddress))
 			{
 				uint textureListAddress = texturelistBlockAddress + 8;
 				reader.ImageBase = unchecked((uint)-textureListAddress);
 				textureNames = TextureNameList.Read(reader, textureListAddress, new());
 				reader.ImageBase = 0;
 			}
-
-			uint blockAddress = GetNJModelBlockAddress(reader, address, out ushort blockHeader);
 
 			uint modelAddress = blockAddress + 8;
 			reader.ImageBase = unchecked((uint)-modelAddress);
