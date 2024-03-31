@@ -238,7 +238,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 					{
 						GCAttach atc = (GCAttach)nodes[mesh.RootIndices.First()].Attach!;
 
-						byte texcoordPrecision = 255;
+						byte texcoordPrecision = byte.MaxValue;
 						if(atc.OpaqueMeshes.Length != 0)
 						{
 							GCVertexFormatParameter[] vtxParams = atc.OpaqueMeshes
@@ -253,7 +253,9 @@ namespace SA3D.Modeling.Mesh.Weighted
 								continue;
 							}
 
-							mesh.TexcoordPrecisionLevel = vtxParams[0].Attributes;
+							texcoordPrecision = (vtxParams[0].Attributes & 0x8) != 0
+								? (byte)(vtxParams[0].Attributes & 0x7)
+								: (byte)0;
 						}
 
 						if(atc.TransparentMeshes.Length != 0)
@@ -270,17 +272,21 @@ namespace SA3D.Modeling.Mesh.Weighted
 								continue;
 							}
 
-							byte newPrecision = vtxParams[0].Attributes;
-							if(texcoordPrecision == 255)
+							byte newPrecision = (vtxParams[0].Attributes & 0x8) != 0
+								? (byte)(vtxParams[0].Attributes & 0x7)
+								: (byte)0;
+
+							if(texcoordPrecision == byte.MaxValue)
 							{
-								mesh.TexcoordPrecisionLevel = newPrecision;
+								texcoordPrecision = newPrecision;
 							}
 							else if(texcoordPrecision != newPrecision)
 							{
-								mesh.TexcoordPrecisionLevel = 0;
 								continue;
 							}
 						}
+
+						mesh.TexcoordPrecisionLevel = texcoordPrecision;
 					}
 
 					break;

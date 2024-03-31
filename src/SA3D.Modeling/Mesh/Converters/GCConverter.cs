@@ -118,9 +118,11 @@ namespace SA3D.Modeling.Mesh.Converters
 								VertexDataType = set.DataType
 							};
 
-							if(param.VertexType is >= GCVertexType.TexCoord0 and <= GCVertexType.TexCoord7)
+							if(param.VertexType is >= GCVertexType.TexCoord0 and <= GCVertexType.TexCoord7
+								&& weightedMesh.TexcoordPrecisionLevel > 0)
 							{
 								param.Attributes = byte.Min(7, weightedMesh.TexcoordPrecisionLevel);
+								param.Attributes |= 0x8;
 							}
 
 							parameters.Add(param);
@@ -420,13 +422,10 @@ namespace SA3D.Modeling.Mesh.Converters
 					{
 						case GCVertexFormatParameter vertexFormatParam:
 							if(vertexFormatParam.VertexType == GCVertexType.TexCoord0
-								&& (vertexFormatParam.Attributes & 0xF0) == 0)
+								&& (vertexFormatParam.Attributes & 0xF8) == 0x8)
 							{
 								uvFac = 1 << (vertexFormatParam.Attributes & 0x7);
-								if((vertexFormatParam.Attributes & 0x8) > 0)
-								{
-									uvFac = 1 / uvFac;
-								}
+								uvFac = 1 / uvFac;
 							}
 
 							break;
