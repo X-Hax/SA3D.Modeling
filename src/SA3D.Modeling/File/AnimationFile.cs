@@ -173,7 +173,7 @@ namespace SA3D.Modeling.File
 			{
 				if(reader.ReadUInt(address) == NMDM)
 				{
-					return ReadNM(reader, address, nodeCount);
+					return ReadNM(reader, address, nodeCount, shortRot);
 				}
 				else if((reader.ReadULong(address) & HeaderMask) == SAANIM)
 				{
@@ -190,7 +190,7 @@ namespace SA3D.Modeling.File
 			}
 		}
 
-		private static AnimationFile ReadNM(EndianStackReader reader, uint address, uint? nodeCount)
+		private static AnimationFile ReadNM(EndianStackReader reader, uint address, uint? nodeCount, bool shortrot)
 		{
 			if(nodeCount == null)
 			{
@@ -206,7 +206,7 @@ namespace SA3D.Modeling.File
 			{
 				uint dataAddress = address + 8;
 				reader.ImageBase = unchecked((uint)-dataAddress);
-				Motion motion = Motion.Read(reader, dataAddress, nodeCount.Value, new(), true);
+				Motion motion = Motion.Read(reader, dataAddress, nodeCount.Value, new(), shortrot);
 				return new(motion, new());
 			}
 			finally
