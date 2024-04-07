@@ -11,7 +11,7 @@
 		<Title>SA3D Model and Animation Library</Title>
 		<Product>SA3D Model and Animation Library</Product>
 		<Description>Reading, writing and processing library for Sonic Adventure models</Description>
-		<Version>1.1.4</Version>
+		<Version>1.1.5</Version>
 		<RepositoryUrl>https://github.com/X-Hax/SA3D.Modeling</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/X-Hax/SA3D.Modeling</PackageProjectUrl>
 		<PackageId>SA3D.Modeling</PackageId>
