@@ -92,20 +92,53 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		public const ushort TL = (ushort)0x4C54u;
 
+
 		/// <summary>
-		/// NM (motion) block header.
+		/// Model motion block header.
 		/// </summary>
 		public const uint NMDM = 0x4D444D4Eu;
 
 		/// <summary>
+		/// Shape motion block header.
+		/// </summary>
+		public const uint NSSM = 0x4D53534Eu;
+
+		/// <summary>
+		/// Camera motion block header.
+		/// </summary>
+		public const uint NCAM = 0x4D41434Eu;
+
+
+		/// <summary>
 		/// Texture list block header in a hashset for finding the block
 		/// </summary>
-		public static readonly HashSet<ushort> TextureListBlockHeaders = new() { TL };
+		public static readonly HashSet<uint> TextureListBlockHeaders = new()
+		{
+			(TL << 16) | NJ,
+			(TL << 16) | GJ,
+		};
 
 		/// <summary>
 		/// model block headers in a hashset for finding the block
 		/// </summary>
-		public static readonly HashSet<ushort> ModelBlockHeaders = new() { CM, BM };
+		public static readonly HashSet<uint> ModelBlockHeaders = new()
+		{
+			(CM << 16) | NJ,
+			(BM << 16) | NJ,
+			(CM << 16) | GJ,
+			(BM << 16) | GJ,
+		};
+
+		/// <summary>
+		/// Animation block headers in a hashset for finding the block
+		/// </summary>
+		public static readonly HashSet<uint> AnimationBlockHeaders = new()
+		{
+			NMDM,
+			NSSM,
+			NCAM,
+		};
+
 		#endregion
 	}
 }
