@@ -288,7 +288,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						corners[k].VertexIndex = vertexIndexMap[corners[k].VertexIndex];
 					}
 
-					BufferMaterial material = BasicConverter.ConvertToBufferMaterial(attach.Materials[j]);
+					BufferMaterial material = BasicConverter.ConvertToBufferMaterial(attach.Materials[mesh.MaterialIndex]);
 					BufferCorner[] resultCorners = BufferMesh.GetCornerTriangleList(corners, indexList, strippified);
 
 					List<BufferCorner>? targetCorners = null;
