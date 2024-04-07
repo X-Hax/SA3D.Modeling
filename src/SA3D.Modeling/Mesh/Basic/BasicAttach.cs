@@ -159,7 +159,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		{
 			BasicAttach onRead()
 			{
-				ILabeledArray<T> readArray<T>(uint arrayOffset, uint countOffset, string genPrefix, bool shortCount, uint elementSize, EndianIOExtensions.ReadValueDelegate<T> read)
+				ILabeledArray<T> readArray<T>(uint arrayOffset, uint countOffset, string genPrefix, bool shortCount, uint elementSize, EndianIOExtensions.ReadValueDelegate<T> read, bool allowNull = false, T? nullDefault = default)
 				{
 					uint itemCount = shortCount
 						? reader.ReadUShort(address + countOffset)
@@ -177,14 +177,31 @@ namespace SA3D.Modeling.Mesh.Basic
 						return new LabeledArray<T>(0);
 					}
 
+					/* Same thing for null arrays. Only happens to normals though, fortunately */
+
 					uint itemAddr = reader.ReadPointer(address + arrayOffset);
-					return reader.ReadLabeledArray(itemAddr, itemCount, elementSize, read, genPrefix, lut);
+					if(itemAddr == 0 && allowNull)
+					{
+						LabeledArray<T> result = new(itemCount);
+
+						for(int i = 0; i < itemCount; i++)
+						{
+							result[i] = nullDefault!;
+						}
+
+						return result;
+					}
+					else
+					{
+						return reader.ReadLabeledArray(itemAddr, itemCount, elementSize, read, genPrefix, lut);
+					}
+
 				}
 
 				uint meshSize = DX ? BasicMesh.StructSizeDX : BasicMesh.StructSize;
 
 				ILabeledArray<Vector3> positions /***/ = readArray(0x00, 0x08, "vertex_", false, 12, /*******************/ (r, p) => r.ReadVector3(p));
-				ILabeledArray<Vector3> normals /*****/ = readArray(0x04, 0x08, "normal_", false, 12, /*******************/ (r, p) => r.ReadVector3(p));
+				ILabeledArray<Vector3> normals /*****/ = readArray(0x04, 0x08, "normal_", false, 12, /*******************/ (r, p) => r.ReadVector3(p), true, BufferMesh.DefaultNormal);
 				ILabeledArray<BasicMesh> meshes /****/ = readArray(0x0C, 0x14, "meshlist_", true, meshSize, /************/ (r, p) => BasicMesh.Read(r, p, lut));
 				ILabeledArray<BasicMaterial> materials = readArray(0x10, 0x16, "matlist_", true, BasicMaterial.StructSize, (r, p) => BasicMaterial.Read(r, p));
 
