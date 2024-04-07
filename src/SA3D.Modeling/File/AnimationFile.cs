@@ -71,10 +71,28 @@ namespace SA3D.Modeling.File
 		/// <param name="address">Address at which to check.</param>
 		public static bool CheckIsAnimationFile(EndianStackReader reader, uint address)
 		{
-			return reader.ReadUInt(address) == NMDM || (
-				(reader.ReadULong(address) & HeaderMask) == SAANIM
-				&& reader[address + 7] <= CurrentAnimVersion);
+			if(CheckIsSAAnimFile(reader, address))
+			{
+				return true;
+			}
+
+			return CheckIsNJAnimFile(reader, address);
 		}
+
+		private static bool CheckIsSAAnimFile(EndianStackReader reader, uint address)
+		{
+			reader.PushBigEndian(false);
+			bool result = (reader.ReadULong(address) & HeaderMask) == SAANIM;
+			reader.PopEndian();
+			return result;
+		}
+
+		private static bool CheckIsNJAnimFile(EndianStackReader reader, uint address)
+		{
+			return NJBlockUtility.FindBlockAddress(reader, address, AnimationBlockHeaders, out _);
+		}
+
+
 
 
 		/// <summary>
@@ -167,53 +185,50 @@ namespace SA3D.Modeling.File
 		/// <returns>The animation file that was read.</returns>
 		public static AnimationFile Read(EndianStackReader reader, uint address, uint? nodeCount, bool shortRot)
 		{
-			reader.PushBigEndian(false);
-
-			try
+			if(CheckIsSAAnimFile(reader, address))
 			{
-				if(reader.ReadUInt(address) == NMDM)
+				try
 				{
-					return ReadNM(reader, address, nodeCount, shortRot);
-				}
-				else if((reader.ReadULong(address) & HeaderMask) == SAANIM)
-				{
+					reader.PushBigEndian(false);
 					return ReadSA(reader, address, nodeCount, shortRot);
 				}
-				else
+				finally
 				{
-					throw new FormatException("Animation file invalid!");
+					reader.PopEndian();
 				}
 			}
-			finally
+
+			uint prevImageBase = reader.ImageBase;
+			if(CheckIsNJAnimFile(reader, address))
 			{
-				reader.PopEndian();
+				try
+				{
+					reader.PushBigEndian(reader.CheckBigEndian32(address + 4));
+					return ReadNJ(reader, address, nodeCount, shortRot);
+				}
+				finally
+				{
+					reader.ImageBase = prevImageBase;
+					reader.PopEndian();
+				}
 			}
+
+			throw new FormatException("File is not an animation file");
 		}
 
-		private static AnimationFile ReadNM(EndianStackReader reader, uint address, uint? nodeCount, bool shortrot)
+		private static AnimationFile ReadNJ(EndianStackReader reader, uint address, uint? nodeCount, bool shortrot)
 		{
 			if(nodeCount == null)
 			{
-				throw new ArgumentException("Cannot read NMDM animations without providing node count!");
+				throw new ArgumentException("Cannot read NJ animations without providing node count!");
 			}
 
-			// Determines big endian via the framecount.
-			// As long as that one is not bigger than 65,535 or 18 minutes of animation at 60fps, we good
-			reader.PushBigEndian(reader.CheckBigEndian32(address + 0xC));
-			uint prevImageBase = reader.ImageBase;
+			NJBlockUtility.FindBlockAddress(reader, address, AnimationBlockHeaders, out uint? blockAddress);
 
-			try
-			{
-				uint dataAddress = address + 8;
-				reader.ImageBase = unchecked((uint)-dataAddress);
-				Motion motion = Motion.Read(reader, dataAddress, nodeCount.Value, new(), shortrot);
-				return new(motion, new());
-			}
-			finally
-			{
-				reader.ImageBase = prevImageBase;
-				reader.PopEndian();
-			}
+			uint dataAddress = blockAddress!.Value + 8;
+			reader.ImageBase = unchecked((uint)-dataAddress);
+			Motion motion = Motion.Read(reader, dataAddress, nodeCount.Value, new(), shortrot);
+			return new(motion, new());
 		}
 
 		private static AnimationFile ReadSA(EndianStackReader reader, uint address, uint? nodeCount, bool shortRot)
