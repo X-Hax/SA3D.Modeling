@@ -1,4 +1,5 @@
 ﻿using SA3D.Modeling.ObjectData.Enums;
+using SA3D.Modeling.Structs;
 using System.Numerics;
 
 namespace SA3D.Modeling.ObjectData
@@ -113,13 +114,14 @@ namespace SA3D.Modeling.ObjectData
 		/// <summary>
 		/// Automatically fills in attributes based on other properties of the node.
 		/// </summary>
-		public void AutoNodeAttributes()
+		/// <param name="overrideExisting">Whether the automatic attributes should override the existing values, instead of "adding" to them</param>
+		public void AutoNodeAttributes(bool overrideExisting = false)
 		{
-			NoPosition = Position == Vector3.Zero;
-			NoScale = Scale == Vector3.One;
-			NoRotation = EulerRotation == Vector3.Zero;
-			SkipChildren = Child == null;
-			SkipDraw = Attach == null;
+			NoPosition = (overrideExisting && NoPosition) || Position.IsDistanceApproximate(Vector3.Zero);
+			NoScale = (overrideExisting && NoScale) || Scale.IsDistanceApproximate(Vector3.One);
+			NoRotation = (overrideExisting && NoRotation) || EulerRotation.IsDistanceApproximate(Vector3.Zero);
+			SkipChildren = (overrideExisting && SkipChildren) || Child == null;
+			SkipDraw = (overrideExisting && SkipDraw) || Attach == null;
 		}
 
 		/// <summary>

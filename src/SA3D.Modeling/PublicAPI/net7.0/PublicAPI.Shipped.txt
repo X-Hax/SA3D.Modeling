@@ -1519,7 +1519,6 @@ SA3D.Modeling.ObjectData.Node.Attach.get -> SA3D.Modeling.Mesh.Attach?
 SA3D.Modeling.ObjectData.Node.Attach.set -> void
 SA3D.Modeling.ObjectData.Node.AttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Attributes.get -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
-SA3D.Modeling.ObjectData.Node.AutoNodeAttributes() -> void
 SA3D.Modeling.ObjectData.Node.BufferMeshData(bool optimize) -> void
 SA3D.Modeling.ObjectData.Node.CheckHasBranchAttaches() -> bool
 SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool

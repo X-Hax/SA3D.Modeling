@@ -1,1 +1,5 @@
-﻿
+﻿SA3D.Modeling.ObjectData.Node.AutoNodeAttributes(bool overrideExisting = false) -> void
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other, float epsilon) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other, float epsilon) -> bool

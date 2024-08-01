@@ -136,5 +136,64 @@ namespace SA3D.Modeling.Structs
 				MathF.Sin(rotation.X)
 				);
 		}
+
+
+		/// <summary>
+		/// Checks whether the distance between two <see cref="Vector3"/>s is less than <paramref name="epsilon"/>
+		/// </summary>
+		/// <param name="value">Vector to compare</param>
+		/// <param name="other">Vector to compare against</param>
+		/// <param name="epsilon">Tolerance value</param>
+		/// <returns>Whether the difference between the  is below tolerance</returns>
+		public static bool IsDistanceApproximate(this Vector3 value, Vector3 other, float epsilon)
+		{
+			if(value == other)
+			{
+				return true;
+			}
+
+			Vector3 diff = value - other;
+			return (diff.X * diff.X) + (diff.Y * diff.Y) + (diff.Z * diff.Z) < (epsilon * epsilon);
+		}
+
+		/// <summary>
+		/// Checks whether the distance between two <see cref="Vector3"/>s is less than 0.001
+		/// </summary>
+		/// <param name="value">Vector to compare</param>
+		/// <param name="other">Vector to compare against</param>
+		/// <returns>Whether the difference between the  is below tolerance</returns>
+		public static bool IsDistanceApproximate(this Vector3 value, Vector3 other)
+		{
+			return IsDistanceApproximate(value, other, 0.001f);
+		}
+
+		/// <summary>
+		/// Checks whether the distance between two <see cref="Vector2"/>s is less than <paramref name="epsilon"/>
+		/// </summary>
+		/// <param name="value">Vector to compare</param>
+		/// <param name="other">Vector to compare against</param>
+		/// <param name="epsilon">Tolerance value</param>
+		/// <returns>Whether the difference between the  is below tolerance</returns>
+		public static bool IsDistanceApproximate(this Vector2 value, Vector2 other, float epsilon)
+		{
+			if(value == other)
+			{
+				return true;
+			}
+
+			Vector2 diff = value - other;
+			return (diff.X * diff.X) + (diff.Y * diff.Y) < (epsilon * epsilon);
+		}
+
+		/// <summary>
+		/// Checks whether the distance between two <see cref="Vector2"/>s is less than 0.001
+		/// </summary>
+		/// <param name="value">Vector to compare</param>
+		/// <param name="other">Vector to compare against</param>
+		/// <returns>Whether the difference between the  is below tolerance</returns>
+		public static bool IsDistanceApproximate(this Vector2 value, Vector2 other)
+		{
+			return IsDistanceApproximate(value, other, 0.001f);
+		}
 	}
 }
