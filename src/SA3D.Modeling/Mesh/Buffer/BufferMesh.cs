@@ -445,7 +445,6 @@ namespace SA3D.Modeling.Mesh.Buffer
 
 			if(!corners.TryCreateDistinctMap(out DistinctMap<BufferCorner> distinctMap))
 			{
-				Corners = corners;
 				return;
 			}
 
