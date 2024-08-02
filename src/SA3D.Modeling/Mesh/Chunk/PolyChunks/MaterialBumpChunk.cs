@@ -8,7 +8,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	public class MaterialBumpChunk : SizedChunk
 	{
 		/// <inheritdoc/>
-		public override ushort Size => 16;
+		public override ushort Size => 6;
 
 		/// <summary>
 		/// DX.
