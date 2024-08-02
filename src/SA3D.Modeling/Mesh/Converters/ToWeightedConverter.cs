@@ -197,9 +197,10 @@ namespace SA3D.Modeling.Mesh.Converters
 			return 0;
 		}
 
-		private WeightedVertex[] EvaluateNoWeightVertices(int meshNodeIndex)
+		private WeightedVertex[] EvaluateNoWeightVertices(int meshNodeIndex, out bool hasNormals)
 		{
 			BufferMesh[] meshes = GetMeshData(meshNodeIndex);
+			hasNormals = false;
 
 			ushort[] indices = _usedVertices.ToArray();
 			BufferVertex[] sourceVertices = new BufferVertex[0x10000];
@@ -210,6 +211,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					continue;
 				}
+
+				hasNormals |= mesh.HasNormals;
 
 				for(int i = 0; i < mesh.Vertices.Length; i++)
 				{
@@ -237,9 +240,11 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		/// <param name="meshNodeIndices">Indices to meshes to use</param>
 		/// <param name="baseNodeIndex">Index to the node that the vertex data should be made relative to.</param>
+		/// <param name="hasNormals"/>
 		/// <returns></returns>
-		private WeightedVertex[] EvaluateWeightVertices(int[] meshNodeIndices, int baseNodeIndex)
+		private WeightedVertex[] EvaluateWeightVertices(int[] meshNodeIndices, int baseNodeIndex, out bool hasNormals)
 		{
+			hasNormals = false;
 			Matrix4x4 baseMatrix = _worldMatrices[_nodes[baseNodeIndex]];
 			Matrix4x4.Invert(baseMatrix, out Matrix4x4 invbaseMatrix);
 
@@ -270,6 +275,8 @@ namespace SA3D.Modeling.Mesh.Converters
 					{
 						continue;
 					}
+
+					hasNormals |= bufferMesh.HasNormals;
 
 					foreach(BufferVertex vtx in bufferMesh.Vertices)
 					{
@@ -388,6 +395,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			int rootNodeIndex = _meshNodeIndexMapping[dependingMeshNodeIndices[0]];
 			SortedSet<int> dependingRelativeNodeIndices = new();
 			string label;
+			bool hasNormals;
 
 			WeightedVertex[] vertices;
 
@@ -399,7 +407,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					return;
 				}
 
-				vertices = EvaluateNoWeightVertices(dependingMeshNodeIndices[0]);
+				vertices = EvaluateNoWeightVertices(dependingMeshNodeIndices[0], out hasNormals);
 				label = _nodes[rootNodeIndex].Attach!.Label;
 			}
 			else
@@ -408,7 +416,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				rootNodeIndex = ComputeCommonNodeIndex(_nodes, absoluteDepends);
 				dependingRelativeNodeIndices = new(absoluteDepends.Select(x => x - rootNodeIndex));
 
-				vertices = EvaluateWeightVertices(dependingMeshNodeIndices, rootNodeIndex);
+				vertices = EvaluateWeightVertices(dependingMeshNodeIndices, rootNodeIndex, out hasNormals);
 				label = _nodes[absoluteDepends.Max].Attach!.Label;
 			}
 
@@ -420,7 +428,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				materials,
 				new() { rootNodeIndex },
 				dependingRelativeNodeIndices,
-				hasColors
+				hasColors,
+				hasNormals
 				)
 			{
 				Label = label

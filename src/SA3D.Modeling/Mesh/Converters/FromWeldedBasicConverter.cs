@@ -70,7 +70,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				return null;
 			}
 
-			WeightedMesh result = WeightedMesh.Create(_outVertices, _polygonCorners, _materials, _hasColors);
+			WeightedMesh result = WeightedMesh.Create(_outVertices, _polygonCorners, _materials, _hasColors, true);
 
 			result.Label = _weldingGroups[^1].Attach!.Label;
 			result.RootIndices.Add(_nodeIndices[_rootNode]);

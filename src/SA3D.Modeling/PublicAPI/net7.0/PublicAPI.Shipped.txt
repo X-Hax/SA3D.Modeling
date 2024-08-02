@@ -1879,7 +1879,6 @@ static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteArray(SA3D.Common.IO.EndianS
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultColorParam -> ushort
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultNormalParam -> ushort
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions.Write(this SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter! parameter, SA3D.Common.IO.EndianStackWriter! writer) -> void
-static SA3D.Modeling.Mesh.Weighted.WeightedMesh.Create(SA3D.Modeling.Mesh.Weighted.WeightedVertex[]! vertices, SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]! triangleSets, SA3D.Modeling.Mesh.Buffer.BufferMaterial[]! materials, bool hasColors) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid(ref SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.Attach! attach, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!

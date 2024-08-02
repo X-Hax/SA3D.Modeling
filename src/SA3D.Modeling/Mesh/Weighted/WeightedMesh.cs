@@ -54,6 +54,11 @@ namespace SA3D.Modeling.Mesh.Weighted
 		public bool IsWeighted => DependingNodeIndices.Count > 0;
 
 		/// <summary>
+		/// Whether the model has normals (even if all normals point in the same direction).
+		/// </summary>
+		public bool HasNormals { get; }
+
+		/// <summary>
 		/// Whether the model has colors (even if all colors are white).
 		/// </summary>
 		public bool HasColors { get; }
@@ -88,7 +93,8 @@ namespace SA3D.Modeling.Mesh.Weighted
 			BufferMaterial[] materials,
 			HashSet<int> rootIndices,
 			SortedSet<int> dependingNodeIndices,
-			bool hasColors)
+			bool hasColors,
+			bool hasNormals)
 		{
 			Vertices = vertices;
 			TriangleSets = triangleSets;
@@ -96,6 +102,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 			RootIndices = rootIndices;
 			DependingNodeIndices = dependingNodeIndices;
 			HasColors = hasColors;
+			HasNormals = hasNormals;
 		}
 
 		/// <summary>
@@ -105,12 +112,14 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <param name="triangleSets">Triangle sets.</param>
 		/// <param name="materials">Materials for each triangle set.</param>
 		/// <param name="hasColors">Whether the model contains colors.</param>
+		/// <param name="hasNormals">Whether the model contains normals.</param>
 		/// <returns>The created weighted mesh.</returns>
 		public static WeightedMesh Create(
 			WeightedVertex[] vertices,
 			BufferCorner[][] triangleSets,
 			BufferMaterial[] materials,
-			bool hasColors)
+			bool hasColors,
+			bool hasNormals)
 		{
 			SortedSet<int> dependingNodes = new();
 
@@ -156,7 +165,8 @@ namespace SA3D.Modeling.Mesh.Weighted
 				materials,
 				new(),
 				dependingNodes,
-				hasColors);
+				hasColors,
+				hasNormals);
 		}
 
 
@@ -475,6 +485,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 			List<BufferMaterial> materials = new();
 			SortedSet<int> dependingNodes = new();
 			bool hasColors = false;
+			bool hasNormals = false;
 
 			int maxNode = meshes.Max(x => x.DependingNodeIndices.Max);
 			int weightNum = maxNode + 1;
@@ -483,6 +494,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 			{
 				materials.AddRange(mesh.Materials);
 				hasColors |= mesh.HasColors;
+				hasNormals |= mesh.HasNormals;
 
 				if(vertices.Count > 0)
 				{
@@ -546,7 +558,8 @@ namespace SA3D.Modeling.Mesh.Weighted
 				materials.ToArray(),
 				new(),
 				dependingNodes,
-				hasColors);
+				hasColors,
+				hasNormals);
 		}
 
 		/// <summary>
@@ -639,7 +652,8 @@ namespace SA3D.Modeling.Mesh.Weighted
 				Materials.ToArray(),
 				new(RootIndices),
 				new(DependingNodeIndices),
-				HasColors);
+				HasColors,
+				HasNormals);
 		}
 
 		#endregion
