@@ -112,32 +112,32 @@ namespace SA3D.Modeling.File
 		/// <summary>
 		/// Texture list block header in a hashset for finding the block
 		/// </summary>
-		public static readonly HashSet<uint> TextureListBlockHeaders = new()
-		{
+		public static readonly HashSet<uint> TextureListBlockHeaders =
+		[
 			(TL << 16) | NJ,
 			(TL << 16) | GJ,
-		};
+		];
 
 		/// <summary>
 		/// model block headers in a hashset for finding the block
 		/// </summary>
-		public static readonly HashSet<uint> ModelBlockHeaders = new()
-		{
+		public static readonly HashSet<uint> ModelBlockHeaders =
+		[
 			(CM << 16) | NJ,
 			(BM << 16) | NJ,
 			(CM << 16) | GJ,
 			(BM << 16) | GJ,
-		};
+		];
 
 		/// <summary>
 		/// Animation block headers in a hashset for finding the block
 		/// </summary>
-		public static readonly HashSet<uint> AnimationBlockHeaders = new()
-		{
+		public static readonly HashSet<uint> AnimationBlockHeaders =
+		[
 			NMDM,
 			NSSM,
 			NCAM,
-		};
+		];
 
 		#endregion
 	}

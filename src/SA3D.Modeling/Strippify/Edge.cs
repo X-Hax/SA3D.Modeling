@@ -23,7 +23,7 @@ namespace SA3D.Modeling.Strippify
 		public Edge(Vertex v1, Vertex v2)
 		{
 			Vertices = new Vertex[] { v1, v2 };
-			Triangles = new List<Triangle>();
+			Triangles = [];
 		}
 
 		/// <summary>

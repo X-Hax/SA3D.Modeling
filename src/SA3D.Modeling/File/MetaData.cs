@@ -64,11 +64,11 @@ namespace SA3D.Modeling.File
 		/// </summary>
 		public MetaData()
 		{
-			AnimFiles = new();
-			MorphFiles = new();
-			Other = new();
-			Labels = new();
-			MetaWeights = new();
+			AnimFiles = [];
+			MorphFiles = [];
+			Other = [];
+			Labels = [];
+			MetaWeights = [];
 		}
 
 

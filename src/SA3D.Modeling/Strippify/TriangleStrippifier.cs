@@ -151,7 +151,7 @@ namespace SA3D.Modeling.Strippify
 
 			Mesh mesh = new(triangleList, RaiseTopoError);   // reading the index data into a virtual mesh
 			int written = 0;            // amount of written triangles
-			List<int[]> strips = new(); // the result list
+			List<int[]> strips = []; // the result list
 
 			int triCount = mesh.Triangles.Length;
 
@@ -294,7 +294,7 @@ namespace SA3D.Modeling.Strippify
 
 		private int[] StripLoop(Triangle firstTriangle, ref int written, Triangle tri2, Triangle tri3, Vertex vert1, Vertex vert2, Vertex vert3)
 		{
-			List<int> strip = new() { vert1.Index, vert2.Index, vert3.Index };
+			List<int> strip = [vert1.Index, vert2.Index, vert3.Index];
 			written++;
 
 			// shift verts two forward

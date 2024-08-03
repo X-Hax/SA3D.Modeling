@@ -44,13 +44,13 @@ namespace SA3D.Modeling.Mesh.Converters
 		{
 			protected override BufferResult ConvertWeighted(WeightedMesh wba, bool optimize)
 			{
-				List<(int nodeIndex, BufferMesh[])> meshSets = new();
+				List<(int nodeIndex, BufferMesh[])> meshSets = [];
 				int[] weightInits = wba.Vertices.Select(x => x.GetFirstWeightIndex()).ToArray();
 
 				foreach(int nodeIndex in wba.DependingNodeIndices)
 				{
-					List<BufferVertex> initVerts = new();
-					List<BufferVertex> continueVerts = new();
+					List<BufferVertex> initVerts = [];
+					List<BufferVertex> continueVerts = [];
 
 					for(int i = 0; i < wba.Vertices.Length; i++)
 					{
@@ -74,7 +74,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						}
 					}
 
-					List<BufferMesh> vertexMeshes = new();
+					List<BufferMesh> vertexMeshes = [];
 
 					if(initVerts.Count > 0)
 					{
@@ -105,9 +105,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				(int lastNodeIndex, BufferMesh[] lastMeshes) = meshSets[lastIndex];
 				nodeIndices[lastIndex] = lastNodeIndex;
 
-				List<BufferMesh> meshes = new();
-				meshes.AddRange(lastMeshes);
-				meshes.AddRange(polyMeshes);
+				List<BufferMesh> meshes = [.. lastMeshes, .. polyMeshes];
 				attaches[lastIndex] = new(meshes.ToArray());
 
 				return new(
@@ -120,7 +118,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			protected override BufferResult ConvertWeightless(WeightedMesh wba, bool optimize)
 			{
-				List<BufferMesh> meshes = new();
+				List<BufferMesh> meshes = [];
 
 				BufferVertex[] vertices = new BufferVertex[wba.Vertices.Length];
 
@@ -148,7 +146,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			private static BufferMesh[] GetPolygonMeshes(WeightedMesh wba, bool optimize)
 			{
-				List<BufferMesh> result = new();
+				List<BufferMesh> result = [];
 
 				for(int i = 0; i < wba.TriangleSets.Length; i++)
 				{
@@ -205,7 +203,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			protected override Attach CombineAttaches(List<Attach> attaches, string label)
 			{
-				List<BufferMesh> meshes = new();
+				List<BufferMesh> meshes = [];
 
 				foreach(Attach atc in attaches)
 				{

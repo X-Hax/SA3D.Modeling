@@ -188,7 +188,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <returns>The poly chunks that were read.</returns>
 		public static PolyChunk?[] ReadArray(EndianStackReader reader, uint address, PointerLUT lut)
 		{
-			List<PolyChunk?> result = new();
+			List<PolyChunk?> result = [];
 
 			PolyChunkType readType()
 			{

@@ -130,7 +130,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			_nodeMeshContainers = new List<MeshContainer>[_nodesMatrices.Length];
 			for(int i = 0; i < _nodesMatrices.Length; i++)
 			{
-				_nodeMeshContainers[i] = new();
+				_nodeMeshContainers[i] = [];
 			}
 		}
 
@@ -274,9 +274,9 @@ namespace SA3D.Modeling.Mesh.Converters
 				Array.Fill(sharedVertexmap, -1);
 			}
 
-			List<BufferCorner[]> tmpCorners = new();
-			List<BufferMaterial> tmpMaterials = new();
-			List<MeshContainer> containers = new();
+			List<BufferCorner[]> tmpCorners = [];
+			List<BufferMaterial> tmpMaterials = [];
+			List<MeshContainer> containers = [];
 
 			for(int i = 0; i < nodeCount; i++)
 			{
@@ -317,7 +317,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			for(int i = 0; i < weightNum; i++)
 			{
-				meshSplitPolygons[i] = new();
+				meshSplitPolygons[i] = [];
 			}
 
 			for(int i = 0; i < weightedMesh.TriangleSets.Length; i++)
@@ -384,7 +384,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		{
 			int[,] counts = new int[result.Length, 2];
 			int meshCount = polygons.GetLength(1);
-			HashSet<ushort> usedIndices = new();
+			HashSet<ushort> usedIndices = [];
 
 			for(int i = polygons.GetLength(0) - 1; i >= 0; i--)
 			{
@@ -432,7 +432,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			ushort[] polygonVertexMap = new ushort[polygonVertexIndices.Count];
 			ushort[] vertexIndexMap = new ushort[source.Vertices.Length];
-			List<WeightedVertex> vertices = new();
+			List<WeightedVertex> vertices = [];
 
 			foreach(ushort index in polygonVertexIndices)
 			{
@@ -452,7 +452,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			/****************/
 			// Evaluating Weighted vertices
 
-			List<WeightedVertex> weightVertexIndices = new();
+			List<WeightedVertex> weightVertexIndices = [];
 
 			for(ushort i = 0; i < source.Vertices.Length; i++)
 			{
@@ -500,9 +500,9 @@ namespace SA3D.Modeling.Mesh.Converters
 			out bool hasColors,
 			out string label)
 		{
-			List<WeightedVertex> combinedVertices = new();
-			List<BufferCorner[]> combinedTriangleSets = new();
-			List<BufferMaterial> combinedMaterials = new();
+			List<WeightedVertex> combinedVertices = [];
+			List<BufferCorner[]> combinedTriangleSets = [];
+			List<BufferMaterial> combinedMaterials = [];
 			hasColors = false;
 
 			foreach(MeshContainer container in containers)
@@ -521,7 +521,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private VertexWelding[]? AssembleVertexWelding(List<MeshContainer> containers)
 		{
-			List<VertexWelding> welding = new();
+			List<VertexWelding> welding = [];
 
 			foreach(MeshContainer container in containers)
 			{
@@ -552,7 +552,7 @@ namespace SA3D.Modeling.Mesh.Converters
 						continue;
 					}
 
-					List<Weld> welds = new();
+					List<Weld> welds = [];
 					ushort sourceVertexIndex = container.polyVertexMap[i];
 					uint targetVertexIndex = i + container.vertexOffset;
 

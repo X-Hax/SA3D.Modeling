@@ -76,7 +76,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 				return VertexChunks != null && VertexChunks.Any(a => a?.HasWeight == true);
 			}
 
-			HashSet<int> ids = new();
+			HashSet<int> ids = [];
 			if(VertexChunks != null)
 			{
 				foreach(VertexChunk? vc in VertexChunks)

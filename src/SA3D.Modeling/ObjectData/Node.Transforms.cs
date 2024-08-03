@@ -198,7 +198,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <returns></returns>
 		public Dictionary<Node, Matrix4x4> GetWorldMatrixTreeLUT()
 		{
-			Dictionary<Node, Matrix4x4> result = new();
+			Dictionary<Node, Matrix4x4> result = [];
 			foreach((Node node, Matrix4x4 worldMatrix) in GetWorldMatrixTreeEnumerator())
 			{
 				result.Add(node, worldMatrix);

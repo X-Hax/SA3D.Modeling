@@ -74,7 +74,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <returns>The converted euler rotation keyframes.</returns>
 		public static EulerKF QuaternionToEuler(QuaternionKF source, float deviationThreshold, bool rotateZYX)
 		{
-			EulerKF result = new();
+			EulerKF result = [];
 			QuaternionToEuler(source, deviationThreshold, rotateZYX, result);
 			return result;
 		}
@@ -156,7 +156,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <returns>The converted quaternion rotation keyframes.</returns>
 		public static QuaternionKF EulerToQuaternion(EulerKF source, float deviationThreshold, bool rotateZYX)
 		{
-			QuaternionKF result = new();
+			QuaternionKF result = [];
 			EulerToQuaternion(source, deviationThreshold, rotateZYX, result);
 			return result;
 		}
@@ -222,7 +222,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <returns>The converted rotation matrix keyframes.</returns>
 		public static Matrix4x4KF GetRotationMatrices(this Keyframes keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out Dictionary<uint, Matrix4x4[]>? complementary)
 		{
-			Matrix4x4KF result = new();
+			Matrix4x4KF result = [];
 			complementary = null;
 			converted = false;
 
@@ -258,7 +258,7 @@ namespace SA3D.Modeling.Animation.Utilities
 
 				Vector3? previous = null;
 				uint previousFrame = 0;
-				complementary = new();
+				complementary = [];
 
 				foreach(KeyValuePair<uint, Vector3> rotation in output)
 				{
@@ -335,7 +335,7 @@ namespace SA3D.Modeling.Animation.Utilities
 			}
 			else
 			{
-				EulerKF rotations = new();
+				EulerKF rotations = [];
 				ConvertMatrixToRotation(source, rotateZYX, null, rotations);
 				EulerToQuaternion(rotations, deviationThreshold, rotateZYX, result);
 			}
@@ -351,7 +351,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <returns>The converted quaternion keyframes.</returns>
 		public static QuaternionKF MatrixToQuaternion(Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX)
 		{
-			QuaternionKF result = new();
+			QuaternionKF result = [];
 			MatrixToQuaternion(source, wasQuaternion, deviationThreshold, rotateZYX, result);
 			return result;
 		}
@@ -388,7 +388,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		{
 			if(wasQuaternion)
 			{
-				QuaternionKF quaternions = new();
+				QuaternionKF quaternions = [];
 				ConvertMatrixToQuaternion(source, quaternions);
 				QuaternionToEuler(quaternions, deviationThreshold, rotateZYX, result);
 			}
@@ -409,7 +409,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <returns>The converted euler keyframes.</returns>
 		public static EulerKF MatrixToEuler(Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, Dictionary<uint, Matrix4x4[]>? complementary)
 		{
-			EulerKF result = new();
+			EulerKF result = [];
 			MatrixToEuler(source, wasQuaternion, deviationThreshold, rotateZYX, complementary, result);
 			return result;
 		}

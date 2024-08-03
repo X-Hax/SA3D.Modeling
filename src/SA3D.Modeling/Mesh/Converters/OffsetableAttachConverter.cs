@@ -22,7 +22,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		public void Convert(Node model, WeightedMesh[] meshData, bool optimize)
 		{
-			List<TResult> results = new();
+			List<TResult> results = [];
 			(Node node, Matrix4x4 worldMatrix)[] nodeMatrices = model.GetWorldMatrixTree();
 
 			foreach(WeightedMesh wba in meshData)
@@ -91,7 +91,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			List<Attach>[] nodeAttaches = new List<Attach>[nodeMatrices.Length];
 			for(int i = 0; i < nodeAttaches.Length; i++)
 			{
-				nodeAttaches[i] = new();
+				nodeAttaches[i] = [];
 			}
 
 			foreach(TResult result in results)

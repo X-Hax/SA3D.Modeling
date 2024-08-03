@@ -119,7 +119,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			private static ChunkResult ConvertWeightedBinaryColored(WeightedMesh wba)
 			{
-				List<BinaryWeightColorVertex> vertices = new();
+				List<BinaryWeightColorVertex> vertices = [];
 				ChunkCorner[][] cornerSets = new ChunkCorner[wba.TriangleSets.Length][];
 
 				// Get every vertex per corner
@@ -155,10 +155,10 @@ namespace SA3D.Modeling.Mesh.Converters
 				sortedVertices = sortedVertices.OrderBy(x => x.vert.nodeIndex).ToArray();
 
 				// Create a vertex chunk per node index
-				List<(int nodeIndex, VertexChunk chunk)> vertexChunks = new();
+				List<(int nodeIndex, VertexChunk chunk)> vertexChunks = [];
 
 				int currentNodeIndex = -1;
-				List<ChunkVertex> chunkVertices = new();
+				List<ChunkVertex> chunkVertices = [];
 				ushort currentVertexOffset = 0;
 				int[] sortedVertMap = new int[sortedVertices.Length];
 				for(int i = 0; i < sortedVertices.Length; i++)
@@ -191,7 +191,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					chunkVertices.ToArray())));
 
 				// get the poly chunks
-				List<PolyChunk> polyChunks = new();
+				List<PolyChunk> polyChunks = [];
 				for(int i = 0; i < cornerSets.Length; i++)
 				{
 					ChunkCorner[] corners = cornerSets[i];
@@ -205,8 +205,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				// assemble the attaches
-				List<int> nodeAttachIndices = new();
-				List<ChunkAttach> attaches = new();
+				List<int> nodeAttachIndices = [];
+				List<ChunkAttach> attaches = [];
 
 				for(int i = 0; i < vertexChunks.Count - 1; i++)
 				{
@@ -230,8 +230,8 @@ namespace SA3D.Modeling.Mesh.Converters
 			private static ChunkResult ConvertWeighted(WeightedMesh wba)
 			{
 
-				List<IndexedWeightVertex> singleWeights = new();
-				List<IndexedWeightVertex> multiWeights = new();
+				List<IndexedWeightVertex> singleWeights = [];
+				List<IndexedWeightVertex> multiWeights = [];
 
 				for(int i = 0; i < wba.Vertices.Length; i++)
 				{
@@ -259,15 +259,15 @@ namespace SA3D.Modeling.Mesh.Converters
 				int[] lastWeightIndices = multiWeights.Select(x => x.vertex.GetLastWeightIndex()).ToArray();
 
 				// grouping the vertices together by node
-				List<(int nodeIndex, VertexChunk[] chunks)> vertexChunks = new();
+				List<(int nodeIndex, VertexChunk[] chunks)> vertexChunks = [];
 
 				foreach(int nodeIndex in wba.DependingNodeIndices.Order())
 				{
-					List<VertexChunk> chunks = new();
+					List<VertexChunk> chunks = [];
 
 					// find out if any singleWeights belong to the node index
 					int singleWeightIndexOffset = 0;
-					List<ChunkVertex> singleWeightVerts = new();
+					List<ChunkVertex> singleWeightVerts = [];
 					for(int i = 0; i < singleWeights.Count; i++)
 					{
 						WeightedVertex vert = singleWeights[i].vertex;
@@ -301,9 +301,9 @@ namespace SA3D.Modeling.Mesh.Converters
 
 					// now the ones with weights. we differentiate between
 					// those that initiate and those that continue
-					List<ChunkVertex> initWeightsVerts = new();
-					List<ChunkVertex> continueWeightsVerts = new();
-					List<ChunkVertex> endWeightsVerts = new();
+					List<ChunkVertex> initWeightsVerts = [];
+					List<ChunkVertex> continueWeightsVerts = [];
+					List<ChunkVertex> endWeightsVerts = [];
 
 					for(int i = 0; i < multiWeights.Count; i++)
 					{
@@ -378,7 +378,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				// assemble the polygon chunks
-				List<PolyChunk> polyChunks = new();
+				List<PolyChunk> polyChunks = [];
 				for(int i = 0; i < wba.TriangleSets.Length; i++)
 				{
 					// mapping the triangles to the chunk format
@@ -396,8 +396,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				// assemble the attaches
-				List<int> nodeAttachIndices = new();
-				List<ChunkAttach> attaches = new();
+				List<int> nodeAttachIndices = [];
+				List<ChunkAttach> attaches = [];
 
 				for(int i = 0; i < vertexChunks.Count - 1; i++)
 				{
@@ -452,7 +452,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				if(wba.HasColors)
 				{
 					type = VertexChunkType.Diffuse;
-					List<ChunkVertex> colorVertices = new();
+					List<ChunkVertex> colorVertices = [];
 					for(int i = 0; i < wba.TriangleSets.Length; i++)
 					{
 						BufferCorner[] bufferCorners = wba.TriangleSets[i];
@@ -515,7 +515,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				VertexChunk vtxChunk = new(type, WeightStatus.Start, 0, vertices);
-				List<PolyChunk> polyChunks = new();
+				List<PolyChunk> polyChunks = [];
 				for(int i = 0; i < cornerSets.Length; i++)
 				{
 					polyChunks.AddRange(CreateStripChunk(cornerSets[i], wba.Materials[i], wba.WriteSpecular, wba.TexcoordPrecisionLevel));
@@ -628,8 +628,8 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			protected override Attach CombineAttaches(List<Attach> attaches, string label)
 			{
-				List<VertexChunk?> vertexChunks = new();
-				List<PolyChunk?> polyChunks = new();
+				List<VertexChunk?> vertexChunks = [];
+				List<PolyChunk?> polyChunks = [];
 
 				foreach(ChunkAttach atc in attaches.Cast<ChunkAttach>())
 				{
@@ -694,7 +694,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			foreach(ChunkAttach atc in model.GetTreeAttachEnumerable().OfType<ChunkAttach>())
 			{
-				List<BufferMesh> meshes = new();
+				List<BufferMesh> meshes = [];
 
 				BufferVertex[]? vertices = null;
 				bool continueWeight = false;
@@ -713,7 +713,7 @@ namespace SA3D.Modeling.Mesh.Converters
 							continue;
 						}
 
-						List<BufferVertex> vertexList = new();
+						List<BufferVertex> vertexList = [];
 						if(!cnk.HasWeight)
 						{
 							for(int j = 0; j < cnk.Vertices.Length; j++)
@@ -851,7 +851,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		public static Dictionary<ChunkAttach, PolyChunk?[]> GetActivePolyChunks(Node model)
 		{
-			Dictionary<ChunkAttach, PolyChunk?[]> result = new();
+			Dictionary<ChunkAttach, PolyChunk?[]> result = [];
 			List<PolyChunk?>[] polyChunkCache = Array.Empty<List<PolyChunk?>>();
 
 			foreach(ChunkAttach attach in model.GetTreeAttachEnumerable().OfType<ChunkAttach>())
@@ -861,7 +861,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					continue;
 				}
 
-				List<PolyChunk?> active = new();
+				List<PolyChunk?> active = [];
 
 				int cacheID = -1;
 				foreach(PolyChunk? polyChunk in attach.PolyChunks)
@@ -876,7 +876,7 @@ namespace SA3D.Modeling.Mesh.Converters
 								Array.Resize(ref polyChunkCache, cacheID + 1);
 							}
 
-							polyChunkCache[cacheID] = new List<PolyChunk?>();
+							polyChunkCache[cacheID] = [];
 							break;
 						case DrawListChunk draw:
 							active.AddRange(polyChunkCache[draw.List]);

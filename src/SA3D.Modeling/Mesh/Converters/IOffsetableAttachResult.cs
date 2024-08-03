@@ -27,7 +27,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			List<(int start, int end)>[] ranges = new List<(int start, int end)>[nodeCount];
 			for(int i = 0; i < nodeCount; i++)
 			{
-				ranges[i] = new();
+				ranges[i] = [];
 			}
 
 			foreach(IOffsetableAttachResult cr in attaches)
@@ -36,7 +36,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				int endNode = cr.AttachIndices[^1];
 
 				// Map out the blocked regions
-				Dictionary<int, int> blocked = new();
+				Dictionary<int, int> blocked = [];
 				for(int i = startNode; i <= endNode; i++)
 				{
 					foreach((int start, int end) r in ranges[i])

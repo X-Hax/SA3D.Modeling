@@ -42,7 +42,7 @@ namespace SA3D.Modeling.Animation.Utilities
 			uint startAddr = address;
 
 			// <frame, address>
-			SortedDictionary<uint, uint> frameAddresses = new();
+			SortedDictionary<uint, uint> frameAddresses = [];
 			for(int i = 0; i < count; i++)
 			{
 				uint frame = reader.ReadUInt(address);

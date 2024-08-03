@@ -49,7 +49,7 @@ namespace SA3D.Modeling.Strippify
 		{
 			Vertices = vertices;
 			Edges = new Edge[3];
-			Neighbours = new List<Triangle>();
+			Neighbours = [];
 			Used = false;
 
 			Vertex prevVert = vertices[2];

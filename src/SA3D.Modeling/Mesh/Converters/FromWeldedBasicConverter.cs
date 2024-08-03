@@ -38,7 +38,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			_rootNode = rootNode;
 			_weldingGroups = weldingGroups;
 			_nodeIndices = nodeIndices;
-			_relativeNodeIndices = new();
+			_relativeNodeIndices = [];
 
 			_matrices = Array.Empty<(Matrix4x4 vertex, Matrix4x4 normal)>();
 
@@ -207,7 +207,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private void MergeWelds()
 		{
-			Dictionary<ushort, ushort> mergeMapping = new();
+			Dictionary<ushort, ushort> mergeMapping = [];
 			_outVertices = _vertices.SelectMany(x => x).ToArray();
 			bool[] resultWelded = _welded.SelectMany(x => x).ToArray();
 
@@ -266,8 +266,8 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private void CollectPolygons()
 		{
-			List<List<BufferCorner>> polygonCorners = new();
-			List<BufferMaterial> materials = new();
+			List<List<BufferCorner>> polygonCorners = [];
+			List<BufferMaterial> materials = [];
 			_hasColors = false;
 
 			int meshIndex = 0;
@@ -356,10 +356,10 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		public static WeightedMesh[] CreateWeightedFromWeldedBasicModel(Node model, Node[][] weldingGroups, BufferMode bufferMode)
 		{
-			List<WeightedMesh> result = new();
+			List<WeightedMesh> result = [];
 
 			Node[] nodes = model.GetTreeNodes();
-			Dictionary<Node, int> nodeIndices = new();
+			Dictionary<Node, int> nodeIndices = [];
 
 			for(int i = 0; i < nodes.Length; i++)
 			{
@@ -367,7 +367,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 
 			HashSet<Node> groupedNodes = weldingGroups.SelectMany(x => x).ToHashSet();
-			Dictionary<BasicAttach, WeightedMesh> reusedMeshes = new();
+			Dictionary<BasicAttach, WeightedMesh> reusedMeshes = [];
 
 			foreach(Node node in model.GetTreeNodeEnumerable())
 			{
@@ -417,8 +417,8 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			WeightedMesh[] weightedMeshes = CreateWeightedFromWeldedBasicModel(model, weldingGroups, optimize ? BufferMode.GenerateOptimized : BufferMode.Generate);
 
-			Dictionary<Node, BasicAttach> attachLUT = new();
-			Dictionary<Node, VertexWelding[]> weldingLUT = new();
+			Dictionary<Node, BasicAttach> attachLUT = [];
+			Dictionary<Node, VertexWelding[]> weldingLUT = [];
 			foreach(Node node in model.GetTreeNodeEnumerable())
 			{
 				if(node.Attach is BasicAttach atc)

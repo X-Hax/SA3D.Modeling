@@ -428,7 +428,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			bool hasNormals = attach.Normals.Any(x => !x.Equals(BufferMesh.DefaultNormal));
 
-			List<BufferMesh> meshes = new();
+			List<BufferMesh> meshes = [];
 			foreach(BasicMesh mesh in attach.Meshes)
 			{
 				// creating the material

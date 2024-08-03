@@ -3,7 +3,7 @@
 	<Import Project="../SA3D.ProjectConfigurations/NuGet.Build.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>SA3D.Modeling</RootNamespace>
 	</PropertyGroup>
 
@@ -23,8 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SA3D.Common" Version="1.4.6" />
-		<PackageReference Include="SA3D.Texturing" Version="1.3.7" />
+		<PackageReference Include="SA3D.Texturing" Version="1.4.0" />
 	</ItemGroup>
 
 </Project>

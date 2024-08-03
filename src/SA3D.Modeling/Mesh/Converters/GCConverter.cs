@@ -22,7 +22,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		{
 			Node[] nodes = model.GetTreeNodes();
 			GCAttach[] attaches = new GCAttach[nodes.Length];
-			List<GCAttach> rootlessAttaches = new();
+			List<GCAttach> rootlessAttaches = [];
 
 			meshData = WeightedMesh.MergeAtRoots(meshData);
 
@@ -103,7 +103,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				GCMesh ProcessBufferMesh(GCCorner[] corners, BufferMaterial material, ref BufferMaterial activeMaterial, ref bool first)
 				{
 					// generating parameter info
-					List<IGCParameter> parameters = new();
+					List<IGCParameter> parameters = [];
 
 					if(first)
 					{
@@ -243,7 +243,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					activeMaterial = material;
 					first = false;
 
-					List<GCPolygon> polygons = new();
+					List<GCPolygon> polygons = [];
 
 					// note: a single triangle polygon can only carry 0xFFFF corners, so about 22k tris
 					if(corners.Length > 0xFFFF)
@@ -269,8 +269,8 @@ namespace SA3D.Modeling.Mesh.Converters
 					return new GCMesh(parameters.ToArray(), polygons.ToArray());
 				}
 
-				List<int> opaqueMeshIndices = new();
-				List<int> translucentMeshIndices = new();
+				List<int> opaqueMeshIndices = [];
+				List<int> translucentMeshIndices = [];
 
 				for(int i = 0; i < weightedMesh.Materials.Length; i++)
 				{
@@ -280,7 +280,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				GCMesh[] ProcessBufferMeshes(List<int> meshIndices)
 				{
 					BufferMaterial currentMaterial = default;
-					List<GCMesh> result = new();
+					List<GCMesh> result = [];
 					bool first = true;
 					foreach(int index in meshIndices)
 					{
@@ -329,7 +329,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		public static BufferMesh[] ConvertGCToBuffer(GCAttach attach, bool optimize)
 		{
-			List<BufferMesh> meshes = new();
+			List<BufferMesh> meshes = [];
 
 			DistinctMap<Vector3>? positions = null;
 			DistinctMap<Vector3>? normals = null;
@@ -377,7 +377,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			float uvFac = 1;
 
-			List<BufferVertex> bufferVertices = new();
+			List<BufferVertex> bufferVertices = [];
 
 			// if there are no normals, then we can already initialize the entire thing with all positions
 			Func<ushort, ushort, ushort> getVertexIndex;
@@ -392,7 +392,7 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 			else
 			{
-				Dictionary<uint, ushort> vertexIndices = new();
+				Dictionary<uint, ushort> vertexIndices = [];
 				getVertexIndex = (pos, nrm) =>
 				{
 					pos = positions[pos];
@@ -473,8 +473,8 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				// filtering out the double loops
-				List<BufferCorner> corners = new();
-				List<uint> trianglelist = new();
+				List<BufferCorner> corners = [];
+				List<uint> trianglelist = [];
 
 				foreach(GCPolygon p in m.Polygons)
 				{

@@ -428,7 +428,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <returns>The vertex sets that were read.</returns>
 		public static GCVertexSet[] ReadArray(EndianStackReader reader, uint address)
 		{
-			List<GCVertexSet> result = new();
+			List<GCVertexSet> result = [];
 			GCVertexSet vertexSet = Read(reader, address);
 			while(vertexSet.Type != GCVertexType.End)
 			{

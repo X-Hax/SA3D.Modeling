@@ -169,7 +169,7 @@ namespace SA3D.Modeling.ObjectData
 			{
 				BufferMeshData(optimize);
 
-				Dictionary<Attach, Node> attachPairs = new();
+				Dictionary<Attach, Node> attachPairs = [];
 				foreach(Node node in GetTreeNodeEnumerable())
 				{
 					if(node.Attach != null)
@@ -235,7 +235,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <param name="twoway">Whether to make all links twoay</param>
 		public Dictionary<Node, HashSet<Node>> GetTreeWeldingLinks(bool twoway)
 		{
-			Dictionary<Node, HashSet<Node>> result = new();
+			Dictionary<Node, HashSet<Node>> result = [];
 
 			foreach(Node node in GetTreeNodeEnumerable())
 			{
@@ -266,7 +266,7 @@ namespace SA3D.Modeling.ObjectData
 					{
 						if(!result.TryGetValue(linkedNode, out HashSet<Node>? targetLinks))
 						{
-							targetLinks = new();
+							targetLinks = [];
 							result.Add(linkedNode, targetLinks);
 						}
 
@@ -287,8 +287,8 @@ namespace SA3D.Modeling.ObjectData
 		{
 			Dictionary<Node, HashSet<Node>> weldLinks = GetTreeWeldingLinks(true);
 
-			Dictionary<Node, int> nodeIndices = new();
-			HashSet<Node> treeNodes = new();
+			Dictionary<Node, int> nodeIndices = [];
+			HashSet<Node> treeNodes = [];
 
 			int index = 0;
 			foreach(Node node in GetTreeNodeEnumerable())
@@ -304,7 +304,7 @@ namespace SA3D.Modeling.ObjectData
 				throw new InvalidOperationException($"The welds reference {notInTreeCount} nodes that are not in the tree!");
 			}
 
-			List<Node[]> result = new();
+			List<Node[]> result = [];
 			while(treeNodes.Count > 0)
 			{
 				Node start = treeNodes.First();
@@ -320,7 +320,7 @@ namespace SA3D.Modeling.ObjectData
 					continue;
 				}
 
-				HashSet<Node> group = new();
+				HashSet<Node> group = [];
 				Queue<Node> linkQueue = new();
 				linkQueue.Enqueue(start);
 

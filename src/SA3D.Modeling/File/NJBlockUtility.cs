@@ -8,7 +8,7 @@ namespace SA3D.Modeling.File
 	{
 		public static Dictionary<uint, uint> GetBlockAddresses(EndianStackReader reader, uint address)
 		{
-			Dictionary<uint, uint> result = new();
+			Dictionary<uint, uint> result = [];
 			reader.PushBigEndian(reader.CheckBigEndian32(address + 4));
 
 			uint blockAddress = address;

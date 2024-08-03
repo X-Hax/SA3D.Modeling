@@ -58,7 +58,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		public void OptimizePolygons()
 		{
 			// getting the current triangles
-			List<GCCorner> triangles = new();
+			List<GCCorner> triangles = [];
 			foreach(GCPolygon p in Polygons)
 			{
 				if(p.Type == GCPolyType.Triangles)
@@ -90,8 +90,8 @@ namespace SA3D.Modeling.Mesh.Gamecube
 			GCCorner[][] strips = Strippify.TriangleStrippifier.Global.Strippify(triangles.ToArray());
 
 			// putting them all together
-			List<GCPolygon> polygons = new();
-			List<GCCorner> singleTris = new();
+			List<GCPolygon> polygons = [];
+			List<GCCorner> singleTris = [];
 
 			for(int i = 0; i < strips.Length; i++)
 			{
@@ -202,7 +202,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 			uint primitives_addr = reader.ReadPointer(address + 8);
 			int primitives_size = reader.ReadInt(address + 12);
 
-			List<IGCParameter> parameters = new();
+			List<IGCParameter> parameters = [];
 			for(int i = 0; i < parameters_count; i++)
 			{
 				parameters.Add(IGCParameter.Read(reader, parameters_addr));
@@ -214,7 +214,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 				indexFormat = p.IndexFormat;
 			}
 
-			List<GCPolygon> primitives = new();
+			List<GCPolygon> primitives = [];
 			uint end_pos = (uint)(primitives_addr + primitives_size);
 
 			while(primitives_addr < end_pos)

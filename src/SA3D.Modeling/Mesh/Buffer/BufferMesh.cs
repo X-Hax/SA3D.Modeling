@@ -198,7 +198,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			{
 				if(strippified)
 				{
-					List<uint> triangles = new();
+					List<uint> triangles = [];
 
 					bool rev = false;
 
@@ -248,7 +248,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			{
 				if(strippified)
 				{
-					List<uint> triangles = new();
+					List<uint> triangles = [];
 					bool rev = false;
 
 					for(int i = 2; i < indexList.Length; i++, rev = !rev)
@@ -305,7 +305,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			{
 				if(strippified)
 				{
-					List<BufferCorner> triangles = new();
+					List<BufferCorner> triangles = [];
 					bool rev = false;
 
 					for(uint i = 2; i < corners.Length; i++, rev = !rev)
@@ -346,7 +346,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 			{
 				if(strippified)
 				{
-					List<BufferCorner> triangles = new();
+					List<BufferCorner> triangles = [];
 					bool rev = false;
 
 					for(uint i = 2; i < indexList.Length; i++, rev = !rev)
@@ -499,7 +499,7 @@ namespace SA3D.Modeling.Mesh.Buffer
 		/// <returns>The optimized buffermeshes.</returns>
 		public static BufferMesh[] CompressLayout(IList<BufferMesh> input)
 		{
-			List<BufferMesh> result = new();
+			List<BufferMesh> result = [];
 
 			foreach(BufferMesh mesh in input)
 			{

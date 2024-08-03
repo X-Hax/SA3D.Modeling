@@ -97,7 +97,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <param name="optimize">Whether to optimize vertex and polygon data of the buffered meshes.</param>
 		public void BufferMeshData(bool optimize)
 		{
-			HashSet<Attach> buffered = new();
+			HashSet<Attach> buffered = [];
 
 			foreach(LandEntry landEntry in Geometry)
 			{
@@ -143,7 +143,7 @@ namespace SA3D.Modeling.ObjectData
 
 			void convertModels(AttachFormat format, IEnumerable<LandEntry> landEntries)
 			{
-				Dictionary<Attach, Attach?> convertedAttaches = new();
+				Dictionary<Attach, Attach?> convertedAttaches = [];
 
 				foreach(LandEntry landEntry in Geometry)
 				{
@@ -187,8 +187,8 @@ namespace SA3D.Modeling.ObjectData
 			else
 			{
 				// converting from some hybrid format to SA2/B format
-				List<LandEntry> visual = new();
-				List<LandEntry> collision = new();
+				List<LandEntry> visual = [];
+				List<LandEntry> collision = [];
 
 				foreach(LandEntry le in Geometry)
 				{

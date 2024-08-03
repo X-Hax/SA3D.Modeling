@@ -190,7 +190,7 @@ namespace SA3D.Modeling.ObjectData
 
 		private Node BaseClone(Func<Node, Node> cloneFunc)
 		{
-			Dictionary<Node, Node> clones = new();
+			Dictionary<Node, Node> clones = [];
 
 			foreach(Node node in GetTreeNodeEnumerable())
 			{

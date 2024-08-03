@@ -47,15 +47,15 @@ namespace SA3D.Modeling.Mesh.Converters
 			_nodes = model.GetTreeNodes();
 
 			_worldMatrices = model.GetWorldMatrixTreeLUT();
-			_output = new();
+			_output = [];
 
 			_meshNodeIndexMapping = Array.Empty<int>();
 			_vertexIndexMapping = new bool[0, 0];
 
 			_currentMeshIndex = -1;
-			_usedVertices = new();
+			_usedVertices = [];
 
-			_unweighted = new();
+			_unweighted = [];
 		}
 
 		private BufferMesh[] GetMeshData(int meshIndex)
@@ -82,7 +82,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private void Setup()
 		{
-			List<int> nodeIndexMeshMap = new();
+			List<int> nodeIndexMeshMap = [];
 
 			for(int i = 0; i < _nodes.Length; i++)
 			{
@@ -150,7 +150,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		private int[] GetDependingMeshNodeIndices()
 		{
-			SortedSet<int> result = new();
+			SortedSet<int> result = [];
 
 			foreach(ushort vtxIndex in _usedVertices)
 			{
@@ -168,7 +168,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		public static int ComputeCommonNodeIndex(Node[] nodes, SortedSet<int> dependingNodeIndices)
 		{
-			Dictionary<Node, int> parentIndices = new();
+			Dictionary<Node, int> parentIndices = [];
 			for(int i = 0; i < nodes.Length; i++)
 			{
 				parentIndices.Add(nodes[i], 0);
@@ -363,8 +363,8 @@ namespace SA3D.Modeling.Mesh.Converters
 			ushort[] vertexIndexMap = GetVertexIndexMap();
 
 			bool hasColors = false;
-			List<BufferCorner[]> triangleSets = new();
-			List<BufferMaterial> materials = new();
+			List<BufferCorner[]> triangleSets = [];
+			List<BufferMaterial> materials = [];
 
 			foreach(BufferMesh bufferMesh in meshes)
 			{
@@ -393,7 +393,7 @@ namespace SA3D.Modeling.Mesh.Converters
 		{
 			int[] dependingMeshNodeIndices = GetDependingMeshNodeIndices();
 			int rootNodeIndex = _meshNodeIndexMapping[dependingMeshNodeIndices[0]];
-			SortedSet<int> dependingRelativeNodeIndices = new();
+			SortedSet<int> dependingRelativeNodeIndices = [];
 			string label;
 			bool hasNormals;
 
@@ -426,7 +426,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				vertices,
 				triangleSets,
 				materials,
-				new() { rootNodeIndex },
+				[rootNodeIndex],
 				dependingRelativeNodeIndices,
 				hasColors,
 				hasNormals

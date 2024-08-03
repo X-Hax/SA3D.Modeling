@@ -149,20 +149,20 @@ namespace SA3D.Modeling.Animation
 		/// </summary>
 		public Keyframes()
 		{
-			Position = new();
-			EulerRotation = new();
-			Scale = new();
-			Vector = new();
-			Vertex = new();
-			Normal = new();
-			Target = new();
-			Roll = new();
-			Angle = new();
-			LightColor = new();
-			Intensity = new();
-			Spot = new();
-			Point = new();
-			QuaternionRotation = new();
+			Position = [];
+			EulerRotation = [];
+			Scale = [];
+			Vector = [];
+			Vertex = [];
+			Normal = [];
+			Target = [];
+			Roll = [];
+			Angle = [];
+			LightColor = [];
+			Intensity = [];
+			Spot = [];
+			Point = [];
+			QuaternionRotation = [];
 		}
 
 

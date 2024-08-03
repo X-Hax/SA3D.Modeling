@@ -137,7 +137,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 				throw new InvalidOperationException();
 			}
 
-			List<(int nodeIndex, float weight)> result = new();
+			List<(int nodeIndex, float weight)> result = [];
 			for(int i = 0; i < Weights.Length; i++)
 			{
 				float weight = Weights[i];

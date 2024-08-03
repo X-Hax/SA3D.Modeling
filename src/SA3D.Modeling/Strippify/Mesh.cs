@@ -34,8 +34,8 @@ namespace SA3D.Modeling.Strippify
 				Vertices[i] = new Vertex(i);
 			}
 
-			List<Edge> edges = new();
-			List<Triangle> triangles = new();
+			List<Edge> edges = [];
+			List<Triangle> triangles = [];
 
 			for(int i = 0; i < triangleList.Length; i += 3)
 			{

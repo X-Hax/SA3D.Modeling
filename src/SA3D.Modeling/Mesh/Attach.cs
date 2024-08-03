@@ -73,8 +73,8 @@ namespace SA3D.Modeling.Mesh
 		/// <returns></returns>
 		public (BufferMesh[] opaque, BufferMesh[] transparent) GetDisplayMeshes()
 		{
-			List<BufferMesh> opaque = new();
-			List<BufferMesh> transparent = new();
+			List<BufferMesh> opaque = [];
+			List<BufferMesh> transparent = [];
 
 			foreach(BufferMesh mesh in MeshData)
 			{

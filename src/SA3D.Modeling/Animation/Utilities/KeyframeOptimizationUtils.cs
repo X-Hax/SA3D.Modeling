@@ -25,7 +25,7 @@ namespace SA3D.Modeling.Animation.Utilities
 				return;
 			}
 
-			List<uint> frames = new();
+			List<uint> frames = [];
 			for(uint frame = start.Value; frame <= end; frame++)
 			{
 				if(keyframes.ContainsKey(frame))

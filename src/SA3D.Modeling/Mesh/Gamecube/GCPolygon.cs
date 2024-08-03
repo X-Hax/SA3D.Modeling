@@ -59,7 +59,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 				address += 2;
 			}
 
-			List<(ReadIndex read, uint fieldOffset)> readList = new();
+			List<(ReadIndex read, uint fieldOffset)> readList = [];
 
 			uint attributes = (uint)indexFormat;
 			for(uint i = 1, outOffset = 0; i <= 0x2000; i <<= 2, outOffset++)
@@ -123,7 +123,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 				writer.WriteUShort(value);
 			}
 
-			List<(Action<EndianStackWriter, ushort> write, uint fieldOffset)> writeList = new();
+			List<(Action<EndianStackWriter, ushort> write, uint fieldOffset)> writeList = [];
 
 			uint attributes = (uint)indexFormat;
 			for(uint i = 1, outOffset = 0; i <= 0x2000; i <<= 2, outOffset++)

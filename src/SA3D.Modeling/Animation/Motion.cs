@@ -101,7 +101,7 @@ namespace SA3D.Modeling.Animation
 		public Motion()
 		{
 			Label = "animation_" + GenerateIdentifier();
-			Keyframes = new();
+			Keyframes = [];
 		}
 
 

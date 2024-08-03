@@ -346,7 +346,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <returns>The read vertex chunks.</returns>
 		public static VertexChunk?[] ReadArray(EndianStackReader reader, uint address)
 		{
-			List<VertexChunk?> result = new();
+			List<VertexChunk?> result = [];
 
 			VertexChunkType readType()
 			{

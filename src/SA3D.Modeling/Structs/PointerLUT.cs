@@ -59,7 +59,7 @@ namespace SA3D.Modeling.Structs
 		/// <summary>
 		/// Creates a new empty LUT.
 		/// </summary>
-		public PointerLUT() : this(new()) { }
+		public PointerLUT() : this([]) { }
 
 		/// <inheritdoc/>
 		protected override void AddEntry(uint address, object value)

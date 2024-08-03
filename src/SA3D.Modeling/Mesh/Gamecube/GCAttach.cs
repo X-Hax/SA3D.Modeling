@@ -53,7 +53,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 
 		internal GCAttach(GCVertexSet[] vertexData, GCMesh[] opaqueMeshes, GCMesh[] transprentMeshes)
 		{
-			VertexData = new();
+			VertexData = [];
 			foreach(GCVertexSet v in vertexData)
 			{
 				if(VertexData.ContainsKey(v.Type))
@@ -209,7 +209,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <inheritdoc/>
 		public override GCAttach Clone()
 		{
-			Dictionary<GCVertexType, GCVertexSet> vertexSets = new();
+			Dictionary<GCVertexType, GCVertexSet> vertexSets = [];
 			foreach(KeyValuePair<GCVertexType, GCVertexSet> t in VertexData)
 			{
 				vertexSets.Add(t.Key, t.Value.Clone());

@@ -121,7 +121,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 			bool hasColors,
 			bool hasNormals)
 		{
-			SortedSet<int> dependingNodes = new();
+			SortedSet<int> dependingNodes = [];
 
 			bool storesWeights = vertices.Any(x => x.Weights != null);
 
@@ -163,7 +163,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 				vertices,
 				triangleSets,
 				materials,
-				new(),
+				[],
 				dependingNodes,
 				hasColors,
 				hasNormals);
@@ -371,13 +371,13 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <returns>Whether the model contained degenerate triangles that have been removed.</returns>
 		public bool EnsurePolygonsValid()
 		{
-			List<BufferCorner[]> newTriangleSets = new();
-			List<BufferMaterial> newMaterials = new();
+			List<BufferCorner[]> newTriangleSets = [];
+			List<BufferMaterial> newMaterials = [];
 			bool changed = false;
 
 			for(int i = 0; i < TriangleSets.Length; i++)
 			{
-				List<int> degenerates = new();
+				List<int> degenerates = [];
 
 				BufferCorner[] triangles = TriangleSets[i];
 				for(int j = 0; j < triangles.Length; j += 3)
@@ -409,7 +409,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 				}
 				else
 				{
-					List<BufferCorner> newTriangles = new();
+					List<BufferCorner> newTriangles = [];
 					for(int j = 0; j < triangles.Length; j += 3)
 					{
 						if(degenerates.Count > 0 && degenerates[0] == j)
@@ -442,7 +442,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <param name="meshes">The meshes to correct.</param>
 		public static void EnsurePolygonsValid(ref WeightedMesh[] meshes)
 		{
-			List<WeightedMesh> newWBAs = new();
+			List<WeightedMesh> newWBAs = [];
 			bool changed = false;
 
 			foreach(WeightedMesh wba in meshes)
@@ -480,10 +480,10 @@ namespace SA3D.Modeling.Mesh.Weighted
 				return meshes.First();
 			}
 
-			List<WeightedVertex> vertices = new();
-			List<BufferCorner[]> corners = new();
-			List<BufferMaterial> materials = new();
-			SortedSet<int> dependingNodes = new();
+			List<WeightedVertex> vertices = [];
+			List<BufferCorner[]> corners = [];
+			List<BufferMaterial> materials = [];
+			SortedSet<int> dependingNodes = [];
 			bool hasColors = false;
 			bool hasNormals = false;
 
@@ -556,7 +556,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 				vertices.ToArray(),
 				corners.ToArray(),
 				materials.ToArray(),
-				new(),
+				[],
 				dependingNodes,
 				hasColors,
 				hasNormals);
@@ -585,7 +585,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 
 					if(list == null)
 					{
-						list = new();
+						list = [];
 						sharedRoots[rootIndex] = list;
 					}
 
@@ -598,7 +598,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 				return meshes;
 			}
 
-			List<WeightedMesh> result = new();
+			List<WeightedMesh> result = [];
 
 			for(int i = 0; i < sharedRoots.Length; i++)
 			{
