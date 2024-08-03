@@ -10,7 +10,7 @@ namespace SA3D.Modeling.Mesh.Converters
 {
 	internal abstract class OffsetableAttachConverter<TResult> where TResult : IOffsetableAttachResult
 	{
-		protected abstract TResult ConvertWeightless(WeightedMesh wba, bool optimize);
+		protected abstract TResult ConvertWeightless(WeightedMesh wba, bool optimize, out int[]? vertexMapping);
 
 		protected abstract TResult ConvertWeighted(WeightedMesh wba, bool optimize);
 
@@ -20,16 +20,19 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		protected abstract Attach CombineAttaches(List<Attach> attaches, string label);
 
-		public void Convert(Node model, WeightedMesh[] meshData, bool optimize)
+		public void Convert(Node model, WeightedMesh[] meshData, bool optimize, out int[]?[] vertexMapping)
 		{
 			List<TResult> results = [];
+			vertexMapping = new int[]?[meshData.Length];
 			(Node node, Matrix4x4 worldMatrix)[] nodeMatrices = model.GetWorldMatrixTree();
 
-			foreach(WeightedMesh wba in meshData)
+			for(int i = 0; i < meshData.Length; i++)
 			{
+				WeightedMesh wba = meshData[i];
+
 				if(!wba.IsWeighted)
 				{
-					results.Add(ConvertWeightless(wba, optimize));
+					results.Add(ConvertWeightless(wba, optimize, out vertexMapping[i]));
 				}
 				else
 				{
@@ -39,18 +42,18 @@ namespace SA3D.Modeling.Mesh.Converters
 					{
 						Matrix4x4 baseMatrix = nodeMatrices[rootIndex].worldMatrix;
 
-						for(int i = 0; i < attachIndices.Length; i++)
+						for(int j = 0; j < attachIndices.Length; j++)
 						{
-							int nodeIndex = result.AttachIndices[i] + rootIndex;
-							attachIndices[i] = nodeIndex;
+							int nodeIndex = result.AttachIndices[j] + rootIndex;
+							attachIndices[j] = nodeIndex;
 
 							Matrix4x4 nodeMatrix = nodeMatrices[nodeIndex].worldMatrix;
 							Matrix4x4.Invert(nodeMatrix, out Matrix4x4 invNodeMatrix);
 							Matrix4x4 vertexMatrix = baseMatrix * invNodeMatrix;
 							Matrix4x4 normalMatrix = vertexMatrix.GetNormalMatrix();
 
-							CorrectSpace(attaches[i], vertexMatrix, normalMatrix);
-							attaches[i].RecalculateBounds();
+							CorrectSpace(attaches[j], vertexMatrix, normalMatrix);
+							attaches[j].RecalculateBounds();
 						}
 					}
 

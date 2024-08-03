@@ -432,7 +432,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			WeightedMesh.ToModel(model, weightedMeshes, AttachFormat.Buffer, optimize);
+			WeightedMesh.ToModel(model, weightedMeshes, AttachFormat.Buffer, optimize, out _);
 
 			foreach(KeyValuePair<Node, BasicAttach> nodeAttach in attachLUT)
 			{

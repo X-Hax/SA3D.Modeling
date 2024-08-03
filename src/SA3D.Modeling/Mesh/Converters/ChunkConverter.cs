@@ -443,7 +443,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			protected override ChunkResult ConvertWeightless(WeightedMesh wba, bool optimize)
+			protected override ChunkResult ConvertWeightless(WeightedMesh wba, bool optimize, out int[]? vertexMapping)
 			{
 				ChunkVertex[] vertices;
 				ChunkCorner[][] cornerSets = new ChunkCorner[wba.TriangleSets.Length][];
@@ -453,6 +453,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					type = VertexChunkType.Diffuse;
 					List<ChunkVertex> colorVertices = [];
+					List<int> colorVertexMapping = [];
 					for(int i = 0; i < wba.TriangleSets.Length; i++)
 					{
 						BufferCorner[] bufferCorners = wba.TriangleSets[i];
@@ -466,12 +467,13 @@ namespace SA3D.Modeling.Mesh.Converters
 
 							WeightedVertex vertex = wba.Vertices[bc.VertexIndex];
 							colorVertices.Add(new(vertex.Position, bc.Color, Color.ColorWhite));
+							colorVertexMapping.Add(bc.VertexIndex);
 						}
 
 						cornerSets[i] = corners;
 					}
 
-					// first, get rid of all duplicate vertices
+					// get rid of all duplicate vertices
 					if(colorVertices.TryCreateDistinctMap(out DistinctMap<ChunkVertex> distinctVerts))
 					{
 						for(int i = 0; i < cornerSets.Length; i++)
@@ -482,6 +484,16 @@ namespace SA3D.Modeling.Mesh.Converters
 								corners[j].Index = distinctVerts[corners[j].Index];
 							}
 						}
+
+						vertexMapping = new int[distinctVerts.Values.Count];
+						for(int i = 0; i < colorVertexMapping.Count; i++)
+						{
+							vertexMapping[distinctVerts.Map![i]] = colorVertexMapping[i];
+						}
+					}
+					else
+					{
+						vertexMapping = colorVertexMapping.ToArray();
 					}
 
 					vertices = distinctVerts.ValueArray;
@@ -490,6 +502,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					type = VertexChunkType.Normal;
 					vertices = new ChunkVertex[wba.Vertices.Length];
+					vertexMapping = null;
 					// converting the vertices 1:1, with normal information
 					for(int i = 0; i < wba.Vertices.Length; i++)
 					{
@@ -648,9 +661,9 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 		}
 
-		public static void ConvertWeightedToChunk(Node model, WeightedMesh[] meshData, bool optimize)
+		public static void ConvertWeightedToChunk(Node model, WeightedMesh[] meshData, bool optimize, out int[]?[] vertexMapping)
 		{
-			new OffsettableChunkConverter().Convert(model, meshData, optimize);
+			new OffsettableChunkConverter().Convert(model, meshData, optimize, out vertexMapping);
 		}
 
 		#region Convert to Buffer

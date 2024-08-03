@@ -212,7 +212,7 @@ namespace SA3D.Modeling.ObjectData
 					BasicConverter.ConvertWeightedToBasic(rootNode, weightedMeshes, optimize);
 					break;
 				case AttachFormat.CHUNK:
-					ChunkConverter.ConvertWeightedToChunk(rootNode, weightedMeshes, optimize);
+					ChunkConverter.ConvertWeightedToChunk(rootNode, weightedMeshes, optimize, out _);
 					break;
 				case AttachFormat.GC:
 					GCConverter.ConvertWeightedToGC(rootNode, weightedMeshes, optimize);

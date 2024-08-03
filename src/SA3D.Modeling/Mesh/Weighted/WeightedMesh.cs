@@ -314,16 +314,19 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// </summary>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
+		/// <param name="vertexMapping">Vertex index mapping for formats, where vertices may rearrange. 
+		/// <br/> If a meshes vertices have been rearranged (weighted meshes excluded), then the mapping is set up like: 
+		/// <code>vertexMapping[mesh_index][new_vertex_index] = old_vertex_index</code></param>
 		/// <returns>The converted attach.</returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public Attach ToAttach(AttachFormat format, bool optimize)
+		public Attach ToAttach(AttachFormat format, bool optimize, out int[]?[] vertexMapping)
 		{
 			HashSet<int> backup = new(RootIndices);
 			RootIndices.Clear();
 			RootIndices.Add(0);
 
 			Node dummy = new();
-			ToModel(dummy, new[] { this }, format, optimize);
+			ToModel(dummy, [this], format, optimize, out vertexMapping);
 
 			RootIndices.Clear();
 			RootIndices.UnionWith(backup);
@@ -338,23 +341,28 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <param name="meshes">Meshes to convert.</param>
 		/// <param name="format">Attach format to convert to.</param>
 		/// <param name="optimize">Whether to optimize the mesh info.</param>
-		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize)
+		/// <param name="vertexMapping">Vertex index mapping for formats, where vertices may rearrange. 
+		/// <br/> If a meshes vertices have been rearranged (weighted meshes excluded), then the mapping is set up like: 
+		/// <code>vertexMapping[mesh_index][new_vertex_index] = old_vertex_index</code></param>
+		public static void ToModel(Node model, WeightedMesh[] meshes, AttachFormat format, bool optimize, out int[]?[] vertexMapping)
 		{
 			EnsurePolygonsValid(ref meshes);
 
 			switch(format)
 			{
 				case AttachFormat.Buffer:
-					FromWeightedConverter.Convert(model, meshes, optimize);
+					FromWeightedConverter.Convert(model, meshes, optimize, out vertexMapping);
 					break;
 				case AttachFormat.BASIC:
 					BasicConverter.ConvertWeightedToBasic(model, meshes, optimize);
+					vertexMapping = new int[]?[meshes.Length];
 					break;
 				case AttachFormat.CHUNK:
-					ChunkConverter.ConvertWeightedToChunk(model, meshes, optimize);
+					ChunkConverter.ConvertWeightedToChunk(model, meshes, optimize, out vertexMapping);
 					break;
 				case AttachFormat.GC:
 					GCConverter.ConvertWeightedToGC(model, meshes, optimize);
+					vertexMapping = new int[]?[meshes.Length];
 					break;
 				default:
 					throw new ArgumentException("Invalid attach format.", nameof(format));

@@ -1,1 +1,2 @@
-﻿
+﻿SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> SA3D.Modeling.Mesh.Attach!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> void

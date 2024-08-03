@@ -116,11 +116,12 @@ namespace SA3D.Modeling.Mesh.Converters
 					attaches);
 			}
 
-			protected override BufferResult ConvertWeightless(WeightedMesh wba, bool optimize)
+			protected override BufferResult ConvertWeightless(WeightedMesh wba, bool optimize, out int[]? vertexMapping)
 			{
 				List<BufferMesh> meshes = [];
 
 				BufferVertex[] vertices = new BufferVertex[wba.Vertices.Length];
+				vertexMapping = null;
 
 				for(int i = 0; i < vertices.Length; i++)
 				{
@@ -141,7 +142,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					vertices.Length,
 					false,
 					wba.RootIndices.ToArray(),
-					new Attach[] { new(result) });
+					[new(result)]);
 			}
 
 			private static BufferMesh[] GetPolygonMeshes(WeightedMesh wba, bool optimize)
@@ -215,9 +216,9 @@ namespace SA3D.Modeling.Mesh.Converters
 
 		}
 
-		public static void Convert(Node model, WeightedMesh[] meshData, bool optimize)
+		public static void Convert(Node model, WeightedMesh[] meshData, bool optimize, out int[]?[] vertexMapping)
 		{
-			new OffsettableBufferConverter().Convert(model, meshData, optimize);
+			new OffsettableBufferConverter().Convert(model, meshData, optimize, out vertexMapping);
 		}
 	}
 }
