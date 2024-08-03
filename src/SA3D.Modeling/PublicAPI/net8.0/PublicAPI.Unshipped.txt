@@ -1,7 +1,1 @@
-﻿SA3D.Modeling.Mesh.Weighted.WeightedMesh.HasNormals.get -> bool
-SA3D.Modeling.ObjectData.Node.AutoNodeAttributes(bool overrideExisting = false) -> void
-static SA3D.Modeling.Mesh.Weighted.WeightedMesh.Create(SA3D.Modeling.Mesh.Weighted.WeightedVertex[]! vertices, SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]! triangleSets, SA3D.Modeling.Mesh.Buffer.BufferMaterial[]! materials, bool hasColors, bool hasNormals) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
-static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other) -> bool
-static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other, float epsilon) -> bool
-static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other) -> bool
-static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other, float epsilon) -> bool
+﻿

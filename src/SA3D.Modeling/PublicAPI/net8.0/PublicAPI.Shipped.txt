@@ -1274,6 +1274,7 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid() -> bool
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.ForceVertexColors.get -> bool
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.ForceVertexColors.set -> void
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.HasColors.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.HasNormals.get -> bool
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.IsWeighted.get -> bool
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.get -> string?
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Label.set -> void
@@ -1519,6 +1520,7 @@ SA3D.Modeling.ObjectData.Node.Attach.get -> SA3D.Modeling.Mesh.Attach?
 SA3D.Modeling.ObjectData.Node.Attach.set -> void
 SA3D.Modeling.ObjectData.Node.AttachCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Attributes.get -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Node.AutoNodeAttributes(bool overrideExisting = false) -> void
 SA3D.Modeling.ObjectData.Node.BufferMeshData(bool optimize) -> void
 SA3D.Modeling.ObjectData.Node.CheckHasBranchAttaches() -> bool
 SA3D.Modeling.ObjectData.Node.CheckHasTreeWeightedMesh() -> bool
@@ -1879,6 +1881,7 @@ static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteArray(SA3D.Common.IO.EndianS
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultColorParam -> ushort
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultNormalParam -> ushort
 static SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions.Write(this SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter! parameter, SA3D.Common.IO.EndianStackWriter! writer) -> void
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.Create(SA3D.Modeling.Mesh.Weighted.WeightedVertex[]! vertices, SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]! triangleSets, SA3D.Modeling.Mesh.Buffer.BufferMaterial[]! materials, bool hasColors, bool hasNormals) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid(ref SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.Attach! attach, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
@@ -1968,6 +1971,10 @@ static SA3D.Modeling.Structs.QuaternionUtilities.RealLerp(System.Numerics.Quater
 static SA3D.Modeling.Structs.VectorUtilities.CalculateAverage(System.Numerics.Vector3[]! points) -> System.Numerics.Vector3
 static SA3D.Modeling.Structs.VectorUtilities.CalculateCenter(System.Collections.Generic.IEnumerable<System.Numerics.Vector3>! points) -> System.Numerics.Vector3
 static SA3D.Modeling.Structs.VectorUtilities.GreatestValue(this System.Numerics.Vector3 vector) -> float
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector2 value, System.Numerics.Vector2 other, float epsilon) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other) -> bool
+static SA3D.Modeling.Structs.VectorUtilities.IsDistanceApproximate(this System.Numerics.Vector3 value, System.Numerics.Vector3 other, float epsilon) -> bool
 static SA3D.Modeling.Structs.VectorUtilities.NormalToXZAngles(this System.Numerics.Vector3 normal) -> System.Numerics.Vector3
 static SA3D.Modeling.Structs.VectorUtilities.XZAnglesToNormal(this System.Numerics.Vector3 rotation) -> System.Numerics.Vector3
 virtual SA3D.Modeling.Mesh.Attach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
