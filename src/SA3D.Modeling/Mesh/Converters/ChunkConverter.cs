@@ -548,14 +548,6 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			private static PolyChunk[] CreateStripChunk(ChunkCorner[] corners, BufferMaterial material, bool writeSpecular, byte texcoordPrecision)
 			{
-				ChunkCorner[][] stripCorners = TriangleStrippifier.Global.StrippifyNoDegen(corners, out bool[] reversed);
-				ChunkStrip[] strips = new ChunkStrip[stripCorners.Length];
-
-				for(int i = 0; i < strips.Length; i++)
-				{
-					strips[i] = new(stripCorners[i], reversed[i]);
-				}
-
 				bool hasUV = material.UseTexture && !material.NormalMapping;
 				PolyChunkType stripType = !hasUV
 					? PolyChunkType.Strip_Blank
@@ -563,16 +555,47 @@ namespace SA3D.Modeling.Mesh.Converters
 					? PolyChunkType.Strip_HDTex
 					: PolyChunkType.Strip_Tex;
 
-				StripChunk stripchunk = new(stripType, strips, 0)
+				ChunkCorner[][] stripCorners = TriangleStrippifier.Global.StrippifyNoDegen(corners, out bool[] reversed);
+				List<ChunkStrip[]> stripCollections = [];
+				List<ChunkStrip> currentStrips = [];
+				uint currentStripsSize = 0;
+
+				int stripTexcoordCount = stripType.GetStripTexCoordCount();
+				bool stripHasNormals = stripType.CheckStripHasNormals();
+				bool stripHasColors = stripType.CheckStripHasColors();
+
+				for(int i = 0; i < stripCorners.Length; i++)
 				{
-					FlatShading = material.Flat,
-					IgnoreAmbient = material.NoAmbient,
-					IgnoreLight = material.NoLighting,
-					IgnoreSpecular = material.NoSpecular,
-					EnvironmentMapping = material.NormalMapping,
-					UseAlpha = material.UseAlpha,
-					DoubleSide = !material.BackfaceCulling
-				};
+					ChunkStrip strip = new(stripCorners[i], reversed[i]);
+
+					uint stripSize = strip.Size(stripTexcoordCount, stripHasNormals, stripHasColors, 0);
+					if(currentStripsSize + stripSize > ChunkStrip.MaxByteSize)
+					{
+						currentStripsSize = 0;
+						stripCollections.Add([.. currentStrips]);
+						currentStrips.Clear();
+					}
+
+					currentStripsSize += stripSize;
+					currentStrips.Add(strip);
+				}
+
+				stripCollections.Add([.. currentStrips]);
+
+				StripChunk[] stripchunks = new StripChunk[stripCollections.Count];
+				for(int i = 0; i < stripchunks.Length; i++)
+				{
+					stripchunks[i] = new(stripType, stripCollections[i], 0)
+					{
+						FlatShading = material.Flat,
+						IgnoreAmbient = material.NoAmbient,
+						IgnoreLight = material.NoLighting,
+						IgnoreSpecular = material.NoSpecular,
+						EnvironmentMapping = material.NormalMapping,
+						UseAlpha = material.UseAlpha,
+						DoubleSide = !material.BackfaceCulling
+					};
+				}
 
 				TextureChunk textureChunk = new()
 				{
@@ -599,7 +622,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					materialChunk.SpecularExponent = (byte)material.SpecularExponent;
 				}
 
-				return new PolyChunk[] { materialChunk, textureChunk, stripchunk };
+				return [materialChunk, textureChunk, .. stripchunks];
 			}
 
 			protected override void CorrectSpace(Attach attach, Matrix4x4 vertexMatrix, Matrix4x4 normalMatrix)

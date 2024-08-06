@@ -10,6 +10,11 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 	public struct ChunkStrip : ICloneable
 	{
 		/// <summary>
+		/// Maximum allowed size of a (collection of) strip chunk(s)
+		/// </summary>
+		public const uint MaxByteSize = ushort.MaxValue - 4;
+
+		/// <summary>
 		/// Triangle corners. 
 		/// <br/> The first two corners are only used for their index.
 		/// </summary>

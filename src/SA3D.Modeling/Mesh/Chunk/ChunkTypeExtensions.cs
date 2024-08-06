@@ -116,18 +116,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 		}
 
 		/// <summary>
-		/// Checks whether a vertex chunktype has diffuse colors
-		/// </summary>
-		/// <param name="type">The type to check.</param>
-		/// <returns></returns>
-		public static bool CheckStripHasColor(this PolyChunkType type)
-		{
-			return type is PolyChunkType.Strip_Color
-				or PolyChunkType.Strip_TexColor
-				or PolyChunkType.Strip_HDTexColor;
-		}
-
-		/// <summary>
 		/// Returns the number of 4-byte values a chunk vertex has.
 		/// </summary>
 		/// <param name="type">Type to get the size of.</param>
@@ -166,6 +154,90 @@ namespace SA3D.Modeling.Mesh.Chunk
 				default:
 					throw new ArgumentException($"Invalid vertex chunk type: {type}", nameof(type));
 			}
+		}
+
+
+		/// <summary>
+		/// Checks whether a polychunk type is a type of strip chunk.
+		/// </summary>
+		/// <param name="type">The type to check.</param>
+		public static bool CheckIsStrip(this PolyChunkType type)
+		{
+			return (int)type >= _strip && type <= PolyChunkType.Strip_HDTexDouble;
+		}
+
+		/// <summary>
+		/// Returns the number of texture coordinate sets by strip chunk type. 
+		/// <br/> Throws an error if <paramref name="type"/> is not a strip chunk type.
+		/// </summary>
+		/// <param name="type">Type to get the strip chunk texture coordinate set count of.</param>
+		public static int GetStripTexCoordCount(this PolyChunkType type)
+		{
+			if(!type.CheckIsStrip())
+			{
+				throw new ArgumentException($"Polychunk type \"{type}\" is not a strip chunk type!", nameof(type));
+			}
+			else if(type is PolyChunkType.Strip_Tex
+					or PolyChunkType.Strip_HDTex
+					or PolyChunkType.Strip_TexNormal
+					or PolyChunkType.Strip_HDTexNormal
+					or PolyChunkType.Strip_TexColor
+					or PolyChunkType.Strip_HDTexColor)
+			{
+				return 1;
+			}
+			else if(type is PolyChunkType.Strip_TexDouble
+				or PolyChunkType.Strip_HDTexDouble)
+			{
+				return 2;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Checks whether a strip chunk type contains HD texture coordinates.
+		/// <br/> Throws an error if <paramref name="type"/> is not a strip chunk type.
+		/// </summary>
+		/// <param name="type">Type to check</param>
+		public static bool CheckStripHasHDTexcoords(this PolyChunkType type)
+		{
+			return !type.CheckIsStrip()
+				? throw new ArgumentException($"Polychunk type \"{type}\" is not a strip chunk type!", nameof(type))
+				: type is PolyChunkType.Strip_HDTex
+				or PolyChunkType.Strip_HDTexColor
+				or PolyChunkType.Strip_HDTexNormal
+				or PolyChunkType.Strip_HDTexDouble;
+		}
+
+		/// <summary>
+		/// Checks whether a strip chunk type contains colors.
+		/// <br/> Throws an error if <paramref name="type"/> is not a strip chunk type.
+		/// </summary>
+		/// <param name="type">Type to check</param>
+		public static bool CheckStripHasColors(this PolyChunkType type)
+		{
+			return !type.CheckIsStrip()
+				? throw new ArgumentException($"Polychunk type \"{type}\" is not a strip chunk type!", nameof(type))
+				: type is PolyChunkType.Strip_Color
+				or PolyChunkType.Strip_TexColor
+				or PolyChunkType.Strip_HDTexColor;
+		}
+
+		/// <summary>
+		/// Checks whether a strip chunk type contains normals.
+		/// <br/> Throws an error if <paramref name="type"/> is not a strip chunk type.
+		/// </summary>
+		/// <param name="type">Type to check</param>
+		public static bool CheckStripHasNormals(this PolyChunkType type)
+		{
+			return !type.CheckIsStrip()
+				? throw new ArgumentException($"Polychunk type \"{type}\" is not a strip chunk type!", nameof(type))
+				: type is PolyChunkType.Strip_Normal
+				or PolyChunkType.Strip_TexNormal
+				or PolyChunkType.Strip_HDTexNormal;
 		}
 	}
 }

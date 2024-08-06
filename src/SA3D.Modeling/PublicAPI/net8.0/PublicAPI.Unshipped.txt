@@ -1,2 +1,8 @@
-﻿SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> SA3D.Modeling.Mesh.Attach!
+﻿const SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.MaxByteSize = 65531 -> uint
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> SA3D.Modeling.Mesh.Attach!
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsStrip(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasColors(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasHDTexcoords(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasNormals(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetStripTexCoordCount(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> int
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> void

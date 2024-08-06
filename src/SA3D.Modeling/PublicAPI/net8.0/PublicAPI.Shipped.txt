@@ -1846,7 +1846,6 @@ static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasSpecularColor(this S
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasWeights(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsNormal32(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsVec4(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
-static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasColor(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> ushort
 static SA3D.Modeling.Mesh.Chunk.PolyChunk.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk!
 static SA3D.Modeling.Mesh.Chunk.PolyChunk.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk?[]!

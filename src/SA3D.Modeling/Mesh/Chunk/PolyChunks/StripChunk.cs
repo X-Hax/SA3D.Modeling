@@ -17,55 +17,22 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// The number of texture coordinate sets the polygons utilize.
 		/// </summary>
-		public int TexcoordCount
-		{
-			get
-			{
-				if(Type is PolyChunkType.Strip_Tex
-					or PolyChunkType.Strip_HDTex
-					or PolyChunkType.Strip_TexNormal
-					or PolyChunkType.Strip_HDTexNormal
-					or PolyChunkType.Strip_TexColor
-					or PolyChunkType.Strip_HDTexColor)
-				{
-					return 1;
-				}
-				else if(Type is PolyChunkType.Strip_TexDouble
-					or PolyChunkType.Strip_HDTexDouble)
-				{
-					return 2;
-				}
-				else
-				{
-					return 0;
-				}
-			}
-		}
+		public int TexcoordCount => Type.GetStripTexCoordCount();
 
 		/// <summary>
 		/// Whether texture coordinates are in the 0-1023 range, instead of 0-255.
 		/// </summary>
-		public bool HasHDTexcoords =>
-			Type is PolyChunkType.Strip_HDTex
-				or PolyChunkType.Strip_HDTexColor
-				or PolyChunkType.Strip_HDTexNormal
-				or PolyChunkType.Strip_HDTexDouble;
+		public bool HasHDTexcoords => Type.CheckStripHasHDTexcoords();
 
 		/// <summary>
 		/// Whether polygons utilize normals.
 		/// </summary>
-		public bool HasNormals =>
-			Type is PolyChunkType.Strip_Normal
-			or PolyChunkType.Strip_TexNormal
-			or PolyChunkType.Strip_HDTexNormal;
+		public bool HasNormals => Type.CheckStripHasNormals();
 
 		/// <summary>
 		/// Whether polygons utilize colors.
 		/// </summary>
-		public bool HasColors =>
-			Type is PolyChunkType.Strip_Color
-			or PolyChunkType.Strip_TexColor
-			or PolyChunkType.Strip_HDTexColor;
+		public bool HasColors => Type.CheckStripHasColors();
 
 		#endregion
 
@@ -222,7 +189,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			{
 				uint result = RawSize;
 
-				if(result > ushort.MaxValue)
+				if(result * 2 > ushort.MaxValue)
 				{
 					throw new InvalidOperationException($"Strip chunk size ({result}) exceeds maximum size ({ushort.MaxValue}).");
 				}
