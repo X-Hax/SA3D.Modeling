@@ -10,6 +10,7 @@ const SA3D.Modeling.Mesh.Basic.BasicMesh.StructSizeDX = 28 -> uint
 const SA3D.Modeling.Mesh.Buffer.BufferCorner.StructSize = 14 -> uint
 const SA3D.Modeling.Mesh.Buffer.BufferCorner.StructSizeNoColor = 10 -> uint
 const SA3D.Modeling.Mesh.Buffer.BufferMaterial.StructSize = 32 -> uint
+const SA3D.Modeling.Mesh.Chunk.Structs.ChunkStrip.MaxByteSize = 131068 -> uint
 const SA3D.Modeling.ObjectData.Node.StructSize = 52 -> uint
 override SA3D.Modeling.Animation.Motion.ToString() -> string!
 override SA3D.Modeling.File.ModelFile.ToString() -> string!
@@ -1282,6 +1283,7 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.Materials.get -> SA3D.Modeling.Mesh.Buf
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.RootIndices.get -> System.Collections.Generic.HashSet<int>!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.TexcoordPrecisionLevel.get -> byte
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.TexcoordPrecisionLevel.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToAttach(SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> SA3D.Modeling.Mesh.Attach!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.TriangleSets.get -> SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.Vertices.get -> SA3D.Modeling.Mesh.Weighted.WeightedVertex[]!
 SA3D.Modeling.Mesh.Weighted.WeightedMesh.WriteSpecular.get -> bool
@@ -1845,8 +1847,13 @@ static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasNormal(this SA3D.Mod
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasSpecularColor(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasWeights(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsNormal32(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsStrip(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsVec4(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasColors(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasHDTexcoords(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckStripHasNormals(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> ushort
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetStripTexCoordCount(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> int
 static SA3D.Modeling.Mesh.Chunk.PolyChunk.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk!
 static SA3D.Modeling.Mesh.Chunk.PolyChunk.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Chunk.PolyChunk?[]!
 static SA3D.Modeling.Mesh.Chunk.PolyChunk.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Chunk.PolyChunk?>! chunks, SA3D.Modeling.Structs.PointerLUT! lut) -> uint
@@ -1885,6 +1892,7 @@ static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.At
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeAtRoots(SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh![]!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.MergeWeightedMeshes(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Weighted.WeightedMesh!>! meshes) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
+static SA3D.Modeling.Mesh.Weighted.WeightedMesh.ToModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes, SA3D.Modeling.Mesh.AttachFormat format, bool optimize, out int[]?[]! vertexMapping) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator !=(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.Mesh.Weighted.WeightedVertex.operator ==(SA3D.Modeling.Mesh.Weighted.WeightedVertex left, SA3D.Modeling.Mesh.Weighted.WeightedVertex right) -> bool
 static SA3D.Modeling.ObjectData.Enums.EnumExtensions.CheckIsCollision(this SA3D.Modeling.ObjectData.Enums.SurfaceAttributes attributes) -> bool
