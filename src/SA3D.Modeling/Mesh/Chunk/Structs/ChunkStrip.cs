@@ -12,7 +12,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <summary>
 		/// Maximum allowed size of a (collection of) strip chunk(s)
 		/// </summary>
-		public const uint MaxByteSize = ushort.MaxValue - 4;
+		public const uint MaxByteSize = (ushort.MaxValue * 2) - 2;
 
 		/// <summary>
 		/// Triangle corners. 

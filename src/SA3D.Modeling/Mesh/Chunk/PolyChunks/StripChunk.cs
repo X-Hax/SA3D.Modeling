@@ -167,7 +167,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		{
 			get
 			{
-				uint result = 2;
+				uint result = 2; // header ushort; strip count and triangle attributes
 
 				int texcoordCount = TexcoordCount;
 				bool hasNormals = HasNormals;
@@ -189,7 +189,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			{
 				uint result = RawSize;
 
-				if(result * 2 > ushort.MaxValue)
+				if(result > ushort.MaxValue)
 				{
 					throw new InvalidOperationException($"Strip chunk size ({result}) exceeds maximum size ({ushort.MaxValue}).");
 				}
