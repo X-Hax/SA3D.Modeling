@@ -50,12 +50,12 @@ namespace SA3D.Modeling.ObjectData.Enums
 		NoMorph = Flag32.B7,
 
 		/// <summary>
-		/// ?
+		/// If the mesh bounds are out of view, skip children (for drawing)
 		/// </summary>
 		Clip = Flag32.B8,
 
 		/// <summary>
-		/// ?
+		/// unused
 		/// </summary>
 		Modifier = Flag32.B9,
 
