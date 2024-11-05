@@ -62,6 +62,16 @@ namespace SA3D.Modeling.ObjectData.Enums
 		/// <summary>
 		/// Node uses a quaternion instead of euler angle for rotation information.
 		/// </summary>
-		UseQuaternionRotation = Flag32.B10
+		UseQuaternionRotation = Flag32.B10,
+
+		/// <summary>
+		/// Cache rotation data before the object is processed
+		/// </summary>
+		CacheRotation = Flag32.B11,
+
+		/// <summary>
+		/// Use cached rotation data (see <see cref="CacheRotation"/>)
+		/// </summary>
+		ApplyCachedRotation = Flag32.B12
 	}
 }

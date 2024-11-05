@@ -1,1 +1,2 @@
-﻿
+﻿SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedRotation = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheRotation = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
