@@ -191,7 +191,10 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 			}
 
-			return new BasicAttach(positions, normals, attach.Meshes, attach.Materials);
+			return new BasicAttach(positions, normals, attach.Meshes, attach.Materials)
+			{
+				MeshBounds = attach.MeshBounds
+			};
 		}
 
 		public static BasicAttach CreateBasicAttach(WeightedVertex[] vertices, BufferCorner[][] triangleSets, BufferMaterial[] bMaterials, bool hasColors, string label)

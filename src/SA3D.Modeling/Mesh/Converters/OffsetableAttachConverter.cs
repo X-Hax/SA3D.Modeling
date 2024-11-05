@@ -53,7 +53,6 @@ namespace SA3D.Modeling.Mesh.Converters
 							Matrix4x4 normalMatrix = vertexMatrix.GetNormalMatrix();
 
 							CorrectSpace(attaches[j], vertexMatrix, normalMatrix);
-							attaches[j].RecalculateBounds();
 						}
 					}
 
@@ -86,6 +85,14 @@ namespace SA3D.Modeling.Mesh.Converters
 						results.Add(result);
 					}
 
+				}
+			}
+
+			foreach(TResult result in results)
+			{
+				foreach(Attach attach in result.Attaches)
+				{
+					attach.RecalculateBounds();
 				}
 			}
 
@@ -135,6 +142,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					string combinedLabel = string.Join('_', attaches.Select(x => x.Label));
 					node.Attach = CombineAttaches(attaches, combinedLabel);
+					node.Attach.RecalculateBounds();
 				}
 			}
 		}
