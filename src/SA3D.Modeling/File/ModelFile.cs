@@ -430,6 +430,8 @@ namespace SA3D.Modeling.File
 				case ModelFormat.SA2:
 					writer.WriteUShort(CM);
 					break;
+				case ModelFormat.SA2B:
+				case ModelFormat.Buffer:
 				default:
 					throw new ArgumentException($"Attach format {format} not supported for NJ binaries");
 			}
