@@ -227,6 +227,17 @@ namespace SA3D.Modeling.Mesh.Buffer
 			set => SetAttributes(MaterialAttributes.BackfaceCulling, value);
 		}
 
+		/// <summary>
+		/// Disable alpha testing
+		/// <br/> Wrapper around flag in <see cref="Attributes"/>.
+		/// </summary>
+		public bool NoAlphaTest
+		{
+			readonly get => HasAttributes(MaterialAttributes.NoAlphaTest);
+			set => SetAttributes(MaterialAttributes.NoAlphaTest, value);
+		}
+
+
 		#endregion
 
 		#region Gamecube Properties

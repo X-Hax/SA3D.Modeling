@@ -73,5 +73,10 @@ namespace SA3D.Modeling.Mesh.Buffer
 		/// Enables backface culling.
 		/// </summary>
 		BackfaceCulling = Flag16.B12,
+
+		/// <summary>
+		/// Disables alpha testing
+		/// </summary>
+		NoAlphaTest = Flag16.B13
 	}
 }

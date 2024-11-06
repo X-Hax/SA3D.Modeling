@@ -839,6 +839,7 @@ namespace SA3D.Modeling.Mesh.Converters
 								material.UseTexture = stripChunk.TexcoordCount > 0 || stripChunk.EnvironmentMapping;
 								material.UseAlpha = stripChunk.UseAlpha;
 								material.BackfaceCulling = !stripChunk.DoubleSide;
+								material.NoAlphaTest = stripChunk.NoAlphaTest;
 
 								BufferCorner[] corners = ConvertStripChunk(stripChunk, vertexCache);
 

@@ -109,7 +109,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <summary>
-		/// Disables Alpha Test
+		/// Disable alpha testing
 		/// <br/> 0x80 in <see cref="PolyChunk.Attributes"/>.
 		/// </summary>
 		public bool NoAlphaTest
