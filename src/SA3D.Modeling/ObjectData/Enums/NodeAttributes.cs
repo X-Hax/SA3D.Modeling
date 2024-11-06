@@ -55,7 +55,7 @@ namespace SA3D.Modeling.ObjectData.Enums
 		Clip = Flag32.B8,
 
 		/// <summary>
-		/// unused
+		/// Unused
 		/// </summary>
 		Modifier = Flag32.B9,
 
@@ -72,6 +72,11 @@ namespace SA3D.Modeling.ObjectData.Enums
 		/// <summary>
 		/// Use cached rotation data (see <see cref="CacheRotation"/>)
 		/// </summary>
-		ApplyCachedRotation = Flag32.B12
+		ApplyCachedRotation = Flag32.B12,
+
+		/// <summary>
+		/// Unused
+		/// </summary>
+		Envelope = Flag32.B13,
 	}
 }
