@@ -23,16 +23,18 @@ namespace SA3D.Modeling.Mesh.Converters
 		public void Convert(Node model, WeightedMesh[] meshData, bool optimize, out int[]?[] vertexMapping)
 		{
 			List<TResult> results = [];
+			HashSet<Attach> noBounds = [];
 			vertexMapping = new int[]?[meshData.Length];
 			(Node node, Matrix4x4 worldMatrix)[] nodeMatrices = model.GetWorldMatrixTree();
 
 			for(int i = 0; i < meshData.Length; i++)
 			{
 				WeightedMesh wba = meshData[i];
+				List<TResult> wbaResults = [];
 
 				if(!wba.IsWeighted)
 				{
-					results.Add(ConvertWeightless(wba, optimize, out vertexMapping[i]));
+					wbaResults.Add(ConvertWeightless(wba, optimize, out vertexMapping[i]));
 				}
 				else
 				{
@@ -66,7 +68,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 							CorrectVertices(rootIndex, attachIndices, attaches);
 
-							results.Add(CreateWeightedResult(
+							wbaResults.Add(CreateWeightedResult(
 								label,
 								result.VertexCount,
 								attachIndices,
@@ -82,21 +84,31 @@ namespace SA3D.Modeling.Mesh.Converters
 						}
 
 						CorrectVertices(rootIndex, result.AttachIndices, result.Attaches);
-						results.Add(result);
+						wbaResults.Add(result);
 					}
 
 				}
-			}
 
-			foreach(TResult result in results)
-			{
-				foreach(Attach attach in result.Attaches)
+				foreach(TResult result in wbaResults)
 				{
-					attach.RecalculateBounds();
+					foreach(Attach attach in result.Attaches)
+					{
+						if(wba.NoBounds)
+						{
+							noBounds.Add(attach);
+							attach.MeshBounds = default;
+						}
+						else
+						{
+							attach.RecalculateBounds();
+						}
+					}
+
+					results.Add(result);
 				}
 			}
 
-			IOffsetableAttachResult.PlanVertexOffsets(results.ToArray());
+			IOffsetableAttachResult.PlanVertexOffsets(results);
 
 			List<Attach>[] nodeAttaches = new List<Attach>[nodeMatrices.Length];
 			for(int i = 0; i < nodeAttaches.Length; i++)
@@ -142,7 +154,16 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					string combinedLabel = string.Join('_', attaches.Select(x => x.Label));
 					node.Attach = CombineAttaches(attaches, combinedLabel);
-					node.Attach.RecalculateBounds();
+
+					if(attaches.Any(noBounds.Contains))
+					{
+						node.Attach = default;
+					}
+					else
+					{
+						node.Attach.RecalculateBounds();
+					}
+
 				}
 			}
 		}

@@ -309,7 +309,14 @@ namespace SA3D.Modeling.Mesh.Converters
 					result.OptimizePolygons();
 				}
 
-				result.RecalculateBounds();
+				if(weightedMesh.NoBounds)
+				{
+					result.MeshBounds = default;
+				}
+				else
+				{
+					result.RecalculateBounds();
+				}
 
 				foreach(int index in weightedMesh.RootIndices)
 				{

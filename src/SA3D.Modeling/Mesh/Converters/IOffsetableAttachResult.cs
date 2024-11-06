@@ -16,9 +16,9 @@ namespace SA3D.Modeling.Mesh.Converters
 		/// <summary>
 		/// Checks for any vertex overlaps in the models and sets their vertex offset accordingly
 		/// </summary>
-		public static void PlanVertexOffsets<T>(T[] attaches) where T : IOffsetableAttachResult
+		public static void PlanVertexOffsets<T>(IEnumerable<T> attaches) where T : IOffsetableAttachResult
 		{
-			if(attaches.Length == 0)
+			if(!attaches.Any())
 			{
 				return;
 			}

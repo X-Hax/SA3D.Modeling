@@ -260,6 +260,11 @@ namespace SA3D.Modeling.Mesh.Converters
 					result = OptimizeBasicVertices(result);
 				}
 
+				if(weightedMesh.NoBounds)
+				{
+					result.MeshBounds = default;
+				}
+
 				foreach(int index in weightedMesh.RootIndices)
 				{
 					attaches[index] = result;

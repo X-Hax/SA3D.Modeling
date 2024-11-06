@@ -86,6 +86,10 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// </summary>
 		public byte TexcoordPrecisionLevel { get; set; }
 
+		/// <summary>
+		/// Resulting mesh data will have no bounds calculated.
+		/// </summary>
+		public bool NoBounds { get; set; }
 
 		internal WeightedMesh(
 			WeightedVertex[] vertices,

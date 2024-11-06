@@ -3,6 +3,8 @@ SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoAlphaTest.set -> void
 SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NoAlphaTest = 8192 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.NoAlphaTest.get -> bool
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.NoAlphaTest.set -> void
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.NoBounds.get -> bool
+SA3D.Modeling.Mesh.Weighted.WeightedMesh.NoBounds.set -> void
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedRotation = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheRotation = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.Envelope = 8192 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes

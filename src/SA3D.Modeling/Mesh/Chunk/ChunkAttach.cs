@@ -105,7 +105,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <inheritdoc/>
 		public override void RecalculateBounds()
 		{
-			if(PolyChunks == null || VertexChunks == null)
+			if(PolyChunks == null || VertexChunks == null || CheckHasWeights())
 			{
 				MeshBounds = default;
 				return;
@@ -128,11 +128,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 
 			MeshBounds = Bounds.FromPoints(vertexEnumerator());
-
-			if(CheckHasWeights())
-			{
-				MeshBounds = new(MeshBounds.Position, 0);
-			}
 		}
 
 		/// <inheritdoc/>
