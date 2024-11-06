@@ -714,8 +714,6 @@ SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Strips.get -> SA3D.Modeling.Mesh.
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TexcoordCount.get -> int
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TriangleAttributeCount.get -> int
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.TriangleAttributeCount.set -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UnknownAttribute.get -> bool
-SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UnknownAttribute.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UseAlpha.get -> bool
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.UseAlpha.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk

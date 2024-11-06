@@ -109,10 +109,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <summary>
-		/// Unknown effect.
+		/// Disables Alpha Test
 		/// <br/> 0x80 in <see cref="PolyChunk.Attributes"/>.
 		/// </summary>
-		public bool UnknownAttribute
+		public bool NoAlphaTest
 		{
 			get => GetAttributeBit(0x80);
 			set => SetAttributeBit(0x80, value);
