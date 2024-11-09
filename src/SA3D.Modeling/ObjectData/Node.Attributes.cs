@@ -85,12 +85,57 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
+		/// If the mesh bounds are out of view, skip children (for drawing)
+		/// </summary>
+		public bool Clip
+		{
+			get => GetNodeAttribute(NodeAttributes.Clip);
+			set => SetNodeAttribute(NodeAttributes.Clip, value);
+		}
+
+		/// <summary>
+		/// Unused
+		/// </summary>
+		public bool Modifier
+		{
+			get => GetNodeAttribute(NodeAttributes.Modifier);
+			set => SetNodeAttribute(NodeAttributes.Modifier, value);
+		}
+
+		/// <summary>
 		/// Whether the node uses quaternion rotations.
 		/// </summary>
 		public bool UseQuaternionRotation
 		{
 			get => GetNodeAttribute(NodeAttributes.UseQuaternionRotation);
 			set => SetNodeAttribute(NodeAttributes.UseQuaternionRotation, value);
+		}
+
+		/// <summary>
+		/// Cache rotation data before the object is processed
+		/// </summary>
+		public bool CacheRotation
+		{
+			get => GetNodeAttribute(NodeAttributes.CacheRotation);
+			set => SetNodeAttribute(NodeAttributes.CacheRotation, value);
+		}
+
+		/// <summary>
+		/// Use cached rotation data (see <see cref="CacheRotation"/>)
+		/// </summary>
+		public bool ApplyCachedRotation
+		{
+			get => GetNodeAttribute(NodeAttributes.ApplyCachedRotation);
+			set => SetNodeAttribute(NodeAttributes.ApplyCachedRotation, value);
+		}
+
+		/// <summary>
+		/// Unused
+		/// </summary>
+		public bool Envelope
+		{
+			get => GetNodeAttribute(NodeAttributes.Envelope);
+			set => SetNodeAttribute(NodeAttributes.Envelope, value);
 		}
 
 

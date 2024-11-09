@@ -8,3 +8,13 @@ SA3D.Modeling.Mesh.Weighted.WeightedMesh.NoBounds.set -> void
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedRotation = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheRotation = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.Envelope = 8192 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.get -> bool
+SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.set -> void
+SA3D.Modeling.ObjectData.Node.CacheRotation.get -> bool
+SA3D.Modeling.ObjectData.Node.CacheRotation.set -> void
+SA3D.Modeling.ObjectData.Node.Clip.get -> bool
+SA3D.Modeling.ObjectData.Node.Clip.set -> void
+SA3D.Modeling.ObjectData.Node.Envelope.get -> bool
+SA3D.Modeling.ObjectData.Node.Envelope.set -> void
+SA3D.Modeling.ObjectData.Node.Modifier.get -> bool
+SA3D.Modeling.ObjectData.Node.Modifier.set -> void
