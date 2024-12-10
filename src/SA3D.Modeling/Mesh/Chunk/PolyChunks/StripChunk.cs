@@ -20,7 +20,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public int TexcoordCount => Type.GetStripTexCoordCount();
 
 		/// <summary>
-		/// Whether texture coordinates are in the 0-1023 range, instead of 0-255.
+		/// Whether texture coordinates are in the 0-1024 range, instead of 0-256.
 		/// </summary>
 		public bool HasHDTexcoords => Type.CheckStripHasHDTexcoords();
 

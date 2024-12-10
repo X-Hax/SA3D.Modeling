@@ -65,7 +65,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <param name="reader">The reader to read from.</param>
 		/// <param name="address">Address at which to start reading.</param>
 		/// <param name="texcoordCount">Number of texture coordinate sets in the strip.</param>
-		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1023, instead of 0-255</param>
+		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1024, instead of 0-256</param>
 		/// <param name="hasNormal">Whether the strip has normals.</param>
 		/// <param name="hasColor">Whether the strip has colors.</param>
 		/// <param name="triangleAttributeCount">Number of attribute sets for every triangle.</param>
@@ -80,7 +80,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 
 			bool hasUV = texcoordCount > 0;
 			bool hasUV2 = texcoordCount > 1;
-			float uvMultiplier = hdTexcoord ? 1f / 1023f : 1f / 255f;
+			float uvMultiplier = hdTexcoord ? 1f / 1024f : 1f / 256f;
 
 			bool flag1 = triangleAttributeCount > 0;
 			bool flag2 = triangleAttributeCount > 1;
@@ -141,7 +141,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// </summary>
 		/// <param name="writer">The writer to write to.</param>
 		/// <param name="texcoordCount">Number of texture coordinate sets in the strip.</param>
-		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1023, instead of 0-255</param>
+		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1024, instead of 0-256</param>
 		/// <param name="hasNormal">Whether the strip has normals.</param>
 		/// <param name="hasColor">Whether the strip has colors.</param>
 		/// <param name="triangleAttributeCount">Number of attribute sets for every triangle.</param>
@@ -158,7 +158,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 
 			bool hasUV = texcoordCount > 0;
 			bool hasUV2 = texcoordCount > 1;
-			float uvMultiplier = hdTexcoord ? 1023f : 255f;
+			float uvMultiplier = hdTexcoord ? 1024f : 256f;
 
 			bool flag1 = triangleAttributeCount > 0;
 			bool flag2 = triangleAttributeCount > 1;

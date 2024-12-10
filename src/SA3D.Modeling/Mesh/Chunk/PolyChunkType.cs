@@ -148,12 +148,12 @@
 		Strip_Blank = ChunkTypeExtensions._strip + 0,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains texture coordinates (0-255 range).
+		/// Triangle strips for rendering; Contains texture coordinates (0-256 range).
 		/// </summary>
 		Strip_Tex = ChunkTypeExtensions._strip + 1,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains texture coordinates (0-1023 range).
+		/// Triangle strips for rendering; Contains texture coordinates (0-1024 range).
 		/// </summary>
 		Strip_HDTex = ChunkTypeExtensions._strip + 2,
 
@@ -163,12 +163,12 @@
 		Strip_Normal = ChunkTypeExtensions._strip + 3,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains normals, texture coordinates (0-255 range).
+		/// Triangle strips for rendering; Contains normals, texture coordinates (0-256 range).
 		/// </summary>
 		Strip_TexNormal = ChunkTypeExtensions._strip + 4,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains normals, texture coordinates (0-1023 range).
+		/// Triangle strips for rendering; Contains normals, texture coordinates (0-1024 range).
 		/// </summary>
 		Strip_HDTexNormal = ChunkTypeExtensions._strip + 5,
 
@@ -178,12 +178,12 @@
 		Strip_Color = ChunkTypeExtensions._strip + 6,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains colors (ARGB32), texture coordinates (0-255 range).
+		/// Triangle strips for rendering; Contains colors (ARGB32), texture coordinates (0-256 range).
 		/// </summary>
 		Strip_TexColor = ChunkTypeExtensions._strip + 7,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains colors (ARGB32), texture coordinates (0-1023 range).
+		/// Triangle strips for rendering; Contains colors (ARGB32), texture coordinates (0-1024 range).
 		/// </summary>
 		Strip_HDTexColor = ChunkTypeExtensions._strip + 8,
 
@@ -193,12 +193,12 @@
 		Strip_BlankDouble = ChunkTypeExtensions._strip + 9,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains 2 sets of texture coordinates (0-255 range).
+		/// Triangle strips for rendering; Contains 2 sets of texture coordinates (0-256 range).
 		/// </summary>
 		Strip_TexDouble = ChunkTypeExtensions._strip + 10,
 
 		/// <summary>
-		/// Triangle strips for rendering; Contains 2 sets of texture coordinates (0-1023 range).
+		/// Triangle strips for rendering; Contains 2 sets of texture coordinates (0-1024 range).
 		/// </summary>
 		Strip_HDTexDouble = ChunkTypeExtensions._strip + 11,
 

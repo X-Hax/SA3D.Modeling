@@ -282,7 +282,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 				case GCVertexType.TexCoord7:
 					foreach(Vector2 uv in Vector2Data)
 					{
-						writer.WriteVector2(uv * 255f, FloatIOType.Short);
+						writer.WriteVector2(uv * 256f, FloatIOType.Short);
 					}
 
 					break;
@@ -405,7 +405,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 					Vector2[] uvData = new Vector2[count];
 					for(int i = 0; i < count; i++)
 					{
-						uvData[i] = reader.ReadVector2(ref dataAddr, FloatIOType.Short) / 255f;
+						uvData[i] = reader.ReadVector2(ref dataAddr, FloatIOType.Short) / 256f;
 					}
 
 					setdata = uvData;
