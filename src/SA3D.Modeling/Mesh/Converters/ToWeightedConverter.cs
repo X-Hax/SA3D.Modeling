@@ -412,9 +412,9 @@ namespace SA3D.Modeling.Mesh.Converters
 			}
 			else
 			{
-				SortedSet<int> absoluteDepends = new(dependingMeshNodeIndices.Select(x => _meshNodeIndexMapping[x]));
+				SortedSet<int> absoluteDepends = [.. dependingMeshNodeIndices.Select(x => _meshNodeIndexMapping[x])];
 				rootNodeIndex = ComputeCommonNodeIndex(_nodes, absoluteDepends);
-				dependingRelativeNodeIndices = new(absoluteDepends.Select(x => x - rootNodeIndex));
+				dependingRelativeNodeIndices = [.. absoluteDepends.Select(x => x - rootNodeIndex)];
 
 				vertices = EvaluateWeightVertices(dependingMeshNodeIndices, rootNodeIndex, out hasNormals);
 				label = _nodes[absoluteDepends.Max].Attach!.Label;

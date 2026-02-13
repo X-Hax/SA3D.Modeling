@@ -512,7 +512,7 @@ namespace SA3D.Modeling.ObjectData
 
 				geometry = data.TryReadPointer(geometryLoc, out uint geometryAddr)
 					? lut.GetAddLabeledValue(geometryAddr, "collist_", onReadGeometry)
-					: (ILabeledArray<LandEntry>)new LabeledArray<LandEntry>("collist_" + identifier, 0);
+					: new LabeledArray<LandEntry>("collist_" + identifier, 0);
 
 				LabeledArray<LandEntryMotion> onReadAnims()
 				{
@@ -529,7 +529,7 @@ namespace SA3D.Modeling.ObjectData
 
 				anim = animAddr != 0
 					? lut.GetAddLabeledValue(animAddr, "animlist_", onReadAnims)
-					: (ILabeledArray<LandEntryMotion>)new LabeledArray<LandEntryMotion>("animlist_" + identifier, 0);
+					: new LabeledArray<LandEntryMotion>("animlist_" + identifier, 0);
 
 				if(data.TryReadPointer(texNameLoc, out uint texNameAddr))
 				{

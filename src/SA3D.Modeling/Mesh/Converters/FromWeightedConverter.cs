@@ -109,7 +109,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				attaches[lastIndex] = new(meshes.ToArray());
 
 				return new(
-					wba.Label ?? "BUFFER_" + StringExtensions.GenerateIdentifier(),
+					wba.Label ?? ("BUFFER_" + StringExtensions.GenerateIdentifier()),
 					wba.Vertices.Length,
 					true,
 					nodeIndices,
@@ -138,7 +138,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				BufferMesh[] result = BufferMesh.CompressLayout(meshes);
 
 				return new(
-					wba.Label ?? "BUFFER_" + StringExtensions.GenerateIdentifier(),
+					wba.Label ?? ("BUFFER_" + StringExtensions.GenerateIdentifier()),
 					vertices.Length,
 					false,
 					wba.RootIndices.ToArray(),

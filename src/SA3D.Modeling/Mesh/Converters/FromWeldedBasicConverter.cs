@@ -308,7 +308,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					}
 					else
 					{
-						polygonCorners.Add(new(resultCorners));
+						polygonCorners.Add([.. resultCorners]);
 						materials.Add(material);
 					}
 				}
@@ -325,7 +325,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				.Select(x => x.VertexIndex)
 				.ToHashSet();
 
-			List<WeightedVertex> newVertices = new(_outVertices);
+			List<WeightedVertex> newVertices = [.. _outVertices];
 			ushort[] map = new ushort[_outVertices.Length];
 
 			ushort realIndex = (ushort)(usedVertices.Count - 1);
@@ -391,7 +391,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 			foreach(Node[] group in weldingGroups)
 			{
-				SortedSet<int> dependencyNodes = new(group.Select(x => nodeIndices[x]));
+				SortedSet<int> dependencyNodes = [.. group.Select(x => nodeIndices[x])];
 				int rootNodeIndex = ToWeightedConverter.ComputeCommonNodeIndex(nodes, dependencyNodes);
 
 				WeightedMesh? mesh = new FromWeldedBasicConverter(nodes[rootNodeIndex], group, nodeIndices).Process();

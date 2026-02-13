@@ -253,7 +253,7 @@ namespace SA3D.Modeling.Mesh.Converters
 					weightedMesh.TriangleSets,
 					weightedMesh.Materials,
 					weightedMesh.HasColors,
-					weightedMesh.Label ?? "BASIC_" + StringExtensions.GenerateIdentifier());
+					weightedMesh.Label ?? ("BASIC_" + StringExtensions.GenerateIdentifier()));
 
 				if(optimize)
 				{
@@ -332,6 +332,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				{
 					BufferCorner[] strip = new BufferCorner[poly.Indices.Length];
 
+					/* This is how NPolys should work IF sonic team had implemented them correctly
 					if(mesh.PolygonType == BasicPolygonType.NPoly)
 					{
 						strip[0] = new BufferCorner(
@@ -368,15 +369,14 @@ namespace SA3D.Modeling.Mesh.Converters
 
 						absoluteIndex += strip.Length;
 					}
-					else
+					*/
+
+					for(int i = 0; i < strip.Length; i++, absoluteIndex++)
 					{
-						for(int i = 0; i < strip.Length; i++, absoluteIndex++)
-						{
-							strip[i] = new BufferCorner(
-								poly.Indices[i],
-								mesh.Colors?[absoluteIndex] ?? BufferMesh.DefaultColor,
-								mesh.Texcoords?[absoluteIndex] ?? Vector2.Zero);
-						}
+						strip[i] = new BufferCorner(
+							poly.Indices[i],
+							mesh.Colors?[absoluteIndex] ?? BufferMesh.DefaultColor,
+							mesh.Texcoords?[absoluteIndex] ?? Vector2.Zero);
 					}
 
 					strips[stripNum] = strip;
