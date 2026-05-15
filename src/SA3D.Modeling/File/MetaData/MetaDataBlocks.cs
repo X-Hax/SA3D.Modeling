@@ -30,8 +30,8 @@ namespace SA3D.Modeling.File.MetaData
 
 		private void ReadVersion0(BinaryObjectReader reader, MetaDataIOContext context)
 		{
-			AddBlock(reader.ReadObjectOffset<Blocks.AnimationFilesMetaDataBlock, MetaDataIOContext>(context));
-			AddBlock(reader.ReadObjectOffset<Blocks.MorphFilesMetaDataBlock, MetaDataIOContext>(context));
+			AddBlock(reader.ReadObjectOffset<AnimationFilesMetaDataBlock, MetaDataIOContext>(context));
+			AddBlock(reader.ReadObjectOffset<MorphFilesMetaDataBlock, MetaDataIOContext>(context));
 		}
 
 		private void ReadVersion1(BinaryObjectReader reader, MetaDataIOContext context)
@@ -41,7 +41,7 @@ namespace SA3D.Modeling.File.MetaData
 				ReadVersion0(reader, context);
 			}
 
-			AddBlock(reader.ReadObjectOffset<Blocks.LabelsMetaDataBlock, MetaDataIOContext>(context));
+			AddBlock(reader.ReadObjectOffset<LabelsMetaDataBlock, MetaDataIOContext>(context));
 		}
 
 		private void ReadVersion2Up(BinaryObjectReader reader, MetaDataIOContext context)
@@ -51,16 +51,16 @@ namespace SA3D.Modeling.File.MetaData
 			{
 				AddBlock(type switch
 				{
-					MetaDataBlockType.Label => reader.ReadObject<Blocks.LabelsMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.Animation => reader.ReadObject<Blocks.AnimationFilesMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.Morph => reader.ReadObject<Blocks.MorphFilesMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.Author => reader.ReadObject<Blocks.AuthorMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.Description => reader.ReadObject<Blocks.DescriptionMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.ActionName => reader.ReadObject<Blocks.ActionNameMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.ObjectName => reader.ReadObject<Blocks.ObjectNameMetaDataBlock, MetaDataIOContext>(context),
-					MetaDataBlockType.Weight => reader.ReadObject<Blocks.WeightsMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Label => reader.ReadObject<LabelsMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Animation => reader.ReadObject<AnimationFilesMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Morph => reader.ReadObject<MorphFilesMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Author => reader.ReadObject<AuthorMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Description => reader.ReadObject<DescriptionMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.ActionName => reader.ReadObject<ActionNameMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.ObjectName => reader.ReadObject<ObjectNameMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Weight => reader.ReadObject<WeightsMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.End => throw new UnreachableException(),
-					_ => reader.ReadObject<Blocks.UnknownMetaDataBlock, MetaDataIOContext>(context),
+					_ => reader.ReadObject<UnknownMetaDataBlock, MetaDataIOContext>(context),
 				});
 
 				type = (MetaDataBlockType)reader.ReadUInt32();
