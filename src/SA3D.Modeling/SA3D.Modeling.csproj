@@ -3,7 +3,7 @@
 	<Import Project="../SA3D.ProjectConfigurations/NuGet.Build.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>SA3D.Modeling</RootNamespace>
 	</PropertyGroup>
 
