@@ -43,7 +43,6 @@ namespace SA3D.Modeling.File
 		/// Creates a new animation file
 		/// </summary>
 		/// <param name="animation">Animation of the file.</param>
-		/// <param name="metaData">Metadata in the file.</param>
 		public AnimationFile(Animation animation)
 		{
 			Animation = animation;

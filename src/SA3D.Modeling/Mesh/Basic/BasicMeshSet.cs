@@ -23,17 +23,17 @@ namespace SA3D.Modeling.Mesh.Basic
 		public const string PolygonLabelPrefix = "polygons_";
 
 		/// <summary>
-		/// Default label prefix for <see cref="NormalsLabel"/>
+		/// Default label prefix for <see cref="Normals"/>
 		/// </summary>
 		public const string NormalsLabelPrefix = "polygon_normals_";
 
 		/// <summary>
-		/// Default label prefix for <see cref="ColorsLabel"/>
+		/// Default label prefix for <see cref="Colors"/>
 		/// </summary>
 		public const string ColorsLabelPrefix = "polygon_colors_";
 
 		/// <summary>
-		/// Default label prefix for <see cref="TexcoordsLabel"/>
+		/// Default label prefix for <see cref="TextureCoordinates"/>
 		/// </summary>
 		public const string TextureCoordinatesLabelPrefix = "polygon_texcoords_";
 
