@@ -16,7 +16,7 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Animation file contents.
 	/// </summary>
-	public class AnimationFile : IFile<AnimationFileIOContext>
+	public class AnimationFile : IFileSerializable<AnimationFileIOContext>
 	{
 		/// <summary>
 		/// Whether the file is an NJ binary.

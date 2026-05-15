@@ -300,10 +300,10 @@ SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.get -> uint
 SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.init -> void
 SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.get -> bool
 SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.init -> void
-SA3D.Modeling.File.File
-SA3D.Modeling.File.IFile
-SA3D.Modeling.File.IFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
-SA3D.Modeling.File.IFile<T>
+SA3D.Modeling.File.FileUtil
+SA3D.Modeling.File.IFileSerializable
+SA3D.Modeling.File.IFileSerializable.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.IFileSerializable<T>
 SA3D.Modeling.File.LevelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
 SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.Level!
 SA3D.Modeling.File.LevelFile.Level.set -> void
@@ -1042,21 +1042,21 @@ static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuate
 static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
 static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
 static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion) -> void
-static SA3D.Modeling.File.File.CheckBytes<T>(byte[]! data) -> bool
-static SA3D.Modeling.File.File.CheckFile<T>(string! filepath) -> bool
-static SA3D.Modeling.File.File.CheckStream<T>(System.IO.Stream! stream) -> bool
-static SA3D.Modeling.File.File.ReadFromBytes<T, C>(byte[]! data, C context) -> T
-static SA3D.Modeling.File.File.ReadFromBytes<T>(byte[]! data) -> T
-static SA3D.Modeling.File.File.ReadFromFile<T, C>(string! filepath, C context) -> T
-static SA3D.Modeling.File.File.ReadFromFile<T>(string! filepath) -> T
-static SA3D.Modeling.File.File.ReadFromStream<T, C>(System.IO.Stream! stream, C context) -> T
-static SA3D.Modeling.File.File.ReadFromStream<T>(System.IO.Stream! stream) -> T
-static SA3D.Modeling.File.File.WriteToBytes<T, C>(this T file, C context) -> byte[]!
-static SA3D.Modeling.File.File.WriteToBytes<T>(this T file) -> byte[]!
-static SA3D.Modeling.File.File.WriteToFile<T, C>(this T file, C context, string! filepath) -> void
-static SA3D.Modeling.File.File.WriteToFile<T>(this T file, string! filepath) -> void
-static SA3D.Modeling.File.File.WriteToStream<T, C>(this T file, C context, System.IO.Stream! stream) -> void
-static SA3D.Modeling.File.File.WriteToStream<T>(this T file, System.IO.Stream! stream) -> void
+static SA3D.Modeling.File.FileUtil.CheckBytes<T>(byte[]! data) -> bool
+static SA3D.Modeling.File.FileUtil.CheckFile<T>(string! filepath) -> bool
+static SA3D.Modeling.File.FileUtil.CheckStream<T>(System.IO.Stream! stream) -> bool
+static SA3D.Modeling.File.FileUtil.ReadFromBytes<T, C>(byte[]! data, C context) -> T
+static SA3D.Modeling.File.FileUtil.ReadFromBytes<T>(byte[]! data) -> T
+static SA3D.Modeling.File.FileUtil.ReadFromFile<T, C>(string! filepath, C context) -> T
+static SA3D.Modeling.File.FileUtil.ReadFromFile<T>(string! filepath) -> T
+static SA3D.Modeling.File.FileUtil.ReadFromStream<T, C>(System.IO.Stream! stream, C context) -> T
+static SA3D.Modeling.File.FileUtil.ReadFromStream<T>(System.IO.Stream! stream) -> T
+static SA3D.Modeling.File.FileUtil.WriteToBytes<T, C>(this T file, C context) -> byte[]!
+static SA3D.Modeling.File.FileUtil.WriteToBytes<T>(this T file) -> byte[]!
+static SA3D.Modeling.File.FileUtil.WriteToFile<T, C>(this T file, C context, string! filepath) -> void
+static SA3D.Modeling.File.FileUtil.WriteToFile<T>(this T file, string! filepath) -> void
+static SA3D.Modeling.File.FileUtil.WriteToStream<T, C>(this T file, C context, System.IO.Stream! stream) -> void
+static SA3D.Modeling.File.FileUtil.WriteToStream<T>(this T file, System.IO.Stream! stream) -> void
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeightNode left, SA3D.Modeling.File.MetaData.Weights.MetaWeightNode right) -> bool

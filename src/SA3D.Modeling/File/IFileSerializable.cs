@@ -5,7 +5,7 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Base file interface
 	/// </summary>
-	public interface IFile : IBinarySerializable
+	public interface IFileSerializable : IBinarySerializable
 	{
 		/// <summary>
 		/// Check whether the data behind a reader can be read as the file
@@ -18,5 +18,5 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Base file interface (with a context)
 	/// </summary>
-	public interface IFile<T> : IBinarySerializable<T>, IFile { }
+	public interface IFileSerializable<T> : IBinarySerializable<T>, IFileSerializable { }
 }
