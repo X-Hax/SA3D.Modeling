@@ -4,21 +4,21 @@ using System;
 namespace SA3D.Modeling.ObjectData.Events
 {
 	/// <summary>
-	/// Arguments for the <see cref="AttachUpdatedEventHandler"/>.
+	/// Arguments for the <see cref="MeshDataUpdatedEventHandler"/>.
 	/// </summary>
-	public class AttachUpdatedEventArgs : EventArgs
+	public class MeshDataUpdatedEventArgs : EventArgs
 	{
 		/// <summary>
-		/// Attach before changing.
+		/// Meshdata before changing.
 		/// </summary>
 		public MeshData? OldMeshData { get; }
 
 		/// <summary>
-		/// Attach after changing.
+		/// Meshdata after changing.
 		/// </summary>
 		public MeshData? NewMeshData { get; }
 
-		internal AttachUpdatedEventArgs(MeshData? oldMeshData, MeshData? newMeshData)
+		internal MeshDataUpdatedEventArgs(MeshData? oldMeshData, MeshData? newMeshData)
 		{
 			OldMeshData = oldMeshData;
 			NewMeshData = newMeshData;
@@ -30,5 +30,5 @@ namespace SA3D.Modeling.ObjectData.Events
 	/// </summary>
 	/// <param name="node">Node that has raised the event.</param>
 	/// <param name="args">Arguments passed to the event.</param>
-	public delegate void AttachUpdatedEventHandler(Node node, AttachUpdatedEventArgs args);
+	public delegate void MeshDataUpdatedEventHandler(Node node, MeshDataUpdatedEventArgs args);
 }

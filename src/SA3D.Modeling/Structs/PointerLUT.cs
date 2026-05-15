@@ -19,7 +19,7 @@ namespace SA3D.Modeling.Structs
 		/// <summary>
 		/// Pointer dictionary for attaches.
 		/// </summary>
-		public PointerDictionary<MeshData> Attaches { get; }
+		public PointerDictionary<MeshData> MeshData { get; }
 
 		/// <summary>
 		/// Pointer dictionary for motions.
@@ -43,7 +43,7 @@ namespace SA3D.Modeling.Structs
 		public PointerLUT(Dictionary<long, string> labels) : base(labels)
 		{
 			Nodes = new();
-			Attaches = new();
+			MeshData = new();
 			Motions = new();
 			NodeMotions = new();
 			Other = new();
@@ -63,7 +63,7 @@ namespace SA3D.Modeling.Structs
 					Nodes.Add(address, node);
 					break;
 				case MeshData attach:
-					Attaches.Add(address, attach);
+					MeshData.Add(address, attach);
 					break;
 				case Animation motion:
 					Motions.Add(address, motion);

@@ -14,13 +14,13 @@ namespace SA3D.Modeling.Mesh
 		/// <param name="attachFormat"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static Format ToFormat(this AttachFormat attachFormat)
+		public static Format ToFormat(this MeshFormat attachFormat)
 		{
 			return attachFormat switch
 			{
-				AttachFormat.Basic => Format.Basic,
-				AttachFormat.Chunk => Format.Chunk,
-				AttachFormat.Ginja => Format.Ginja,
+				MeshFormat.Basic => Format.Basic,
+				MeshFormat.Chunk => Format.Chunk,
+				MeshFormat.Ginja => Format.Ginja,
 				_ => throw new InvalidOperationException(),
 			};
 		}

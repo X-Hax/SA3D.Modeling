@@ -46,8 +46,8 @@ namespace SA3D.Modeling.Mesh.Ginja
 		public LabeledArray<GinjaMeshSet>? TransparentMeshes { get; set; }
 
 		/// <inheritdoc/>
-		public override AttachFormat MeshFormat
-			=> AttachFormat.Ginja;
+		public override MeshFormat MeshFormat
+			=> MeshFormat.Ginja;
 
 		/// <inheritdoc/>
 		public override string LabelPrefix => "ginjaMesh_";

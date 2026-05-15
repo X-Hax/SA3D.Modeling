@@ -40,7 +40,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Node should be skipped for attach related evaluations. Required if node has no attach.
+		/// Node should be skipped for meshdata related evaluations. Required if node has no meshdata.
 		/// </summary>
 		public bool SkipDraw
 		{
@@ -166,7 +166,7 @@ namespace SA3D.Modeling.ObjectData
 			NoScale = (overrideExisting && NoScale) || Scale.IsDistanceApproximate(Vector3.One);
 			NoRotation = (overrideExisting && NoRotation) || EulerRotation.IsDistanceApproximate(Vector3.Zero);
 			SkipChildren = (overrideExisting && SkipChildren) || Child == null;
-			SkipDraw = (overrideExisting && SkipDraw) || Attach == null;
+			SkipDraw = (overrideExisting && SkipDraw) || MeshData == null;
 		}
 
 		/// <summary>

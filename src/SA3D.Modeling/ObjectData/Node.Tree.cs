@@ -216,7 +216,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <exception cref="InvalidOperationException"/>
 		public void InsertBefore(Node node)
 		{
-			CheckAttachCompatibility(node);
+			CheckMeshDataCompatibility(node);
 
 			node.Detach();
 
@@ -243,7 +243,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <exception cref="InvalidOperationException"/>
 		public void InsertAfter(Node node)
 		{
-			CheckAttachCompatibility(node);
+			CheckMeshDataCompatibility(node);
 
 			node.Detach();
 
@@ -262,7 +262,7 @@ namespace SA3D.Modeling.ObjectData
 		{
 			if(Child == null)
 			{
-				CheckAttachCompatibility(node);
+				CheckMeshDataCompatibility(node);
 				node.Detach();
 
 				node.Parent = this;
@@ -340,7 +340,7 @@ namespace SA3D.Modeling.ObjectData
 
 			if(node != null)
 			{
-				CheckAttachCompatibility(node);
+				CheckMeshDataCompatibility(node);
 			}
 
 			DetachChildren(true);
@@ -378,7 +378,7 @@ namespace SA3D.Modeling.ObjectData
 
 			if(node != null)
 			{
-				CheckAttachCompatibility(node);
+				CheckMeshDataCompatibility(node);
 			}
 
 			DetachSuccessors(true);

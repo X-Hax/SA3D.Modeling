@@ -22,12 +22,12 @@ namespace SA3D.Modeling.ObjectData
 			set
 			{
 				_model.OnTransformsUpdated -= OnTransformsUpdated;
-				_model.OnAttachUpdated -= OnAttachUpdated;
+				_model.OnMeshDataUpdated -= OnMeshDataUpdated;
 
 				_model = value;
 
 				_model.OnTransformsUpdated += OnTransformsUpdated;
-				_model.OnAttachUpdated += OnAttachUpdated;
+				_model.OnMeshDataUpdated += OnMeshDataUpdated;
 			}
 		}
 
@@ -65,13 +65,13 @@ namespace SA3D.Modeling.ObjectData
 		{
 			_model = node;
 			_model.OnTransformsUpdated += OnTransformsUpdated;
-			_model.OnAttachUpdated += OnAttachUpdated;
+			_model.OnMeshDataUpdated += OnMeshDataUpdated;
 
 			UpdateBounds();
 		}
 
 
-		private void OnAttachUpdated(Node node, AttachUpdatedEventArgs args)
+		private void OnMeshDataUpdated(Node node, MeshDataUpdatedEventArgs args)
 		{
 			UpdateBounds();
 		}
@@ -82,18 +82,18 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Copies the Attach-bounds and applies the landentries transform matrix to them
+		/// Copies the Meshdata-bounds and applies the landentries transform matrix to them
 		/// </summary>
 		public void UpdateBounds()
 		{
-			if(Model.Attach == null)
+			if(Model.MeshData == null)
 			{
 				ModelBounds = default;
 				return;
 			}
 
-			Vector3 position = Vector3.Transform(Model.Attach.MeshBounds.Position, Model.QuaternionRotation) + Model.Position;
-			float radius = Model.Attach.MeshBounds.Radius * Model.Scale.GreatestValue();
+			Vector3 position = Vector3.Transform(Model.MeshData.MeshBounds.Position, Model.QuaternionRotation) + Model.Position;
+			float radius = Model.MeshData.MeshBounds.Radius * Model.Scale.GreatestValue();
 			ModelBounds = new(position, radius);
 		}
 

@@ -192,39 +192,39 @@ namespace SA3D.Modeling.ObjectData
 
 		#endregion
 
-		#region Attaches
+		#region Meshdata
 
 		/// <summary>
-		/// Iterates over the attaches of the entire tree, starting at the root node.
+		/// Iterates over the meshdata of the entire tree, starting at the root node.
 		/// <br/> First <see cref="Child"/>, then <see cref="Next"/>.
 		/// </summary>
-		public IEnumerable<MeshData> GetTreeAttachEnumerable()
+		public IEnumerable<MeshData> GetTreeMeshDataEnumerable()
 		{
 			foreach(Node node in GetTreeNodeEnumerable())
 			{
-				if(node.Attach != null)
+				if(node.MeshData != null)
 				{
-					yield return node.Attach;
+					yield return node.MeshData;
 				}
 			}
 		}
 
 		/// <summary>
-		/// Returns the number of attaches in the entire tree, starting at the root node.
+		/// Returns the number of meshdata in the entire tree, starting at the root node.
 		/// </summary>
 		/// <returns></returns>
-		public int GetTreeAttachCount()
+		public int GetTreeMeshDataCount()
 		{
-			return GetTreeAttachEnumerable().Count();
+			return GetTreeMeshDataEnumerable().Count();
 		}
 
 		/// <summary>
-		/// Returns the attaches in the entire tree, starting at the root node.
+		/// Returns the meshdata in the entire tree, starting at the root node.
 		/// <br/> First <see cref="Child"/>, then <see cref="Next"/>.
 		/// </summary>
-		public MeshData[] GetTreeAttaches()
+		public MeshData[] GetTreeMeshData()
 		{
-			return GetTreeAttachEnumerable().ToArray();
+			return GetTreeMeshDataEnumerable().ToArray();
 		}
 
 		#endregion
