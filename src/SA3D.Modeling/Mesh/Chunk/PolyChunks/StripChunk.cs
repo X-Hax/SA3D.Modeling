@@ -1,6 +1,8 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.Structs;
 using System;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
@@ -10,42 +12,16 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// </summary>
 	public class StripChunk : SizedChunk
 	{
-		private int _triangleAttributeCount;
-
-		#region Type dependent properties
-
-		/// <summary>
-		/// The number of texture coordinate sets the polygons utilize.
-		/// </summary>
-		public int TexcoordCount => Type.GetStripTexCoordCount();
-
-		/// <summary>
-		/// Whether texture coordinates are in the 0-1024 range, instead of 0-256.
-		/// </summary>
-		public bool HasHDTexcoords => Type.CheckStripHasHDTexcoords();
-
-		/// <summary>
-		/// Whether polygons utilize normals.
-		/// </summary>
-		public bool HasNormals => Type.CheckStripHasNormals();
-
-		/// <summary>
-		/// Whether polygons utilize colors.
-		/// </summary>
-		public bool HasColors => Type.CheckStripHasColors();
-
-		#endregion
-
 		#region Attribute Properties
 
 		/// <summary>
-		/// Ignores lighting as a whole.
+		/// Enables fullbright (no diffuse lighting &amp; ambient light set to white. Priority over <see cref="IgnoreAmbient"/>)
 		/// <br/> 0x01 in <see cref="PolyChunk.Attributes"/>.
 		/// </summary>
 		public bool IgnoreLight
 		{
-			get => GetAttributeBit(1);
-			set => SetAttributeBit(0x01, value);
+			get => GetAttributeFlag(1);
+			set => SetAttributeFlag(0x01, value);
 		}
 
 		/// <summary>
@@ -54,8 +30,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool IgnoreSpecular
 		{
-			get => GetAttributeBit(2);
-			set => SetAttributeBit(0x02, value);
+			get => GetAttributeFlag(2);
+			set => SetAttributeFlag(0x02, value);
 		}
 
 		/// <summary>
@@ -64,8 +40,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool IgnoreAmbient
 		{
-			get => GetAttributeBit(4);
-			set => SetAttributeBit(0x04, value);
+			get => GetAttributeFlag(4);
+			set => SetAttributeFlag(0x04, value);
 		}
 
 		/// <summary>
@@ -74,8 +50,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool UseAlpha
 		{
-			get => GetAttributeBit(8);
-			set => SetAttributeBit(0x08, value);
+			get => GetAttributeFlag(8);
+			set => SetAttributeFlag(0x08, value);
 		}
 
 		/// <summary>
@@ -84,8 +60,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool DoubleSide
 		{
-			get => GetAttributeBit(0x10);
-			set => SetAttributeBit(0x10, value);
+			get => GetAttributeFlag(0x10);
+			set => SetAttributeFlag(0x10, value);
 		}
 
 		/// <summary>
@@ -94,8 +70,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool FlatShading
 		{
-			get => GetAttributeBit(0x20);
-			set => SetAttributeBit(0x20, value);
+			get => GetAttributeFlag(0x20);
+			set => SetAttributeFlag(0x20, value);
 		}
 
 		/// <summary>
@@ -104,26 +80,57 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public bool EnvironmentMapping
 		{
-			get => GetAttributeBit(0x40);
-			set => SetAttributeBit(0x40, value);
+			get => GetAttributeFlag(0x40);
+			set => SetAttributeFlag(0x40, value);
 		}
 
 		/// <summary>
-		/// Disable alpha testing
+		/// Extended alpha bit; Used by SA2B and the RenderFix mod
 		/// <br/> 0x80 in <see cref="PolyChunk.Attributes"/>.
 		/// </summary>
-		public bool NoAlphaTest
+		public bool ExtendedUseAlpha
 		{
-			get => GetAttributeBit(0x80);
-			set => SetAttributeBit(0x80, value);
+			get => GetAttributeFlag(0x80);
+			set => SetAttributeFlag(0x80, value);
 		}
 
-		private bool GetAttributeBit(byte bits)
+		/// <summary>
+		/// Alpha mode derived from <see cref="UseAlpha"/> and <see cref="ExtendedUseAlpha"/>
+		/// </summary>
+		public AlphaMode AlphaMode
+		{
+			get
+			{
+				if(UseAlpha && ExtendedUseAlpha)
+				{
+					return AlphaMode.TransparentForceAlphaClipOn;
+				}
+				else if(ExtendedUseAlpha)
+				{
+					return AlphaMode.TransparentForceAlphaClipOff;
+				}
+				else if(UseAlpha)
+				{
+					return AlphaMode.Transparent;
+				}
+				else
+				{
+					return AlphaMode.Opaque;
+				}
+			}
+			set
+			{
+				UseAlpha = value is AlphaMode.Transparent or AlphaMode.TransparentForceAlphaClipOn;
+				ExtendedUseAlpha = value is AlphaMode.TransparentForceAlphaClipOn or AlphaMode.TransparentForceAlphaClipOff;
+			}
+		}
+
+		private bool GetAttributeFlag(byte bits)
 		{
 			return (Attributes & bits) != 0;
 		}
 
-		private void SetAttributeBit(byte bits, bool value)
+		private void SetAttributeFlag(byte bits, bool value)
 		{
 			if(value)
 			{
@@ -141,14 +148,14 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// Triangle strips making up the polygons.
 		/// </summary>
-		public ChunkStrip[] Strips { get; private set; }
+		public ChunkStrip[] Strips { get; set; }
 
 		/// <summary>
 		/// Number of custom attributes for each triangle.
 		/// </summary>
 		public int TriangleAttributeCount
 		{
-			get => _triangleAttributeCount;
+			get => field;
 			set
 			{
 				if(value is < 0 or > 3)
@@ -156,141 +163,208 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 					throw new ArgumentOutOfRangeException(nameof(value), "Value out of range. Must be between 0 and 3.");
 				}
 
-				_triangleAttributeCount = value;
-			}
-		}
-
-		/// <summary>
-		/// Raw size not constrained to 16 bits.
-		/// </summary>
-		public uint RawSize
-		{
-			get
-			{
-				uint result = 2; // header ushort; strip count and triangle attributes
-
-				int texcoordCount = TexcoordCount;
-				bool hasNormals = HasNormals;
-				bool hasColors = HasColors;
-
-				foreach(ChunkStrip str in Strips)
-				{
-					result += str.Size(texcoordCount, hasNormals, hasColors, _triangleAttributeCount);
-				}
-
-				return result / 2;
+				field = value;
 			}
 		}
 
 		/// <inheritdoc/>
 		public override ushort Size
-		{
-			get
-			{
-				uint result = RawSize;
+			=> (ushort)uint.Clamp(CalculateByteSize() / 2, 0, ushort.MaxValue);
 
-				if(result > ushort.MaxValue)
-				{
-					throw new InvalidOperationException($"Strip chunk size ({result}) exceeds maximum size ({ushort.MaxValue}).");
-				}
-
-				return (ushort)result;
-			}
-		}
 
 		/// <summary>
-		/// Creates a new strip chunk.
+		/// Creates a new, empty strip chunk.
 		/// </summary>
-		/// <param name="type">Type of strip chunk.</param>
-		/// <param name="strips">Triangle strips.</param>
-		/// <param name="triangleAttributeCount">Number of custom attributes for each triangle.</param>
-		/// <exception cref="ArgumentException"></exception>
-		public StripChunk(PolyChunkType type, ChunkStrip[] strips, int triangleAttributeCount) : base(type)
+		public StripChunk() : base(PolyChunkType.Strip_Blank)
 		{
-			if(type is < PolyChunkType.Strip_Blank or > PolyChunkType.Strip_HDTexDouble)
-			{
-				throw new ArgumentException($"Type \"{type}\" is not a valid strip chunk type!");
-			}
-
-			Strips = strips;
-			TriangleAttributeCount = triangleAttributeCount;
+			Strips = [];
 		}
 
-		/// <summary>
-		/// Creates a new strip chunk.
-		/// </summary>
-		/// <param name="type">Type of strip chunk.</param>
-		/// <param name="stripCount">Number of strips to create the stripchunk with.</param>
-		/// <param name="triangleAttributeCount">Number of custom attributes for each triangle.</param>
-		/// <exception cref="ArgumentException"></exception>
-		public StripChunk(PolyChunkType type, ushort stripCount, int triangleAttributeCount)
-			: this(type, new ChunkStrip[stripCount], triangleAttributeCount) { }
 
+		/// <inheritdoc/>
+		protected override bool IsTypeApplicable(PolyChunkType type)
+		{
+			return type is >= PolyChunkType.Strip_Blank and <= PolyChunkType.Strip_HDTexDouble;
+		}
 
 		/// <summary>
 		/// Changes the type of the strip chunk.
 		/// </summary>
 		public void ChangeType(PolyChunkType type)
 		{
-			if(type is < PolyChunkType.Strip_Blank or > PolyChunkType.Strip_HDTexDouble)
-			{
-				throw new ArgumentException($"Type \"{type}\" is not a valid strip chunk type!");
-			}
-
 			Type = type;
 		}
 
-
-		internal static StripChunk Read(EndianStackReader reader, ref uint address)
+		/// <summary>
+		/// Calculate the chunks size.
+		/// </summary>
+		/// <returns></returns>
+		public uint CalculateByteSize()
 		{
-			ushort header = reader.ReadUShort(address);
-			ushort header2 = reader.ReadUShort(address + 4);
+			uint result = 2; // header ushort; strip count and triangle attributes
 
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			byte attribs = (byte)(header >> 8);
-			ushort polyCount = (ushort)(header2 & 0x3FFFu);
-			byte triangleAttributeCount = (byte)(header2 >> 14);
+			uint structSize = (uint)(
+				2u // vertex index
+				+ (Type.GetStripTexCoordCount() * 4u)
+				+ (Type.CheckStripHasNormals() ? 12u : 0u)
+				+ (Type.CheckStripHasColors() ? 4u : 0u)
+			);
 
-			StripChunk result = new(type, polyCount, triangleAttributeCount)
+			foreach(ChunkStrip str in Strips)
 			{
-				Attributes = attribs
-			};
-
-			address += 6;
-
-			int texcoordCount = result.TexcoordCount;
-			bool hasNormals = result.HasNormals;
-			bool hasColors = result.HasColors;
-			bool hdTexcoord = result.HasHDTexcoords;
-
-			for(int i = 0; i < polyCount; i++)
-			{
-				result.Strips[i] = ChunkStrip.Read(reader, ref address, texcoordCount, hdTexcoord, hasNormals, hasColors, triangleAttributeCount);
+				result += (uint)(
+					2u // strip header
+					+ (str.Corners.Length * structSize) // individual corners
+					+ ((str.Corners.Length - 2) * TriangleAttributeCount * 2) // triangle attributes
+				);
 			}
 
 			return result;
 		}
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		public override void Read(BinaryObjectReader reader)
+		{
+			base.Read(reader);
+
+			ushort stripData = reader.ReadUInt16();
+			Strips = new ChunkStrip[stripData & 0x3FFFu];
+			TriangleAttributeCount = (byte)(stripData >> 14);
+
+			bool hasNormals = Type.CheckStripHasNormals();
+			bool hasColors = Type.CheckStripHasColors();
+
+			bool hasUV = Type.GetStripTexCoordCount() > 0;
+			bool hasUV2 = Type.GetStripTexCoordCount() > 1;
+
+			bool flag1 = TriangleAttributeCount > 0;
+			bool flag2 = TriangleAttributeCount > 1;
+			bool flag3 = TriangleAttributeCount > 2;
+
+			for(int i = 0; i < Strips.Length; i++)
+			{
+				short header = reader.ReadInt16();
+				bool reverse = header < 0;
+				ChunkCorner[] corners = new ChunkCorner[Math.Abs(header)];
+
+				for(int j = 0; j < corners.Length; j++)
+				{
+					ChunkCorner c = ChunkCorner.DefaultValues;
+					c.Index = reader.ReadUInt16();
+
+					if(hasUV)
+					{
+						c.Texcoord = reader.ReadVector2(FloatIOType.Short);
+
+						if(hasUV2)
+						{
+							c.Texcoord2 = reader.ReadVector2(FloatIOType.Short);
+						}
+					}
+
+					if(hasNormals)
+					{
+						c.Normal = reader.ReadVector3(FloatIOType.NormalizedShort);
+					}
+
+					if(hasColors)
+					{
+						c.Color = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
+					}
+
+					if(flag1 && j > 1)
+					{
+						c.Attributes1 = reader.ReadUInt16();
+						if(flag2)
+						{
+							c.Attributes2 = reader.ReadUInt16();
+							if(flag3)
+							{
+								c.Attributes3 = reader.ReadUInt16();
+							}
+						}
+					}
+
+					corners[j] = c;
+				}
+
+				Strips[i] = new ChunkStrip(corners, reverse);
+			}
+		}
+
+		/// <inheritdoc/>
+		protected override void WriteData(BinaryObjectWriter writer)
 		{
 			if(Strips.Length > 0x3FFF)
 			{
 				throw new InvalidOperationException($"Strip count ({Strips.Length}) exceeds maximum ({0x3FFF})");
 			}
 
-			base.InternalWrite(writer);
+			uint size = CalculateByteSize() / 2;
+			if(size > ushort.MaxValue)
+			{
+				throw new InvalidOperationException($"Strip chunk size ({size}) exceeds maximum size ({ushort.MaxValue}).");
+			}
 
-			writer.WriteUShort((ushort)(Strips.Length | (TriangleAttributeCount << 14)));
+			base.WriteData(writer);
 
-			int texcoordCount = TexcoordCount;
-			bool hasNormals = HasNormals;
-			bool hasColors = HasColors;
-			bool hdTexcoord = HasHDTexcoords;
+			writer.WriteUInt16((ushort)(Strips.Length | (TriangleAttributeCount << 14)));
+
+			bool hasNormals = Type.CheckStripHasNormals();
+			bool hasColors = Type.CheckStripHasColors();
+
+			bool hasUV = Type.GetStripTexCoordCount() > 0;
+			bool hasUV2 = Type.GetStripTexCoordCount() > 1;
+
+			bool flag1 = TriangleAttributeCount > 0;
+			bool flag2 = TriangleAttributeCount > 1;
+			bool flag3 = TriangleAttributeCount > 2;
 
 			foreach(ChunkStrip s in Strips)
 			{
-				s.Write(writer, texcoordCount, hdTexcoord, hasNormals, hasColors, _triangleAttributeCount);
+				writer.WriteInt16(
+					s.Reversed
+					? (short)-s.Corners.Length
+					: (short)s.Corners.Length
+				);
+
+				for(int j = 0; j < s.Corners.Length; j++)
+				{
+					ChunkCorner c = s.Corners[j];
+					writer.WriteUInt16(c.Index);
+					if(hasUV)
+					{
+						writer.WriteVector2(c.Texcoord, FloatIOType.Short);
+
+						if(hasUV2)
+						{
+							writer.WriteVector2(c.Texcoord2, FloatIOType.Short);
+						}
+					}
+
+					if(hasNormals)
+					{
+						writer.WriteVector3(c.Normal, FloatIOType.NormalizedShort);
+					}
+
+					if(hasColors)
+					{
+						writer.WriteObject(c.Color, ColorIOType.ARGB8_16);
+					}
+
+					if(flag1 && j > 1)
+					{
+						writer.WriteUInt16(c.Attributes1);
+						if(flag2)
+						{
+							writer.WriteUInt16(c.Attributes2);
+							if(flag3)
+							{
+								writer.WriteUInt16(c.Attributes3);
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -298,12 +372,12 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <inheritdoc/>
 		public override StripChunk Clone()
 		{
-			return new(
-				Type,
-				Strips.ContentClone(),
-				TriangleAttributeCount)
+			return new()
 			{
-				Attributes = Attributes
+				Type = Type,
+				Strips = Strips.ContentClone(),
+				Attributes = Attributes,
+				TriangleAttributeCount = TriangleAttributeCount
 			};
 		}
 

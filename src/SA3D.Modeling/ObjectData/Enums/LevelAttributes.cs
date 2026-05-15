@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Landtable attributes.
 	/// </summary>
-	public enum LandtableAttributes : uint
+	public enum LevelAttributes : uint
 	{
 		/// <summary>
 		/// Enables geometry motions.

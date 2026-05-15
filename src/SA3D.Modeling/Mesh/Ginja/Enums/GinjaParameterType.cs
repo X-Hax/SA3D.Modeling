@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// The types of parameter that exist
 	/// </summary>
-	public enum GCParameterType : uint
+	public enum GinjaParameterType : uint
 	{
 		/// <summary>
 		/// Stores vertex attribute format information.
@@ -18,7 +18,7 @@
 		/// <summary>
 		/// Stores lighting values.
 		/// </summary>
-		Lighting = 2,
+		StripFlags = 2,
 
 		//Unused = 3, // Yes, number 3 would probably crash the game
 
@@ -28,17 +28,17 @@
 		BlendAlpha = 4,
 
 		/// <summary>
-		/// Stores the ambient color
+		/// Stores the diffuse color
 		/// </summary>
-		AmbientColor = 5,
+		DiffuseColor = 5,
 
 		/// <summary>
-		/// Stores diffuse color (?).
+		/// Stores ambient color.
 		/// </summary>
-		DiffuseColor = 6,
+		AmbientColor = 6,
 
 		/// <summary>
-		/// Stores specular color (?).
+		/// Stores specular color.
 		/// </summary>
 		SpecularColor = 7,
 
@@ -50,11 +50,11 @@
 		/// <summary>
 		/// Unknown functionality.
 		/// </summary>
-		Unknown = 9,
+		TevStage = 9,
 
 		/// <summary>
 		/// Stores texture coordinate processing parameters.
 		/// </summary>
-		Texcoord = 10,
+		TexGen = 10,
 	}
 }

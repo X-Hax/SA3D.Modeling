@@ -1,20 +1,1099 @@
-﻿SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoAlphaTest.get -> bool
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.NoAlphaTest.set -> void
-SA3D.Modeling.Mesh.Buffer.MaterialAttributes.NoAlphaTest = 8192 -> SA3D.Modeling.Mesh.Buffer.MaterialAttributes
-SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.NoAlphaTest.get -> bool
-SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.NoAlphaTest.set -> void
-SA3D.Modeling.Mesh.Weighted.WeightedMesh.NoBounds.get -> bool
-SA3D.Modeling.Mesh.Weighted.WeightedMesh.NoBounds.set -> void
-SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedRotation = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
-SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheRotation = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+﻿abstract SA3D.Modeling.File.MetaData.MetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+abstract SA3D.Modeling.File.MetaData.MetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+abstract SA3D.Modeling.File.MetaData.MetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.AlignWithFour.get -> bool
+abstract SA3D.Modeling.Mesh.MeshData.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
+abstract SA3D.Modeling.Mesh.MeshData.Clone() -> SA3D.Modeling.Mesh.MeshData!
+abstract SA3D.Modeling.Mesh.MeshData.LabelPrefix.get -> string!
+abstract SA3D.Modeling.Mesh.MeshData.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+abstract SA3D.Modeling.Mesh.MeshData.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+abstract SA3D.Modeling.Mesh.MeshData.RecalculateBounds() -> void
+abstract SA3D.Modeling.Mesh.MeshData.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+const SA3D.Modeling.AnimationData.Animation.KeyframeSetLabelPrefix = "keyframes_" -> string!
+const SA3D.Modeling.File.MetaData.Weights.MetaWeight.StructSize = 12 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMesh.MaterialsLabelPrefix = "materials_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMesh.MeshesLabelPrefix = "meshes_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMesh.NormalsLabelPrefix = "normals_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMesh.PositionsLabelPrefix = "positions_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.ColorsLabelPrefix = "polygon_colors_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.NormalsLabelPrefix = "polygon_normals_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonLabelPrefix = "polygons_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.StructSize = 24 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.StructSizeDX = 28 -> uint
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinatesLabelPrefix = "polygon_texcoords_" -> string!
+const SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunksLabelPrefix = "poly_" -> string!
+const SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunksLabelPrefix = "vertex_" -> string!
+const SA3D.Modeling.Mesh.Ginja.GinjaMesh.OpaqueMeshesLabelPrefix = "opaque_" -> string!
+const SA3D.Modeling.Mesh.Ginja.GinjaMesh.TransparentMeshesLabelPrefix = "transparent_" -> string!
+const SA3D.Modeling.Mesh.Ginja.GinjaMesh.VertexDataLabelPrefix = "vertex_" -> string!
+const SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.ParametersLabelPrefix = "parameters_" -> string!
+const SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.PolygonsLabelPrefix = "polygons_" -> string!
+const SA3D.Modeling.ObjectData.Level.ModelAnimationsLabelPrefix = "modelAnimations_" -> string!
+const SA3D.Modeling.ObjectData.Level.ModelsLabelPrefix = "models_" -> string!
+override SA3D.Modeling.AnimationData.Animation.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.AnimationFilesMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.AnimationFilesMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.AuthorMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.AuthorMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.DescriptionMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.DescriptionMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Blocks.MorphFilesMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.MorphFilesMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.ObjectNameMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.ObjectNameMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+override SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Weights.MetaWeight.Equals(object? obj) -> bool
+override SA3D.Modeling.File.MetaData.Weights.MetaWeight.GetHashCode() -> int
+override SA3D.Modeling.File.MetaData.Weights.MetaWeight.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.Equals(object? obj) -> bool
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.GetHashCode() -> int
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Equals(object? obj) -> bool
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.GetHashCode() -> int
+override SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.BasicMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
+override SA3D.Modeling.Mesh.Basic.BasicMesh.Clone() -> SA3D.Modeling.Mesh.MeshData!
+override SA3D.Modeling.Mesh.Basic.BasicMesh.LabelPrefix.get -> string!
+override SA3D.Modeling.Mesh.Basic.BasicMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Basic.BasicMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Basic.BasicMesh.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Basic.BasicMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Basic.BasicMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CheckHasWeights() -> bool
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Clone() -> SA3D.Modeling.Mesh.Chunk.ChunkMesh!
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.LabelPrefix.get -> string!
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.AlignWithFour.get -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.AlignWithFour.get -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.AlignWithFour.get -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Ginja.GinjaCorner.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Ginja.GinjaCorner.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Ginja.GinjaCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Clone() -> SA3D.Modeling.Mesh.Ginja.GinjaMesh!
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.LabelPrefix.get -> string!
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GinjaPolygon.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.MeshData.ToString() -> string!
+override SA3D.Modeling.ObjectData.Level.ToString() -> string!
+override SA3D.Modeling.ObjectData.LevelModel.ToString() -> string!
+override SA3D.Modeling.Structs.PointerLUT.AddEntry(long address, object! value) -> void
+SA3D.Modeling.AnimationData.Animation
+SA3D.Modeling.AnimationData.Animation.Animation() -> void
+SA3D.Modeling.AnimationData.Animation.EnsureKeyframes(SA3D.Modeling.AnimationData.KeyframeAttributes targetTypes) -> void
+SA3D.Modeling.AnimationData.Animation.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.AnimationData.KeyframeAttributes targetTypes, bool createKeyframes) -> void
+SA3D.Modeling.AnimationData.Animation.GetFrameCount() -> uint
+SA3D.Modeling.AnimationData.Animation.InterpolationMode.get -> SA3D.Modeling.AnimationData.InterpolationMode
+SA3D.Modeling.AnimationData.Animation.InterpolationMode.set -> void
+SA3D.Modeling.AnimationData.Animation.IsCameraMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsLightMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsNodeMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsShapeMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsSpotLightMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.KeyframeSets.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.AnimationData.KeyframeSet!>!
+SA3D.Modeling.AnimationData.Animation.KeyframeSets.set -> void
+SA3D.Modeling.AnimationData.Animation.KeyframeTypes.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.Animation.Label.get -> string!
+SA3D.Modeling.AnimationData.Animation.Label.set -> void
+SA3D.Modeling.AnimationData.Animation.LabelPrefix.get -> string!
+SA3D.Modeling.AnimationData.Animation.ManualKeyframeTypes.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.Animation.ManualKeyframeTypes.set -> void
+SA3D.Modeling.AnimationData.Animation.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
+SA3D.Modeling.AnimationData.Animation.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.AnimationData.AnimationIOContext context) -> void
+SA3D.Modeling.AnimationData.Animation.ShortRotations.get -> bool
+SA3D.Modeling.AnimationData.Animation.ShortRotations.set -> void
+SA3D.Modeling.AnimationData.Animation.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.AnimationData.AnimationIOContext context) -> void
+SA3D.Modeling.AnimationData.AnimationIOContext
+SA3D.Modeling.AnimationData.AnimationIOContext.AnimationIOContext() -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.BaseContext.get -> SA3D.Modeling.Structs.IOContext
+SA3D.Modeling.AnimationData.AnimationIOContext.BaseContext.init -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.FileContext.get -> SA3D.Modeling.File.AnimationFileIOContext
+SA3D.Modeling.AnimationData.AnimationIOContext.FileContext.init -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.KeyframeType.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.AnimationIOContext.KeyframeType.set -> void
+SA3D.Modeling.AnimationData.EnumExtensions
+SA3D.Modeling.AnimationData.Frame
+SA3D.Modeling.AnimationData.Frame.Angle.get -> float?
+SA3D.Modeling.AnimationData.Frame.Angle.set -> void
+SA3D.Modeling.AnimationData.Frame.Color.get -> SA3D.Modeling.Structs.Color?
+SA3D.Modeling.AnimationData.Frame.Color.set -> void
+SA3D.Modeling.AnimationData.Frame.EulerRotation.get -> System.Numerics.Vector3?
+SA3D.Modeling.AnimationData.Frame.EulerRotation.set -> void
+SA3D.Modeling.AnimationData.Frame.Frame() -> void
+SA3D.Modeling.AnimationData.Frame.FrameTime.get -> float
+SA3D.Modeling.AnimationData.Frame.FrameTime.set -> void
+SA3D.Modeling.AnimationData.Frame.Intensity.get -> float?
+SA3D.Modeling.AnimationData.Frame.Intensity.set -> void
+SA3D.Modeling.AnimationData.Frame.Normal.get -> System.Numerics.Vector3[]?
+SA3D.Modeling.AnimationData.Frame.Normal.set -> void
+SA3D.Modeling.AnimationData.Frame.Point.get -> System.Numerics.Vector2?
+SA3D.Modeling.AnimationData.Frame.Point.set -> void
+SA3D.Modeling.AnimationData.Frame.Position.get -> System.Numerics.Vector3?
+SA3D.Modeling.AnimationData.Frame.Position.set -> void
+SA3D.Modeling.AnimationData.Frame.QuaternionRotation.get -> System.Numerics.Quaternion?
+SA3D.Modeling.AnimationData.Frame.QuaternionRotation.set -> void
+SA3D.Modeling.AnimationData.Frame.Roll.get -> float?
+SA3D.Modeling.AnimationData.Frame.Roll.set -> void
+SA3D.Modeling.AnimationData.Frame.Scale.get -> System.Numerics.Vector3?
+SA3D.Modeling.AnimationData.Frame.Scale.set -> void
+SA3D.Modeling.AnimationData.Frame.Spotlight.get -> SA3D.Modeling.AnimationData.Spotlight?
+SA3D.Modeling.AnimationData.Frame.Spotlight.set -> void
+SA3D.Modeling.AnimationData.Frame.Target.get -> System.Numerics.Vector3?
+SA3D.Modeling.AnimationData.Frame.Target.set -> void
+SA3D.Modeling.AnimationData.Frame.Vector.get -> System.Numerics.Vector3?
+SA3D.Modeling.AnimationData.Frame.Vector.set -> void
+SA3D.Modeling.AnimationData.Frame.Vertex.get -> System.Numerics.Vector3[]?
+SA3D.Modeling.AnimationData.Frame.Vertex.set -> void
+SA3D.Modeling.AnimationData.InterpolationMode
+SA3D.Modeling.AnimationData.InterpolationMode.Linear = 0 -> SA3D.Modeling.AnimationData.InterpolationMode
+SA3D.Modeling.AnimationData.InterpolationMode.Spline = 1 -> SA3D.Modeling.AnimationData.InterpolationMode
+SA3D.Modeling.AnimationData.InterpolationMode.User = 2 -> SA3D.Modeling.AnimationData.InterpolationMode
+SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Angle = 256 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.EulerRotation = 2 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Intensity = 1024 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.LightColor = 512 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Normal = 32 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Point = 4096 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Position = 1 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.QuaternionRotation = 8192 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Roll = 128 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Scale = 4 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Spot = 2048 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Target = 64 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Vector = 8 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeAttributes.Vertex = 16 -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeSet
+SA3D.Modeling.AnimationData.KeyframeSet.Angle.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.AnimationData.KeyframeSet.BaseLabel.get -> string!
+SA3D.Modeling.AnimationData.KeyframeSet.BaseLabel.set -> void
+SA3D.Modeling.AnimationData.KeyframeSet.EnsureKeyframes(SA3D.Modeling.AnimationData.KeyframeAttributes targets, uint endFrame) -> void
+SA3D.Modeling.AnimationData.KeyframeSet.EnsureNodeKeyframes(SA3D.Modeling.ObjectData.Node! node, SA3D.Modeling.AnimationData.KeyframeAttributes targets, uint endFrame) -> void
+SA3D.Modeling.AnimationData.KeyframeSet.EulerRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.AnimationData.KeyframeSet.GetFrameAt(float frame) -> SA3D.Modeling.AnimationData.Frame
+SA3D.Modeling.AnimationData.KeyframeSet.HasKeyframes.get -> bool
+SA3D.Modeling.AnimationData.KeyframeSet.Intensity.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.AnimationData.KeyframeSet.KeyframeCount.get -> uint
+SA3D.Modeling.AnimationData.KeyframeSet.KeyframeSet() -> void
+SA3D.Modeling.AnimationData.KeyframeSet.LightColor.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Modeling.Structs.Color>!
+SA3D.Modeling.AnimationData.KeyframeSet.Normal.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>!>!
+SA3D.Modeling.AnimationData.KeyframeSet.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
+SA3D.Modeling.AnimationData.KeyframeSet.Point.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector2>!
+SA3D.Modeling.AnimationData.KeyframeSet.Position.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.AnimationData.KeyframeSet.QuaternionRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+SA3D.Modeling.AnimationData.KeyframeSet.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.AnimationData.AnimationIOContext context) -> void
+SA3D.Modeling.AnimationData.KeyframeSet.Roll.get -> System.Collections.Generic.SortedDictionary<uint, float>!
+SA3D.Modeling.AnimationData.KeyframeSet.Scale.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.AnimationData.KeyframeSet.Spot.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Modeling.AnimationData.Spotlight>!
+SA3D.Modeling.AnimationData.KeyframeSet.Target.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.AnimationData.KeyframeSet.Type.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
+SA3D.Modeling.AnimationData.KeyframeSet.Vector.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+SA3D.Modeling.AnimationData.KeyframeSet.Vertex.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>!>!
+SA3D.Modeling.AnimationData.KeyframeSet.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.AnimationData.AnimationIOContext context) -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation
+SA3D.Modeling.AnimationData.LevelModelAnimation.Animation.get -> SA3D.Modeling.AnimationData.ModelAnimation!
+SA3D.Modeling.AnimationData.LevelModelAnimation.Animation.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.Frame.get -> float
+SA3D.Modeling.AnimationData.LevelModelAnimation.Frame.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.LevelModelAnimation() -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.MaxFrame.get -> float
+SA3D.Modeling.AnimationData.LevelModelAnimation.MaxFrame.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.AnimationData.LevelModelAnimation.Model.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.Step.get -> float
+SA3D.Modeling.AnimationData.LevelModelAnimation.Step.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.TextureListPointer.get -> uint
+SA3D.Modeling.AnimationData.LevelModelAnimation.TextureListPointer.set -> void
+SA3D.Modeling.AnimationData.LevelModelAnimation.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.AnimationData.ModelAnimation
+SA3D.Modeling.AnimationData.ModelAnimation.Animation.get -> SA3D.Modeling.AnimationData.Animation!
+SA3D.Modeling.AnimationData.ModelAnimation.Animation.set -> void
+SA3D.Modeling.AnimationData.ModelAnimation.Label.get -> string!
+SA3D.Modeling.AnimationData.ModelAnimation.Label.set -> void
+SA3D.Modeling.AnimationData.ModelAnimation.LabelPrefix.get -> string!
+SA3D.Modeling.AnimationData.ModelAnimation.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.AnimationData.ModelAnimation.Model.set -> void
+SA3D.Modeling.AnimationData.ModelAnimation.ModelAnimation() -> void
+SA3D.Modeling.AnimationData.ModelAnimation.ModelAnimation(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.AnimationData.Animation! animation) -> void
+SA3D.Modeling.AnimationData.ModelAnimation.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.AnimationData.ModelAnimation.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.AnimationData.Spotlight
+SA3D.Modeling.AnimationData.Spotlight.Far.get -> float
+SA3D.Modeling.AnimationData.Spotlight.Far.set -> void
+SA3D.Modeling.AnimationData.Spotlight.InsideAngle.get -> float
+SA3D.Modeling.AnimationData.Spotlight.InsideAngle.set -> void
+SA3D.Modeling.AnimationData.Spotlight.Near.get -> float
+SA3D.Modeling.AnimationData.Spotlight.Near.set -> void
+SA3D.Modeling.AnimationData.Spotlight.OutsideAngle.get -> float
+SA3D.Modeling.AnimationData.Spotlight.OutsideAngle.set -> void
+SA3D.Modeling.AnimationData.Spotlight.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.AnimationData.Spotlight.Spotlight() -> void
+SA3D.Modeling.AnimationData.Spotlight.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils
+SA3D.Modeling.File.AnimationFile.Animation.get -> SA3D.Modeling.AnimationData.Animation!
+SA3D.Modeling.File.AnimationFile.Animation.set -> void
+SA3D.Modeling.File.AnimationFile.AnimationFile() -> void
+SA3D.Modeling.File.AnimationFile.AnimationFile(SA3D.Modeling.AnimationData.Animation! animation) -> void
+SA3D.Modeling.File.AnimationFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.AnimationFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
+SA3D.Modeling.File.AnimationFile.MetaData.set -> void
+SA3D.Modeling.File.AnimationFile.NJFile.get -> bool
+SA3D.Modeling.File.AnimationFile.NJFile.set -> void
+SA3D.Modeling.File.AnimationFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.AnimationFileIOContext context) -> void
+SA3D.Modeling.File.AnimationFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.AnimationFileIOContext context) -> void
+SA3D.Modeling.File.AnimationFileIOContext
+SA3D.Modeling.File.AnimationFileIOContext.AnimationFileIOContext() -> void
+SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.get -> uint
+SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.init -> void
+SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.get -> bool
+SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.init -> void
+SA3D.Modeling.File.File
+SA3D.Modeling.File.IFile
+SA3D.Modeling.File.IFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.IFile<T>
+SA3D.Modeling.File.LevelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.Level!
+SA3D.Modeling.File.LevelFile.Level.set -> void
+SA3D.Modeling.File.LevelFile.LevelFile() -> void
+SA3D.Modeling.File.LevelFile.LevelFile(SA3D.Modeling.ObjectData.Level! level) -> void
+SA3D.Modeling.File.LevelFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
+SA3D.Modeling.File.LevelFile.MetaData.set -> void
+SA3D.Modeling.File.LevelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.LevelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock.ActionNameMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.AnimationFilesMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.AnimationFilesMetaDataBlock.AnimationFilesMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.AuthorMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.AuthorMetaDataBlock.AuthorMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.DescriptionMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.DescriptionMetaDataBlock.DescriptionMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.Labels.get -> SA3D.Common.Lookup.LabelDictionary!
+SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.Labels.set -> void
+SA3D.Modeling.File.MetaData.Blocks.LabelsMetaDataBlock.LabelsMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.MorphFilesMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.MorphFilesMetaDataBlock.MorphFilesMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.ObjectNameMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.ObjectNameMetaDataBlock.ObjectNameMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.StringListMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.Values.get -> System.Collections.Generic.List<string!>!
+SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.Values.set -> void
+SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.StringMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.Value.get -> string!
+SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.Value.set -> void
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Data.get -> byte[]!
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Data.set -> void
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.RawType.get -> uint
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.RawType.set -> void
+SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.UnknownMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.Weights.get -> System.Collections.Generic.List<SA3D.Modeling.File.MetaData.Weights.MetaWeightNode>!
+SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.Weights.set -> void
+SA3D.Modeling.File.MetaData.Blocks.WeightsMetaDataBlock.WeightsMetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.MetaDataBlock
+SA3D.Modeling.File.MetaData.MetaDataBlock.MetaDataBlock() -> void
+SA3D.Modeling.File.MetaData.MetaDataBlock.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
+SA3D.Modeling.File.MetaData.MetaDataBlock.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
+SA3D.Modeling.File.MetaData.MetaDataBlocks
+SA3D.Modeling.File.MetaData.MetaDataBlocks.Blocks.get -> System.Collections.Generic.List<SA3D.Modeling.File.MetaData.MetaDataBlock!>!
+SA3D.Modeling.File.MetaData.MetaDataBlocks.Blocks.set -> void
+SA3D.Modeling.File.MetaData.MetaDataBlocks.MetaDataBlocks() -> void
+SA3D.Modeling.File.MetaData.MetaDataBlocks.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
+SA3D.Modeling.File.MetaData.MetaDataBlocks.ReplaceLabels(SA3D.Common.Lookup.LabelDictionary! newLabels) -> void
+SA3D.Modeling.File.MetaData.MetaDataBlocks.TryGetBlock(SA3D.Modeling.File.MetaData.MetaDataBlockType type, out SA3D.Modeling.File.MetaData.MetaDataBlock? block) -> bool
+SA3D.Modeling.File.MetaData.MetaDataBlocks.TryGetBlock<T>(out T? block) -> bool
+SA3D.Modeling.File.MetaData.MetaDataBlocks.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
+SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.ActionName = 1094931534 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Animation = 1296649793 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Author = 1213486401 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Description = 1129530692 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.End = 4476485 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Label = 1279410508 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Morph = 1179799373 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.ObjectName = 1329744462 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Texture = 5784916 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Tool = 1280266068 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataBlockType.Weight = 1414022999 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
+SA3D.Modeling.File.MetaData.MetaDataIOContext
+SA3D.Modeling.File.MetaData.MetaDataIOContext.HasAnimMorphFiles.get -> bool
+SA3D.Modeling.File.MetaData.MetaDataIOContext.HasAnimMorphFiles.init -> void
+SA3D.Modeling.File.MetaData.MetaDataIOContext.MetaDataIOContext() -> void
+SA3D.Modeling.File.MetaData.MetaDataIOContext.Version.get -> int
+SA3D.Modeling.File.MetaData.MetaDataIOContext.Version.init -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.MetaWeight() -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.MetaWeight(long nodePointer, uint vertexIndex, float weight) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.NodeOffset.get -> long
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.NodeOffset.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.VertexIndex.get -> uint
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.VertexIndex.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.Weight.get -> float
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.Weight.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.MetaWeightNode() -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.MetaWeightNode(long nodeOffset, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex[]! vertexWeights) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.NodeOffset.get -> long
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.NodeOffset.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.VertexWeights.get -> SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex[]!
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.VertexWeights.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.DestinationVertexIndex.get -> uint
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.DestinationVertexIndex.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.MetaWeightVertex() -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.MetaWeightVertex(uint destinationVertexIndex, SA3D.Modeling.File.MetaData.Weights.MetaWeight[]! weights) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Weights.get -> SA3D.Modeling.File.MetaData.Weights.MetaWeight[]!
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Weights.set -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.ModelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.ModelFile.Format.get -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.File.ModelFile.Format.set -> void
+SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
+SA3D.Modeling.File.ModelFile.MetaData.set -> void
+SA3D.Modeling.File.ModelFile.Model.set -> void
+SA3D.Modeling.File.ModelFile.ModelFile() -> void
+SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Node! model) -> void
+SA3D.Modeling.File.ModelFile.NJFile.set -> void
+SA3D.Modeling.File.ModelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.ModelFile.TextureNames.set -> void
+SA3D.Modeling.File.ModelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.AlphaMode.Opaque = 0 -> SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.AlphaMode.Transparent = 1 -> SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOff = 2 -> SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOn = 3 -> SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.AttachFormat.Basic = 0 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.Chunk = 1 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.AttachFormat.Ginja = 2 -> SA3D.Modeling.Mesh.AttachFormat
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.BasicMesh() -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.Materials.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.BasicMaterial>!
+SA3D.Modeling.Mesh.Basic.BasicMesh.Materials.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.Meshes.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.BasicMeshSet!>!
+SA3D.Modeling.Mesh.Basic.BasicMesh.Meshes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.Normals.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>?
+SA3D.Modeling.Mesh.Basic.BasicMesh.Positions.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>!
+SA3D.Modeling.Mesh.Basic.BasicMesh.Positions.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.BasicMeshSet() -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Clone() -> SA3D.Modeling.Mesh.Basic.BasicMeshSet!
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Colors.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Structs.Color>?
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Colors.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.MaterialIndex.get -> ushort
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.MaterialIndex.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Normals.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>?
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Normals.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributes.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonCornerCount.get -> int
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Polygons.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>!
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Polygons.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonType.get -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonType.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinates.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector2>?
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinates.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.VerifyPolygonData() -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.BasicMultiPolygon(ushort[]! corners, bool reversed) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.GetReader(SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>!
+SA3D.Modeling.Mesh.Chunk.ChunkMesh
+SA3D.Modeling.Mesh.Chunk.ChunkMesh.ChunkMesh() -> void
+SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunks.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Chunk.PolyChunk!>?
+SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunks.set -> void
+SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunks.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Chunk.VertexChunk!>?
+SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunks.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Dir.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Dir.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Up.get -> System.Numerics.Vector3
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Up.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.AlphaMode.get -> SA3D.Modeling.Mesh.AlphaMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.AlphaMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.CalculateByteSize() -> uint
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.ExtendedUseAlpha.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.ExtendedUseAlpha.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.StripChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Strips.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.TextureChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.CalculateByteSize() -> uint
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.ChangeType(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Polygons.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.VerifyPolygonData() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.VolumeChunk() -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Material_Empty = 16 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Volume_Quad = 57 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.PolyChunkType.Volume_Triangle = 56 -> SA3D.Modeling.Mesh.Chunk.PolyChunkType
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, float diffuse, float specular) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, SA3D.Modeling.Structs.Color diffuse) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, float diffuse, float specular) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, SA3D.Modeling.Structs.Color diffuse) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, SA3D.Modeling.Structs.Color diffuse, SA3D.Modeling.Structs.Color specular) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, System.Numerics.Vector3 normal, uint attributes) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, uint attributes) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, uint attributes, SA3D.Modeling.Structs.Color diffuse) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, ushort index, float weight) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Indices.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.TriangleAttributes.set -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.VerifyPolygonData() -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Attributes.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.CompactShape.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.CompactShape.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Type.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.VertexCalculationContinue.get -> bool
+SA3D.Modeling.Mesh.Chunk.VertexChunk.VertexCalculationContinue.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.VertexChunk() -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Vertices.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.WeightMode.get -> SA3D.Modeling.Mesh.Chunk.WeightMode
+SA3D.Modeling.Mesh.Chunk.VertexChunk.WeightMode.set -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.AttributesDiffuse = 52 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.VertexChunkType.DiffuseSpecular = 51 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
+SA3D.Modeling.Mesh.Chunk.WeightMode
+SA3D.Modeling.Mesh.Chunk.WeightMode.End = 2 -> SA3D.Modeling.Mesh.Chunk.WeightMode
+SA3D.Modeling.Mesh.Chunk.WeightMode.Middle = 1 -> SA3D.Modeling.Mesh.Chunk.WeightMode
+SA3D.Modeling.Mesh.Chunk.WeightMode.Start = 0 -> SA3D.Modeling.Mesh.Chunk.WeightMode
+SA3D.Modeling.Mesh.EnumExtensions
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Alpha0 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Alpha1 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.AlphaBump = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.AlphaBumpN = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Color0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Color0A0 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Color1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Color1A1 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.ColorNull = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.ColorZero = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.Float32 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGB565 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGB8 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGBA4 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGBA6 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGBA8 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.RGBX8 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.Signed16 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.Signed8 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.Unsigned16 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType.Unsigned8 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.Color0LargeIndex = 64 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.Color1LargeIndex = 256 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasColor0 = 128 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasColor1 = 512 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasNormal = 32 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasPosition = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasPositionMatrixID = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord0 = 2048 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord1 = 8192 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord2 = 32768 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord3 = 131072 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord4 = 524288 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord5 = 2097152 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord6 = 8388608 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.HasTexCoord7 = 33554432 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.NormalLargeIndex = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.PositionLargeIndex = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.PositionMatrixIDLargeIndex = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord0LargeIndex = 1024 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord1LargeIndex = 4096 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord2LargeIndex = 16384 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord3LargeIndex = 65536 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord4LargeIndex = 262144 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord5LargeIndex = 1048576 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord6LargeIndex = 4194304 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat.TexCoord7LargeIndex = 16777216 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.AmbientColor = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.BlendAlpha = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.DiffuseColor = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.IndexFormat = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.SpecularColor = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.StripFlags = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.TevStage = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.TexGen = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.Texture = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType.VertexFormat = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.Lines = 168 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.LineStrip = 176 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.Points = 184 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.TriangleFan = 160 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.Triangles = 144 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType.TriangleStrip = 152 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.ColorRGB = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.ColorRGBA = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.NormalNBT = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.NormalNBT3 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.NormalXYZ = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.PositionXY = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.PositionXYZ = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.TexCoordU = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType.TexCoordUV = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStage7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStageMax = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID.TevStageNull = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoord7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoordMax = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID.TexCoordNull = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Identity = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix8 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix.Matrix9 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Binormal = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord0 = 12 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord1 = 13 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord2 = 14 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord3 = 15 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord4 = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord5 = 17 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.BumpTexCoord6 = 18 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Color0 = 19 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Color1 = 20 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Normal = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Position = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.Tangent = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord0 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord1 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord2 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord3 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord4 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord5 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord6 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource.TexCoord7 = 11 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump0 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump1 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump2 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump3 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump4 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump5 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump6 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Bump7 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Matrix2x4 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.Matrix3x4 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType.SRTG = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMap7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMapMax = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID.TexMapNull = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.Mask = SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.RepeatV | SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.MirrorV | SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.RepeatU | SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.MirrorU | SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.Unknown -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.MirrorU = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.MirrorV = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.RepeatU = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.RepeatV = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode.Unknown = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.Color0 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.Color1 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.End = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.Normal = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.Position = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.PositionMatrixID = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord0 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord1 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord2 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord3 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord4 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord5 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord6 = 11 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType.TexCoord7 = 12 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.GinjaCorner
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.Color0Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.Color0Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.Color1Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.Color1Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.GinjaCorner() -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.NormalIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.NormalIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.PositionIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.PositionIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.PositionMatrixIDIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.PositionMatrixIDIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord0Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord0Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord1Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord1Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord2Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord2Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord3Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord3Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord4Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord4Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord5Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord5Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord6Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord6Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord7Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GinjaCorner.TexCoord7Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaIOContext
+SA3D.Modeling.Mesh.Ginja.GinjaIOContext.BaseContext.get -> SA3D.Modeling.Structs.IOContext
+SA3D.Modeling.Mesh.Ginja.GinjaIOContext.GinjaIOContext(SA3D.Modeling.Structs.IOContext baseContext) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaIOContext.IndexFormat.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.GinjaIOContext.IndexFormat.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMesh
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.GinjaMesh() -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.OpaqueMeshes.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Ginja.GinjaMeshSet!>?
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.OpaqueMeshes.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.TransparentMeshes.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Ginja.GinjaMeshSet!>?
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.TransparentMeshes.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.VertexData.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Ginja.GinjaVertexSet!>?
+SA3D.Modeling.Mesh.Ginja.GinjaMesh.VertexData.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Clone() -> SA3D.Modeling.Mesh.Ginja.GinjaMeshSet!
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.GetIndexFormat() -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat?
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.GinjaMeshSet() -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Parameters.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter!>!
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Parameters.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Polygons.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Ginja.GinjaPolygon>!
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Polygons.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Mesh.Ginja.GinjaIOContext! context) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Mesh.Ginja.GinjaIOContext! context) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Clone() -> SA3D.Modeling.Mesh.Ginja.GinjaPolygon
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Corners.get -> SA3D.Modeling.Mesh.Ginja.GinjaCorner[]!
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Corners.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.GinjaPolygon() -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.GinjaPolygon(SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType type, SA3D.Modeling.Mesh.Ginja.GinjaCorner[]! corners) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat format) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaPolyType
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Type.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaPolygon.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat format) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.ChangeDataType(SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType dataType, object? data) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Clone() -> SA3D.Modeling.Mesh.Ginja.GinjaVertexSet!
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.ColorData.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Structs.Color>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.ColorData.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Data.get -> object?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.DataLength.get -> int
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.DataType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.DataType.init -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Float32Data.get -> SA3D.Common.Lookup.LabeledArray<float>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Float32Data.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.GetDataAsFloat(int fractionalBitCount) -> float[]?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.GetDataAsVector2(int fractionalBitCount) -> System.Numerics.Vector2[]?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.GetDataAsVector3(int fractionalBitCount) -> System.Numerics.Vector3[]?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.GinjaVertexSet() -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.SetFloatData(float[]? data, int fractionalBitCount) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.SetFloatData(System.Numerics.Vector2[]? data, int fractionalBitCount) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.SetFloatData(System.Numerics.Vector3[]? data, int fractionalBitCount) -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Signed16Data.get -> SA3D.Common.Lookup.LabeledArray<short>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Signed16Data.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Signed8Data.get -> SA3D.Common.Lookup.LabeledArray<sbyte>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Signed8Data.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.StructType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.StructType.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Type.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Unsigned16Data.get -> SA3D.Common.Lookup.LabeledArray<ushort>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Unsigned16Data.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Unsigned8Data.get -> SA3D.Common.Lookup.LabeledArray<byte>?
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Unsigned8Data.set -> void
+SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.AmbientColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.AmbientColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.GinjaAmbientColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaAmbientColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.GinjaBlendAlphaParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.DiffuseColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.DiffuseColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.GinjaDiffuseColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaDiffuseColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.GinjaIndexFormatParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.IndexFormat.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaIndexFormat
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.IndexFormat.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaIndexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.GinjaSpecularColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.SpecularColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.SpecularColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaSpecularColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.ChannelCount.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.ChannelCount.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.DoubleSided.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.DoubleSided.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.GinjaStripFlagsParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreAmbient.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreAmbient.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreLight.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreLight.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreSpecular.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.IgnoreSpecular.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.NoPunchThrough.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.NoPunchThrough.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.TevStageCount.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.TevStageCount.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.TexGenCount.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.TexGenCount.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseVertexColorForAmbient.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseVertexColorForAmbient.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseVertexColorForDiffuse.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaStripFlagsParameter.UseVertexColorForDiffuse.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.ColorChannel.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.ColorChannel.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.GinjaTevStageParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TevStage.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTevStageID
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TevStage.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TexCoord.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TexCoord.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TexMap.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexMapID
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.TexMap.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.GinjaTexGenParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.MatrixID.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenMatrix
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.MatrixID.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexCoord.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexCoordID
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexCoord.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexGenSource.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenSource
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexGenSource.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexGenType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTexGenType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.TexGenType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.GinjaTextureParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.TextureID.get -> ushort
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.TextureID.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.Tiling.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaTileMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.Tiling.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTextureParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.FractionalBitCount.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.FractionalBitCount.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.GinjaVertexFormatParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexDataType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexDataType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexStructType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexStructType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaVertexType
+SA3D.Modeling.Mesh.Ginja.Parameters.GinjaVertexFormatParameter.VertexType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter.ReadParameter(Amicitia.IO.Binary.BinaryObjectReader! reader) -> SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter!
+SA3D.Modeling.Mesh.Ginja.Parameters.IGinjaParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaParameterType
+SA3D.Modeling.Mesh.MeshData
+SA3D.Modeling.Mesh.MeshData.Label.get -> string!
+SA3D.Modeling.Mesh.MeshData.Label.set -> void
+SA3D.Modeling.Mesh.MeshData.MeshBounds.get -> SA3D.Modeling.Structs.Bounds
+SA3D.Modeling.Mesh.MeshData.MeshBounds.set -> void
+SA3D.Modeling.Mesh.MeshData.MeshData() -> void
+SA3D.Modeling.ObjectData.Enums.IsCollisionAttributeAttribute
+SA3D.Modeling.ObjectData.Enums.IsCollisionAttributeAttribute.IsCollisionAttributeAttribute() -> void
+SA3D.Modeling.ObjectData.Enums.IsDisplayAttributeAttribute
+SA3D.Modeling.ObjectData.Enums.IsDisplayAttributeAttribute.IsDisplayAttributeAttribute() -> void
+SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Enums.LevelAttributes.CustomDrawDistance = 4 -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Enums.LevelAttributes.EnableMotions = 1 -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Enums.LevelAttributes.LoadTexlist = 2 -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Enums.LevelAttributes.LoadTextureFile = 8 -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedMatrix = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheMatrix = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.Envelope = 8192 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.NewMeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.OldMeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Level
+SA3D.Modeling.ObjectData.Level.Attributes.get -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
+SA3D.Modeling.ObjectData.Level.Attributes.set -> void
+SA3D.Modeling.ObjectData.Level.DrawDistance.get -> float
+SA3D.Modeling.ObjectData.Level.DrawDistance.set -> void
+SA3D.Modeling.ObjectData.Level.Format.get -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.ObjectData.Level.Label.get -> string!
+SA3D.Modeling.ObjectData.Level.Label.set -> void
+SA3D.Modeling.ObjectData.Level.LabelPrefix.get -> string!
+SA3D.Modeling.ObjectData.Level.Level() -> void
+SA3D.Modeling.ObjectData.Level.ModelAnimations.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.AnimationData.LevelModelAnimation!>?
+SA3D.Modeling.ObjectData.Level.ModelAnimations.set -> void
+SA3D.Modeling.ObjectData.Level.Models.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.ObjectData.LevelModel!>!
+SA3D.Modeling.ObjectData.Level.Models.set -> void
+SA3D.Modeling.ObjectData.Level.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.Level.SortLandEntries() -> void
+SA3D.Modeling.ObjectData.Level.TexListPtr.get -> uint
+SA3D.Modeling.ObjectData.Level.TexListPtr.set -> void
+SA3D.Modeling.ObjectData.Level.TextureFileName.get -> string?
+SA3D.Modeling.ObjectData.Level.TextureFileName.set -> void
+SA3D.Modeling.ObjectData.Level.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.LevelModel
+SA3D.Modeling.ObjectData.LevelModel.BlockBit.get -> uint
+SA3D.Modeling.ObjectData.LevelModel.BlockBit.set -> void
+SA3D.Modeling.ObjectData.LevelModel.Copy() -> SA3D.Modeling.ObjectData.LevelModel!
+SA3D.Modeling.ObjectData.LevelModel.LevelModel() -> void
+SA3D.Modeling.ObjectData.LevelModel.LevelModel(SA3D.Modeling.ObjectData.Node! node) -> void
+SA3D.Modeling.ObjectData.LevelModel.Model.get -> SA3D.Modeling.ObjectData.Node!
+SA3D.Modeling.ObjectData.LevelModel.Model.set -> void
+SA3D.Modeling.ObjectData.LevelModel.ModelBounds.get -> SA3D.Modeling.Structs.Bounds
+SA3D.Modeling.ObjectData.LevelModel.ModelBounds.set -> void
+SA3D.Modeling.ObjectData.LevelModel.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.LevelModel.SurfaceAttributes.get -> SA3D.Modeling.ObjectData.Enums.SurfaceAttributes
+SA3D.Modeling.ObjectData.LevelModel.SurfaceAttributes.set -> void
+SA3D.Modeling.ObjectData.LevelModel.Unknown.get -> uint
+SA3D.Modeling.ObjectData.LevelModel.Unknown.set -> void
+SA3D.Modeling.ObjectData.LevelModel.UpdateBounds() -> void
+SA3D.Modeling.ObjectData.LevelModel.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.set -> void
+SA3D.Modeling.ObjectData.Node.Attach.get -> SA3D.Modeling.Mesh.MeshData?
 SA3D.Modeling.ObjectData.Node.CacheRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.CacheRotation.set -> void
 SA3D.Modeling.ObjectData.Node.Clip.get -> bool
 SA3D.Modeling.ObjectData.Node.Clip.set -> void
 SA3D.Modeling.ObjectData.Node.Envelope.get -> bool
 SA3D.Modeling.ObjectData.Node.Envelope.set -> void
+SA3D.Modeling.ObjectData.Node.GetTreeAttachEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.MeshData!>!
+SA3D.Modeling.ObjectData.Node.GetTreeAttaches() -> SA3D.Modeling.Mesh.MeshData![]!
+SA3D.Modeling.ObjectData.Node.LabelPrefix.get -> string!
 SA3D.Modeling.ObjectData.Node.Modifier.get -> bool
 SA3D.Modeling.ObjectData.Node.Modifier.set -> void
+SA3D.Modeling.ObjectData.Node.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.Node.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Structs.Bounds.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Structs.Bounds.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Structs.Color.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.ColorIOType type) -> void
+SA3D.Modeling.Structs.Color.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.ColorIOType type) -> void
+SA3D.Modeling.Structs.FloatIOType.BAMSF16 = 5 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.BAMSF32 = 6 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.FloatIOType.NormalizedShort = 7 -> SA3D.Modeling.Structs.FloatIOType
+SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.Format.Basic = 0 -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.Format.BasicDX = 1 -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.Format.Chunk = 2 -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.Format.Ginja = 3 -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.IOContext
+SA3D.Modeling.Structs.IOContext.IOContext() -> void
+SA3D.Modeling.Structs.IOContext.LevelFormat.get -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.IOContext.LevelFormat.init -> void
+SA3D.Modeling.Structs.IOContext.MeshFormat.get -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.IOContext.MeshFormat.init -> void
+SA3D.Modeling.Structs.IOContext.PointerLUT.get -> SA3D.Modeling.Structs.PointerLUT!
+SA3D.Modeling.Structs.IOContext.PointerLUT.init -> void
+SA3D.Modeling.Structs.PointerLUT.Attaches.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.MeshData!>!
+SA3D.Modeling.Structs.PointerLUT.Motions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.Animation!>!
+SA3D.Modeling.Structs.PointerLUT.NodeMotions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.ModelAnimation!>!
+SA3D.Modeling.Structs.PointerLUT.PointerLUT(System.Collections.Generic.Dictionary<long, string!>! labels) -> void
+static readonly SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Ginja.GinjaVertexSet!
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.DefaultValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter
+static SA3D.Modeling.AnimationData.EnumExtensions.ChannelCount(this SA3D.Modeling.AnimationData.KeyframeAttributes attributes) -> int
+static SA3D.Modeling.AnimationData.Spotlight.Distance(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to) -> float
+static SA3D.Modeling.AnimationData.Spotlight.Lerp(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to, float time) -> SA3D.Modeling.AnimationData.Spotlight
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EnsurePositiveEulerRotationAngles(SA3D.Modeling.AnimationData.KeyframeSet! keyframes, bool forBAMS) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.GetRotationMatrices(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>!
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
+static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion) -> void
+static SA3D.Modeling.File.File.CheckBytes<T>(byte[]! data) -> bool
+static SA3D.Modeling.File.File.CheckFile<T>(string! filepath) -> bool
+static SA3D.Modeling.File.File.CheckStream<T>(System.IO.Stream! stream) -> bool
+static SA3D.Modeling.File.File.ReadFromBytes<T, C>(byte[]! data, C context) -> T
+static SA3D.Modeling.File.File.ReadFromBytes<T>(byte[]! data) -> T
+static SA3D.Modeling.File.File.ReadFromFile<T, C>(string! filepath, C context) -> T
+static SA3D.Modeling.File.File.ReadFromFile<T>(string! filepath) -> T
+static SA3D.Modeling.File.File.ReadFromStream<T, C>(System.IO.Stream! stream, C context) -> T
+static SA3D.Modeling.File.File.ReadFromStream<T>(System.IO.Stream! stream) -> T
+static SA3D.Modeling.File.File.WriteToBytes<T, C>(this T file, C context) -> byte[]!
+static SA3D.Modeling.File.File.WriteToBytes<T>(this T file) -> byte[]!
+static SA3D.Modeling.File.File.WriteToFile<T, C>(this T file, C context, string! filepath) -> void
+static SA3D.Modeling.File.File.WriteToFile<T>(this T file, string! filepath) -> void
+static SA3D.Modeling.File.File.WriteToStream<T, C>(this T file, C context, System.IO.Stream! stream) -> void
+static SA3D.Modeling.File.File.WriteToStream<T>(this T file, System.IO.Stream! stream) -> void
+static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
+static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
+static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeightNode left, SA3D.Modeling.File.MetaData.Weights.MetaWeightNode right) -> bool
+static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeightNode left, SA3D.Modeling.File.MetaData.Weights.MetaWeightNode right) -> bool
+static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex left, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex right) -> bool
+static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex left, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex right) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> int
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetReadCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Action<Amicitia.IO.Binary.BinaryObjectWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
+static SA3D.Modeling.Mesh.EnumExtensions.ToFormat(this SA3D.Modeling.Mesh.AttachFormat attachFormat) -> SA3D.Modeling.Structs.Format
+static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetDataByteSize(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType dataType) -> int
+static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetDataReflectionType(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType dataType) -> System.Type!
+static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetStructComponentCount(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType structType) -> int
+static SA3D.Modeling.Mesh.Ginja.GinjaCorner.operator !=(SA3D.Modeling.Mesh.Ginja.GinjaCorner left, SA3D.Modeling.Mesh.Ginja.GinjaCorner right) -> bool
+static SA3D.Modeling.Mesh.Ginja.GinjaCorner.operator ==(SA3D.Modeling.Mesh.Ginja.GinjaCorner left, SA3D.Modeling.Mesh.Ginja.GinjaCorner right) -> bool
+static SA3D.Modeling.Structs.BAMSFHelper.ReadBAMSF16(this Amicitia.IO.Binary.BinaryValueReader! reader) -> float
+static SA3D.Modeling.Structs.BAMSFHelper.ReadBAMSF32(this Amicitia.IO.Binary.BinaryValueReader! reader) -> float
+static SA3D.Modeling.Structs.BAMSFHelper.WriteBAMSF16(this Amicitia.IO.Binary.BinaryValueWriter! writer, float radians) -> void
+static SA3D.Modeling.Structs.BAMSFHelper.WriteBAMSF32(this Amicitia.IO.Binary.BinaryValueWriter! writer, float radians) -> void
+static SA3D.Modeling.Structs.Color.implicit operator SA3D.Modeling.Structs.Color(System.Numerics.Vector3 vector) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.implicit operator SA3D.Modeling.Structs.Color(System.Numerics.Vector4 vector) -> SA3D.Modeling.Structs.Color
+static SA3D.Modeling.Structs.Color.implicit operator System.Numerics.Vector3(SA3D.Modeling.Structs.Color color) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.Color.implicit operator System.Numerics.Vector4(SA3D.Modeling.Structs.Color color) -> System.Numerics.Vector4
+static SA3D.Modeling.Structs.DebugStringExtensions.DebugString(this System.Numerics.Vector4 vector) -> string!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetReader(this SA3D.Modeling.Structs.FloatIOType type) -> System.Func<Amicitia.IO.Binary.BinaryValueReader!, float>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetVector2Reader(this SA3D.Modeling.Structs.FloatIOType type) -> System.Func<Amicitia.IO.Binary.BinaryValueReader!, System.Numerics.Vector2>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetVector2Writer(this SA3D.Modeling.Structs.FloatIOType type) -> System.Action<Amicitia.IO.Binary.BinaryValueWriter!, System.Numerics.Vector2>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetVector3Reader(this SA3D.Modeling.Structs.FloatIOType type) -> System.Func<Amicitia.IO.Binary.BinaryValueReader!, System.Numerics.Vector3>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetVector3Writer(this SA3D.Modeling.Structs.FloatIOType type) -> System.Action<Amicitia.IO.Binary.BinaryValueWriter!, System.Numerics.Vector3>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.GetWriter(this SA3D.Modeling.Structs.FloatIOType type) -> System.Action<Amicitia.IO.Binary.BinaryValueWriter!, float>!
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.ReadSingle(this Amicitia.IO.Binary.BinaryValueReader! reader, SA3D.Modeling.Structs.FloatIOType type) -> float
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.ReadVector2(this Amicitia.IO.Binary.BinaryValueReader! reader, SA3D.Modeling.Structs.FloatIOType type) -> System.Numerics.Vector2
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.ReadVector3(this Amicitia.IO.Binary.BinaryValueReader! reader, SA3D.Modeling.Structs.FloatIOType type) -> System.Numerics.Vector3
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.WriteSingle(this Amicitia.IO.Binary.BinaryValueWriter! writer, float value, SA3D.Modeling.Structs.FloatIOType type) -> void
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.WriteVector2(this Amicitia.IO.Binary.BinaryValueWriter! writer, System.Numerics.Vector2 value, SA3D.Modeling.Structs.FloatIOType type) -> void
+static SA3D.Modeling.Structs.FloatIOTypeExtensions.WriteVector3(this Amicitia.IO.Binary.BinaryValueWriter! writer, System.Numerics.Vector3 value, SA3D.Modeling.Structs.FloatIOType type) -> void
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+virtual SA3D.Modeling.Mesh.MeshData.CheckHasWeights() -> bool

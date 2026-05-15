@@ -130,15 +130,12 @@ namespace SA3D.Modeling.ObjectData
 			{
 				Previous.Next = Next;
 			}
-			else if(Parent != null)
+			else
 			{
-				Parent.Child = Next;
+				Parent?.Child = Next;
 			}
 
-			if(Next != null)
-			{
-				Next.Previous = Previous;
-			}
+			Next?.Previous = Previous;
 
 			Parent = null;
 			Next = null;
@@ -227,9 +224,9 @@ namespace SA3D.Modeling.ObjectData
 			{
 				Previous.Next = node;
 			}
-			else if(Parent != null)
+			else
 			{
-				Parent.Child = node;
+				Parent?.Child = node;
 			}
 
 			node.Parent = Parent;
@@ -250,10 +247,7 @@ namespace SA3D.Modeling.ObjectData
 
 			node.Detach();
 
-			if(Next != null)
-			{
-				Next.Previous = node;
-			}
+			Next?.Previous = node;
 
 			node.Parent = Parent;
 			node.Previous = this;

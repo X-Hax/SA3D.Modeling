@@ -1,53 +1,88 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿using SA3D.Modeling.Structs;
+using System;
+
+namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// Extension methods for gamecube enums.
 	/// </summary>
-	public static class GCEnumExtensions
+	public static class GinjaEnumExtensions
 	{
 		/// <summary>
-		/// Returns the struct size of a struct-data combination
+		/// Returns the number of components for the given <see cref="GinjaStructType"/>
 		/// </summary>
-		/// <param name="structType">Type of structure.</param>
-		/// <param name="dataType">Value datatype within the structure</param>
-		/// <returns>The size in bytes.</returns>
-		public static uint GetStructSize(GCStructType structType, GCDataType dataType)
+		/// <param name="structType">The type to get the number of components for</param>
+		public static int GetStructComponentCount(this GinjaStructType structType)
 		{
-			uint num_components = structType switch
+			return structType switch
 			{
-				GCStructType.PositionXY
-				or GCStructType.TexCoordUV => 2,
+				GinjaStructType.PositionXY
+				or GinjaStructType.TexCoordUV => 2,
 
-				GCStructType.PositionXYZ
-				or GCStructType.NormalXYZ => 3,
+				GinjaStructType.PositionXYZ
+				or GinjaStructType.NormalXYZ => 3,
 
-				GCStructType.NormalNBT
-				or GCStructType.NormalNBT3 => 9,
+				GinjaStructType.NormalNBT
+				or GinjaStructType.NormalNBT3 => 9,
 
-				GCStructType.ColorRGB
-				or GCStructType.ColorRGBA
-				or GCStructType.TexCoordU
-				or _ => 1,
+				GinjaStructType.ColorRGB
+				or GinjaStructType.ColorRGBA
+				or GinjaStructType.TexCoordU => 1,
+
+				_ => throw new InvalidOperationException($"Invalid struct type {structType}"),
 			};
+		}
 
-			return (uint)(num_components * dataType switch
+		/// <summary>
+		/// Returns the number of bytes occupied by a given <see cref="GinjaDataType"/>
+		/// </summary>
+		/// <param name="dataType">The datatype to get the bytesize for</param>
+		public static int GetDataByteSize(this GinjaDataType dataType)
+		{
+			return dataType switch
 			{
-				GCDataType.Unsigned8
-				or GCDataType.Signed8 => 1,
+				GinjaDataType.Unsigned8
+				or GinjaDataType.Signed8 => 1,
 
-				GCDataType.Unsigned16
-				or GCDataType.Signed16
-				or GCDataType.RGB565
-				or GCDataType.RGBA4 => 2,
+				GinjaDataType.Unsigned16
+				or GinjaDataType.Signed16
+				or GinjaDataType.RGB565
+				or GinjaDataType.RGBA4 => 2,
 
-				GCDataType.RGBA6 => 3,
+				GinjaDataType.RGBA6 => 3,
 
-				GCDataType.Float32
-				or GCDataType.RGB8
-				or GCDataType.RGBX8
-				or GCDataType.RGBA8
-				or _ => 4,
-			});
+				GinjaDataType.Float32
+				or GinjaDataType.RGB8
+				or GinjaDataType.RGBX8
+				or GinjaDataType.RGBA8 => 4,
+
+				_ => throw new InvalidOperationException($"Invalid data type {dataType}"),
+			};
+		}
+
+		/// <summary>
+		/// Returns the <see cref="Type"/> for the given <see cref="GinjaDataType"/>
+		/// </summary>
+		/// <param name="dataType">The datatype to get the reflection type for</param>
+		public static Type GetDataReflectionType(this GinjaDataType dataType)
+		{
+			return dataType switch
+			{
+				GinjaDataType.Unsigned8 => typeof(byte),
+				GinjaDataType.Signed8 => typeof(sbyte),
+				GinjaDataType.Unsigned16 => typeof(ushort),
+				GinjaDataType.Signed16 => typeof(short),
+				GinjaDataType.Float32 => typeof(float),
+
+				GinjaDataType.RGB565
+				or GinjaDataType.RGB8
+				or GinjaDataType.RGBX8
+				or GinjaDataType.RGBA4
+				or GinjaDataType.RGBA6
+				or GinjaDataType.RGBA8 => typeof(Color),
+
+				_ => throw new InvalidOperationException($"Invalid data type {dataType}"),
+			};
 		}
 	}
 }

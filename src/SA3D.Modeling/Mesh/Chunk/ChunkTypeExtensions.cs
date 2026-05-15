@@ -13,6 +13,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		internal const byte _vertex = 32;
 		internal const byte _volume = 56;
 		internal const byte _strip = 64;
+		internal const byte _shapeOffset = 128;
 
 		/// <summary>
 		/// Checks whether a vertex chunktype uses 4 component vectors for positions/normals.
@@ -115,12 +116,13 @@ namespace SA3D.Modeling.Mesh.Chunk
 				or VertexChunkType.NormalAttributes;
 		}
 
+
 		/// <summary>
 		/// Returns the number of 4-byte values a chunk vertex has.
 		/// </summary>
 		/// <param name="type">Type to get the size of.</param>
 		/// <returns></returns>
-		public static ushort GetIntegerSize(this VertexChunkType type)
+		public static int GetIntegerSize(this VertexChunkType type)
 		{
 			switch(type)
 			{
@@ -137,6 +139,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 					return 4;
 				case VertexChunkType.Normal32Diffuse:
 				case VertexChunkType.Normal32UserAttributes:
+				case VertexChunkType.DiffuseSpecular:
+				case VertexChunkType.AttributesDiffuse:
 					return 5;
 				case VertexChunkType.Normal:
 					return 6;

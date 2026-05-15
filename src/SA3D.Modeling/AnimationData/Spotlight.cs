@@ -1,38 +1,33 @@
-﻿using SA3D.Common.IO;
-using System;
-using static SA3D.Common.MathHelper;
+﻿using Amicitia.IO.Binary;
+using SA3D.Modeling.Structs;
+using System.Numerics;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Spotlight for cutscenes.
 	/// </summary>
-	public struct Spotlight
+	public struct Spotlight : IBinarySerializable
 	{
-		/// <summary>
-		/// Size of the spotlight struct.
-		/// </summary>
-		public static uint StructSize => 16;
-
 		/// <summary>
 		/// Closest light distance.
 		/// </summary>
-		public float near;
+		public float Near { get; set; }
 
 		/// <summary>
 		/// Furthest light distance.
 		/// </summary>
-		public float far;
+		public float Far { get; set; }
 
 		/// <summary>
 		/// Inner cone angle.
 		/// </summary>
-		public float insideAngle;
+		public float InsideAngle { get; set; }
 
 		/// <summary>
 		/// Outer cone angle.
 		/// </summary>
-		public float outsideAngle;
+		public float OutsideAngle { get; set; }
 
 		/// <summary>
 		/// Linearly interpolate between two spotlights.
@@ -46,10 +41,10 @@ namespace SA3D.Modeling.Animation
 			float inverse = 1 - time;
 			return new Spotlight()
 			{
-				near = (to.near * time) + (from.near * inverse),
-				far = (to.far * time) + (from.far * inverse),
-				insideAngle = (to.insideAngle * time) + (from.insideAngle * inverse),
-				outsideAngle = (to.outsideAngle * time) + (from.outsideAngle * inverse),
+				Near = (to.Near * time) + (from.Near * inverse),
+				Far = (to.Far * time) + (from.Far * inverse),
+				InsideAngle = (to.InsideAngle * time) + (from.InsideAngle * inverse),
+				OutsideAngle = (to.OutsideAngle * time) + (from.OutsideAngle * inverse),
 			};
 		}
 
@@ -61,41 +56,28 @@ namespace SA3D.Modeling.Animation
 		/// <returns>The distance</returns>
 		public static float Distance(Spotlight from, Spotlight to)
 		{
-			return MathF.Sqrt(
-				MathF.Pow(from.near - to.near, 2) +
-				MathF.Pow(from.far - to.far, 2) +
-				MathF.Pow(from.insideAngle - to.insideAngle, 2) +
-				MathF.Pow(from.outsideAngle - to.outsideAngle, 2)
-				);
+			return Vector4.Distance(
+				new(from.Near, from.Far, from.InsideAngle, from.OutsideAngle),
+				new(to.Near, to.Far, to.InsideAngle, to.OutsideAngle)
+			);
 		}
 
-		/// <summary>
-		/// Reads a spotlight off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The spotlight that was read.</returns>
-		public static Spotlight Read(EndianStackReader reader, uint address)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			return new Spotlight()
-			{
-				near = reader.ReadFloat(address),
-				far = reader.ReadFloat(address + 4),
-				insideAngle = BAMSToRad(reader.ReadInt(address + 8)),
-				outsideAngle = BAMSToRad(reader.ReadInt(address + 12))
-			};
+			Near = reader.ReadSingle();
+			Far = reader.ReadSingle();
+			InsideAngle = reader.ReadSingle(FloatIOType.BAMS32);
+			OutsideAngle = reader.ReadSingle(FloatIOType.BAMS32);
 		}
 
-		/// <summary>
-		/// Writes the spotlight to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public readonly void Write(EndianStackWriter writer)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			writer.WriteFloat(near);
-			writer.WriteFloat(far);
-			writer.WriteInt(RadToBAMS(insideAngle));
-			writer.WriteInt(RadToBAMS(outsideAngle));
+			writer.WriteSingle(Near);
+			writer.WriteSingle(Far);
+			writer.WriteSingle(InsideAngle, FloatIOType.BAMS32);
+			writer.WriteSingle(OutsideAngle, FloatIOType.BAMS32);
 		}
 	}
 }

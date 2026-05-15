@@ -1,6 +1,4 @@
 ﻿using SA3D.Modeling.Mesh;
-using SA3D.Modeling.Mesh.Converters;
-using SA3D.Modeling.Mesh.Weighted;
 using SA3D.Modeling.ObjectData.Events;
 using SA3D.Modeling.ObjectData.Structs;
 using System;
@@ -11,13 +9,13 @@ namespace SA3D.Modeling.ObjectData
 {
 	public partial class Node
 	{
-		private Attach? _attach;
+		private MeshData? _attach;
 
 
 		/// <summary>
 		/// Mesh data attached to this node.
 		/// </summary>
-		public Attach? Attach
+		public MeshData? Attach
 		{
 			get => _attach;
 			set
@@ -29,12 +27,12 @@ namespace SA3D.Modeling.ObjectData
 
 				AttachFormat? format = GetAttachFormat();
 
-				if(value != null && format != null && format != value.Format)
+				if(value != null && format != null && format != value.MeshFormat)
 				{
-					throw new FormatException($"Node uses {format} attaches, and the attach that is being set is of type {value.Format}! Cannot set attach!");
+					throw new FormatException($"Node uses {format} attaches, and the attach that is being set is of type {value.MeshFormat}! Cannot set attach!");
 				}
 
-				Attach? previous = _attach;
+				MeshData? previous = _attach;
 				_attach = value;
 
 				OnAttachUpdated?.Invoke(this, new(previous, _attach));
@@ -61,7 +59,7 @@ namespace SA3D.Modeling.ObjectData
 			{
 				if(node.Attach != null)
 				{
-					return node.Attach.Format;
+					return node.Attach.MeshFormat;
 				}
 			}
 
@@ -97,7 +95,7 @@ namespace SA3D.Modeling.ObjectData
 			{
 				if(node._attach != null)
 				{
-					Attach? previous = node._attach;
+					MeshData? previous = node._attach;
 					node._attach = null;
 					node.OnAttachUpdated?.Invoke(node, new(previous, null));
 				}
@@ -111,123 +109,6 @@ namespace SA3D.Modeling.ObjectData
 		{
 			return GetTreeAttachEnumerable().Any(x => x.CheckHasWeights());
 		}
-
-
-		/// <summary>
-		/// Generates buffer mesh data for the attaches in the entire tree.
-		/// </summary>
-		/// <param name="optimize">Whether to optimize vertex and polygon data of the buffered meshes.</param>
-		public void BufferMeshData(bool optimize)
-		{
-			AttachFormat? format = GetAttachFormat();
-			if(format == null)
-			{
-				return;
-			}
-
-			Node rootNode = GetRootNode();
-
-			switch(format)
-			{
-				case AttachFormat.BASIC:
-					BasicConverter.BufferBasicModel(rootNode, optimize);
-					break;
-				case AttachFormat.CHUNK:
-					ChunkConverter.BufferChunkModel(rootNode, optimize);
-					break;
-				case AttachFormat.GC:
-					GCConverter.BufferGCModel(rootNode, optimize);
-					break;
-				case AttachFormat.Buffer:
-				default:
-					break;
-			}
-		}
-
-		/// <summary>
-		/// Converts the entire Model to a different attach format.
-		/// </summary>
-		/// <param name="newAttachFormat">The attach format to convert to.</param>
-		/// <param name="bufferMode">How to handle buffered mesh data of the model.</param>
-		/// <param name="optimize">Whether to optimize the new attach data.</param>
-		/// <param name="forceUpdate">Force conversion, even if the attach format ends up being the same.</param>
-		/// <param name="updateBuffer">Whether to generate buffer mesh data after conversion.</param>
-		public void ConvertAttachFormat(
-			AttachFormat newAttachFormat,
-			BufferMode bufferMode,
-			bool optimize,
-			bool forceUpdate = false,
-			bool updateBuffer = false)
-		{
-			AttachFormat? format = GetAttachFormat();
-			if(format == null || (newAttachFormat == format && !forceUpdate))
-			{
-				return;
-			}
-
-			if(newAttachFormat == AttachFormat.Buffer)
-			{
-				BufferMeshData(optimize);
-
-				Dictionary<Attach, Node> attachPairs = [];
-				foreach(Node node in GetTreeNodeEnumerable())
-				{
-					if(node.Attach != null)
-					{
-						attachPairs.Add(node.Attach, node);
-					}
-				}
-
-				ClearAttachesFromTree();
-				ClearWeldingsFromTree();
-
-				foreach(KeyValuePair<Attach, Node> pair in attachPairs)
-				{
-					if(pair.Key.MeshData.Length == 0)
-					{
-						continue;
-					}
-
-					pair.Value.Attach = new(pair.Key.MeshData)
-					{
-						Label = pair.Key.Label,
-						MeshBounds = pair.Key.MeshBounds
-					};
-				}
-
-				return;
-			}
-
-			Node rootNode = GetRootNode();
-			WeightedMesh[] weightedMeshes = WeightedMesh.FromModel(rootNode, bufferMode);
-
-			if(weightedMeshes.Length == 0)
-			{
-				throw new InvalidOperationException("No weighted meshes have been generated! Did you perhaps forget to buffer the mesh data?");
-			}
-
-			switch(newAttachFormat)
-			{
-				case AttachFormat.BASIC:
-					BasicConverter.ConvertWeightedToBasic(rootNode, weightedMeshes, optimize);
-					break;
-				case AttachFormat.CHUNK:
-					ChunkConverter.ConvertWeightedToChunk(rootNode, weightedMeshes, optimize, out _);
-					break;
-				case AttachFormat.GC:
-					GCConverter.ConvertWeightedToGC(rootNode, weightedMeshes, optimize);
-					break;
-				case AttachFormat.Buffer:
-				default:
-					break;
-			}
-
-			if(updateBuffer)
-			{
-				BufferMeshData(optimize);
-			}
-		}
-
 
 		/// <summary>
 		/// Returns a dictionary of links between nodes that influence each other with welds.

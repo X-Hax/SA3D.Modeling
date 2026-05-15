@@ -1,17 +1,20 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.ObjectData;
-using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.Structs;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Pairs a node and motion together.
 	/// </summary>
-	public class NodeMotion : ILabel
+	public class ModelAnimation : ILabel, IBinarySerializable<IOContext>
 	{
+		/// <inheritdoc/>
+		public string LabelPrefix => "action_";
+
 		/// <inheritdoc/>
 		public string Label { get; set; }
 
@@ -23,67 +26,56 @@ namespace SA3D.Modeling.Animation
 		/// <summary>
 		/// Assigned motion.
 		/// </summary>
-		public Motion Animation { get; set; }
+		public Animation Animation { get; set; }
 
+		/// <summary>
+		/// Creates a new, blank node animation
+		/// </summary>
+		public ModelAnimation() : this(new(), new()) { }
 
 		/// <summary>
 		/// Creates a new node motion.
 		/// </summary>
 		/// <param name="model">The model of the pair.</param>
 		/// <param name="animation">The animation of the pair.</param>
-		public NodeMotion(Node model, Motion animation)
+		public ModelAnimation(Node model, Animation animation)
 		{
-			Label = "action_" + StringExtensions.GenerateIdentifier();
+			Label = LabelPrefix.GenerateIdentifier();
 			Model = model;
 			Animation = animation;
 		}
 
-
-		/// <summary>
-		/// Writes the node motion and its contents to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="format">The format in which the model should be written.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>Address at which the node motion was written.</returns>
-		public uint Write(EndianStackWriter writer, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, IOContext context)
 		{
-			uint OnWrite(NodeMotion nodeMotion)
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Model));
+
+			AnimationIOContext animationContext = new()
 			{
-				uint nodeAddress = Model.Write(writer, format, lut);
-				uint motionAddress = Animation.Write(writer, lut);
-
-				uint result = writer.PointerPosition;
-
-				writer.WriteUInt(nodeAddress);
-				writer.WriteUInt(motionAddress);
-
-				return result;
-			}
-
-			return lut.GetAddAddress(this, OnWrite);
+				BaseContext = context,
+				FileContext = new()
+				{
+					KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
+				}
+			};
 		}
 
-		/// <summary>
-		/// Reads a NodeMotion off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="format">The format that the node should be read in.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The node motion pair that was read</returns>
-		public static NodeMotion Read(EndianStackReader reader, uint address, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			NodeMotion onRead()
+			writer.WriteObjectOffset(Model, context, context.PointerLUT);
+
+			AnimationIOContext animationContext = new()
 			{
-				Node mdl = Node.Read(reader, reader.ReadPointer(address), format, lut);
-				Motion mtn = Motion.Read(reader, reader.ReadPointer(address + 4), (uint)mdl.GetTreeNodeCount(), lut);
+				BaseContext = context,
+				FileContext = new()
+				{
+					KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
+				}
+			};
 
-				return new NodeMotion(mdl, mtn);
-			}
-
-			return lut.GetAddLabeledValue(address, "action_", onRead);
+			writer.WriteObjectOffset(Animation, animationContext, context.PointerLUT);
 		}
-
 	}
 }

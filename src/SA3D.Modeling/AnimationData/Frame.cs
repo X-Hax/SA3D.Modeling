@@ -1,7 +1,7 @@
 ﻿using SA3D.Modeling.Structs;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Frame on timeline with interpolated values from a keyframe storage.

@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// The component type of the data.
 	/// </summary>
-	public enum GCDataType : byte
+	public enum GinjaDataType : byte
 	{
 		/// <summary>
 		/// Equal to <see cref="byte"/>.

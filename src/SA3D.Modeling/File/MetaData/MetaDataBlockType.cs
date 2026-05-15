@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.File
+﻿namespace SA3D.Modeling.File.MetaData
 {
 	/// <summary>
 	/// Meta data type
 	/// </summary>
-	public enum MetaBlockType : uint
+	public enum MetaDataBlockType : uint
 	{
 		/// <summary>
 		/// Data labels.

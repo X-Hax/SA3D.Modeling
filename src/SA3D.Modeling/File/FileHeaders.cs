@@ -13,7 +13,6 @@ namespace SA3D.Modeling.File
 		public const ulong SADX = 0x58444153u;
 		public const ulong SA2 = 0x324153u;
 		public const ulong SA2B = 0x42324153u;
-		public const ulong BUF = 0x465542u;
 
 		#region Landtable
 
@@ -21,7 +20,6 @@ namespace SA3D.Modeling.File
 		public const ulong SADXLVL = (LVL << 32) | SADX;
 		public const ulong SA2LVL = (LVL << 24) | SA2;
 		public const ulong SA2BLVL = (LVL << 32) | SA2B;
-		public const ulong BUFLVL = (LVL << 24) | BUF;
 
 		public const ulong CurrentLandtableVersion = 3;
 		public const ulong CurrentLandtableVersionShifted = CurrentLandtableVersion << 56;
@@ -30,7 +28,6 @@ namespace SA3D.Modeling.File
 		public const ulong SADXLVLVer = SADXLVL | CurrentLandtableVersionShifted;
 		public const ulong SA2LVLVer = SA2LVL | CurrentLandtableVersionShifted;
 		public const ulong SA2BLVLVer = SA2BLVL | CurrentLandtableVersionShifted;
-		public const ulong BUFLVLVer = BUFLVL | CurrentLandtableVersionShifted;
 
 		#endregion
 
@@ -40,7 +37,6 @@ namespace SA3D.Modeling.File
 		public const ulong SADXMDL = (MDL << 32) | SADX;
 		public const ulong SA2MDL = (MDL << 24) | SA2;
 		public const ulong SA2BMDL = (MDL << 32) | SA2B;
-		public const ulong BUFMDL = (MDL << 24) | BUF;
 
 		public const ulong CurrentModelVersion = 3;
 		public const ulong CurrentModelVersionShifted = CurrentModelVersion << 56;
@@ -49,7 +45,6 @@ namespace SA3D.Modeling.File
 		public const ulong SADXMDLVer = SADXMDL | CurrentModelVersionShifted;
 		public const ulong SA2MDLVer = SA2MDL | CurrentModelVersionShifted;
 		public const ulong SA2BMDLVer = SA2BMDL | CurrentModelVersionShifted;
-		public const ulong BUFMDLVer = BUFMDL | CurrentModelVersionShifted;
 
 		#endregion
 
@@ -67,76 +62,37 @@ namespace SA3D.Modeling.File
 
 		#region Other
 
-		/// <summary>
-		/// NJ header.
-		/// </summary>
-		public const ushort NJ = (ushort)0x4A4Eu;
+		public const string NinjaModelBlockIdentifier = "NJ";
+		public const string GinjaModelBlockIdentifier = "GJ";
 
-		/// <summary>
-		/// GJ Header.
-		/// </summary>
-		public const ushort GJ = (ushort)0x4A47u;
+		public const string ChunkModelBlockType = "CM";
+		public const string BasicModelBlockType = "BM";
+		public const string TextureListBlockType = "TL";
 
-		/// <summary>
-		/// Chunk model block header.
-		/// </summary>
-		public const ushort CM = (ushort)0x4D43u;
-
-		/// <summary>
-		/// Basic model block header.
-		/// </summary>
-		public const ushort BM = (ushort)0x4D42u;
-
-		/// <summary>
-		/// Texture list block header
-		/// </summary>
-		public const ushort TL = (ushort)0x4C54u;
+		public const string ModelMotionBlockHeader = "NMDM";
+		public const string ShapeMotionBlockHeader = "NSSM";
+		public const string CameraMotionBlockHeader = "NCAM";
 
 
-		/// <summary>
-		/// Model motion block header.
-		/// </summary>
-		public const uint NMDM = 0x4D444D4Eu;
-
-		/// <summary>
-		/// Shape motion block header.
-		/// </summary>
-		public const uint NSSM = 0x4D53534Eu;
-
-		/// <summary>
-		/// Camera motion block header.
-		/// </summary>
-		public const uint NCAM = 0x4D41434Eu;
-
-
-		/// <summary>
-		/// Texture list block header in a hashset for finding the block
-		/// </summary>
-		public static readonly HashSet<uint> TextureListBlockHeaders =
+		public static readonly HashSet<string> TextureListBlockHeaders =
 		[
-			(TL << 16) | NJ,
-			(TL << 16) | GJ,
+			NinjaModelBlockIdentifier + TextureListBlockType,
+			GinjaModelBlockIdentifier + TextureListBlockType,
 		];
 
-		/// <summary>
-		/// model block headers in a hashset for finding the block
-		/// </summary>
-		public static readonly HashSet<uint> ModelBlockHeaders =
+		public static readonly HashSet<string> ModelBlockHeaders =
 		[
-			(CM << 16) | NJ,
-			(BM << 16) | NJ,
-			(CM << 16) | GJ,
-			(BM << 16) | GJ,
+			NinjaModelBlockIdentifier + ChunkModelBlockType,
+			NinjaModelBlockIdentifier + BasicModelBlockType,
+			GinjaModelBlockIdentifier + ChunkModelBlockType,
+			GinjaModelBlockIdentifier + BasicModelBlockType
 		];
 
-		/// <summary>
-		/// Animation block headers in a hashset for finding the block
-		/// </summary>
-		public static readonly HashSet<uint> AnimationBlockHeaders =
+		public static readonly HashSet<string> AnimationBlockHeaders =
 		[
-			NMDM,
-			NSSM,
-			NCAM,
+			ModelMotionBlockHeader,
+			ShapeMotionBlockHeader,
+			CameraMotionBlockHeader,
 		];
 
 		#endregion

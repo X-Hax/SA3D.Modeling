@@ -84,28 +84,28 @@ override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ToString() -> string!
 override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.ToString() -> string!
 override SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.ToString() -> string!
 override SA3D.Modeling.Mesh.Chunk.VertexChunk.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.CheckHasWeights() -> bool
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCAttach!
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.RecalculateBounds() -> void
-override SA3D.Modeling.Mesh.Gamecube.GCAttach.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.GCCorner.Equals(object? obj) -> bool
-override SA3D.Modeling.Mesh.Gamecube.GCCorner.GetHashCode() -> int
-override SA3D.Modeling.Mesh.Gamecube.GCCorner.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.GCMesh.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.GCPolygon.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.ToString() -> string!
-override SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GCAttach.CanWrite(SA3D.Modeling.ObjectData.Enums.ModelFormat format) -> bool
+override SA3D.Modeling.Mesh.Ginja.GCAttach.CheckHasWeights() -> bool
+override SA3D.Modeling.Mesh.Ginja.GCAttach.Clone() -> SA3D.Modeling.Mesh.Ginja.GCAttach!
+override SA3D.Modeling.Mesh.Ginja.GCAttach.Format.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Ginja.GCAttach.RecalculateBounds() -> void
+override SA3D.Modeling.Mesh.Ginja.GCAttach.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GCCorner.Equals(object? obj) -> bool
+override SA3D.Modeling.Mesh.Ginja.GCCorner.GetHashCode() -> int
+override SA3D.Modeling.Mesh.Ginja.GCCorner.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GCMesh.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GCPolygon.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.GCVertexSet.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.ToString() -> string!
+override SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.ToString() -> string!
 override SA3D.Modeling.Mesh.Weighted.WeightedVertex.Equals(object? obj) -> bool
 override SA3D.Modeling.Mesh.Weighted.WeightedVertex.GetHashCode() -> int
 override SA3D.Modeling.Mesh.Weighted.WeightedVertex.ToString() -> string!
@@ -528,17 +528,17 @@ SA3D.Modeling.Mesh.Buffer.BufferMaterial.Diffuse.get -> SA3D.Modeling.Structs.Co
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.Diffuse.set -> void
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.get -> bool
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.Flat.set -> void
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.get -> uint
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GamecubeData.set -> void
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GinjaData.get -> uint
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GinjaData.set -> void
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCMatrixID.set -> void
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.get -> byte
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCShadowStencil.set -> void
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordID.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordID.set -> void
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordSource.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordSource.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordSource.set -> void
-SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.GCTexCoordType.set -> void
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.HasAttributes(SA3D.Modeling.Mesh.Buffer.MaterialAttributes attrib) -> bool
 SA3D.Modeling.Mesh.Buffer.BufferMaterial.MipmapDistanceMultiplier.get -> float
@@ -942,326 +942,326 @@ SA3D.Modeling.Mesh.FilterMode.Bilinear = 1 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.FilterMode.Blend = 3 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.FilterMode.Nearest = 0 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.FilterMode.Trilinear = 2 -> SA3D.Modeling.Mesh.FilterMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Float32 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGB565 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGB8 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA4 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA6 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBA8 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.RGBX8 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Signed16 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Signed8 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Unsigned16 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType.Unsigned8 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCEnumExtensions
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.Color0LargeIndex = 64 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.Color1LargeIndex = 256 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasColor0 = 128 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasColor1 = 512 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasNormal = 32 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasPosition = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasPositionMatrixID = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord0 = 2048 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord1 = 8192 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord2 = 32768 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord3 = 131072 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord4 = 524288 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord5 = 2097152 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord6 = 8388608 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.HasTexCoord7 = 33554432 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.NormalLargeIndex = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.PositionLargeIndex = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.PositionMatrixIDLargeIndex = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord0LargeIndex = 1024 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord1LargeIndex = 4096 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord2LargeIndex = 16384 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord3LargeIndex = 65536 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord4LargeIndex = 262144 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord5LargeIndex = 1048576 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord6LargeIndex = 4194304 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat.TexCoord7LargeIndex = 16777216 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.AmbientColor = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.BlendAlpha = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.DiffuseColor = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.IndexFormat = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Lighting = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.SpecularColor = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Texcoord = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Texture = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.Unknown = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType.VertexFormat = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Lines = 168 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.LineStrip = 176 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Points = 184 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.TriangleFan = 160 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.Triangles = 144 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType.TriangleStrip = 152 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.ColorRGB = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.ColorRGBA = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalNBT = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalNBT3 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.NormalXYZ = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.PositionXY = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.PositionXYZ = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.TexCoordU = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType.TexCoordUV = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord0 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord1 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord2 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord3 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord4 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord5 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord6 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoord7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordMax = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID.TexCoordNull = 255 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Identity = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix0 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix1 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix2 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix3 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix4 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix5 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix6 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix7 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix8 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix.Matrix9 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Binormal = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord0 = 12 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord1 = 13 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord2 = 14 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord3 = 15 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord4 = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord5 = 17 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.BumpTexCoord6 = 18 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Color0 = 19 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Color1 = 20 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Normal = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Position = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.Tangent = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord0 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord1 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord2 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord3 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord4 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord5 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord6 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource.TexCoord7 = 11 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump0 = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump1 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump2 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump3 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump4 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump5 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump6 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Bump7 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Matrix2x4 = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.Matrix3x4 = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType.SRTG = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Mask = SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatV | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorV | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatU | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorU | SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Unknown -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorU = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.MirrorV = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatU = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.RepeatV = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode.Unknown = 16 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Color0 = 3 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Color1 = 4 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.End = 255 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Normal = 2 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.Position = 1 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.PositionMatrixID = 0 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord0 = 5 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord1 = 6 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord2 = 7 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord3 = 8 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord4 = 9 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord5 = 10 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord6 = 11 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType.TexCoord7 = 12 -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.GCAttach
-SA3D.Modeling.Mesh.Gamecube.GCAttach.ConvertToBufferMeshData(bool optimize) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
-SA3D.Modeling.Mesh.Gamecube.GCAttach.GCAttach(System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType, SA3D.Modeling.Mesh.Gamecube.GCVertexSet!>! vertexData, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! opaqueMeshes, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! transprentMeshes) -> void
-SA3D.Modeling.Mesh.Gamecube.GCAttach.OpaqueMeshes.get -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
-SA3D.Modeling.Mesh.Gamecube.GCAttach.OpaqueMeshes.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCAttach.OptimizePolygons() -> void
-SA3D.Modeling.Mesh.Gamecube.GCAttach.OptimizeVertexData() -> void
-SA3D.Modeling.Mesh.Gamecube.GCAttach.TransparentMeshes.get -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
-SA3D.Modeling.Mesh.Gamecube.GCAttach.TransparentMeshes.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCAttach.VertexData.get -> System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType, SA3D.Modeling.Mesh.Gamecube.GCVertexSet!>!
-SA3D.Modeling.Mesh.Gamecube.GCCorner
-SA3D.Modeling.Mesh.Gamecube.GCCorner.Color0Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.Color0Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.Color1Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.Color1Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.GCCorner() -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.NormalIndex.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.NormalIndex.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionIndex.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionIndex.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionMatrixIDIndex.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.PositionMatrixIDIndex.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord0Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord0Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord1Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord1Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord2Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord2Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord3Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord3Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord4Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord4Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord5Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord5Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord6Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord6Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord7Index.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.GCCorner.TexCoord7Index.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCMesh
-SA3D.Modeling.Mesh.Gamecube.GCMesh.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCMesh!
-SA3D.Modeling.Mesh.Gamecube.GCMesh.GCMesh(SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter![]! parameters, SA3D.Modeling.Mesh.Gamecube.GCPolygon[]! polygons) -> void
-SA3D.Modeling.Mesh.Gamecube.GCMesh.IndexFormat.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat?
-SA3D.Modeling.Mesh.Gamecube.GCMesh.OptimizePolygons() -> void
-SA3D.Modeling.Mesh.Gamecube.GCMesh.Parameters.get -> SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter![]!
-SA3D.Modeling.Mesh.Gamecube.GCMesh.Parameters.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCMesh.Polygons.get -> SA3D.Modeling.Mesh.Gamecube.GCPolygon[]!
-SA3D.Modeling.Mesh.Gamecube.GCMesh.Polygons.set -> void
-SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteParameters(SA3D.Common.IO.EndianStackWriter! writer) -> uint
-SA3D.Modeling.Mesh.Gamecube.GCMesh.WritePolygons(SA3D.Common.IO.EndianStackWriter! writer, ref SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> uint
-SA3D.Modeling.Mesh.Gamecube.GCPolygon
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCPolygon
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.Corners.get -> SA3D.Modeling.Mesh.Gamecube.GCCorner[]!
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.GCPolygon() -> void
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.GCPolygon(SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType type, SA3D.Modeling.Mesh.Gamecube.GCCorner[]! corners) -> void
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCPolyType
-SA3D.Modeling.Mesh.Gamecube.GCPolygon.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> void
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Clone() -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ColorData.get -> SA3D.Modeling.Structs.Color[]!
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Data.get -> System.Array?
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataLength.get -> int
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.DataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.GCVertexSet(SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType attribute, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType, SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, System.Array? data) -> void
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Optimize(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Gamecube.GCMesh!>? meshes) -> void
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructSize.get -> uint
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.StructType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Vector2Data.get -> System.Numerics.Vector2[]!
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Vector3Data.get -> System.Numerics.Vector3[]!
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteData(SA3D.Common.IO.EndianStackWriter! writer) -> uint
-SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteHeader(SA3D.Common.IO.EndianStackWriter! writer, uint dataAddress) -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.AmbientColor.get -> SA3D.Modeling.Structs.Color
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.AmbientColor.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.GCAmbientColorParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DestinationAlpha.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.GCBlendAlphaParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.SourceAlpha.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.UseAlpha.get -> bool
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.UseAlpha.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.DiffuseColor.get -> SA3D.Modeling.Structs.Color
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.DiffuseColor.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.GCDiffuseColorParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.GCIndexFormatParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.IndexFormat.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.IndexFormat.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCIndexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.GCLightingParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.LightingAttributes.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.LightingAttributes.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ShadowStencil.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.ShadowStencil.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown1.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown1.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown2.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.Unknown2.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.GCSpecularColorParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.SpecularColor.get -> SA3D.Modeling.Structs.Color
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.SpecularColor.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.GCTexCoordParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordMatrix
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.MatrixID.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordID
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordID.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordSource.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordSource
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordSource.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTexCoordType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.TexCoordType.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.GCTextureParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.TextureID.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.TextureID.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Tiling.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCTileMode
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Tiling.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCTextureParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.GCUnknownParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown1.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown1.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.get -> ushort
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.Unknown2.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.get -> byte
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Attributes.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.GCVertexFormatParameter() -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexDataType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexDataType.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexStructType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexStructType.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexType.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCVertexType
-SA3D.Modeling.Mesh.Gamecube.Parameters.GCVertexFormatParameter.VertexType.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter
-SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Data.get -> uint
-SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Data.set -> void
-SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter!
-SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter.Type.get -> SA3D.Modeling.Mesh.Gamecube.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.Float32 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGB565 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGB8 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGBA4 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGBA6 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGBA8 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.RGBX8 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.Signed16 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.Signed8 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.Unsigned16 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCDataType.Unsigned8 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Enums.GCEnumExtensions
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.Color0LargeIndex = 64 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.Color1LargeIndex = 256 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasColor0 = 128 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasColor1 = 512 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasNormal = 32 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasPosition = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasPositionMatrixID = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord0 = 2048 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord1 = 8192 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord2 = 32768 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord3 = 131072 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord4 = 524288 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord5 = 2097152 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord6 = 8388608 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.HasTexCoord7 = 33554432 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.NormalLargeIndex = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.PositionLargeIndex = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.PositionMatrixIDLargeIndex = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord0LargeIndex = 1024 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord1LargeIndex = 4096 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord2LargeIndex = 16384 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord3LargeIndex = 65536 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord4LargeIndex = 262144 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord5LargeIndex = 1048576 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord6LargeIndex = 4194304 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat.TexCoord7LargeIndex = 16777216 -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.AmbientColor = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.BlendAlpha = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.DiffuseColor = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.IndexFormat = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.Lighting = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.SpecularColor = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.Texcoord = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.Texture = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.Unknown = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType.VertexFormat = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.Lines = 168 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.LineStrip = 176 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.Points = 184 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.TriangleFan = 160 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.Triangles = 144 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType.TriangleStrip = 152 -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.ColorRGB = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.ColorRGBA = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.NormalNBT = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.NormalNBT3 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.NormalXYZ = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.PositionXY = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.PositionXYZ = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.TexCoordU = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCStructType.TexCoordUV = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoord7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoordMax = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID.TexCoordNull = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Identity = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix0 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix1 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix2 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix3 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix4 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix5 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix6 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix7 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix8 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix.Matrix9 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Binormal = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord0 = 12 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord1 = 13 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord2 = 14 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord3 = 15 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord4 = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord5 = 17 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.BumpTexCoord6 = 18 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Color0 = 19 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Color1 = 20 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Normal = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Position = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.Tangent = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord0 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord1 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord2 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord3 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord4 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord5 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord6 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource.TexCoord7 = 11 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump0 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump1 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump2 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump3 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump4 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump5 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump6 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Bump7 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Matrix2x4 = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.Matrix3x4 = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType.SRTG = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.Mask = SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.RepeatV | SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.MirrorV | SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.RepeatU | SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.MirrorU | SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.Unknown -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.MirrorU = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.MirrorV = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.RepeatU = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.RepeatV = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode.Unknown = 16 -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.Color0 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.Color1 = 4 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.End = 255 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.Normal = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.Position = 1 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.PositionMatrixID = 0 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord0 = 5 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord1 = 6 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord2 = 7 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord3 = 8 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord4 = 9 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord5 = 10 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord6 = 11 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType.TexCoord7 = 12 -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.GCAttach
+SA3D.Modeling.Mesh.Ginja.GCAttach.ConvertToBufferMeshData(bool optimize) -> SA3D.Modeling.Mesh.Buffer.BufferMesh![]!
+SA3D.Modeling.Mesh.Ginja.GCAttach.GCAttach(System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType, SA3D.Modeling.Mesh.Ginja.GCVertexSet!>! vertexData, SA3D.Modeling.Mesh.Ginja.GCMesh![]! opaqueMeshes, SA3D.Modeling.Mesh.Ginja.GCMesh![]! transprentMeshes) -> void
+SA3D.Modeling.Mesh.Ginja.GCAttach.OpaqueMeshes.get -> SA3D.Modeling.Mesh.Ginja.GCMesh![]!
+SA3D.Modeling.Mesh.Ginja.GCAttach.OpaqueMeshes.set -> void
+SA3D.Modeling.Mesh.Ginja.GCAttach.OptimizePolygons() -> void
+SA3D.Modeling.Mesh.Ginja.GCAttach.OptimizeVertexData() -> void
+SA3D.Modeling.Mesh.Ginja.GCAttach.TransparentMeshes.get -> SA3D.Modeling.Mesh.Ginja.GCMesh![]!
+SA3D.Modeling.Mesh.Ginja.GCAttach.TransparentMeshes.set -> void
+SA3D.Modeling.Mesh.Ginja.GCAttach.VertexData.get -> System.Collections.Generic.Dictionary<SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType, SA3D.Modeling.Mesh.Ginja.GCVertexSet!>!
+SA3D.Modeling.Mesh.Ginja.GCCorner
+SA3D.Modeling.Mesh.Ginja.GCCorner.Color0Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.Color0Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.Color1Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.Color1Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.GCCorner() -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.NormalIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.NormalIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.PositionIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.PositionIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.PositionMatrixIDIndex.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.PositionMatrixIDIndex.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord0Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord0Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord1Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord1Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord2Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord2Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord3Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord3Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord4Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord4Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord5Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord5Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord6Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord6Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord7Index.get -> ushort
+SA3D.Modeling.Mesh.Ginja.GCCorner.TexCoord7Index.set -> void
+SA3D.Modeling.Mesh.Ginja.GCMesh
+SA3D.Modeling.Mesh.Ginja.GCMesh.Clone() -> SA3D.Modeling.Mesh.Ginja.GCMesh!
+SA3D.Modeling.Mesh.Ginja.GCMesh.GCMesh(SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter![]! parameters, SA3D.Modeling.Mesh.Ginja.GCPolygon[]! polygons) -> void
+SA3D.Modeling.Mesh.Ginja.GCMesh.IndexFormat.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat?
+SA3D.Modeling.Mesh.Ginja.GCMesh.OptimizePolygons() -> void
+SA3D.Modeling.Mesh.Ginja.GCMesh.Parameters.get -> SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter![]!
+SA3D.Modeling.Mesh.Ginja.GCMesh.Parameters.set -> void
+SA3D.Modeling.Mesh.Ginja.GCMesh.Polygons.get -> SA3D.Modeling.Mesh.Ginja.GCPolygon[]!
+SA3D.Modeling.Mesh.Ginja.GCMesh.Polygons.set -> void
+SA3D.Modeling.Mesh.Ginja.GCMesh.WriteParameters(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.Mesh.Ginja.GCMesh.WritePolygons(SA3D.Common.IO.EndianStackWriter! writer, ref SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat indexFormat) -> uint
+SA3D.Modeling.Mesh.Ginja.GCPolygon
+SA3D.Modeling.Mesh.Ginja.GCPolygon.Clone() -> SA3D.Modeling.Mesh.Ginja.GCPolygon
+SA3D.Modeling.Mesh.Ginja.GCPolygon.Corners.get -> SA3D.Modeling.Mesh.Ginja.GCCorner[]!
+SA3D.Modeling.Mesh.Ginja.GCPolygon.GCPolygon() -> void
+SA3D.Modeling.Mesh.Ginja.GCPolygon.GCPolygon(SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType type, SA3D.Modeling.Mesh.Ginja.GCCorner[]! corners) -> void
+SA3D.Modeling.Mesh.Ginja.GCPolygon.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCPolyType
+SA3D.Modeling.Mesh.Ginja.GCPolygon.Write(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat indexFormat) -> void
+SA3D.Modeling.Mesh.Ginja.GCVertexSet
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Clone() -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.ColorData.get -> SA3D.Modeling.Structs.Color[]!
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Data.get -> System.Array?
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.DataLength.get -> int
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.DataType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.GCVertexSet(SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType attribute, SA3D.Modeling.Mesh.Ginja.Enums.GCDataType dataType, SA3D.Modeling.Mesh.Ginja.Enums.GCStructType structType, System.Array? data) -> void
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Optimize(System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Ginja.GCMesh!>? meshes) -> void
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.StructSize.get -> uint
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.StructType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Vector2Data.get -> System.Numerics.Vector2[]!
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.Vector3Data.get -> System.Numerics.Vector3[]!
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.WriteData(SA3D.Common.IO.EndianStackWriter! writer) -> uint
+SA3D.Modeling.Mesh.Ginja.GCVertexSet.WriteHeader(SA3D.Common.IO.EndianStackWriter! writer, uint dataAddress) -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.AmbientColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.AmbientColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.GCAmbientColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.DestinationAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.GCBlendAlphaParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.SourceAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.UseAlpha.get -> bool
+SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.UseAlpha.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.DiffuseColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.DiffuseColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.GCDiffuseColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.GCIndexFormatParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.IndexFormat.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.IndexFormat.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCIndexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.GCLightingParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.LightingAttributes.get -> ushort
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.LightingAttributes.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.ShadowStencil.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.ShadowStencil.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Unknown1.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Unknown1.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Unknown2.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.Unknown2.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCParameterExtensions
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.GCSpecularColorParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.SpecularColor.get -> SA3D.Modeling.Structs.Color
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.SpecularColor.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.GCTexCoordParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.MatrixID.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordMatrix
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.MatrixID.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordID.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordID
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordID.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordSource.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordSource
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordSource.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTexCoordType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.TexCoordType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.GCTextureParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.TextureID.get -> ushort
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.TextureID.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.Tiling.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCTileMode
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.Tiling.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCTextureParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.GCUnknownParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Unknown1.get -> ushort
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Unknown1.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Unknown2.get -> ushort
+SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.Unknown2.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.Attributes.get -> byte
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.Attributes.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.GCVertexFormatParameter() -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexDataType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCDataType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexDataType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexStructType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCStructType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexStructType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexType.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCVertexType
+SA3D.Modeling.Mesh.Ginja.Parameters.GCVertexFormatParameter.VertexType.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter
+SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter.Data.get -> uint
+SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter.Data.set -> void
+SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter!
+SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter.Type.get -> SA3D.Modeling.Mesh.Ginja.Enums.GCParameterType
 SA3D.Modeling.Mesh.Weighted.BufferMode
 SA3D.Modeling.Mesh.Weighted.BufferMode.Generate = 1 -> SA3D.Modeling.Mesh.Weighted.BufferMode
 SA3D.Modeling.Mesh.Weighted.BufferMode.GenerateOptimized = 2 -> SA3D.Modeling.Mesh.Weighted.BufferMode
@@ -1721,14 +1721,14 @@ static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultColor -> SA3D.Modeli
 static readonly SA3D.Modeling.Mesh.Buffer.BufferMesh.DefaultNormal -> System.Numerics.Vector3
 static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkCorner
 static readonly SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.DefaultValues -> SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex
-static readonly SA3D.Modeling.Mesh.Gamecube.GCVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCAmbientColorParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCBlendAlphaParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCDiffuseColorParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter.White -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCSpecularColorParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.DefaultValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCTexCoordParameter
-static readonly SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter.DefaultValues -> SA3D.Modeling.Mesh.Gamecube.Parameters.GCUnknownParameter
+static readonly SA3D.Modeling.Mesh.Ginja.GCVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter.White -> SA3D.Modeling.Mesh.Ginja.Parameters.GCAmbientColorParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Ginja.Parameters.GCBlendAlphaParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter.White -> SA3D.Modeling.Mesh.Ginja.Parameters.GCDiffuseColorParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter.White -> SA3D.Modeling.Mesh.Ginja.Parameters.GCSpecularColorParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.DefaultValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GCTexCoordParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter.DefaultValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GCUnknownParameter
 static readonly SA3D.Modeling.Strippify.TriangleStrippifier.Global -> SA3D.Modeling.Strippify.TriangleStrippifier!
 static readonly SA3D.Modeling.Structs.BAMSFHelper.BAMSF2Deg -> float
 static readonly SA3D.Modeling.Structs.BAMSFHelper.BAMSF2Rad -> float
@@ -1866,24 +1866,24 @@ static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Read(SA3D.Common.IO.
 static SA3D.Modeling.Mesh.Chunk.VertexChunk.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address) -> SA3D.Modeling.Mesh.Chunk.VertexChunk!
 static SA3D.Modeling.Mesh.Chunk.VertexChunk.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Chunk.VertexChunk?[]!
 static SA3D.Modeling.Mesh.Chunk.VertexChunk.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.Chunk.VertexChunk?>! chunks) -> uint
-static SA3D.Modeling.Mesh.Gamecube.Enums.GCEnumExtensions.GetStructSize(SA3D.Modeling.Mesh.Gamecube.Enums.GCStructType structType, SA3D.Modeling.Mesh.Gamecube.Enums.GCDataType dataType) -> uint
-static SA3D.Modeling.Mesh.Gamecube.GCAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Gamecube.GCAttach!
-static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator !=(SA3D.Modeling.Mesh.Gamecube.GCCorner left, SA3D.Modeling.Mesh.Gamecube.GCCorner right) -> bool
-static SA3D.Modeling.Mesh.Gamecube.GCCorner.operator ==(SA3D.Modeling.Mesh.Gamecube.GCCorner left, SA3D.Modeling.Mesh.Gamecube.GCCorner right) -> bool
-static SA3D.Modeling.Mesh.Gamecube.GCMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, ref SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCMesh!
-static SA3D.Modeling.Mesh.Gamecube.GCMesh.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, int count) -> SA3D.Modeling.Mesh.Gamecube.GCMesh![]!
-static SA3D.Modeling.Mesh.Gamecube.GCMesh.WriteArrayContents(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCMesh![]! meshes) -> uint[]!
-static SA3D.Modeling.Mesh.Gamecube.GCPolygon.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Mesh.Gamecube.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Gamecube.GCPolygon
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateColor0Set(SA3D.Modeling.Structs.Color[]! colors) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateNormalSet(System.Numerics.Vector3[]! normals) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreatePositionSet(System.Numerics.Vector3[]! positions) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.CreateTexcoord0Set(System.Numerics.Vector2[]! texcoords) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Gamecube.GCVertexSet![]!
-static SA3D.Modeling.Mesh.Gamecube.GCVertexSet.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Gamecube.GCVertexSet![]! vertexSets) -> uint
-static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultColorParam -> ushort
-static SA3D.Modeling.Mesh.Gamecube.Parameters.GCLightingParameter.DefaultNormalParam -> ushort
-static SA3D.Modeling.Mesh.Gamecube.Parameters.GCParameterExtensions.Write(this SA3D.Modeling.Mesh.Gamecube.Parameters.IGCParameter! parameter, SA3D.Common.IO.EndianStackWriter! writer) -> void
+static SA3D.Modeling.Mesh.Ginja.Enums.GCEnumExtensions.GetStructSize(SA3D.Modeling.Mesh.Ginja.Enums.GCStructType structType, SA3D.Modeling.Mesh.Ginja.Enums.GCDataType dataType) -> uint
+static SA3D.Modeling.Mesh.Ginja.GCAttach.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, SA3D.Modeling.Structs.PointerLUT! lut) -> SA3D.Modeling.Mesh.Ginja.GCAttach!
+static SA3D.Modeling.Mesh.Ginja.GCCorner.operator !=(SA3D.Modeling.Mesh.Ginja.GCCorner left, SA3D.Modeling.Mesh.Ginja.GCCorner right) -> bool
+static SA3D.Modeling.Mesh.Ginja.GCCorner.operator ==(SA3D.Modeling.Mesh.Ginja.GCCorner left, SA3D.Modeling.Mesh.Ginja.GCCorner right) -> bool
+static SA3D.Modeling.Mesh.Ginja.GCMesh.Read(SA3D.Common.IO.EndianStackReader! reader, uint address, ref SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Ginja.GCMesh!
+static SA3D.Modeling.Mesh.Ginja.GCMesh.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address, int count) -> SA3D.Modeling.Mesh.Ginja.GCMesh![]!
+static SA3D.Modeling.Mesh.Ginja.GCMesh.WriteArrayContents(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Ginja.GCMesh![]! meshes) -> uint[]!
+static SA3D.Modeling.Mesh.Ginja.GCPolygon.Read(SA3D.Common.IO.EndianStackReader! reader, ref uint address, SA3D.Modeling.Mesh.Ginja.Enums.GCIndexFormat indexFormat) -> SA3D.Modeling.Mesh.Ginja.GCPolygon
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.CreateColor0Set(SA3D.Modeling.Structs.Color[]! colors) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.CreateNormalSet(System.Numerics.Vector3[]! normals) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.CreatePositionSet(System.Numerics.Vector3[]! positions) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.CreateTexcoord0Set(System.Numerics.Vector2[]! texcoords) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.Read(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.ReadArray(SA3D.Common.IO.EndianStackReader! reader, uint address) -> SA3D.Modeling.Mesh.Ginja.GCVertexSet![]!
+static SA3D.Modeling.Mesh.Ginja.GCVertexSet.WriteArray(SA3D.Common.IO.EndianStackWriter! writer, SA3D.Modeling.Mesh.Ginja.GCVertexSet![]! vertexSets) -> uint
+static SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.DefaultColorParam -> ushort
+static SA3D.Modeling.Mesh.Ginja.Parameters.GCLightingParameter.DefaultNormalParam -> ushort
+static SA3D.Modeling.Mesh.Ginja.Parameters.GCParameterExtensions.Write(this SA3D.Modeling.Mesh.Ginja.Parameters.IGCParameter! parameter, SA3D.Common.IO.EndianStackWriter! writer) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.Create(SA3D.Modeling.Mesh.Weighted.WeightedVertex[]! vertices, SA3D.Modeling.Mesh.Buffer.BufferCorner[]![]! triangleSets, SA3D.Modeling.Mesh.Buffer.BufferMaterial[]! materials, bool hasColors, bool hasNormals) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.EnsurePolygonsValid(ref SA3D.Modeling.Mesh.Weighted.WeightedMesh![]! meshes) -> void
 static SA3D.Modeling.Mesh.Weighted.WeightedMesh.FromAttach(SA3D.Modeling.Mesh.Attach! attach, SA3D.Modeling.Mesh.Weighted.BufferMode bufferMode) -> SA3D.Modeling.Mesh.Weighted.WeightedMesh!

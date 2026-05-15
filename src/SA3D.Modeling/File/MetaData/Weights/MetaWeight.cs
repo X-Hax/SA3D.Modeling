@@ -1,12 +1,13 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using System;
 
-namespace SA3D.Modeling.File.Structs
+namespace SA3D.Modeling.File.MetaData.Weights
 {
 	/// <summary>
 	/// Metadata weight.
 	/// </summary>
-	public readonly struct MetaWeight : IEquatable<MetaWeight>
+	public struct MetaWeight : IEquatable<MetaWeight>, IBinarySerializable
 	{
 		/// <summary>
 		/// Size of the structure in bytes.
@@ -17,17 +18,17 @@ namespace SA3D.Modeling.File.Structs
 		/// <summary>
 		/// Pointer to the node that is weighted to.
 		/// </summary>
-		public uint NodePointer { get; }
+		public long NodeOffset { get; set; }
 
 		/// <summary>
 		/// Vertex index to the draw position and normal from.
 		/// </summary>
-		public uint VertexIndex { get; }
+		public uint VertexIndex { get; set; }
 
 		/// <summary>
 		/// Influence of the weight.
 		/// </summary>
-		public float Weight { get; }
+		public float Weight { get; set; }
 
 
 		/// <summary>
@@ -36,46 +37,34 @@ namespace SA3D.Modeling.File.Structs
 		/// <param name="nodePointer">Pointer to the node that is weighted to.</param>
 		/// <param name="vertexIndex">Vertex cache index.</param>
 		/// <param name="weight">Weight.</param>
-		public MetaWeight(uint nodePointer, uint vertexIndex, float weight)
+		public MetaWeight(long nodePointer, uint vertexIndex, float weight)
 		{
-			NodePointer = nodePointer;
+			NodeOffset = nodePointer;
 			VertexIndex = vertexIndex;
 			Weight = weight;
 		}
 
-
-		/// <summary>
-		/// Writes the meta weight to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public void Write(EndianStackWriter writer)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUInt(NodePointer);
-			writer.WriteUInt(VertexIndex);
-			writer.WriteFloat(Weight);
+			NodeOffset = reader.ReadOffsetValue();
+			VertexIndex = reader.ReadUInt32();
+			Weight = reader.ReadSingle();
 		}
 
-		/// <summary>
-		/// Reads a meta weight off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The read meta weight</returns>
-		public static MetaWeight Read(EndianStackReader reader, uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			return new(
-				reader.ReadUInt(address),
-				reader.ReadUInt(address + 4),
-				reader.ReadFloat(address + 8)
-			);
+			writer.WriteOffsetValue(NodeOffset);
+			writer.WriteUInt32(VertexIndex);
+			writer.WriteSingle(Weight);
 		}
-
 
 		/// <inheritdoc/>
 		public override readonly bool Equals(object? obj)
 		{
 			return obj is MetaWeight weight &&
-				   NodePointer == weight.NodePointer &&
+				   NodeOffset == weight.NodeOffset &&
 				   VertexIndex == weight.VertexIndex &&
 				   Weight == weight.Weight;
 		}
@@ -83,7 +72,7 @@ namespace SA3D.Modeling.File.Structs
 		/// <inheritdoc/>
 		public override readonly int GetHashCode()
 		{
-			return HashCode.Combine(NodePointer, VertexIndex, Weight);
+			return HashCode.Combine(NodeOffset, VertexIndex, Weight);
 		}
 
 		/// <inheritdoc/>
@@ -117,7 +106,7 @@ namespace SA3D.Modeling.File.Structs
 		/// <inheritdoc/>
 		public override readonly string ToString()
 		{
-			return $"{NodePointer:X8} - {VertexIndex} - {Weight:F4}";
+			return $"{NodeOffset:X8} - {VertexIndex} - {Weight:F4}";
 		}
 	}
 }

@@ -1,13 +1,13 @@
 ﻿using SA3D.Common;
 using System;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Enums
+namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// Holds information about the triangle lists index formatting of geometry.
 	/// </summary>
 	[Flags]
-	public enum GCIndexFormat : uint
+	public enum GinjaIndexFormat : uint
 	{
 		/// <summary>
 		/// Whether the position matrix ID indices are 16 bit rather than 8 bit.

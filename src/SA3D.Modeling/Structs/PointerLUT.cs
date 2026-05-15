@@ -1,7 +1,6 @@
 ﻿using SA3D.Common.Lookup;
-using SA3D.Modeling.Animation;
+using SA3D.Modeling.AnimationData;
 using SA3D.Modeling.Mesh;
-using SA3D.Modeling.Mesh.Chunk;
 using SA3D.Modeling.ObjectData;
 using System.Collections.Generic;
 
@@ -20,22 +19,17 @@ namespace SA3D.Modeling.Structs
 		/// <summary>
 		/// Pointer dictionary for attaches.
 		/// </summary>
-		public PointerDictionary<Attach> Attaches { get; }
+		public PointerDictionary<MeshData> Attaches { get; }
 
 		/// <summary>
 		/// Pointer dictionary for motions.
 		/// </summary>
-		public PointerDictionary<Motion> Motions { get; }
+		public PointerDictionary<Animation> Motions { get; }
 
 		/// <summary>
 		/// Pointer dictionary for nodemotions.
 		/// </summary>
-		public PointerDictionary<NodeMotion> NodeMotions { get; }
-
-		/// <summary>
-		/// Pointer dictionary for polygon chunks.
-		/// </summary>
-		public PointerDictionary<PolyChunk> PolyChunks { get; }
+		public PointerDictionary<ModelAnimation> NodeMotions { get; }
 
 		/// <summary>
 		/// Pointer dictionary for other objects.
@@ -46,13 +40,12 @@ namespace SA3D.Modeling.Structs
 		/// Creates a new LUT with preexisting labels.
 		/// </summary>
 		/// <param name="labels">The labels to populate the LUT with.</param>
-		public PointerLUT(Dictionary<uint, string> labels) : base(labels)
+		public PointerLUT(Dictionary<long, string> labels) : base(labels)
 		{
 			Nodes = new();
 			Attaches = new();
 			Motions = new();
 			NodeMotions = new();
-			PolyChunks = new();
 			Other = new();
 		}
 
@@ -62,24 +55,21 @@ namespace SA3D.Modeling.Structs
 		public PointerLUT() : this([]) { }
 
 		/// <inheritdoc/>
-		protected override void AddEntry(uint address, object value)
+		protected override void AddEntry(long address, object value)
 		{
 			switch(value)
 			{
 				case Node node:
 					Nodes.Add(address, node);
 					break;
-				case Attach attach:
+				case MeshData attach:
 					Attaches.Add(address, attach);
 					break;
-				case Motion motion:
+				case Animation motion:
 					Motions.Add(address, motion);
 					break;
-				case NodeMotion action:
+				case ModelAnimation action:
 					NodeMotions.Add(address, action);
-					break;
-				case PolyChunk polychunk:
-					PolyChunks.Add(address, polychunk);
 					break;
 				default:
 					Other.Add(address, value);

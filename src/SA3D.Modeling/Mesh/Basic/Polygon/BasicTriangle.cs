@@ -1,4 +1,4 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
-	/// A polygon with three corners.
+	/// A polygon with three index.
 	/// </summary>
 	public struct BasicTriangle : IBasicPolygon
 	{
@@ -77,28 +77,19 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 
 
 		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer)
+		public void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUShort(Index1);
-			writer.WriteUShort(Index2);
-			writer.WriteUShort(Index3);
+			Index1 = reader.ReadUInt16();
+			Index2 = reader.ReadUInt16();
+			Index3 = reader.ReadUInt16();
 		}
 
-		/// <summary>
-		/// Reads a quad off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">The Reader to read from.</param>
-		/// <param name="address">Address at which the quad is located.</param>
-		/// <returns>The quad that was read.</returns>
-		public static BasicTriangle Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			BasicTriangle t = new(
-				reader.ReadUShort(address),
-				reader.ReadUShort(address + 2),
-				reader.ReadUShort(address + 4));
-
-			address += 6;
-			return t;
+			writer.WriteUInt16(Index1);
+			writer.WriteUInt16(Index2);
+			writer.WriteUInt16(Index3);
 		}
 
 
@@ -126,6 +117,5 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		{
 			return $"Triangle: [{Index1}, {Index2}, {Index3}]";
 		}
-
 	}
 }

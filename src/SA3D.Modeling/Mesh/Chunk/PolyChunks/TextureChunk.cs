@@ -1,4 +1,4 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using System;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
@@ -9,7 +9,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	public class TextureChunk : PolyChunk
 	{
 		/// <inheritdoc/>
-		public override uint ByteSize => 4;
+		protected override bool AlignWithFour => true;
 
 		/// <summary>
 		/// Whether the chunktype is <see cref="PolyChunkType.TextureID2"/>.
@@ -104,27 +104,26 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// Creates a new texture chunk.
 		/// </summary>
 		/// <param name="second">Whether it is <see cref="PolyChunkType.TextureID2"/></param>
-		public TextureChunk(bool second = false) : base(second ? PolyChunkType.TextureID2 : PolyChunkType.TextureID) { }
+		public TextureChunk() : base(PolyChunkType.TextureID) { }
 
-
-		internal static TextureChunk Read(EndianStackReader data, uint address)
+		/// <inheritdoc/>
+		protected override bool IsTypeApplicable(PolyChunkType type)
 		{
-			ushort header = data.ReadUShort(address);
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			byte attribs = (byte)(header >> 8);
-			ushort cnkData = data.ReadUShort(address + 2);
-
-			return new TextureChunk(type == PolyChunkType.TextureID2)
-			{
-				Attributes = attribs,
-				Data = cnkData
-			};
+			return type is PolyChunkType.TextureID or PolyChunkType.TextureID2;
 		}
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		public override void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUShort(Data);
+			base.Read(reader);
+			Data = reader.ReadUInt16();
+		}
+
+		/// <inheritdoc/>
+		protected override void WriteData(BinaryObjectWriter writer)
+		{
+			base.WriteData(writer);
+			writer.WriteUInt16(Data);
 		}
 
 		/// <inheritdoc/>

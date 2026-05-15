@@ -1,30 +1,28 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.ObjectData;
-using SA3D.Modeling.Structs;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using static SA3D.Common.StringExtensions;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Animation data for various targets.
 	/// </summary>
-	public class Motion : ILabel
+	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>
 	{
 		/// <summary>
-		/// Size of the motion struct in bytes.
+		/// Label prefix for <see cref="KeyframeSets"/>
 		/// </summary>
-		public const uint StructSize = 16;
+		public const string KeyframeSetLabelPrefix = "keyframes_";
+
+		/// <inheritdoc/>
+		public string LabelPrefix => "animation_";
 
 		/// <inheritdoc/>
 		public string Label { get; set; }
-
-		/// <summary>
-		/// Number of animated nodes in the model that this animation targets.
-		/// </summary>
-		public uint NodeCount { get; set; }
 
 		/// <summary>
 		/// Intepolation mode between keyframes.
@@ -34,12 +32,12 @@ namespace SA3D.Modeling.Animation
 		/// <summary>
 		/// Whether to use 16-bit for euler rotation BAMS values.
 		/// </summary>
-		public bool ShortRot { get; set; }
+		public bool ShortRotations { get; set; }
 
 		/// <summary>
-		/// Keyframes based on their model id
+		/// Animation keyframe sets. The index of a keyframe set corresponds to the index of the node it belongs to
 		/// </summary>
-		public Dictionary<int, Keyframes> Keyframes { get; }
+		public LabeledArray<KeyframeSet> KeyframeSets { get; set; }
 
 		/// <summary>
 		/// Types of keyframe stored in this animation.
@@ -48,13 +46,13 @@ namespace SA3D.Modeling.Animation
 		{
 			get
 			{
-				KeyframeAttributes type = 0;
-				foreach(Keyframes kf in Keyframes.Values)
+				KeyframeAttributes type = ManualKeyframeTypes;
+				foreach(KeyframeSet kf in KeyframeSets)
 				{
 					type |= kf.Type;
 				}
 
-				return type | ManualKeyframeTypes;
+				return type;
 			}
 		}
 
@@ -98,10 +96,11 @@ namespace SA3D.Modeling.Animation
 		/// <summary>
 		/// Creates a new empty motion.
 		/// </summary>
-		public Motion()
+		public Animation()
 		{
-			Label = "animation_" + GenerateIdentifier();
-			Keyframes = [];
+			string identifier = GenerateIdentifier();
+			Label = LabelPrefix + identifier;
+			KeyframeSets = new(KeyframeSetLabelPrefix + identifier, 0);
 		}
 
 
@@ -116,13 +115,7 @@ namespace SA3D.Modeling.Animation
 		/// <returns></returns>
 		public uint GetFrameCount()
 		{
-			uint result = 0;
-			foreach(Keyframes k in Keyframes.Values)
-			{
-				result = uint.Max(result, k.KeyframeCount);
-			}
-
-			return result;
+			return KeyframeSets.Max(x => x?.KeyframeCount ?? 0);
 		}
 
 		/// <summary>
@@ -142,7 +135,7 @@ namespace SA3D.Modeling.Animation
 			uint? start = null,
 			uint? end = null)
 		{
-			foreach(Keyframes keyframes in Keyframes.Values)
+			foreach(KeyframeSet keyframes in KeyframeSets)
 			{
 				keyframes.Optimize(generalThreshold, quaternionThreshold, colorThreshold, asDegrees, start, end);
 			}
@@ -166,24 +159,24 @@ namespace SA3D.Modeling.Animation
 			}
 
 			uint maxFrame = GetFrameCount() - 1;
+			Node[] animNodes = model.GetAnimTreeNodes();
 
-			int i = 0;
-			foreach(Node node in model.GetAnimTreeNodes())
+			if(KeyframeSets.Length < animNodes.Length)
 			{
-				if(!Keyframes.TryGetValue(i, out Keyframes? keyframes))
-				{
-					if(!createKeyframes)
-					{
-						continue;
-					}
+				KeyframeSet[] sets = KeyframeSets.Array;
+				Array.Resize(ref sets, animNodes.Length);
 
-					keyframes = new();
-					Keyframes.Add(i, keyframes);
+				for(int i = KeyframeSets.Length; i < animNodes.Length; i++)
+				{
+					sets[i] = new();
 				}
 
-				keyframes.EnsureNodeKeyframes(node, targetTypes, maxFrame);
+				KeyframeSets.Array = sets;
+			}
 
-				i++;
+			for(int i = 0; i < animNodes.Length; i++)
+			{
+				KeyframeSets[i]!.EnsureNodeKeyframes(animNodes[i], targetTypes, maxFrame);
 			}
 		}
 
@@ -194,111 +187,45 @@ namespace SA3D.Modeling.Animation
 		public void EnsureKeyframes(KeyframeAttributes targetTypes)
 		{
 			uint maxFrame = GetFrameCount() - 1;
-			foreach(Keyframes kf in Keyframes.Values)
+			foreach(KeyframeSet kf in KeyframeSets)
 			{
 				kf.EnsureKeyframes(targetTypes, maxFrame);
 			}
 		}
 
-		/// <summary>
-		/// Writes the motion to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		public uint Write(EndianStackWriter writer, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, AnimationIOContext context)
 		{
-			uint onWrite()
-			{
-				KeyframeAttributes type = KeyframeTypes;
-				int channels = type.ChannelCount();
+			ShortRotations = context.FileContext.ShortRotations;
 
-				uint keyframeCount = uint.Max(NodeCount, (uint)Keyframes.Keys.Max() + 1u);
+			long keyframeOffset = reader.ReadOffsetValue();
 
-				(uint address, uint count)[][] keyFrameLocations = new (uint addr, uint count)[keyframeCount][];
+			reader.Skip(sizeof(int)); // keyframe type count
+			ManualKeyframeTypes = (KeyframeAttributes)reader.ReadUInt16();
+			ushort attributes = reader.ReadUInt16();
+			InterpolationMode = (InterpolationMode)((attributes >> 6) & 0x3);
 
-				for(int i = 0; i < keyframeCount; i++)
-				{
-					keyFrameLocations[i] = !Keyframes.ContainsKey(i)
-						? new (uint, uint)[channels]
-						: Keyframes[i].Write(writer, type, lut, ShortRot);
-				}
-
-				uint keyframesAddr = writer.PointerPosition;
-
-				foreach((uint addr, uint count)[] kf in keyFrameLocations)
-				{
-					for(int i = 0; i < kf.Length; i++)
-					{
-						writer.WriteUInt(kf[i].addr);
-					}
-
-					for(int i = 0; i < kf.Length; i++)
-					{
-						writer.WriteUInt(kf[i].count);
-					}
-				}
-
-				uint result = writer.PointerPosition;
-
-				writer.WriteUInt(keyframesAddr);
-				writer.WriteUInt(GetFrameCount());
-				writer.WriteUShort((ushort)type);
-				writer.WriteUShort((ushort)((channels & 0xF) | ((int)InterpolationMode << 6)));
-
-				return result;
-
-			}
-
-			return lut.GetAddAddress(this, onWrite);
+			context.KeyframeType = ManualKeyframeTypes;
+			KeyframeSets = reader.ReadLabeledObjectArrayOffset<KeyframeSet, AnimationIOContext>((int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
 		}
 
-		/// <summary>
-		/// Reads a motion off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">Byte source</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="modelCount">Number of nodes in the tree of the targeted model.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <param name="shortRot">Whether euler rotations are stored in 16-bit instead of 32-bit.</param>
-		/// <returns>The motion that was read</returns>
-		public static Motion Read(EndianStackReader reader, uint address, uint modelCount, PointerLUT lut, bool shortRot = false)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
-			Motion onRead()
-			{
-				uint keyframeAddr = reader.ReadPointer(address);
-				// offset 4 is frame count. We dont need to read that.
-				KeyframeAttributes keyframeType = (KeyframeAttributes)reader.ReadUShort(address + 8);
+			context.KeyframeType = KeyframeTypes;
+			writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.PointerLUT);
 
-				ushort tmp = reader.ReadUShort(address + 10);
-				InterpolationMode mode = (InterpolationMode)((tmp >> 6) & 0x3);
-				int channels = tmp & 0xF;
-
-				Motion result = new()
-				{
-					InterpolationMode = mode,
-					NodeCount = modelCount,
-					ShortRot = shortRot,
-					ManualKeyframeTypes = keyframeType
-				};
-
-				for(int i = 0; i < modelCount; i++)
-				{
-					Keyframes kf = Animation.Keyframes.Read(reader, ref keyframeAddr, keyframeType, lut, shortRot);
-					result.Keyframes.Add(i, kf);
-				}
-
-				return result;
-
-			}
-
-			return lut.GetAddLabeledValue(address, "animation_", onRead);
+			int channels = context.KeyframeType.ChannelCount();
+			writer.WriteUInt32(GetFrameCount());
+			writer.WriteUInt16((ushort)context.KeyframeType);
+			writer.WriteUInt16((ushort)((channels & 0xF) | ((int)InterpolationMode << 6)));
 		}
-
 
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return $"{Label} : {NodeCount} - {Keyframes.Count}";
+			return $"{Label} - {KeyframeSets.Length}";
 		}
 	}
 }

@@ -1,14 +1,14 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Parameter determining which types of vertex data is used by geometry.
 	/// </summary>
-	public struct GCVertexFormatParameter : IGCParameter
+	public struct GinjaVertexFormatParameter : IGinjaParameter
 	{
 		/// <inheritdoc/>
-		public readonly GCParameterType Type => GCParameterType.VertexFormat;
+		public readonly GinjaParameterType Type => GinjaParameterType.VertexFormat;
 
 		/// <inheritdoc/>
 		public uint Data { get; set; }
@@ -16,34 +16,34 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <summary>
 		/// The attribute type that this parameter applies for.
 		/// </summary>
-		public GCVertexType VertexType
+		public GinjaVertexType VertexType
 		{
-			readonly get => (GCVertexType)((Data >> 16) & 0xFF);
+			readonly get => (GinjaVertexType)((Data >> 16) & 0xFF);
 			set => Data = (Data & ~0xFF0000u) | ((uint)value << 16);
 		}
 
 		/// <summary>
 		/// Vertex struct type being utilized.
 		/// </summary>
-		public GCStructType VertexStructType
+		public GinjaStructType VertexStructType
 		{
-			readonly get => (GCStructType)((Data >> 12) & 0xF);
+			readonly get => (GinjaStructType)((Data >> 12) & 0xF);
 			set => Data = (Data & ~0xF000u) | (((uint)value) << 12);
 		}
 
 		/// <summary>
 		/// Vertex data type being utilized.
 		/// </summary>
-		public GCDataType VertexDataType
+		public GinjaDataType VertexDataType
 		{
-			readonly get => (GCDataType)((Data >> 8) & 0xF);
+			readonly get => (GinjaDataType)((Data >> 8) & 0xF);
 			set => Data = (Data & ~0xF00u) | (((uint)value) << 8);
 		}
 
 		/// <summary>
-		/// Additional attributes.
+		/// Number of fractional bits in integer data
 		/// </summary>
-		public byte Attributes
+		public byte FractionalBitCount
 		{
 			readonly get => (byte)(Data & 0xFF);
 			set => Data = (Data & ~0xFFu) | value;
@@ -52,7 +52,7 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <inheritdoc/>
 		public override readonly string ToString()
 		{
-			return $"Vertex Format: {VertexType} - {VertexStructType} - {VertexDataType} - {Attributes:X2}";
+			return $"Vertex Format: {VertexType} - {VertexStructType} - {VertexDataType} - {FractionalBitCount:X2}";
 		}
 	}
 }

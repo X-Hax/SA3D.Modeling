@@ -1,17 +1,16 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
-	/// A BASIC polygon containing a variable number of corners.
+	/// A BASIC polygon containing a variable number of indices.
 	/// </summary>
 	public struct BasicMultiPolygon : IBasicPolygon
 	{
 		/// <summary>
-		/// Indices of the polygon.
+		/// Polygon corner information
 		/// </summary>
 		public ushort[] Indices { get; set; }
 
@@ -21,7 +20,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		public bool Reversed { get; set; }
 
 		/// <inheritdoc/>
-		public readonly uint Size => (uint)(2 + (Indices.Length * 2));
+		public readonly uint Size => (uint)((1 + Indices.Length) * sizeof(ushort));
 
 		/// <inheritdoc/>
 		public readonly int NumIndices => Indices.Length;
@@ -37,11 +36,11 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		/// <summary>
 		/// Creates a new multi polygon.
 		/// </summary>
-		/// <param name="indices">Indices of the polygon.</param>
+		/// <param name="corners">Indices of the polygon.</param>
 		/// <param name="reversed">Whether the polygons backface culling direction is flipped.</param>
-		public BasicMultiPolygon(ushort[] indices, bool reversed)
+		public BasicMultiPolygon(ushort[] corners, bool reversed)
 		{
-			Indices = indices;
+			Indices = corners;
 			Reversed = reversed;
 		}
 
@@ -54,37 +53,27 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			: this(new ushort[size], reversed) { }
 
 
-		/// <summary>
-		/// Reads a basic multi polygon off of an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="data">The reader to read from.</param>
-		/// <param name="address">Address at which the polygon is located.</param>
-		/// <returns>The polygon that was read.</returns>
-		public static BasicMultiPolygon Read(EndianStackReader data, ref uint address)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			ushort header = data.ReadUShort(address);
-			ushort[] indices = new ushort[header & 0x7FFF];
-			bool reversed = (header & 0x8000) != 0;
-			address += 2;
-			for(int i = 0; i < indices.Length; i++)
+			ushort header = reader.ReadUInt16();
+			Indices = new ushort[header & 0x7FFF];
+			Reversed = (header & 0x8000) != 0;
+			for(int i = 0; i < Indices.Length; i++)
 			{
-				indices[i] = data.ReadUShort(address);
-				address += 2;
+				Indices[i] = reader.ReadUInt16();
 			}
-
-			return new BasicMultiPolygon(indices, reversed);
 		}
 
 		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer)
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			writer.WriteUShort((ushort)((Indices.Length & 0x7FFF) | (Reversed ? 0x8000 : 0)));
+			writer.WriteUInt16((ushort)((Indices.Length & 0x7FFF) | (Reversed ? 0x8000 : 0)));
 			for(int i = 0; i < Indices.Length; i++)
 			{
-				writer.WriteUShort(Indices[i]);
+				writer.WriteUInt16(Indices[i]);
 			}
 		}
-
 
 		/// <inheritdoc/>
 		public readonly IEnumerator<ushort> GetEnumerator()
@@ -102,7 +91,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		/// <inheritdoc/>
 		public readonly object Clone()
 		{
-			return new BasicMultiPolygon(Indices.ToArray(), Reversed);
+			return new BasicMultiPolygon((ushort[])Indices.Clone(), Reversed);
 		}
 
 		/// <inheritdoc/>
@@ -110,7 +99,6 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		{
 			return $"Multi: {Reversed} - {Indices.Length}";
 		}
-
 
 	}
 }

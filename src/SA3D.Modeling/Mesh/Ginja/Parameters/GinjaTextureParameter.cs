@@ -1,14 +1,14 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Texture information for the geometry
 	/// </summary>
-	public struct GCTextureParameter : IGCParameter
+	public struct GinjaTextureParameter : IGinjaParameter
 	{
 		/// <inheritdoc/>
-		public readonly GCParameterType Type => GCParameterType.Texture;
+		public readonly GinjaParameterType Type => GinjaParameterType.Texture;
 
 		/// <inheritdoc/>
 		public uint Data { get; set; }
@@ -25,9 +25,9 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <summary>
 		/// Texture tiling properties.
 		/// </summary>
-		public GCTileMode Tiling
+		public GinjaTileMode Tiling
 		{
-			readonly get => (GCTileMode)(Data >> 16);
+			readonly get => (GinjaTileMode)(Data >> 16);
 			set => Data = (Data & 0xFFFF) | ((uint)value << 16);
 		}
 

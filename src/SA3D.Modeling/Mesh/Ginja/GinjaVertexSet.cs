@@ -1,443 +1,494 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
 using SA3D.Common.IO;
-using SA3D.Modeling.Mesh.Gamecube.Enums;
-using SA3D.Modeling.Mesh.Gamecube.Parameters;
+using SA3D.Common.Lookup;
+using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 
-namespace SA3D.Modeling.Mesh.Gamecube
+namespace SA3D.Modeling.Mesh.Ginja
 {
 	/// <summary>
 	/// A vertex data set, which can hold various types of data
 	/// </summary>
-	public class GCVertexSet : ICloneable
+	public class GinjaVertexSet : ICloneable, IBinarySerializable<IOContext>
 	{
+		private GinjaDataType _dataType;
+
 		/// <summary>
 		/// Null vertex set.
 		/// </summary>
-		public static readonly GCVertexSet EndVertexSet
-			= new(GCVertexType.End, default, default, null);
+		public static readonly GinjaVertexSet EndVertexSet
+			= new() { Type = GinjaVertexType.End };
 
 		/// <summary>
 		/// The type of vertex data that is stored.
 		/// </summary>
-		public GCVertexType Type { get; }
+		public GinjaVertexType Type { get; set; }
 
 		/// <summary>
 		/// The datatype as which the data is stored.
 		/// </summary>
-		public GCDataType DataType { get; }
+		public GinjaDataType DataType
+		{
+			get => _dataType;
+			init => _dataType = value;
+		}
 
 		/// <summary>
 		/// The structure in which the data is stored.
 		/// </summary>
-		public GCStructType StructType { get; }
+		public GinjaStructType StructType { get; set; }
 
 		/// <summary>
-		/// The size of a single element in the list in bytes
+		/// Raw Data behind the vertex set. Always a <see cref="LabeledArray{T}"/>
 		/// </summary>
-		public uint StructSize => GCEnumExtensions.GetStructSize(StructType, DataType);
+		public object? Data { get; private set; }
 
 		/// <summary>
-		/// Raw Data behind the vertex set.
-		/// </summary>
-		public Array? Data { get; private set; }
-
-		/// <summary>
-		/// Number of entries in the data.
+		/// Number of items in the data.
 		/// </summary>
 		public int DataLength
-			=> Data?.Length ?? 0;
+			=> ((IList?)Data)?.Count ?? 0;
+
 
 		/// <summary>
-		/// Vector3 data.
+		/// <see cref="GinjaDataType.Signed8"/> data.
 		/// </summary>
-		public Vector3[] Vector3Data
+		public LabeledArray<byte>? Unsigned8Data
 		{
-			get
-			{
-				if(Data is not Vector3[] v3data)
-				{
-					throw new InvalidOperationException("VertexSet does not contain Vector3 data!");
-				}
-
-				return v3data;
-			}
+			get => GetData<byte>();
+			set => SetData(value);
 		}
 
 		/// <summary>
-		/// Vector2 data.
+		/// <see cref="GinjaDataType.Signed8"/> data.
 		/// </summary>
-		public Vector2[] Vector2Data
+		public LabeledArray<sbyte>? Signed8Data
 		{
-			get
-			{
-				if(Data is not Vector2[] uvdata)
-				{
-					throw new InvalidOperationException("VertexSet does not contain Vector2 data!");
-				}
-
-				return uvdata;
-			}
+			get => GetData<sbyte>();
+			set => SetData(value);
 		}
 
 		/// <summary>
-		/// Color data.
+		/// <see cref="GinjaDataType.Unsigned16"/> data.
 		/// </summary>
-		public Color[] ColorData
+		public LabeledArray<ushort>? Unsigned16Data
 		{
-			get
-			{
-				if(Data is not Color[] coldata)
-				{
-					throw new InvalidOperationException("VertexSet does not contain Color data!");
-				}
+			get => GetData<ushort>();
+			set => SetData(value);
+		}
 
-				return coldata;
-			}
+		/// <summary>
+		/// <see cref="GinjaDataType.Signed16"/> data.
+		/// </summary>
+		public LabeledArray<short>? Signed16Data
+		{
+			get => GetData<short>();
+			set => SetData(value);
+		}
+
+		/// <summary>
+		/// <see cref="GinjaDataType.Float32"/> data.
+		/// </summary>
+		public LabeledArray<float>? Float32Data
+		{
+			get => GetData<float>();
+			set => SetData(value);
+		}
+
+		/// <summary>
+		/// <see cref="GinjaDataType.RGB565"/>, <see cref="GinjaDataType.RGB8"/>, <see cref="GinjaDataType.RGBX8"/>, <see cref="GinjaDataType.RGBA4"/>, <see cref="GinjaDataType.RGBA6"/> or <see cref="GinjaDataType.RGBA8"/> data.
+		/// </summary>
+		public LabeledArray<Color>? ColorData
+		{
+			get => GetData<Color>();
+			set => SetData(value);
 		}
 
 
-		/// <summary>
-		/// Creates a new custom Vertex set.
-		/// </summary>
-		/// <param name="attribute">The type of vertex data that is stored.</param>
-		/// <param name="dataType">The datatype as which the data is stored.</param>
-		/// <param name="structType">The structure in which the data is stored.</param>
-		/// <param name="data">Raw Data behind the vertex set.</param>
-		public GCVertexSet(GCVertexType attribute, GCDataType dataType, GCStructType structType, Array? data)
+		private void SetData<T>(LabeledArray<T>? data) where T : struct
 		{
-			Type = attribute;
-			DataType = dataType;
-			StructType = structType;
+			if(data == null)
+			{
+				Data = null;
+				return;
+			}
+
+			Type dataType = DataType.GetDataReflectionType();
+			if(typeof(T) != dataType)
+			{
+				throw new ArgumentException($"Invalid data type \"{typeof(T)}\" for vertex type \"{Type}\"! Expected data type \"{dataType}\"!");
+			}
+
 			Data = data;
-
-			if(data is not (null or Vector3[] or Vector2[] or Color[]))
-			{
-				throw new ArgumentException("Data array has to hold either Vector3, Vector2 or Color!");
-			}
 		}
 
-
-		/// <summary>
-		/// Creates a new vertex set for position data.
-		/// </summary>
-		/// <param name="positions">The position data.</param>
-		/// <returns>The created vertex set.</returns>
-		public static GCVertexSet CreatePositionSet(Vector3[] positions)
-		{
-			return new GCVertexSet(GCVertexType.Position, GCDataType.Float32, GCStructType.PositionXYZ, positions);
-		}
-
-		/// <summary>
-		/// Creates a new vertex set for normal data.
-		/// </summary>
-		/// <param name="normals">The normal data.</param>
-		/// <returns>The created vertex set.</returns>
-		public static GCVertexSet CreateNormalSet(Vector3[] normals)
-		{
-			return new GCVertexSet(GCVertexType.Normal, GCDataType.Float32, GCStructType.NormalXYZ, normals);
-		}
-
-		/// <summary>
-		/// Creates a new vertex set for texcoord0 data.
-		/// </summary>
-		/// <param name="texcoords">The texcoord data.</param>
-		/// <returns>The created vertex set.</returns>
-		public static GCVertexSet CreateTexcoord0Set(Vector2[] texcoords)
-		{
-			return new GCVertexSet(GCVertexType.TexCoord0, GCDataType.Signed16, GCStructType.TexCoordUV, texcoords);
-		}
-
-		/// <summary>
-		/// Creates a new vertex set for color0 data.
-		/// </summary>
-		/// <param name="colors">The color data.</param>
-		/// <returns>The created vertex set.</returns>
-		public static GCVertexSet CreateColor0Set(Color[] colors)
-		{
-			return new GCVertexSet(GCVertexType.Color0, GCDataType.RGBA8, GCStructType.ColorRGBA, colors);
-		}
-
-		/// <summary>
-		/// Removes double values from the data. Can correct affected indices in mesh polygons.
-		/// </summary>
-		/// <param name="meshes">The meshes to correct the polygons of.</param>
-		/// <exception cref="NotSupportedException"></exception>
-		public unsafe void Optimize(IEnumerable<GCMesh>? meshes)
+		private LabeledArray<T>? GetData<T>() where T : struct
 		{
 			if(Data == null)
 			{
-				return;
+				return null;
 			}
 
-			int prevLength = Data.Length;
-
-			int[]? OptimizeData<T>(T[] data) where T : IEquatable<T>
+			if(Data is not LabeledArray<T> data)
 			{
-				if(data.TryCreateDistinctMap(out DistinctMap<T> mapping))
-				{
-					Data = mapping.ValueArray;
-				}
-
-				return mapping.Map;
+				throw new InvalidOperationException($"VertexSet does not contain {typeof(T)} data!");
 			}
 
-			int[]? map = Data switch
-			{
-				Vector3[] vector3Data => OptimizeData(vector3Data),
-				Vector2[] vector2Data => OptimizeData(vector2Data),
-				Color[] colorData => OptimizeData(colorData),
-				_ => throw new NotSupportedException(),
-			};
-
-			if(map is null || meshes == null)
-			{
-				return;
-			}
-
-			int fieldOffset = (int)Type;
-
-
-			foreach(GCMesh mesh in meshes)
-			{
-				for(int i = 0; i < mesh.Polygons.Length; i++)
-				{
-					int count = mesh.Polygons[i].Corners.Length;
-					fixed(GCCorner* corner = &mesh.Polygons[i].Corners[0])
-					{
-						// Offsetting it so that its on the correct field for every element.
-						// We just keep it as a GCCorner* so that ++ moves forward a full element.
-						GCCorner* current = (GCCorner*)(((ushort*)corner) + fieldOffset);
-
-						for(int j = 0; j < count; j++, current++)
-						{
-							*(ushort*)current = (ushort)map[*(ushort*)current];
-						}
-					}
-				}
-			}
-
-			if(prevLength > 256 && Data.Length <= 256)
-			{
-				GCIndexFormat useLargeIndex = (GCIndexFormat)(1 << (fieldOffset * 2));
-				GCIndexFormat hasData = (GCIndexFormat)((uint)useLargeIndex << 1);
-				useLargeIndex = ~useLargeIndex;
-
-				foreach(GCMesh mesh in meshes)
-				{
-					for(int i = 0; i < mesh.Parameters.Length; i++)
-					{
-						if(mesh.Parameters[i] is not GCIndexFormatParameter param
-							|| !param.IndexFormat.HasFlag(hasData))
-						{
-							continue;
-						}
-
-						param.IndexFormat &= useLargeIndex;
-						mesh.Parameters[i] = param;
-					}
-				}
-			}
+			return data;
 		}
 
 
 		/// <summary>
-		/// Writes the data behind the set to the endian stack writer.
+		/// Creates a new <see cref="GinjaVertexType.End"/> vertex set (implemented for binary serialization)
 		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <returns>Address at whicht the data was written.</returns>
-		/// <exception cref="FormatException"></exception>
-		public uint WriteData(EndianStackWriter writer)
+		public GinjaVertexSet()
 		{
-			uint result = writer.PointerPosition;
+			Type = GinjaVertexType.End;
+		}
 
-			switch(Type)
+
+		/// <summary>
+		/// Changes the data type and data, which is expected to be a <see cref="LabeledArray{T}"/>
+		/// </summary>
+		/// <param name="dataType">The new data type</param>
+		/// <param name="data">The new data. Must be a <see cref="LabeledArray{T}"/></param>
+		public void ChangeDataType(GinjaDataType dataType, object? data)
+		{
+			if(data != null)
 			{
-				case GCVertexType.Position:
-				case GCVertexType.Normal:
-					foreach(Vector3 vec in Vector3Data)
-					{
-						writer.WriteVector3(vec);
-					}
+				Type expectedType = dataType switch
+				{
+					GinjaDataType.Unsigned8 => typeof(LabeledArray<byte>),
+					GinjaDataType.Signed8 => typeof(LabeledArray<sbyte>),
+					GinjaDataType.Unsigned16 => typeof(LabeledArray<ushort>),
+					GinjaDataType.Signed16 => typeof(LabeledArray<short>),
+					GinjaDataType.Float32 => typeof(LabeledArray<float>),
 
-					break;
-				case GCVertexType.Color0:
-				case GCVertexType.Color1:
-					foreach(Color col in ColorData)
-					{
-						writer.WriteColor(col, ColorIOType.RGBA8);
-					}
+					GinjaDataType.RGB565
+					or GinjaDataType.RGB8
+					or GinjaDataType.RGBX8
+					or GinjaDataType.RGBA4
+					or GinjaDataType.RGBA6
+					or GinjaDataType.RGBA8 => typeof(LabeledArray<Color>),
 
-					break;
-				case GCVertexType.TexCoord0:
-				case GCVertexType.TexCoord1:
-				case GCVertexType.TexCoord2:
-				case GCVertexType.TexCoord3:
-				case GCVertexType.TexCoord4:
-				case GCVertexType.TexCoord5:
-				case GCVertexType.TexCoord6:
-				case GCVertexType.TexCoord7:
-					foreach(Vector2 uv in Vector2Data)
-					{
-						writer.WriteVector2(uv * 256f, FloatIOType.Short);
-					}
+					_ => throw new InvalidEnumArgumentException(nameof(dataType), (int)dataType, typeof(GinjaDataType)),
+				};
+				if(data.GetType() != expectedType)
+				{
+					throw new ArgumentException($"Invalid data type \"{data.GetType()}\"! Expected \"{expectedType}\"!");
+				}
+			}
 
-					break;
-				case GCVertexType.PositionMatrixID:
-				case GCVertexType.End:
-				default:
-					throw new FormatException($"Vertex type invalid: {Type}");
+			_dataType = dataType;
+			Data = data;
+		}
+
+
+		/// <summary>
+		/// Returns data as a float array (not applicable to color types)
+		/// </summary>
+		/// <param name="fractionalBitCount">Fractional bit count to use for when converting fixed-pointer number to float</param>
+		public float[]? GetDataAsFloat(int fractionalBitCount)
+		{
+			if(DataType is >= GinjaDataType.RGB565)
+			{
+				throw new InvalidOperationException("Vertex set contains colors and is thus not convertable to float!");
+			}
+
+			if(Data == null)
+			{
+				return null;
+			}
+
+			float[] result = DataType switch
+			{
+				GinjaDataType.Unsigned8 => [.. Unsigned8Data!.Select(x => (float)x)],
+				GinjaDataType.Signed8 => [.. Signed8Data!.Select(x => (float)x)],
+				GinjaDataType.Unsigned16 => [.. Unsigned16Data!.Select(x => (float)x)],
+				GinjaDataType.Signed16 => [.. Signed16Data!.Select(x => (float)x)],
+				GinjaDataType.Float32 => Float32Data!.ToArray(),
+
+				_ => throw new InvalidOperationException($"Vertex set has invalid data type \"{DataType}\""!),
+			};
+
+			if(DataType != GinjaDataType.Float32 && fractionalBitCount > 0)
+			{
+				byte maxFractionalBitCount = (byte)(DataType.GetDataByteSize() * 8);
+				if(fractionalBitCount > maxFractionalBitCount)
+				{
+					throw new ArgumentOutOfRangeException(nameof(fractionalBitCount), fractionalBitCount, $"Fractional bit count too large! With a datatype of \"{DataType}\", it can at most be {maxFractionalBitCount}!");
+				}
+
+				float fractionalFactor = 1 / (float)(1 << fractionalBitCount);
+				for(int i = 0; i < result.Length; i++)
+				{
+					result[i] *= fractionalFactor;
+				}
 			}
 
 			return result;
 		}
 
 		/// <summary>
-		/// Writes the sets structure/header to an endian stack writer.
+		/// Returns data as a vector2 array (not applicable to color types)
 		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="dataAddress">The address at which the sets data is located.</param>
-		public void WriteHeader(EndianStackWriter writer, uint dataAddress)
+		/// <param name="fractionalBitCount">Fractional bit count to use for when converting fixed-pointer number to float</param>
+		public Vector2[]? GetDataAsVector2(int fractionalBitCount)
 		{
+			if(Data == null)
+			{
+				return null;
+			}
+
+			if(DataLength % 2 != 0)
+			{
+				throw new InvalidOperationException($"Vertex set data length is {DataLength}, which is not a multiple of 2!");
+			}
+
+			float[] values = GetDataAsFloat(fractionalBitCount)!;
+
+			Vector2[] result = new Vector2[values.Length / 2];
+			for(int i = 0; i < result.Length; i++)
+			{
+				result[i] = new(
+					values[i * 2],
+					values[(i * 2) + 1]
+				);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Returns data as a vector3 array (not applicable to color types)
+		/// </summary>
+		/// <param name="fractionalBitCount">Fractional bit count to use for when converting fixed-pointer number to float</param>
+		public Vector3[]? GetDataAsVector3(int fractionalBitCount)
+		{
+			if(Data == null)
+			{
+				return null;
+			}
+
+			if(DataLength % 3 != 0)
+			{
+				throw new InvalidOperationException($"Vertex set data length is {DataLength}, which is not a multiple of 3!");
+			}
+
+			float[] values = GetDataAsFloat(fractionalBitCount)!;
+
+			Vector3[] result = new Vector3[values.Length / 3];
+			for(int i = 0; i < result.Length; i++)
+			{
+				result[i] = new(
+					values[i * 3],
+					values[(i * 3) + 1],
+					values[(i * 3) + 2]
+				);
+			}
+
+			return result;
+		}
+
+
+		/// <summary>
+		/// Replace data with float-based data
+		/// </summary>
+		/// <param name="data">The float data to insert</param>
+		/// <param name="fractionalBitCount">Fractional bit count to use when converting to fixed-pointer numbers</param>
+		public void SetFloatData(float[]? data, int fractionalBitCount)
+		{
+			if(DataType is >= GinjaDataType.RGB565)
+			{
+				throw new InvalidOperationException("Vertex set contains colors and is thus not convertable from float!");
+			}
+
+			if(data == null)
+			{
+				Data = null;
+				return;
+			}
+
+			float[] processedData = data;
+
+			if(DataType != GinjaDataType.Float32 && fractionalBitCount > 0)
+			{
+				byte maxFractionalBitCount = (byte)(DataType.GetDataByteSize() * 8);
+				if(fractionalBitCount > maxFractionalBitCount)
+				{
+					throw new ArgumentOutOfRangeException(nameof(fractionalBitCount), fractionalBitCount, $"Fractional bit count too large! With a datatype of \"{DataType}\", it can at most be {maxFractionalBitCount}!");
+				}
+
+				float fractionalFactor = 1 << fractionalBitCount;
+				processedData = [.. data.Select(x => x * fractionalFactor)];
+			}
+
+			string label = ((ILabel?)Data)?.Label ?? (Type.ToString().ToLower() + "_").GenerateIdentifier();
+
+			switch(DataType)
+			{
+				case GinjaDataType.Unsigned8:
+					Unsigned8Data = new(label, [.. processedData.Select(x => (byte)x)]);
+					break;
+				case GinjaDataType.Signed8:
+					Signed8Data = new(label, [.. processedData.Select(x => (sbyte)x)]);
+					break;
+				case GinjaDataType.Unsigned16:
+					Unsigned16Data = new(label, [.. processedData.Select(x => (byte)x)]);
+					break;
+				case GinjaDataType.Signed16:
+					Signed16Data = new(label, [.. processedData.Select(x => (byte)x)]);
+					break;
+				case GinjaDataType.Float32:
+					Float32Data = new(label, processedData);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Replace data with float-based data from vectors
+		/// </summary>
+		/// <param name="data">The float data to insert</param>
+		/// <param name="fractionalBitCount">Fractional bit count to use when converting to fixed-pointer numbers</param>
+		public void SetFloatData(Vector2[]? data, int fractionalBitCount)
+		{
+			SetFloatData(
+				data?.SelectMany<Vector2, float>(x => [x.X, x.Y]).ToArray(),
+				fractionalBitCount
+			);
+		}
+
+		/// <summary>
+		/// Replace data with float-based data from vectors
+		/// </summary>
+		/// <param name="data">The float data to insert</param>
+		/// <param name="fractionalBitCount">Fractional bit count to use when converting to fixed-pointer numbers</param>
+		public void SetFloatData(Vector3[]? data, int fractionalBitCount)
+		{
+			SetFloatData(
+				data?.SelectMany<Vector3, float>(x => [x.X, x.Y, x.Z]).ToArray(),
+				fractionalBitCount
+			);
+		}
+
+
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, IOContext context)
+		{
+			Type = (GinjaVertexType)reader.ReadByte();
+			int readStructSize = reader.ReadByte();
+			int count = reader.ReadUInt16();
+
+			uint structure = reader.ReadUInt32();
+			StructType = (GinjaStructType)(structure & 0x0F);
+			_dataType = (GinjaDataType)((structure >> 4) & 0x0F);
+
+			int structSize = StructType.GetStructComponentCount() * DataType.GetDataByteSize();
+			if(readStructSize != structSize)
+			{
+				throw new Exception($"Read structure size doesnt match calculated structure size: {readStructSize} != {structSize}");
+			}
+
+			long dataOffset = reader.ReadOffsetValue();
+
+			if(Type == GinjaVertexType.End)
+			{
+				return;
+			}
+
+			int arraySize = StructType.GetStructComponentCount() * count;
+			string labelPrefix = Type.ToString() + "_";
+
+			Data = DataType switch
+			{
+				GinjaDataType.Unsigned8 => reader.ReadLabeledArrayAtOffset<byte>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
+				GinjaDataType.Signed8 => reader.ReadLabeledArrayAtOffset<sbyte>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
+				GinjaDataType.Unsigned16 => reader.ReadLabeledArrayAtOffset<ushort>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
+				GinjaDataType.Signed16 => reader.ReadLabeledArrayAtOffset<short>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
+				GinjaDataType.Float32 => reader.ReadLabeledArrayAtOffset<float>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
+				GinjaDataType.RGB565 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGB565, context.PointerLUT),
+				GinjaDataType.RGBA8 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGBA8, context.PointerLUT),
+				GinjaDataType.RGB8 or GinjaDataType.RGBX8 or GinjaDataType.RGBA4 or GinjaDataType.RGBA6 => throw new NotImplementedException($"Data type \"{DataType}\" is not implemented"),
+				_ => throw new InvalidDataException($"Invalid data type \"{DataType}\"!"),
+			};
+		}
+
+		internal static LabeledArray<GinjaVertexSet> ReadArray(BinaryObjectReader reader, IOContext context)
+		{
+			List<GinjaVertexSet> result = [];
+
+			while(reader.ReadObject<GinjaVertexSet, IOContext>(context) is GinjaVertexSet vertexSet && vertexSet.Type != GinjaVertexType.End)
+			{
+				result.Add(vertexSet);
+			}
+
+			return new([.. result]);
+		}
+
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, IOContext context)
+		{
+			byte structSize = (byte)(StructType.GetStructComponentCount() * DataType.GetDataByteSize());
+
 			writer.WriteByte((byte)Type);
-			writer.WriteByte((byte)StructSize);
-			writer.WriteUShort((ushort)DataLength);
+			writer.WriteByte(structSize);
+			writer.WriteUInt16((ushort)DataLength);
 
 			uint structure = (uint)StructType;
 			structure |= (uint)((byte)DataType << 4);
-			writer.WriteUInt(structure);
+			writer.WriteUInt32(structure);
 
-			writer.WriteUInt(dataAddress);
-			writer.WriteUInt((uint)(DataLength * StructSize));
-		}
-
-		/// <summary>
-		/// Writes an array of vertex sets to an endian stack writer. Includes end marker.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="vertexSets">The vertex sets to write.</param>
-		/// <returns>Address at which the vertex set headers were written.</returns>
-		public static uint WriteArray(EndianStackWriter writer, GCVertexSet[] vertexSets)
-		{
-			uint[] dataAddresses = new uint[vertexSets.Length];
-			for(int i = 0; i < vertexSets.Length; i++)
+			switch(DataType)
 			{
-				dataAddresses[i] = vertexSets[i].WriteData(writer);
-			}
-
-			uint result = writer.PointerPosition;
-
-			for(int i = 0; i < vertexSets.Length; i++)
-			{
-				vertexSets[i].WriteHeader(writer, dataAddresses[i]);
-			}
-
-			// End marker
-			writer.WriteByte(0xFF);
-			writer.WriteEmpty(15);
-
-			return result;
-		}
-
-		/// <summary>
-		/// Read a vertex set off an endian data reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The vertex set that was read.</returns>
-		public static GCVertexSet Read(EndianStackReader reader, uint address)
-		{
-			GCVertexType attribute = (GCVertexType)reader[address];
-			if(attribute == GCVertexType.End)
-			{
-				return EndVertexSet;
-			}
-
-			uint structure = reader.ReadUInt(address + 4);
-			GCStructType structType = (GCStructType)(structure & 0x0F);
-			GCDataType dataType = (GCDataType)((structure >> 4) & 0x0F);
-			uint structSize = GCEnumExtensions.GetStructSize(structType, dataType);
-
-			if(reader[address + 1] != structSize)
-			{
-				throw new Exception($"Read structure size doesnt match calculated structure size: {reader[address + 1]} != {structSize}");
-			}
-
-			// reading the data
-			int count = reader.ReadUShort(address + 2);
-			uint dataAddr = reader.ReadPointer(address + 8);
-
-			Array setdata;
-
-			switch(attribute)
-			{
-				case GCVertexType.Position:
-				case GCVertexType.Normal:
-					Vector3[] vector3Data = new Vector3[count];
-					for(int i = 0; i < count; i++)
-					{
-						vector3Data[i] = reader.ReadVector3(ref dataAddr);
-					}
-
-					setdata = vector3Data;
+				case GinjaDataType.Unsigned8:
+					writer.WriteArrayOffset(Unsigned8Data, context.PointerLUT, 4);
 					break;
-				case GCVertexType.Color0:
-				case GCVertexType.Color1:
-					Color[] colorData = new Color[count];
-					for(int i = 0; i < count; i++)
-					{
-						colorData[i] = reader.ReadColor(ref dataAddr, ColorIOType.RGBA8);
-					}
-
-					setdata = colorData;
+				case GinjaDataType.Signed8:
+					writer.WriteArrayOffset(Signed8Data, context.PointerLUT, 4);
 					break;
-				case GCVertexType.TexCoord0:
-				case GCVertexType.TexCoord1:
-				case GCVertexType.TexCoord2:
-				case GCVertexType.TexCoord3:
-				case GCVertexType.TexCoord4:
-				case GCVertexType.TexCoord5:
-				case GCVertexType.TexCoord6:
-				case GCVertexType.TexCoord7:
-					Vector2[] uvData = new Vector2[count];
-					for(int i = 0; i < count; i++)
-					{
-						uvData[i] = reader.ReadVector2(ref dataAddr, FloatIOType.Short) / 256f;
-					}
-
-					setdata = uvData;
+				case GinjaDataType.Unsigned16:
+					writer.WriteArrayOffset(Unsigned16Data, context.PointerLUT, 4);
 					break;
-				case GCVertexType.PositionMatrixID:
-					throw new NotSupportedException();
-				case GCVertexType.End:
+				case GinjaDataType.Signed16:
+					writer.WriteArrayOffset(Signed16Data, context.PointerLUT, 4);
+					break;
+				case GinjaDataType.Float32:
+					writer.WriteArrayOffset(Float32Data, context.PointerLUT);
+					break;
+				case GinjaDataType.RGB565:
+					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGB565, context.PointerLUT, 4);
+					break;
+				case GinjaDataType.RGBA8:
+					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGBA8, context.PointerLUT);
+					break;
+				case GinjaDataType.RGB8:
+				case GinjaDataType.RGBX8:
+				case GinjaDataType.RGBA4:
+				case GinjaDataType.RGBA6:
+					throw new NotImplementedException($"Data type \"{DataType}\" is not implemented");
 				default:
-					throw new ArgumentException($"Vertex type invalid: {attribute}");
+					throw new InvalidDataException($"Invalid data type \"{DataType}\"!");
 			}
 
-			return new GCVertexSet(attribute, dataType, structType, setdata);
+			writer.WriteUInt32((uint)(DataLength * structSize));
 		}
 
-		/// <summary>
-		/// Reads an array of vertex sets off an endian stack reader. Stops reading when an end marker set is encountered.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The vertex sets that were read.</returns>
-		public static GCVertexSet[] ReadArray(EndianStackReader reader, uint address)
+		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<GinjaVertexSet> vertexSets, IOContext context)
 		{
-			List<GCVertexSet> result = [];
-			GCVertexSet vertexSet = Read(reader, address);
-			while(vertexSet.Type != GCVertexType.End)
+			foreach(GinjaVertexSet vertexSet in vertexSets)
 			{
-				result.Add(vertexSet);
-				address += 16;
-				vertexSet = Read(reader, address);
+				writer.WriteObject(vertexSet, context);
 			}
 
-			return result.ToArray();
+			writer.WriteObject(EndVertexSet);
 		}
 
 
@@ -450,9 +501,15 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// Creates a deep clone of the vertex set.
 		/// </summary>
 		/// <returns></returns>
-		public GCVertexSet Clone()
+		public GinjaVertexSet Clone()
 		{
-			return new(Type, DataType, StructType, (Array?)Data?.Clone() ?? null);
+			return new()
+			{
+				Type = Type,
+				DataType = DataType,
+				StructType = StructType,
+				Data = ((ICloneable?)Data)?.Clone(),
+			};
 		}
 
 		/// <inheritdoc/>
@@ -460,5 +517,6 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		{
 			return $"{Type}: {DataLength}";
 		}
+
 	}
 }

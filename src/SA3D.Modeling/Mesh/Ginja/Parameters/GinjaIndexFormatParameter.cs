@@ -1,14 +1,14 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Holds information about the triangle lists of geometry.
 	/// </summary>
-	public struct GCIndexFormatParameter : IGCParameter
+	public struct GinjaIndexFormatParameter : IGinjaParameter
 	{
 		/// <inheritdoc/>
-		public readonly GCParameterType Type => GCParameterType.IndexFormat;
+		public readonly GinjaParameterType Type => GinjaParameterType.IndexFormat;
 
 		/// <inheritdoc/>
 		public uint Data { get; set; }
@@ -16,9 +16,9 @@ namespace SA3D.Modeling.Mesh.Gamecube.Parameters
 		/// <summary>
 		/// Holds information about the triangle lists of geometry.
 		/// </summary>
-		public GCIndexFormat IndexFormat
+		public GinjaIndexFormat IndexFormat
 		{
-			readonly get => (GCIndexFormat)Data;
+			readonly get => (GinjaIndexFormat)Data;
 			set => Data = (uint)value;
 		}
 

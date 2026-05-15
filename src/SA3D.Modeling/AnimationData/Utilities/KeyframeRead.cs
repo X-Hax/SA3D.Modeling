@@ -1,142 +1,161 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation.Utilities
+namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeRead
 	{
-		public static void ReadVector3Set(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Vector3> dictionary, FloatIOType type)
+		public static void ReadFloatSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, float> dictionary, FloatIOType type)
 		{
-			if(type is FloatIOType.BAMS16 or FloatIOType.BAMS16F or FloatIOType.Short)
+			Func<BinaryValueReader, float> read = type.GetReader();
+
+			if(type.GetByteSize() == 2)
 			{
 				for(int i = 0; i < count; i++)
 				{
-					uint frame = reader.ReadUShort(address);
-					address += 2;
-					dictionary.Add(frame, reader.ReadVector3(ref address, type));
+					dictionary.Add(
+						reader.ReadUInt16(),
+						read(reader)
+					);
 				}
 			}
 			else
 			{
 				for(int i = 0; i < count; i++)
 				{
-					uint frame = reader.ReadUInt(address);
-					address += 4;
-					dictionary.Add(frame, reader.ReadVector3(ref address, type));
+					dictionary.Add(
+						reader.ReadUInt32(),
+						read(reader)
+					);
+				}
+			}
+		}
+
+		public static void ReadVector2Set(this BinaryObjectReader reader, int count, SortedDictionary<uint, Vector2> dictionary, FloatIOType type)
+		{
+			Func<BinaryValueReader, Vector2> read = type.GetVector2Reader();
+
+			if(type.GetByteSize() == 2)
+			{
+				for(int i = 0; i < count; i++)
+				{
+					dictionary.Add(
+						reader.ReadUInt16(),
+						read(reader)
+					);
+				}
+			}
+			else
+			{
+				for(int i = 0; i < count; i++)
+				{
+					dictionary.Add(
+						reader.ReadUInt32(),
+						read(reader)
+					);
+				}
+			}
+		}
+
+		public static void ReadVector3Set(this BinaryObjectReader reader, int count, SortedDictionary<uint, Vector3> dictionary, FloatIOType type)
+		{
+			Func<BinaryValueReader, Vector3> read = type.GetVector3Reader();
+
+			if(type.GetByteSize() == 2)
+			{
+				for(int i = 0; i < count; i++)
+				{
+					dictionary.Add(
+						reader.ReadUInt16(),
+						read(reader)
+					);
+				}
+			}
+			else
+			{
+				for(int i = 0; i < count; i++)
+				{
+					dictionary.Add(
+						reader.ReadUInt32(),
+						read(reader)
+					);
 				}
 			}
 
 		}
 
-		public static void ReadVector3ArraySet(this EndianStackReader reader, uint address, uint count, string labelPrefix, SortedDictionary<uint, ILabeledArray<Vector3>> dictionary, PointerLUT lut)
+		public static void ReadVector3ArraySet(this BinaryObjectReader reader, int count, string labelPrefix, SortedDictionary<uint, LabeledArray<Vector3>> dictionary, PointerLUT lut)
 		{
 			if(count == 0)
 			{
 				return;
 			}
 
-			uint startAddr = address;
+			long startOffset = reader.GetPositionOffset();
 
-			// <frame, address>
-			SortedDictionary<uint, uint> frameAddresses = [];
+			// <frame, offset>
+			SortedDictionary<uint, long> frameOffsets = [];
 			for(int i = 0; i < count; i++)
 			{
-				uint frame = reader.ReadUInt(address);
-				uint ptr = reader.ReadPointer(address += 4);
-				address += 4;
-
-				frameAddresses.Add(frame, ptr);
+				frameOffsets.Add(reader.ReadUInt32(), reader.ReadOffsetValue());
 			}
 
-			uint[] addresses = frameAddresses.Values.Distinct().Order().ToArray();
-			// get the smallest array size
-			uint size = (startAddr - addresses[^1]) / 12;
-			for(int i = 1; i < addresses.Length; i++)
+			long[] offsets = [startOffset, .. frameOffsets.Values.Distinct()];
+			Array.Sort(offsets);
+
+			// get the smallest array size; Start with the largest possible size
+			long size = long.MaxValue;
+			for(int i = 1; i < offsets.Length; i++)
 			{
-				for(int j = 0; j < i; j++)
-				{
-					uint newSize = (addresses[i] - addresses[j]) / 12;
-					if(newSize < size)
-					{
-						size = newSize;
-					}
-				}
+				long newSize = (offsets[i] - offsets[i - 1]) / 12;
+				size = long.Min(size, newSize);
 			}
 
-			foreach(KeyValuePair<uint, uint> item in frameAddresses)
+			foreach(KeyValuePair<uint, long> item in frameOffsets)
 			{
-				ILabeledArray<Vector3> vectors = lut.GetAddLabeledValue(item.Value, labelPrefix, () =>
-				{
-					LabeledArray<Vector3> result = new(size);
-
-					uint ptr = item.Value;
-					for(int j = 0; j < size; j++)
-					{
-						result[j] = reader.ReadVector3(ref ptr);
-					}
-
-					return result;
-				});
+				LabeledArray<Vector3> vectors = reader.ReadLabeledObjectArrayAtOffset(StructBinaryHelper.ReadVector3, item.Value, (int)size, labelPrefix, lut)
+					?? throw reader.ReadNullReference(nameof(KeyframeSet), labelPrefix);
 
 				dictionary.Add(item.Key, vectors);
 			}
 		}
 
-		public static void ReadVector2Set(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Vector2> dictionary, FloatIOType type)
+		public static void ReadColorSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Color> dictionary, ColorIOType type)
 		{
 			for(int i = 0; i < count; i++)
 			{
-				uint frame = reader.ReadUInt(address);
-				address += 4;
-				dictionary.Add(frame, reader.ReadVector2(ref address, type));
+				dictionary.Add(
+					reader.ReadUInt32(),
+					reader.ReadObject<Color, ColorIOType>(type)
+				);
 			}
 		}
 
-		public static void ReadColorSet(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Color> dictionary, ColorIOType type)
+		public static void ReadSpotSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Spotlight> dictionary)
 		{
 			for(int i = 0; i < count; i++)
 			{
-				uint frame = reader.ReadUInt(address);
-				address += 4;
-				dictionary.Add(frame, reader.ReadColor(ref address, type));
+				dictionary.Add(
+					reader.ReadUInt32(),
+					reader.ReadObject<Spotlight>()
+				);
 			}
 		}
 
-		public static void ReadFloatSet(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, float> dictionary, bool BAMS)
+		public static void ReadQuaternionSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Quaternion> dictionary)
 		{
 			for(int i = 0; i < count; i++)
 			{
-				uint frame = reader.ReadUInt(address);
-				float value = BAMS
-					? BAMSFHelper.BAMSFToRad(reader.ReadInt(address + 4))
-					: reader.ReadFloat(address + 4);
-				address += 8;
-				dictionary.Add(frame, value);
-			}
-		}
-
-		public static void ReadSpotSet(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Spotlight> dictionary)
-		{
-			for(int i = 0; i < count; i++)
-			{
-				uint frame = reader.ReadUInt(address);
-				Spotlight value = Spotlight.Read(reader, address + 4);
-				address += 8 + Spotlight.StructSize;
-				dictionary.Add(frame, value);
-			}
-		}
-
-		public static void ReadQuaternionSet(this EndianStackReader reader, uint address, uint count, SortedDictionary<uint, Quaternion> dictionary)
-		{
-			for(int i = 0; i < count; i++)
-			{
-				uint frame = reader.ReadUInt(address);
-				address += 4;
-				dictionary.Add(frame, reader.ReadQuaternion(ref address));
+				dictionary.Add(
+					reader.ReadUInt32(),
+					reader.ReadQuaternion()
+				);
 			}
 		}
 	}

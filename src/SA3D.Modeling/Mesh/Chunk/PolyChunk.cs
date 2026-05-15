@@ -1,6 +1,8 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using Amicitia.IO.Streams;
+using SA3D.Common.IO;
+using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.PolyChunks;
-using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 
@@ -9,12 +11,29 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// <summary>
 	/// Polychunk base class.
 	/// </summary>
-	public abstract class PolyChunk : ICloneable
+	public abstract class PolyChunk : ICloneable, IBinarySerializable
 	{
 		/// <summary>
-		/// Type.
+		/// Chunk type
 		/// </summary>
-		public PolyChunkType Type { get; protected set; }
+		public PolyChunkType Type
+		{
+			get;
+			protected set
+			{
+				if(!Enum.IsDefined(value) || value is PolyChunkType.End or PolyChunkType.Null)
+				{
+					throw new FormatException($"Poly chunk type is invalid: {value}");
+				}
+
+				if(!IsTypeApplicable(value))
+				{
+					throw new ArgumentException($"Poly chunk type \"{value}\" is not allowed in {GetType()}");
+				}
+
+				field = value;
+			}
+		}
 
 		/// <summary>
 		/// Additonal attributes.
@@ -22,9 +41,9 @@ namespace SA3D.Modeling.Mesh.Chunk
 		public byte Attributes { get; set; }
 
 		/// <summary>
-		/// Size of the chunk in bytes.
+		/// Whether the polygon chunk position and size needs to be a multiple of 4
 		/// </summary>
-		public abstract uint ByteSize { get; }
+		protected abstract bool AlignWithFour { get; }
 
 		/// <summary>
 		/// Base constructor for every poly chunk.
@@ -37,179 +56,138 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 
 		/// <summary>
-		/// Writes the poly chunk to an endian stack writer.
+		/// Checks whether a given polychunk type can be applied to this polychunk implementation
 		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		public void Write(EndianStackWriter writer, PointerLUT lut)
-		{
-			lut.PolyChunks.Add(writer.PointerPosition, this);
-			writer.WriteUShort((ushort)((byte)Type | (Attributes << 8)));
-			InternalWrite(writer);
-		}
-
-		/// <summary>
-		/// Writes an array of poly chunks to an endian stack writer. Includes NULL and END chunks.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="chunks">Chunks to writ.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
+		/// <param name="type">The type to check</param>
 		/// <returns></returns>
-		public static uint WriteArray(EndianStackWriter writer, IEnumerable<PolyChunk?> chunks, PointerLUT lut)
+		protected virtual bool IsTypeApplicable(PolyChunkType type)
 		{
-			uint result = writer.PointerPosition;
+			// only allowing type to be set via constructor
+			return Type == default || type == Type;
+		}
 
-			foreach(PolyChunk? chunk in chunks)
+		/// <inheritdoc/>
+		public virtual void Read(BinaryObjectReader reader)
+		{
+			ushort header = reader.ReadUInt16();
+			Type = (PolyChunkType)(header & 0xFF);
+			Attributes = (byte)(header >> 8);
+		}
+
+		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader)
+		{
+			PolyChunkType peekType()
 			{
-				if(chunk == null)
+				using SeekToken token = reader.At();
+				return (PolyChunkType)(reader.ReadUInt16() & 0xFF);
+			}
+
+			List<PolyChunk> chunks = [];
+			while(true)
+			{
+				PolyChunk chunk;
+				switch(peekType())
 				{
-					writer.WriteEmpty(2);
-					continue;
+					case PolyChunkType.BlendAlpha:
+						chunk = reader.ReadObject<BlendAlphaChunk>();
+						break;
+					case PolyChunkType.MipmapDistanceMultiplier:
+						chunk = reader.ReadObject<MipmapDistanceMultiplierChunk>();
+						break;
+					case PolyChunkType.SpecularExponent:
+						chunk = reader.ReadObject<SpecularExponentChunk>();
+						break;
+					case PolyChunkType.CacheList:
+						chunk = reader.ReadObject<CacheListChunk>();
+						break;
+					case PolyChunkType.DrawList:
+						chunk = reader.ReadObject<DrawListChunk>();
+						break;
+					case PolyChunkType.TextureID:
+					case PolyChunkType.TextureID2:
+						chunk = reader.ReadObject<TextureChunk>();
+						break;
+					case PolyChunkType.Material_Empty:
+					case PolyChunkType.Material_Diffuse:
+					case PolyChunkType.Material_Ambient:
+					case PolyChunkType.Material_DiffuseAmbient:
+					case PolyChunkType.Material_Specular:
+					case PolyChunkType.Material_DiffuseSpecular:
+					case PolyChunkType.Material_AmbientSpecular:
+					case PolyChunkType.Material_DiffuseAmbientSpecular:
+					case PolyChunkType.Material_Diffuse2:
+					case PolyChunkType.Material_Ambient2:
+					case PolyChunkType.Material_DiffuseAmbient2:
+					case PolyChunkType.Material_Specular2:
+					case PolyChunkType.Material_DiffuseSpecular2:
+					case PolyChunkType.Material_AmbientSpecular2:
+					case PolyChunkType.Material_DiffuseAmbientSpecular2:
+						chunk = reader.ReadObject<MaterialChunk>();
+						break;
+					case PolyChunkType.Material_Bump:
+						chunk = reader.ReadObject<MaterialBumpChunk>();
+						break;
+					case PolyChunkType.Volume_Triangle:
+					case PolyChunkType.Volume_Quad:
+					case PolyChunkType.Volume_Strip:
+						chunk = reader.ReadObject<VolumeChunk>();
+						break;
+					case PolyChunkType.Strip_Blank:
+					case PolyChunkType.Strip_Tex:
+					case PolyChunkType.Strip_HDTex:
+					case PolyChunkType.Strip_Normal:
+					case PolyChunkType.Strip_TexNormal:
+					case PolyChunkType.Strip_HDTexNormal:
+					case PolyChunkType.Strip_Color:
+					case PolyChunkType.Strip_TexColor:
+					case PolyChunkType.Strip_HDTexColor:
+					case PolyChunkType.Strip_BlankDouble:
+					case PolyChunkType.Strip_TexDouble:
+					case PolyChunkType.Strip_HDTexDouble:
+						chunk = reader.ReadObject<StripChunk>();
+						break;
+					case PolyChunkType.Null:
+						reader.Skip(sizeof(ushort));
+						continue;
+					case PolyChunkType.End:
+						reader.Skip(sizeof(ushort));
+						goto End;
+					default:
+						throw new InvalidOperationException(); // cant be reached
 				}
 
-				chunk.Write(writer, lut);
+				chunks.Add(chunk);
 			}
 
-			// end chunk
-			writer.WriteUShort(0xFF);
-
-			return result;
+			End:
+			return new([.. chunks]);
 		}
 
-		/// <summary>
-		/// Writes the poly chunks body to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		protected abstract void InternalWrite(EndianStackWriter writer);
-
-		/// <summary>
-		/// Reads a poly chunk off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">Reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The poly chunk that was read.</returns>
-		public static PolyChunk Read(EndianStackReader reader, ref uint address, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer)
 		{
-			uint chunkAddress = address;
-			ushort header = reader.ReadUShort(address);
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			byte attribs = (byte)(header >> 8);
-
-			if(!Enum.IsDefined(type) || type is PolyChunkType.End or PolyChunkType.Null)
+			if(AlignWithFour)
 			{
-				throw new FormatException($"Poly chunk type is invalid: {type}");
+				writer.Align(4);
 			}
 
-			PolyChunk chunk;
-			switch(type)
-			{
-				case PolyChunkType.BlendAlpha:
-					chunk = new BlendAlphaChunk();
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.MipmapDistanceMultiplier:
-					chunk = new MipmapDistanceMultiplierChunk();
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.SpecularExponent:
-					chunk = new SpecularExponentChunk();
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.CacheList:
-					chunk = new CacheListChunk();
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.DrawList:
-					chunk = new DrawListChunk();
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.TextureID:
-				case PolyChunkType.TextureID2:
-					chunk = TextureChunk.Read(reader, address);
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.Material_Diffuse:
-				case PolyChunkType.Material_Ambient:
-				case PolyChunkType.Material_DiffuseAmbient:
-				case PolyChunkType.Material_Specular:
-				case PolyChunkType.Material_DiffuseSpecular:
-				case PolyChunkType.Material_AmbientSpecular:
-				case PolyChunkType.Material_DiffuseAmbientSpecular:
-				case PolyChunkType.Material_Diffuse2:
-				case PolyChunkType.Material_Ambient2:
-				case PolyChunkType.Material_DiffuseAmbient2:
-				case PolyChunkType.Material_Specular2:
-				case PolyChunkType.Material_DiffuseSpecular2:
-				case PolyChunkType.Material_AmbientSpecular2:
-				case PolyChunkType.Material_DiffuseAmbientSpecular2:
-					chunk = MaterialChunk.Read(reader, ref address);
-					break;
-				case PolyChunkType.Material_Bump:
-					chunk = MaterialBumpChunk.Read(reader, address);
-					address += chunk.ByteSize;
-					break;
-				case PolyChunkType.Volume_Polygon3:
-				case PolyChunkType.Volume_Polygon4:
-				case PolyChunkType.Volume_Strip:
-					chunk = VolumeChunk.Read(reader, ref address);
-					break;
-				case PolyChunkType.Strip_Blank:
-				case PolyChunkType.Strip_Tex:
-				case PolyChunkType.Strip_HDTex:
-				case PolyChunkType.Strip_Normal:
-				case PolyChunkType.Strip_TexNormal:
-				case PolyChunkType.Strip_HDTexNormal:
-				case PolyChunkType.Strip_Color:
-				case PolyChunkType.Strip_TexColor:
-				case PolyChunkType.Strip_HDTexColor:
-				case PolyChunkType.Strip_BlankDouble:
-				case PolyChunkType.Strip_TexDouble:
-				case PolyChunkType.Strip_HDTexDouble:
-					chunk = StripChunk.Read(reader, ref address);
-					break;
-				case PolyChunkType.Null:
-				case PolyChunkType.End:
-				default:
-					throw new InvalidOperationException(); // cant be reached
-			}
-
-			chunk.Attributes = attribs;
-			lut.PolyChunks.Add(chunkAddress, chunk);
-			return chunk;
+			writer.WriteUInt16((ushort)((byte)Type | (Attributes << 8)));
+			WriteData(writer);
 		}
 
 		/// <summary>
-		/// Reads an array of poly chunks off an endian stack reader. Respects NULL and END chunks.
+		/// Writes additional polychunk data
 		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The poly chunks that were read.</returns>
-		public static PolyChunk?[] ReadArray(EndianStackReader reader, uint address, PointerLUT lut)
+		/// <param name="writer">The writer to write to</param>
+		protected virtual void WriteData(BinaryObjectWriter writer) { }
+
+		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks)
 		{
-			List<PolyChunk?> result = [];
+			writer.WriteObjectArray(chunks);
 
-			PolyChunkType readType()
-			{
-				return (PolyChunkType)(reader.ReadUShort(address) & 0xFF);
-			}
-
-			for(PolyChunkType type = readType(); type != PolyChunkType.End; type = readType())
-			{
-				if(type == PolyChunkType.Null)
-				{
-					result.Add(null);
-					address += 2;
-					continue;
-				}
-
-				result.Add(Read(reader, ref address, lut));
-			}
-
-			return result.ToArray();
+			// End chunk
+			writer.WriteUInt16((ushort)PolyChunkType.End);
 		}
-
 
 
 		object ICloneable.Clone()
@@ -231,5 +209,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 		{
 			return Type.ToString();
 		}
+
 	}
 }

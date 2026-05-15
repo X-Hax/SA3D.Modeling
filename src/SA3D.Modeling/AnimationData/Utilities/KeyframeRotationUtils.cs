@@ -7,7 +7,7 @@ using QuaternionKF = System.Collections.Generic.SortedDictionary<uint, System.Nu
 using EulerKF = System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>;
 using System.Linq;
 
-namespace SA3D.Modeling.Animation.Utilities
+namespace SA3D.Modeling.AnimationData.Utilities
 {
 	/// <summary>
 	/// Utility methods for converting keyframe rotations from and to matrices and each other.
@@ -86,7 +86,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <param name="deviationThreshold">The deviation threshold below which converted values should be ignored.</param>
 		/// <param name="rotateZYX">Whether euler angles are applied in ZYX order.</param>
 		/// <param name="clearQuaternion">Whether quaternion keyframes should be cleared after converting.</param>
-		public static void QuaternionToEuler(this Keyframes keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion)
+		public static void QuaternionToEuler(this KeyframeSet keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion)
 		{
 			keyframes.EulerRotation.Clear();
 			QuaternionToEuler(keyframes.QuaternionRotation, deviationThreshold, rotateZYX, keyframes.EulerRotation);
@@ -168,7 +168,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <param name="deviationThreshold">The deviation threshold below which converted values should be ignored.</param>
 		/// <param name="rotateZYX">Whether euler angles are applied in ZYX order.</param>
 		/// <param name="clearEuler">Whether euler keyframes should be cleared after converting.</param>
-		public static void EulerToQuaternion(this Keyframes keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler)
+		public static void EulerToQuaternion(this KeyframeSet keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler)
 		{
 			keyframes.QuaternionRotation.Clear();
 			EulerToQuaternion(keyframes.EulerRotation, deviationThreshold, rotateZYX, keyframes.QuaternionRotation);
@@ -220,7 +220,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <param name="converted">Whether the output was converted between euler and quaternion</param>
 		/// <param name="complementary">Complementary matrices for quaternion target.</param>
 		/// <returns>The converted rotation matrix keyframes.</returns>
-		public static Matrix4x4KF GetRotationMatrices(this Keyframes keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out Dictionary<uint, Matrix4x4[]>? complementary)
+		public static Matrix4x4KF GetRotationMatrices(this KeyframeSet keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out Dictionary<uint, Matrix4x4[]>? complementary)
 		{
 			Matrix4x4KF result = [];
 			complementary = null;
@@ -364,7 +364,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <param name="wasQuaternion">Whether the matrices should be handled as quaternion rotations.</param>
 		/// <param name="deviationThreshold">The deviation threshold below which converted values should be ignored.</param>
 		/// <param name="rotateZYX">Whether the euler angles should be applied in ZYX order.</param>
-		public static void MatrixToQuaternion(this Keyframes keyframes, Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX)
+		public static void MatrixToQuaternion(this KeyframeSet keyframes, Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX)
 		{
 			keyframes.QuaternionRotation.Clear();
 			MatrixToQuaternion(source, wasQuaternion, deviationThreshold, rotateZYX, keyframes.QuaternionRotation);
@@ -423,7 +423,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// <param name="deviationThreshold">The deviation threshold below which converted values should be ignored.</param>
 		/// <param name="rotateZYX">Whether the euler angles should be applied in ZYX order.</param>
 		/// <param name="complementary">Rotation matrices to be applied in between keyframes. Used for achieving angle differences greater than 180 degrees.</param>
-		public static void MatrixToEuler(this Keyframes keyframes, Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, Dictionary<uint, Matrix4x4[]>? complementary)
+		public static void MatrixToEuler(this KeyframeSet keyframes, Matrix4x4KF source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, Dictionary<uint, Matrix4x4[]>? complementary)
 		{
 			keyframes.EulerRotation.Clear();
 			MatrixToEuler(source, wasQuaternion, deviationThreshold, rotateZYX, complementary, keyframes.EulerRotation);
@@ -436,7 +436,7 @@ namespace SA3D.Modeling.Animation.Utilities
 		/// </summary>
 		/// <param name="keyframes">The keyframes to adjust.</param>
 		/// <param name="forBAMS">Keyframes target BAMS and rotations should be handled as such.</param>
-		public static void EnsurePositiveEulerRotationAngles(Keyframes keyframes, bool forBAMS)
+		public static void EnsurePositiveEulerRotationAngles(KeyframeSet keyframes, bool forBAMS)
 		{
 			if(keyframes.EulerRotation.Count == 0)
 			{

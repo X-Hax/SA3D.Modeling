@@ -1,18 +1,15 @@
-﻿using SA3D.Common.IO;
-using SA3D.Modeling.Mesh;
+﻿using Amicitia.IO.Binary;
 using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.ObjectData.Events;
 using SA3D.Modeling.Structs;
-using System;
 using System.Numerics;
-using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.ObjectData
 {
 	/// <summary>
 	/// Stage Geometry
 	/// </summary>
-	public class LandEntry
+	public class LevelModel : IBinarySerializable<IOContext>
 	{
 		private Node _model;
 
@@ -55,51 +52,22 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public uint Unknown { get; set; }
 
+		/// <summary>
+		/// Creates a new, empty land entry
+		/// </summary>
+		public LevelModel() : this(new()) { }
 
 		/// <summary>
 		/// Creates a new landentry object.
 		/// </summary>
 		/// <param name="node">Model behind the landentry.</param>
-		/// <param name="surfaceAttributes">Geometry behavior attributes.</param>
-		public LandEntry(Node node, SurfaceAttributes surfaceAttributes)
+		public LevelModel(Node node)
 		{
 			_model = node;
 			_model.OnTransformsUpdated += OnTransformsUpdated;
 			_model.OnAttachUpdated += OnAttachUpdated;
 
-			SurfaceAttributes = surfaceAttributes;
-
 			UpdateBounds();
-		}
-
-		private LandEntry(Node model, SurfaceAttributes attribs, uint blockbit, uint unknown, Bounds modelBounds)
-		{
-			_model = model;
-			_model.OnTransformsUpdated += OnTransformsUpdated;
-			_model.OnAttachUpdated += OnAttachUpdated;
-
-			SurfaceAttributes = attribs;
-			BlockBit = blockbit;
-			Unknown = unknown;
-			ModelBounds = modelBounds;
-		}
-
-
-		/// <summary>
-		/// Creates a new land entry from an attach.
-		/// </summary>
-		/// <param name="attach"></param>
-		/// <param name="surfaceAttributes">Geometry behavior attributes.</param>
-		/// <returns></returns>
-		public static LandEntry CreateWithAttach(Attach attach, SurfaceAttributes surfaceAttributes)
-		{
-			Node node = new()
-			{
-				Attach = attach,
-				Label = "col_" + GenerateIdentifier()
-			};
-
-			return new(node, surfaceAttributes);
 		}
 
 
@@ -130,100 +98,71 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 
-		/// <summary>
-		/// Reads a landentry off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="modelFormat">Format to read model data in.</param>
-		/// <param name="tableFormat">Landtable format that the landentry belongs to.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The land entry that was read.</returns>
-		public static LandEntry Read(EndianStackReader reader, uint address, ModelFormat modelFormat, ModelFormat tableFormat, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, IOContext context)
 		{
-			Bounds bounds = Bounds.Read(reader, ref address);
-			if(tableFormat < ModelFormat.SA2)
+			ModelBounds = reader.ReadObject<Bounds>();
+
+			if(context.LevelFormat is Format.Basic or Format.BasicDX)
 			{
-				address += 8; //sa1 has unused radius y and radius z values
+				reader.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			uint modelAddress = reader.ReadPointer(address);
-			Node model = Node.Read(reader, modelAddress, modelFormat, lut);
+			Model = reader.ReadObjectOffset<Node, IOContext>(context);
 
-			uint unknown = 0;
-			uint blockBit;
-
-			SurfaceAttributes attribs;
-			if(tableFormat == ModelFormat.Buffer)
+			if(context.LevelFormat >= Format.Chunk)
 			{
-				unknown = reader.ReadUInt(address + 4);
-				blockBit = reader.ReadUInt(address + 8);
-				attribs = (SurfaceAttributes)reader.ReadULong(address + 12);
-			}
-			else if(tableFormat >= ModelFormat.SA2)
-			{
-				unknown = reader.ReadUInt(address + 4);
-				blockBit = reader.ReadUInt(address + 8);
-				attribs = ((SA2SurfaceAttributes)reader.ReadUInt(address + 12)).ToUniversal();
+				Unknown = reader.ReadUInt32();
+				BlockBit = reader.ReadUInt32();
+				SurfaceAttributes = ((SA2SurfaceAttributes)reader.ReadUInt32()).ToUniversal();
 			}
 			else
 			{
-				blockBit = reader.ReadUInt(address + 4);
-				attribs = ((SA1SurfaceAttributes)reader.ReadUInt(address + 8)).ToUniversal();
+				BlockBit = reader.ReadUInt32();
+				SurfaceAttributes = ((SA1SurfaceAttributes)reader.ReadUInt32()).ToUniversal();
 			}
-
-			return new(model, attribs, blockBit, unknown, bounds);
 		}
 
-		/// <summary>
-		/// Writes the land entry to an endian stack writer.
-		/// </summary>
-		/// <remarks>Does not write the node itself.</remarks>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="format">Landtable format.</param>
-		/// <param name="lut">Pointer references to utilize</param>
-		public void Write(EndianStackWriter writer, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			if(!lut.Nodes.TryGetAddress(Model, out uint modelAddress))
+			writer.WriteObject(ModelBounds);
+
+			if(context.LevelFormat is Format.Basic or Format.BasicDX)
 			{
-				throw new InvalidOperationException("Model has not been written!");
+				writer.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			ModelBounds.Write(writer);
-			if(format is ModelFormat.SA1 or ModelFormat.SADX)
-			{
-				writer.WriteEmpty(8); // unused radius y and radius z values
-			}
+			writer.WriteObjectOffset(Model, context);
 
-			writer.WriteUInt(modelAddress);
-
-			if(format is ModelFormat.Buffer)
+			if(context.LevelFormat >= Format.Chunk)
 			{
-				writer.WriteUInt(Unknown);
-				writer.WriteUInt(BlockBit);
-				writer.WriteULong((ulong)SurfaceAttributes);
+				writer.WriteUInt32(Unknown);
+				writer.WriteUInt32(BlockBit);
+				writer.WriteUInt32((uint)SurfaceAttributes.ToSA2());
 			}
-			else if(format is ModelFormat.SA2 or ModelFormat.SA2B)
+			else
 			{
-				writer.WriteUInt(Unknown);
-				writer.WriteUInt(BlockBit);
-				writer.WriteUInt((uint)SurfaceAttributes.ToSA2());
-			}
-			else // SA1 or SADX
-			{
-				writer.WriteUInt(BlockBit);
-				writer.WriteUInt((uint)SurfaceAttributes.ToSA1());
+				writer.WriteUInt32(BlockBit);
+				writer.WriteUInt32((uint)SurfaceAttributes.ToSA1());
 			}
 		}
+
 
 
 		/// <summary>
 		/// Creates a copy of the landentry copies the node tree but reuses attaches.
 		/// </summary>
 		/// <returns></returns>
-		public LandEntry Copy()
+		public LevelModel Copy()
 		{
-			return new(Model.DeepSimpleCopy(), SurfaceAttributes, BlockBit, Unknown, ModelBounds);
+			return new(Model.DeepSimpleCopy())
+			{
+				SurfaceAttributes = SurfaceAttributes,
+				BlockBit = BlockBit,
+				Unknown = Unknown,
+				ModelBounds = ModelBounds
+			};
 		}
 
 		/// <inheritdoc/>
@@ -231,5 +170,6 @@ namespace SA3D.Modeling.ObjectData
 		{
 			return Model.ToString();
 		}
+
 	}
 }

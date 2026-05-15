@@ -1,7 +1,10 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
 using System;
+using System.IO;
+using System.Linq;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
@@ -10,19 +13,17 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// </summary>
 	public class VolumeChunk : SizedChunk
 	{
-		private int _polygonAttributeCount;
-
 		/// <summary>
 		/// Polygons of the volume
 		/// </summary>
-		public IChunkVolumePolygon[] Polygons { get; }
+		public IChunkVolumePolygon[] Polygons { get; set; }
 
 		/// <summary>
 		/// User attribute count (ranges from 0 to 3)
 		/// </summary>
 		public int PolygonAttributeCount
 		{
-			get => _polygonAttributeCount;
+			get;
 			set
 			{
 				if(value is < 0 or > 3)
@@ -30,24 +31,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 					throw new ArgumentOutOfRangeException(nameof(value), "Value out of range. Must be between 0 and 3.");
 				}
 
-				_polygonAttributeCount = value;
-			}
-		}
-
-		/// <summary>
-		/// Raw size not constrained to 16 bits.
-		/// </summary>
-		public uint RawSize
-		{
-			get
-			{
-				uint size = 2;
-				foreach(IChunkVolumePolygon p in Polygons)
-				{
-					size += p.Size(PolygonAttributeCount);
-				}
-
-				return size / 2;
+				field = value;
 			}
 		}
 
@@ -56,56 +40,120 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		{
 			get
 			{
-				uint result = RawSize;
+				uint result = CalculateByteSize() / 2;
 
 				if(result > ushort.MaxValue)
 				{
 					throw new InvalidOperationException($"Strip chunk size ({result}) exceeds maximum size ({ushort.MaxValue}).");
 				}
 
-				return (ushort)result;
+				return (ushort)uint.Clamp(CalculateByteSize() / 2, 0, ushort.MaxValue);
 			}
 		}
 
 
 		/// <summary>
-		/// Creates a new volume chunk.
+		/// Creates a new empty volume chunk (using <see cref="PolyChunkType.Volume_Triangle"/>)
 		/// </summary>
-		/// <param name="type">Type of volume chunk.</param>
-		/// <param name="polygons">Polygons to use.</param>
-		/// <param name="polygonAttributeCount">Number of attributes for each polygon.</param>
-		public VolumeChunk(PolyChunkType type, IChunkVolumePolygon[] polygons, int polygonAttributeCount) : base(type)
+		public VolumeChunk() : base(PolyChunkType.Volume_Triangle)
 		{
-			if(type is < PolyChunkType.Volume_Polygon3 or > PolyChunkType.Volume_Strip)
-			{
-				throw new ArgumentException($"Type \"{type}\" is not a valid volume chunk type!");
-			}
-
-			Polygons = polygons;
-			PolygonAttributeCount = polygonAttributeCount;
+			Polygons = [];
 		}
-
-		/// <summary>
-		/// Creates a new, empty volume chunk.
-		/// </summary>
-		/// <param name="type">Type of volume chunk.</param>
-		/// <param name="polygonCount">Number of polygons in the chunk.</param>
-		/// <param name="polygonAttributeCount">Number of attributes for each polygon.</param>
-		public VolumeChunk(PolyChunkType type, ushort polygonCount, int polygonAttributeCount)
-			: this(type, new IChunkVolumePolygon[polygonCount], polygonAttributeCount) { }
 
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		protected override bool IsTypeApplicable(PolyChunkType type)
+		{
+			return type is >= PolyChunkType.Volume_Triangle and <= PolyChunkType.Volume_Strip;
+		}
+
+
+		/// <summary>
+		/// Changes the type of the volume chunk.
+		/// </summary>
+		public void ChangeType(PolyChunkType type)
+		{
+			Type = type;
+		}
+
+		/// <summary>
+		/// Checks whether polygon data is valid and throws an <see cref="InvalidDataException"/> if not.
+		/// </summary>
+		/// <exception cref="InvalidDataException"></exception>
+		public void VerifyPolygonData()
+		{
+			Type expectedPolygonType = Type switch
+			{
+				PolyChunkType.Volume_Triangle => typeof(ChunkVolumeTriangle),
+				PolyChunkType.Volume_Quad => typeof(ChunkVolumeQuad),
+				PolyChunkType.Volume_Strip => typeof(ChunkVolumeStrip),
+				_ => throw new InvalidDataException(),
+			};
+
+			if(Polygons.Any(x => x.GetType() != expectedPolygonType))
+			{
+				throw new InvalidDataException($"Not all polygons are of the expected type {expectedPolygonType}!");
+			}
+
+			if(Type == PolyChunkType.Volume_Strip)
+			{
+				foreach(ChunkVolumeStrip strip in Polygons.Cast<ChunkVolumeStrip>())
+				{
+					strip.VerifyPolygonData();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Calculate the chunks size.
+		/// </summary>
+		/// <returns></returns>
+		public uint CalculateByteSize()
+		{
+			uint result = 2; // header ushort; strip count and triangle attributes
+
+			result += Type switch
+			{
+				PolyChunkType.Volume_Triangle => (ushort)(Polygons.Length * (6u + (PolygonAttributeCount * 2u))),
+				PolyChunkType.Volume_Quad => (ushort)(Polygons.Length * (8u + (PolygonAttributeCount * 2u))),
+				PolyChunkType.Volume_Strip => (ushort)Polygons.Sum(x => 2u + (2 * (x.NumIndices + ((x.NumIndices - 2) * PolygonAttributeCount)))),
+				_ => throw new InvalidDataException(),
+			};
+
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public override void Read(BinaryObjectReader reader)
+		{
+			base.Read(reader);
+
+			ushort data = reader.ReadUInt16();
+			int polygonCount = data & 0x3FFF;
+			PolygonAttributeCount = (byte)(data >> 14);
+
+			Polygons = Type switch
+			{
+				PolyChunkType.Volume_Triangle => reader.ReadObjectArray<ChunkVolumeTriangle>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
+				PolyChunkType.Volume_Quad => reader.ReadObjectArray<ChunkVolumeQuad>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
+				PolyChunkType.Volume_Strip => reader.ReadObjectArray<ChunkVolumeStrip>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
+				_ => throw new InvalidOperationException(),
+			};
+		}
+
+		/// <inheritdoc/>
+		protected override void WriteData(BinaryObjectWriter writer)
 		{
 			if(Polygons.Length > 0x3FFF)
 			{
 				throw new InvalidOperationException($"Poly count ({Polygons.Length}) exceeds maximum ({0x3FFF})");
 			}
 
-			base.InternalWrite(writer);
+			VerifyPolygonData();
 
-			writer.WriteUShort((ushort)(Polygons.Length | (PolygonAttributeCount << 14)));
+			base.WriteData(writer);
+
+			writer.WriteUInt16((ushort)(Polygons.Length | (PolygonAttributeCount << 14)));
 
 			foreach(IChunkVolumePolygon p in Polygons)
 			{
@@ -113,55 +161,16 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			}
 		}
 
-		internal static VolumeChunk Read(EndianStackReader reader, ref uint address)
-		{
-			ushort header = reader.ReadUShort(address);
-			ushort Header2 = reader.ReadUShort(address + 4);
-
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			byte attrib = (byte)(header >> 8);
-			ushort polyCount = (ushort)(Header2 & 0x3FFFu);
-			byte userAttribs = (byte)(Header2 >> 14);
-
-			VolumeChunk result = new(type, polyCount, userAttribs)
-			{
-				Attributes = attrib,
-			};
-
-			address += 6;
-
-			if(type == PolyChunkType.Volume_Polygon3)
-			{
-				for(int i = 0; i < polyCount; i++)
-				{
-					result.Polygons[i] = ChunkVolumeTriangle.Read(reader, ref address, userAttribs);
-				}
-			}
-			else if(type == PolyChunkType.Volume_Polygon4)
-			{
-				for(int i = 0; i < polyCount; i++)
-				{
-					result.Polygons[i] = ChunkVolumeQuad.Read(reader, ref address, userAttribs);
-				}
-			}
-			else // Volume_Strip
-			{
-				for(int i = 0; i < polyCount; i++)
-				{
-					result.Polygons[i] = ChunkVolumeStrip.Read(reader, ref address, userAttribs);
-				}
-			}
-
-			return result;
-		}
-
 
 		/// <inheritdoc/>
 		public override VolumeChunk Clone()
 		{
-			return new(Type, Polygons.ContentClone(), PolygonAttributeCount)
+			return new()
 			{
-				Attributes = Attributes
+				Type = Type,
+				Attributes = Attributes,
+				Polygons = Polygons.ContentClone(),
+				PolygonAttributeCount = PolygonAttributeCount
 			};
 		}
 

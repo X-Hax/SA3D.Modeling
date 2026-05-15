@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// Indicates which type of data a vertex set stores.
 	/// </summary>
-	public enum GCVertexType : byte
+	public enum GinjaVertexType : byte
 	{
 		/// <summary>
 		/// Position Matrix Indices.

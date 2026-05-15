@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// The component structure of the data.
 	/// </summary>
-	public enum GCStructType : byte
+	public enum GinjaStructType : byte
 	{
 		/// <summary>
 		/// 2 component vector position (X, Y).

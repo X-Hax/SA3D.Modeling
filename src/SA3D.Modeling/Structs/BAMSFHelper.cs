@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Amicitia.IO.Binary;
+using System;
 
 namespace SA3D.Modeling.Structs
 {
 	/// <summary>
-	/// Math helper for converting to and from BAMSF rotations (360° = 0xFFFF, as opposed ot 0x10000)
+	/// Math helper for converting to and from BAMSF rotations (360° = 0xFFFF, as opposed to 0x10000)
 	/// </summary>
 	public static class BAMSFHelper
 	{
@@ -51,6 +52,47 @@ namespace SA3D.Modeling.Structs
 		public static int DegToBAMSF(float deg)
 		{
 			return (int)Math.Round(deg * BAMSF2Deg);
+		}
+
+
+		/// <summary>
+		/// Writes a radians angle as a 16 bit BAMS value (where 360° = 0xFFFF instead of 0x10000)
+		/// </summary>
+		/// <param name="writer">The writer to write to</param>
+		/// <param name="radians">The radians value to write</param>
+		public static void WriteBAMSF16(this BinaryValueWriter writer, float radians)
+		{
+			writer.WriteInt16((short)RadToBAMSF(radians));
+		}
+
+		/// <summary>
+		/// Writes a radians angle as a 32 bit BAMS value (where 360° = 0xFFFF instead of 0x10000)
+		/// </summary>
+		/// <param name="writer">The writer to write to</param>
+		/// <param name="radians">The radians value to write</param>
+		public static void WriteBAMSF32(this BinaryValueWriter writer, float radians)
+		{
+			writer.WriteInt32(RadToBAMSF(radians));
+		}
+
+		/// <summary>
+		/// Reads a 16 bit BAMS value as a radians angle (where 360° = 0xFFFF instead of 0x10000)
+		/// </summary>
+		/// <param name="reader">The reader to read from</param>
+		/// <returns></returns>
+		public static float ReadBAMSF16(this BinaryValueReader reader)
+		{
+			return BAMSFToRad(reader.ReadInt16());
+		}
+
+		/// <summary>
+		/// Reads a 32 bit BAMS value as a radians angle (where 360° = 0xFFFF instead of 0x10000)
+		/// </summary>
+		/// <param name="reader">The reader to read from</param>
+		/// <returns></returns>
+		public static float ReadBAMSF32(this BinaryValueReader reader)
+		{
+			return BAMSFToRad(reader.ReadInt32());
 		}
 
 	}

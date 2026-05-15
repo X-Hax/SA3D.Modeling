@@ -1,4 +1,4 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using System;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
@@ -121,69 +121,51 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 
 
 		/// <inheritdoc/>
-		public readonly ushort Size(int polygonAttributeCount)
+		public void Read(BinaryObjectReader reader, int polygonAttributeCount)
 		{
-			return (ushort)(8u + (polygonAttributeCount * 2u));
-		}
-
-		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer, int polygonAttributeCount)
-		{
-			writer.WriteUShort(Index1);
-			writer.WriteUShort(Index2);
-			writer.WriteUShort(Index3);
-			writer.WriteUShort(Index4);
+			Index1 = reader.ReadUInt16();
+			Index2 = reader.ReadUInt16();
+			Index3 = reader.ReadUInt16();
+			Index4 = reader.ReadUInt16();
 
 			if(polygonAttributeCount > 0)
 			{
-				writer.WriteUShort(Attribute1);
-				if(polygonAttributeCount > 1)
-				{
-					writer.WriteUShort(Attribute2);
-					if(polygonAttributeCount > 0)
-					{
-						writer.WriteUShort(Attribute3);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Reads a chunk volume quad off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">Reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="polygonAttributeCount">Number of attributes to read for the quad.</param>
-		/// <returns>The quad that was read.</returns>
-		public static ChunkVolumeQuad Read(EndianStackReader reader, ref uint address, int polygonAttributeCount)
-		{
-			ChunkVolumeQuad result = new(
-				reader.ReadUShort(address),
-				reader.ReadUShort(address + 2),
-				reader.ReadUShort(address + 4),
-				reader.ReadUShort(address + 6));
-
-			address += 8;
-
-			if(polygonAttributeCount > 0)
-			{
-				result.Attribute1 = reader.ReadUShort(address);
-				address += 2;
+				Attribute1 = reader.ReadUInt16();
 
 				if(polygonAttributeCount > 1)
 				{
-					result.Attribute2 = reader.ReadUShort(address);
-					address += 2;
+					Attribute2 = reader.ReadUInt16();
 
 					if(polygonAttributeCount > 2)
 					{
-						result.Attribute3 = reader.ReadUShort(address);
-						address += 2;
+						Attribute3 = reader.ReadUInt16();
 					}
 				}
 			}
+		}
 
-			return result;
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer, int polygonAttributeCount)
+		{
+			writer.WriteUInt16(Index1);
+			writer.WriteUInt16(Index2);
+			writer.WriteUInt16(Index3);
+			writer.WriteUInt16(Index4);
+
+			if(polygonAttributeCount > 0)
+			{
+				writer.WriteUInt16(Attribute1);
+
+				if(polygonAttributeCount > 1)
+				{
+					writer.WriteUInt16(Attribute2);
+
+					if(polygonAttributeCount > 0)
+					{
+						writer.WriteUInt16(Attribute3);
+					}
+				}
+			}
 		}
 
 
