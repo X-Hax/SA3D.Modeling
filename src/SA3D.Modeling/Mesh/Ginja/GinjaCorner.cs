@@ -1,77 +1,77 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 using System;
 using System.Runtime.InteropServices;
 
-namespace SA3D.Modeling.Mesh.Gamecube
+namespace SA3D.Modeling.Mesh.Ginja
 {
 	/// <summary>
 	/// A single corner of a polygon, called loop
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 2)]
-	public struct GCCorner : IEquatable<GCCorner>
+	public struct GinjaCorner : IEquatable<GinjaCorner>
 	{
 		/// <summary>
-		/// The index to <see cref="GCVertexType.PositionMatrixID"/>.
+		/// The index to <see cref="GinjaVertexType.PositionMatrixID"/>.
 		/// </summary>
 		public ushort PositionMatrixIDIndex { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.Position"/>.
+		/// The index to <see cref="GinjaVertexType.Position"/>.
 		/// </summary>
 		public ushort PositionIndex { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.Normal"/>.
+		/// The index to <see cref="GinjaVertexType.Normal"/>.
 		/// </summary>
 		public ushort NormalIndex { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.Color0"/>.
+		/// The index to <see cref="GinjaVertexType.Color0"/>.
 		/// </summary>
 		public ushort Color0Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.Color1"/>.
+		/// The index to <see cref="GinjaVertexType.Color1"/>.
 		/// </summary>
 		public ushort Color1Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord0"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord0"/>.
 		/// </summary>
 		public ushort TexCoord0Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord1"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord1"/>.
 		/// </summary>
 		public ushort TexCoord1Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord2"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord2"/>.
 		/// </summary>
 		public ushort TexCoord2Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord3"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord3"/>.
 		/// </summary>
 		public ushort TexCoord3Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord4"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord4"/>.
 		/// </summary>
 		public ushort TexCoord4Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord5"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord5"/>.
 		/// </summary>
 		public ushort TexCoord5Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord6"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord6"/>.
 		/// </summary>
 		public ushort TexCoord6Index { get; set; }
 
 		/// <summary>
-		/// The index to <see cref="GCVertexType.TexCoord7"/>.
+		/// The index to <see cref="GinjaVertexType.TexCoord7"/>.
 		/// </summary>
 		public ushort TexCoord7Index { get; set; }
 
@@ -79,7 +79,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <inheritdoc/>
 		public override readonly bool Equals(object? obj)
 		{
-			return obj is GCCorner corner &&
+			return obj is GinjaCorner corner &&
 				   PositionMatrixIDIndex == corner.PositionMatrixIDIndex &&
 				   PositionIndex == corner.PositionIndex &&
 				   NormalIndex == corner.NormalIndex &&
@@ -115,7 +115,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 			return hash.ToHashCode();
 		}
 
-		readonly bool IEquatable<GCCorner>.Equals(GCCorner other)
+		readonly bool IEquatable<GinjaCorner>.Equals(GinjaCorner other)
 		{
 			return Equals(other);
 		}
@@ -126,7 +126,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <param name="left">Lefthand corner.</param>
 		/// <param name="right">Righthand corner.</param>
 		/// <returns>Whether the two corners are equal.</returns>
-		public static bool operator ==(GCCorner left, GCCorner right)
+		public static bool operator ==(GinjaCorner left, GinjaCorner right)
 		{
 			return left.Equals(right);
 		}
@@ -137,7 +137,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// <param name="left">Lefthand corner.</param>
 		/// <param name="right">Righthand corner.</param>
 		/// <returns>Whether the two corners are inequal.</returns>
-		public static bool operator !=(GCCorner left, GCCorner right)
+		public static bool operator !=(GinjaCorner left, GinjaCorner right)
 		{
 			return !(left == right);
 		}

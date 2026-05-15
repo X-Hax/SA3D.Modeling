@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Amicitia.IO.Binary;
+using System;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace SA3D.Modeling.Structs
@@ -8,9 +8,12 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// RGBA Color value.
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public partial struct Color : IEquatable<Color>
+	public partial struct Color : IEquatable<Color>, IBinarySerializable<ColorIOType>
 	{
+		private byte _red, _green, _blue, _alpha;
+		private float _redF, _greenF, _blueF, _alphaF;
+		private const float _fDivFac = byte.MaxValue;
+
 		#region Constants
 
 		/// <summary>
@@ -55,34 +58,69 @@ namespace SA3D.Modeling.Structs
 		#endregion
 
 		/// <summary>
-		/// Red.
+		/// Red / first color component.
 		/// </summary>
-		public byte Red { get; set; }
+		public byte Red
+		{
+			readonly get => _red;
+			set
+			{
+				_red = value;
+				_redF = value / _fDivFac;
+			}
+		}
 
 		/// <summary>
-		/// Green.
+		/// Green / second color component.
 		/// </summary>
-		public byte Green { get; set; }
+		public byte Green
+		{
+			readonly get => _green;
+			set
+			{
+				_green = value;
+				_greenF = value / _fDivFac;
+			}
+		}
 
 		/// <summary>
-		/// Blue.
+		/// Blue / third color component.
 		/// </summary>
-		public byte Blue { get; set; }
+		public byte Blue
+		{
+			readonly get => _blue;
+			set
+			{
+				_blue = value;
+				_blueF = value / _fDivFac;
+			}
+		}
 
 		/// <summary>
-		/// Alpha/Transparency.
+		/// Alpha / fourth color component (transparency).
 		/// </summary>
-		public byte Alpha { get; set; }
+		public byte Alpha
+		{
+			readonly get => _alpha;
+			set
+			{
+				_alpha = value;
+				_alphaF = value / _fDivFac;
+			}
+		}
 
-		#region Converter Properties
 
 		/// <summary>
 		/// Red as a float. Ranges from 0 - 1.
 		/// </summary>
 		public float RedF
 		{
-			readonly get => Red / 255.0f;
-			set => Red = FromFloat(value);
+			readonly get => _redF;
+			set
+			{
+				_redF = value;
+				_red = FromFloat(value);
+			}
 		}
 
 		/// <summary>
@@ -90,8 +128,12 @@ namespace SA3D.Modeling.Structs
 		/// </summary>
 		public float GreenF
 		{
-			readonly get => Green / 255.0f;
-			set => Green = FromFloat(value);
+			readonly get => _blueF;
+			set
+			{
+				_blueF = value;
+				_blue = FromFloat(value);
+			}
 		}
 
 		/// <summary>
@@ -99,8 +141,12 @@ namespace SA3D.Modeling.Structs
 		/// </summary>
 		public float BlueF
 		{
-			readonly get => Blue / 255.0f;
-			set => Blue = FromFloat(value);
+			readonly get => _greenF;
+			set
+			{
+				_greenF = value;
+				_green = FromFloat(value);
+			}
 		}
 
 		/// <summary>
@@ -108,9 +154,15 @@ namespace SA3D.Modeling.Structs
 		/// </summary>
 		public float AlphaF
 		{
-			readonly get => Alpha / 255.0f;
-			set => Alpha = FromFloat(value);
+			readonly get => _alphaF;
+			set
+			{
+				_alphaF = value;
+				_alpha = FromFloat(value);
+			}
 		}
+
+		#region Converter Properties
 
 		/// <summary>
 		/// The color as a 4 component float vector.
@@ -334,11 +386,63 @@ namespace SA3D.Modeling.Structs
 		/// <param name="blue">Blue color.</param>
 		public Color(float red, float green, float blue) : this(red, green, blue, 1) { }
 
-		/// <summary>
-		/// Creates a new color from a 4 component floating point vector.
-		/// </summary>
-		/// <param name="vector">Color value vector.</param>
-		public Color(Vector4 vector) : this(vector.X, vector.Y, vector.Z, vector.W) { }
+		#endregion
+
+		#region IO Methods
+
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, ColorIOType type)
+		{
+			switch(type)
+			{
+				case ColorIOType.RGBA8:
+					RGBA = reader.ReadUInt32();
+					break;
+				case ColorIOType.ARGB8_32:
+					ARGB = reader.ReadUInt32();
+					break;
+				case ColorIOType.ARGB8_16:
+					ushort GB = reader.ReadUInt16();
+					ushort AR = reader.ReadUInt16();
+					ARGB = (uint)(GB | (AR << 16));
+					break;
+				case ColorIOType.ARGB4:
+					ARGB4 = reader.ReadUInt16();
+					break;
+				case ColorIOType.RGB565:
+					RGB565 = reader.ReadUInt16();
+					break;
+				default:
+					throw new ArgumentException($"Invalid type.", nameof(type));
+			}
+		}
+
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer, ColorIOType type)
+		{
+			switch(type)
+			{
+				case ColorIOType.RGBA8:
+					writer.WriteUInt32(RGBA);
+					break;
+				case ColorIOType.ARGB8_32:
+					writer.WriteUInt32(ARGB);
+					break;
+				case ColorIOType.ARGB8_16:
+					uint val = ARGB;
+					writer.WriteUInt16((ushort)val);
+					writer.WriteUInt16((ushort)(val >> 16));
+					break;
+				case ColorIOType.ARGB4:
+					writer.WriteUInt16(ARGB4);
+					break;
+				case ColorIOType.RGB565:
+					writer.WriteUInt16(RGB565);
+					break;
+				default:
+					throw new ArgumentException($"Invalid type.", nameof(type));
+			}
+		}
 
 		#endregion
 
@@ -507,6 +611,45 @@ namespace SA3D.Modeling.Structs
 
 		#endregion
 
+		/// <summary>
+		/// Implicit 4 component vector to color (red, green, blue, alpha).
+		/// </summary>
+		/// <param name="vector"></param>
+		public static implicit operator Color(Vector4 vector)
+		{
+			Color result = default;
+			result.FloatVector = vector;
+			return result;
+		}
+
+		/// <summary>
+		/// Implicit 3 component vector to color (red, green, blue, 1.0).
+		/// </summary>
+		/// <param name="vector"></param>
+		public static implicit operator Color(Vector3 vector)
+		{
+			Color result = default;
+			result.FloatVector = new(vector, 1);
+			return result;
+		}
+
+		/// <summary>
+		/// Implicit color to 4 component vector (red, green, blue, alpha).
+		/// </summary>
+		/// <param name="color"></param>
+		public static implicit operator Vector4(Color color)
+		{
+			return color.FloatVector;
+		}
+
+		/// <summary>
+		/// Implicit color to 3 component vector (red, green, blue).
+		/// </summary>
+		/// <param name="color"></param>
+		public static implicit operator Vector3(Color color)
+		{
+			return color.FloatVector.AsVector3();
+		}
 
 		private static byte FromFloat(float value)
 		{
@@ -521,5 +664,6 @@ namespace SA3D.Modeling.Structs
 		{
 			return Hex;
 		}
+
 	}
 }

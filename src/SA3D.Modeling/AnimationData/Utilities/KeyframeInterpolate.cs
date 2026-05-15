@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation.Utilities
+namespace SA3D.Modeling.AnimationData.Utilities
 {
 	/// <summary>
 	/// Keyframe interpolation methods
@@ -115,14 +115,14 @@ namespace SA3D.Modeling.Animation.Utilities
 			}
 		}
 
-		public static Vector3[]? ValueAtFrame(this SortedDictionary<uint, ILabeledArray<Vector3>> keyframes, float frame)
+		public static Vector3[]? ValueAtFrame(this SortedDictionary<uint, LabeledArray<Vector3>> keyframes, float frame)
 		{
 			if(keyframes.Count == 0)
 			{
 				return null;
 			}
 
-			if(!GetNearestFrames(keyframes, frame, out float interpolation, out ILabeledArray<Vector3> before, out ILabeledArray<Vector3>? next))
+			if(!GetNearestFrames(keyframes, frame, out float interpolation, out LabeledArray<Vector3> before, out LabeledArray<Vector3>? next))
 			{
 				return before.ToArray();
 			}

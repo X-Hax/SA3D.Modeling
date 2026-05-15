@@ -1,4 +1,4 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using System;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <summary>
 		/// Vertex indices.
 		/// </summary>
-		public ushort[] Indices { get; }
+		public ushort[] Indices { get; set; }
 
 		/// <inheritdoc/>
 		public readonly int NumIndices => Indices.Length;
@@ -19,7 +19,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <summary>
 		/// Triangle attributes for each triangle. [triangle index, attribute index]
 		/// </summary>
-		public ushort[,] TriangleAttributes { get; }
+		public ushort[,] TriangleAttributes { get; set; }
 
 		/// <summary>
 		/// Whether the triangles use reversed culling direction.
@@ -64,59 +64,72 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			Reversed = reversed;
 		}
 
-		/// <inheritdoc/>
-		public readonly ushort Size(int polygonAttributeCount)
-		{
-			return (ushort)(2u + (2 * (Indices.Length + (TriangleAttributes.Length * polygonAttributeCount))));
-		}
-
-		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer, int polygonAttributeCount)
-		{
-			short count = (short)Math.Min(Indices.Length, short.MaxValue);
-			writer.WriteShort(Reversed ? (short)-count : count);
-
-			writer.WriteUShort(Indices[0]);
-			writer.WriteUShort(Indices[1]);
-			for(int i = 2; i < count; i++)
-			{
-				writer.WriteUShort(Indices[i]);
-
-				for(int j = 0; j < polygonAttributeCount; j++)
-				{
-					writer.WriteUShort(TriangleAttributes[i - 2, j]);
-				}
-			}
-		}
 
 		/// <summary>
-		/// Reads a chunk volume strip off an endian stack reader. Advances the address by the number of bytes read.
+		/// Verifies this strips polygon data
 		/// </summary>
-		/// <param name="reader">Reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="polygonAttributeCount">Number of attributes to read for each triangle in the strip.</param>
-		/// <returns>The strip that was read.</returns>
-		public static ChunkVolumeStrip Read(EndianStackReader reader, ref uint address, int polygonAttributeCount)
+		/// <exception cref="InvalidOperationException"></exception>
+		public readonly void VerifyPolygonData()
 		{
-			short header = reader.ReadShort(address);
-			ChunkVolumeStrip result = new(Math.Abs(header), header < 0);
-			address += 2;
-
-			result.Indices[0] = reader.ReadUShort(address);
-			result.Indices[1] = reader.ReadUShort(address += 2);
-
-			for(int i = 2; i < result.Indices.Length; i++)
+			if(Indices.Length < 3)
 			{
-				result.Indices[i] = reader.ReadUShort(address += 2);
+				throw new InvalidOperationException("Volume strips require at least 3 indices!");
+			}
+
+			if(TriangleAttributes.Length != Indices.Length - 2)
+			{
+				throw new InvalidOperationException("Triangle attributes on volume strips are required to have 2 less than the length of the same polygons indices!");
+			}
+
+			if(TriangleAttributes.GetLength(1) != 3)
+			{
+				throw new InvalidOperationException("Triangle attributes on volume strips need to be 3 deep!");
+			}
+		}
+
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, int polygonAttributeCount)
+		{
+			short header = reader.ReadInt16();
+			Reversed = header < 0;
+			Indices = new ushort[Math.Abs(header)];
+			TriangleAttributes = new ushort[Indices.Length - 2, 3];
+
+			Indices[0] = reader.ReadUInt16();
+			Indices[1] = reader.ReadUInt16();
+
+			for(int i = 2; i < Indices.Length; i++)
+			{
+				Indices[i] = reader.ReadUInt16();
 
 				for(int j = 0; j < polygonAttributeCount; j++)
 				{
-					result.TriangleAttributes[i - 2, j] = reader.ReadUShort(address += 2);
+					TriangleAttributes[i - 2, j] = reader.ReadUInt16();
 				}
 			}
-
-			return result;
 		}
+
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer, int polygonAttributeCount)
+		{
+			VerifyPolygonData();
+
+			short count = (short)Math.Min(Indices.Length, short.MaxValue);
+			writer.WriteInt16(Reversed ? (short)-count : count);
+
+			writer.WriteUInt16(Indices[0]);
+			writer.WriteUInt16(Indices[1]);
+			for(int i = 2; i < count; i++)
+			{
+				writer.WriteUInt16(Indices[i]);
+
+				for(int j = 0; j < polygonAttributeCount; j++)
+				{
+					writer.WriteUInt16(TriangleAttributes[i - 2, j]);
+				}
+			}
+		}
+
 
 		readonly object ICloneable.Clone()
 		{
@@ -134,5 +147,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 				(ushort[,])TriangleAttributes.Clone(),
 				Reversed);
 		}
+
+
 	}
 }

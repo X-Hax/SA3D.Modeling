@@ -1,9 +1,9 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
 	/// Primitive type on how surface data is stored.
 	/// </summary>
-	public enum GCPolyType
+	public enum GinjaPolyType
 	{
 		/// <summary>
 		/// Triangle list.

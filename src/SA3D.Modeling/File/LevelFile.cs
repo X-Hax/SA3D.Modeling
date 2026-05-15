@@ -1,8 +1,12 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using Amicitia.IO.Streams;
+using SA3D.Common.IO;
+using SA3D.Modeling.File.MetaData;
+using SA3D.Modeling.File.MetaData.Blocks;
 using SA3D.Modeling.ObjectData;
-using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using static SA3D.Modeling.File.FileHeaders;
 
@@ -11,285 +15,122 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Level geometry file contents.
 	/// </summary>
-	public class LevelFile
+	public class LevelFile : IFile
 	{
 		/// <summary>
 		/// Landtable of the file.
 		/// </summary>
-		public LandTable Level { get; }
+		public Level Level { get; set; }
 
 		/// <summary>
 		/// MetaData in the file.
 		/// </summary>
-		public MetaData MetaData { get; }
+		public MetaDataBlocks MetaData { get; set; }
 
 
 		/// <summary>
-		/// Creates a new level file.
+		/// Creates a blank level file
 		/// </summary>
-		/// <param name="level">Landtable of the file.</param>
-		/// <param name="metaData">MetaData in the file.</param>
-		public LevelFile(LandTable level, MetaData metaData)
+		public LevelFile() : this(new()) { }
+
+		/// <summary>
+		/// Creates a level file for a level.
+		/// </summary>
+		/// <param name="level">Level of the file.</param>
+		public LevelFile(Level level)
 		{
 			Level = level;
-			MetaData = metaData;
+			MetaData = new();
 		}
 
 
-		/// <summary>
-		/// Checks whether data is formatted as a level file.
-		/// </summary>
-		/// <param name="data">The data to check.</param>
-		public static bool CheckIsLevelFile(byte[] data)
+		/// <inheritdoc/>
+		public bool Check(BinaryObjectReader reader)
 		{
-			return CheckIsLevelFile(data, 0);
-		}
+			using SeekToken seekToken = reader.At();
+			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
 
-		/// <summary>
-		/// Checks whether data is formatted as a level file.
-		/// </summary>
-		/// <param name="data">The data to check.</param>
-		/// <param name="address">Address at which to check.</param>
-		public static bool CheckIsLevelFile(byte[] data, uint address)
-		{
-			return CheckIsLevelFile(new EndianStackReader(data), address);
-		}
-
-		/// <summary>
-		/// Checks whether data is formatted as a level file.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		public static bool CheckIsLevelFile(EndianStackReader reader)
-		{
-			return CheckIsLevelFile(reader, 0);
-		}
-
-		/// <summary>
-		/// Checks whether data is formatted as a level file.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to check.</param>
-		public static bool CheckIsLevelFile(EndianStackReader reader, uint address)
-		{
-			switch(reader.ReadULong(address) & HeaderMask)
+			return (reader.ReadUInt64() & HeaderMask) switch
 			{
-				case SA1LVL:
-				case SADXLVL:
-				case SA2LVL:
-				case SA2BLVL:
-				case BUFLVL:
-					break;
-				default:
-					return false;
+				SA1LVL or SADXLVL or SA2LVL or SA2BLVL => true,
+				_ => false,
+			};
+		}
+
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
+		{
+			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
+
+			ulong headerVersion = reader.ReadUInt64();
+
+			Format format = (headerVersion & HeaderMask) switch
+			{
+				SA1LVL => Format.Basic,
+				SADXLVL => Format.BasicDX,
+				SA2LVL => Format.Chunk,
+				SA2BLVL => Format.Ginja,
+				_ => throw new FormatException("File invalid; Header malformed"),
+			};
+
+			byte version = (byte)(headerVersion >> 56);
+			if(version > CurrentLandtableVersion)
+			{
+				throw new FormatException($"File invalid; Unsupported version {version}; Maximum supported version: {CurrentLandtableVersion}");
 			}
 
-			return reader[address + 7] <= CurrentLandtableVersion;
-		}
-
-
-		/// <summary>
-		/// Reads a level file.
-		/// </summary>
-		/// <param name="filepath">Path to the file to read.</param>
-		/// <returns>The level file that was read.</returns>
-		public static LevelFile ReadFromFile(string filepath)
-		{
-			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath));
-		}
-
-		/// <summary>
-		/// Reads a level file off byte data.
-		/// </summary>
-		/// <param name="data">The data to read.</param>
-		/// <returns>The level file that was read.</returns>
-		public static LevelFile ReadFromBytes(byte[] data)
-		{
-			return ReadFromBytes(data, 0);
-		}
-
-		/// <summary>
-		/// Reads a level file off byte data.
-		/// </summary>
-		/// <param name="data">The data to read.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The level file that was read.</returns>
-		public static LevelFile ReadFromBytes(byte[] data, uint address)
-		{
-			using(EndianStackReader reader = new(data))
+			using(reader.At(4, SeekOrigin.Current))
 			{
-				return Read(reader, address);
-			}
-		}
-
-		/// <summary>
-		/// Reads a level file off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <returns>The level file that was read.</returns>
-		public static LevelFile Read(EndianStackReader reader)
-		{
-			return Read(reader, 0);
-		}
-
-		/// <summary>
-		/// Reads a level file off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The level file that was read.</returns>
-		public static LevelFile Read(EndianStackReader reader, uint address)
-		{
-			reader.PushBigEndian(false);
-
-			try
-			{
-				ulong header = reader.ReadULong(0) & HeaderMask;
-				byte version = reader[7];
-
-				ModelFormat format = header switch
+				MetaDataIOContext metaDataContext = new()
 				{
-					SA1LVL => ModelFormat.SA1,
-					SADXLVL => ModelFormat.SADX,
-					SA2LVL => ModelFormat.SA2,
-					SA2BLVL => ModelFormat.SA2B,
-					BUFLVL => ModelFormat.Buffer,
-					_ => throw new FormatException("File invalid; Header malformed"),
+					Version = version
 				};
 
-				if(version > CurrentLandtableVersion)
-				{
-					throw new FormatException("File invalid; Version not supported");
-				}
-
-				MetaData metaData = MetaData.Read(reader, address + 0xC, version, false);
-				PointerLUT lut = new(metaData.Labels);
-
-				uint ltblAddress = reader.ReadUInt(address + 8);
-				LandTable table = LandTable.Read(reader, ltblAddress, format, lut);
-
-				return new(table, metaData);
+				MetaData = reader.ReadObject<MetaDataBlocks, MetaDataIOContext>(metaDataContext);
 			}
-			finally
+
+			Dictionary<long, string> labels = [];
+			if(MetaData.TryGetBlock(out LabelsMetaDataBlock? labelBlock))
 			{
-				reader.PopEndian();
+				labels = labelBlock!.Labels.GetDictFrom();
 			}
-		}
 
-
-		/// <summary>
-		/// Write the level file to a file. Previous labels may get lost.
-		/// </summary>
-		/// <param name="filepath">Path to the file to write to.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public void WriteToFile(string filepath)
-		{
-			WriteToFile(filepath, Level, MetaData);
-		}
-
-		/// <summary>
-		/// Writes the level file to a byte array. Previous labels may get lost.
-		/// </summary>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		public byte[] WriteToBytes()
-		{
-			return WriteToBytes(Level, MetaData);
-		}
-
-		/// <summary>
-		/// Writes the level file to an endian stack writer. Previous labels may get lost.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public void Write(EndianStackWriter writer)
-		{
-			Write(writer, Level, MetaData);
-		}
-
-
-		/// <summary>
-		/// Write a level file to a file.
-		/// </summary>
-		/// <param name="filepath">Path to the file to write to.</param>
-		/// <param name="level">The level to write.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static void WriteToFile(string filepath, LandTable level, MetaData? metaData = null)
-		{
-			using(FileStream stream = System.IO.File.Create(filepath))
+			IOContext context = new()
 			{
-				EndianStackWriter writer = new(stream);
-				Write(writer, level, metaData);
-			}
+				LevelFormat = format,
+				MeshFormat = format,
+				PointerLUT = new(labels)
+			};
+
+			Level = reader.ReadObjectOffset<Level, IOContext>(context, context.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(LevelFile), nameof(Level));
 		}
 
-		/// <summary>
-		/// Writes a level file to a byte array.
-		/// </summary>
-		/// <param name="level">The level to write.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <returns>The written byte data.</returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static byte[] WriteToBytes(LandTable level, MetaData? metaData = null)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer)
 		{
-			using(MemoryStream stream = new())
+			ulong header = Level.Format switch
 			{
-				EndianStackWriter writer = new(stream);
-				Write(writer, level, metaData);
-				return stream.ToArray();
-			}
-		}
+				Format.Basic => SA1LVLVer,
+				Format.BasicDX => SADXLVLVer,
+				Format.Chunk => SA2LVLVer,
+				Format.Ginja => SA2BLVLVer,
+				_ => throw new ArgumentException($"Level format {Level.Format} not supported for SALVL files"),
+			};
 
-		/// <summary>
-		/// Writes a level file to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="level">The level to write.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static void Write(EndianStackWriter writer, LandTable level, MetaData? metaData = null)
-		{
-			// writing indicator
-			switch(level.Format)
+			writer.WriteUInt64(header);
+
+			IOContext context = new()
 			{
-				case ModelFormat.SA1:
-					writer.WriteULong(SA1LVLVer);
-					break;
-				case ModelFormat.SADX:
-					writer.WriteULong(SADXLVLVer);
-					break;
-				case ModelFormat.SA2:
-					writer.WriteULong(SA2LVLVer);
-					break;
-				case ModelFormat.SA2B:
-					writer.WriteULong(SA2BLVLVer);
-					break;
-				case ModelFormat.Buffer:
-					writer.WriteULong(BUFLVLVer);
-					break;
-				default:
-					break;
-			}
+				MeshFormat = Level.Format,
+				LevelFormat = Level.Format,
+				PointerLUT = new()
+			};
 
-			uint placeholderAddr = writer.Position;
-			// 4 bytes: landtable address placeholder
-			// 4 bytes: metadata placeholder
-			writer.WriteEmpty(8);
+			writer.WriteObjectOffset(Level, context);
 
-			PointerLUT lut = new();
-
-			uint ltblAddress = level.Write(writer, lut);
-
-			metaData ??= new();
-			metaData.Labels = lut.Labels.GetDictFrom();
-			uint metaDataAddress = metaData.Write(writer);
-
-			uint end = writer.Position;
-			writer.Seek(placeholderAddr, SeekOrigin.Begin);
-			writer.WriteUInt(ltblAddress);
-			writer.WriteUInt(metaDataAddress);
-			writer.Seek(end, SeekOrigin.Begin);
+			MetaData.ReplaceLabels(context.PointerLUT.Labels);
+			writer.WriteObject(MetaData);
 		}
-
 	}
 }

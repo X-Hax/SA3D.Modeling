@@ -23,7 +23,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SA3D.Texturing" Version="1.4.0" />
+		<PackageReference Include="J113D.Strippify" Version="1.1.0" />
+		<!--<PackageReference Include="SA3D.Texturing" Version="1.4.0" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\SA3D.Texturing\src\SA3D.Texturing\SA3D.Texturing.csproj" />
 	</ItemGroup>
 
 </Project>

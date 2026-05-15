@@ -1,4 +1,5 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -8,7 +9,7 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// Bounding sphere determining the bounds of an object in 3D space.
 	/// </summary>
-	public struct Bounds : IEquatable<Bounds>
+	public struct Bounds : IEquatable<Bounds>, IBinarySerializable
 	{
 		private Vector3 _position;
 
@@ -85,39 +86,18 @@ namespace SA3D.Modeling.Structs
 
 		#region I/O
 
-		/// <summary>
-		/// Reads bounds from an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to read.</param>
-		/// <returns>The read bounds.</returns>
-		public static Bounds Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			Vector3 position = reader.ReadVector3(ref address);
-			float radius = reader.ReadFloat(address);
-			address += 4;
-			return new(position, radius);
+			Position = reader.ReadVector3();
+			Radius = reader.ReadSingle();
 		}
 
-		/// <summary>
-		/// Reads bounds from an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to read.</param>
-		/// <returns>The read bounds.</returns>
-		public static Bounds Read(EndianStackReader reader, uint address)
-		{
-			return Read(reader, ref address);
-		}
-
-		/// <summary>
-		/// Writes the bounds to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public readonly void Write(EndianStackWriter writer)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
 			writer.WriteVector3(Position);
-			writer.WriteFloat(Radius);
+			writer.WriteSingle(Radius);
 		}
 
 		#endregion

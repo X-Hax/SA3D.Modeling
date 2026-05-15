@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation.Utilities
+namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeOptimizationUtils
 	{

@@ -1,7 +1,7 @@
 ﻿using SA3D.Common;
 using System;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Depicts keyframe contents.

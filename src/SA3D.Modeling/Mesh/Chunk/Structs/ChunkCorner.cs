@@ -1,5 +1,4 @@
-﻿using SA3D.Modeling.Mesh.Buffer;
-using SA3D.Modeling.Structs;
+﻿using SA3D.Modeling.Structs;
 using System;
 using System.Numerics;
 
@@ -15,8 +14,8 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// </summary>
 		public static readonly ChunkCorner DefaultValues = new()
 		{
-			Normal = BufferMesh.DefaultNormal,
-			Color = BufferMesh.DefaultColor
+			Normal = Vector3.UnitY,
+			Color = Color.ColorWhite
 		};
 
 		/// <summary>

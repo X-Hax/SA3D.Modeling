@@ -1,20 +1,15 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Structs;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Ambient color of the geometry.
 	/// </summary>
-	public struct GCAmbientColorParameter : IGCParameter
+	public struct GinjaAmbientColorParameter : IGinjaParameter
 	{
-		/// <summary>
-		/// Ambient color parameter with the color white.
-		/// </summary>
-		public static readonly GCAmbientColorParameter White = new() { Data = uint.MaxValue };
-
 		/// <inheritdoc/>
-		public readonly GCParameterType Type => GCParameterType.AmbientColor;
+		public readonly GinjaParameterType Type => GinjaParameterType.AmbientColor;
 
 		/// <inheritdoc/>
 		public uint Data { get; set; }

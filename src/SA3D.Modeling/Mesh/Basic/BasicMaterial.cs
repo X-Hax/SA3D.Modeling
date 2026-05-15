@@ -1,4 +1,4 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using SA3D.Modeling.Structs;
 using System;
 
@@ -7,7 +7,7 @@ namespace SA3D.Modeling.Mesh.Basic
 	/// <summary>
 	/// BASIC format material
 	/// </summary>
-	public struct BasicMaterial
+	public struct BasicMaterial : IBinarySerializable
 	{
 		/// <summary>
 		/// Number of bytes the structure occupies.
@@ -256,56 +256,24 @@ namespace SA3D.Modeling.Mesh.Basic
 
 		#endregion
 
-
-		/// <summary>
-		/// Creates a new basic material from a template.
-		/// </summary>
-		/// <param name="template">The template.</param>
-		public BasicMaterial(BasicMaterial template)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			DiffuseColor = template.DiffuseColor;
-			SpecularColor = template.SpecularColor;
-			SpecularExponent = template.SpecularExponent;
-			TextureID = template.TextureID;
-			Attributes = template.Attributes;
+			DiffuseColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
+			SpecularColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
+			SpecularExponent = reader.ReadSingle();
+			TextureID = reader.ReadUInt32();
+			Attributes = reader.ReadUInt32();
 		}
 
-
-		/// <summary>
-		/// Reads a material from an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which the material is located.</param>
-		/// <returns>The read material.</returns>
-		public static BasicMaterial Read(EndianStackReader reader, uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			Color dif = reader.ReadColor(ref address, ColorIOType.ARGB8_32);
-			Color spec = reader.ReadColor(ref address, ColorIOType.ARGB8_32);
-			float exp = reader.ReadFloat(address);
-			uint texID = reader.ReadUInt(address + 4);
-			uint attribs = reader.ReadUInt(address + 8);
-
-			return new BasicMaterial()
-			{
-				DiffuseColor = dif,
-				SpecularColor = spec,
-				SpecularExponent = exp,
-				TextureID = texID,
-				Attributes = attribs
-			};
-		}
-
-		/// <summary>
-		/// Writes the materials structure to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public readonly void Write(EndianStackWriter writer)
-		{
-			writer.WriteColor(DiffuseColor, ColorIOType.ARGB8_32);
-			writer.WriteColor(SpecularColor, ColorIOType.ARGB8_32);
-			writer.WriteFloat(SpecularExponent);
-			writer.WriteUInt(TextureID);
-			writer.WriteUInt(Attributes);
+			writer.WriteObject(DiffuseColor, ColorIOType.ARGB8_32);
+			writer.WriteObject(SpecularColor, ColorIOType.ARGB8_32);
+			writer.WriteSingle(SpecularExponent);
+			writer.WriteUInt32(TextureID);
+			writer.WriteUInt32(Attributes);
 		}
 
 

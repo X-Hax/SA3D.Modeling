@@ -1,6 +1,5 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
 using SA3D.Modeling.Structs;
-using System;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
@@ -9,12 +8,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// </summary>
 	public class MaterialChunk : SizedChunk
 	{
-		private Color? _diffuse;
-		private Color? _ambient;
-		private Color? _specular;
-
 		/// <summary>
-		/// Whether the material type is a second type
+		/// Whether the chunk is for the second material slot
 		/// </summary>
 		public bool Second
 		{
@@ -29,10 +24,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			{
 				byte type = (byte)Type;
 
-				return (ushort)(2 *
-					((type & 1)
+				return (ushort)(2 * (
+					(type & 1)
 					+ ((type >> 1) & 1)
-					+ ((type >> 2) & 1)));
+					+ ((type >> 2) & 1)
+				));
 			}
 		}
 
@@ -59,11 +55,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Diffuse
 		{
-			get => _diffuse;
+			get;
 			set
 			{
 				TypeAttribute(0x01, value.HasValue);
-				_diffuse = value;
+				field = value;
 			}
 		}
 
@@ -72,11 +68,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Ambient
 		{
-			get => _ambient;
+			get;
 			set
 			{
 				TypeAttribute(0x02, value.HasValue);
-				_ambient = value;
+				field = value;
 			}
 		}
 
@@ -85,11 +81,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Specular
 		{
-			get => _specular;
+			get;
 			set
 			{
 				TypeAttribute(0x04, value.HasValue);
-				_specular = value;
+				field = value;
 			}
 		}
 
@@ -99,12 +95,17 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public byte SpecularExponent { get; set; }
 
+
 		/// <summary>
-		/// Creates a new material chunk. Defaults to <see cref="PolyChunkType.Material_Diffuse"/> with a white diffuse color.
+		/// Creates a new, empty material chunk.
 		/// </summary>
-		public MaterialChunk() : base(PolyChunkType.Material_Diffuse)
+		public MaterialChunk() : base(PolyChunkType.Material_Empty) { }
+
+
+		/// <inheritdoc/>
+		protected override bool IsTypeApplicable(PolyChunkType type)
 		{
-			_diffuse = Color.ColorWhite;
+			return type is >= PolyChunkType.Material_Empty and <= PolyChunkType.Material_DiffuseAmbientSpecular2;
 		}
 
 		private void TypeAttribute(byte val, bool state)
@@ -115,66 +116,52 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 				: type & ~val);
 		}
 
-		internal static MaterialChunk Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public override void Read(BinaryObjectReader reader)
 		{
-			ushort header = reader.ReadUShort(address);
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			// skipping size
-			address += 4;
+			base.Read(reader);
 
-			MaterialChunk mat = new()
+			byte type = (byte)Type;
+			if((type & 0x01) != 0)
 			{
-				Attributes = (byte)(header >> 8)
-			};
-
-			if(((byte)type & 0x01) != 0)
-			{
-				mat.Diffuse = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
+				Diffuse = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
 			}
 
-			if(((byte)type & 0x02) != 0)
+			if((type & 0x02) != 0)
 			{
-				mat.Ambient = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
+				Ambient = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
 			}
 
-			if(((byte)type & 0x04) != 0)
+			if((type & 0x04) != 0)
 			{
-				Color spec = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
-				mat.SpecularExponent = spec.Alpha;
+				Color spec = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
+				SpecularExponent = spec.Alpha;
 				spec.Alpha = 255;
-				mat.Specular = spec;
+				Specular = spec;
 			}
 
-			mat.Second = ((byte)type & 0x08) != 0;
-
-			return mat;
 		}
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		protected override void WriteData(BinaryObjectWriter writer)
 		{
-			if(_diffuse == null && _specular == null && _ambient == null)
+			base.WriteData(writer);
+
+			if(Diffuse.HasValue)
 			{
-				throw new InvalidOperationException("Material has no colors and thus no valid type!");
+				writer.WriteObject(Diffuse.Value, ColorIOType.ARGB8_16);
 			}
 
-			base.InternalWrite(writer);
-
-			if(_diffuse.HasValue)
+			if(Ambient.HasValue)
 			{
-				writer.WriteColor(_diffuse.Value, ColorIOType.ARGB8_16);
+				writer.WriteObject(Ambient.Value, ColorIOType.ARGB8_16);
 			}
 
-			if(_ambient.HasValue)
+			if(Specular.HasValue)
 			{
-				writer.WriteColor(_ambient.Value, ColorIOType.ARGB8_16);
-			}
-
-			if(_specular.HasValue)
-			{
-				Color wSpecular = _specular.Value;
+				Color wSpecular = Specular.Value;
 				wSpecular.Alpha = SpecularExponent;
-				writer.WriteColor(wSpecular, ColorIOType.ARGB8_16);
+				writer.WriteObject(wSpecular, ColorIOType.ARGB8_16);
 			}
 		}
 	}

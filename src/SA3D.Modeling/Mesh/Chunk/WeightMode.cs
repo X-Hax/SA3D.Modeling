@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Vertex chunk weight status.
 	/// </summary>
-	public enum WeightStatus
+	public enum WeightMode
 	{
 		/// <summary>
 		/// Start of a weighted model (replaces cached vertices).

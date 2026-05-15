@@ -1,6 +1,9 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using Amicitia.IO.Streams;
+using SA3D.Common;
+using SA3D.Common.IO;
 using SA3D.Common.Lookup;
-using SA3D.Modeling.Animation.Utilities;
+using SA3D.Modeling.AnimationData.Utilities;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
@@ -8,13 +11,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation
+namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Keyframe storage for an animation.
 	/// </summary>
-	public class Keyframes
+	public class KeyframeSet : IBinarySerializable<AnimationIOContext>
 	{
+		/// <summary>
+		/// Base label for all the keyframes
+		/// </summary>
+		public string BaseLabel { get; set; }
+
+
 		/// <summary>
 		/// Transform position keyframes.
 		/// </summary>
@@ -38,12 +47,12 @@ namespace SA3D.Modeling.Animation
 		/// <summary>
 		/// Mesh vertex positions.
 		/// </summary>
-		public SortedDictionary<uint, ILabeledArray<Vector3>> Vertex { get; private set; }
+		public SortedDictionary<uint, LabeledArray<Vector3>> Vertex { get; private set; }
 
 		/// <summary>
 		/// Mesh vertex normals.
 		/// </summary>
-		public SortedDictionary<uint, ILabeledArray<Vector3>> Normal { get; private set; }
+		public SortedDictionary<uint, LabeledArray<Vector3>> Normal { get; private set; }
 
 		/// <summary>
 		/// Camera lookat target.
@@ -147,8 +156,9 @@ namespace SA3D.Modeling.Animation
 		/// <summary>
 		/// Creates an empty keyframe storage
 		/// </summary>
-		public Keyframes()
+		public KeyframeSet()
 		{
+			BaseLabel = "keyframes_".GenerateIdentifier();
 			Position = [];
 			EulerRotation = [];
 			Scale = [];
@@ -338,180 +348,159 @@ namespace SA3D.Modeling.Animation
 		}
 
 
-		/// <summary>
-		/// Writes the keyframe set to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="writeAttributes">Which channels should be written</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <param name="shortRot">Whether to write euler rotations 16-bit instead of 32-bit.</param>
-		public (uint address, uint count)[] Write(EndianStackWriter writer, KeyframeAttributes writeAttributes, PointerLUT lut, bool shortRot = false)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, AnimationIOContext context)
 		{
-			int channels = writeAttributes.ChannelCount();
-			(uint address, uint count)[] keyframeLocs = new (uint address, uint count)[channels];
-			int channelIndex = -1;
+			int channelCount = context.KeyframeType.ChannelCount();
+
+			long[] keyframeOffsets = new long[channelCount];
+			for(int i = 0; i < channelCount; i++)
+			{
+				keyframeOffsets[i] = reader.ReadOffsetValue();
+			}
+
+			int[] keyframeCounts = reader.ReadArray<int>(channelCount);
+
+			int index = 0;
+			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
+			{
+				if(!context.KeyframeType.HasFlag(flag))
+				{
+					continue;
+				}
+
+				long offset = keyframeOffsets[index];
+				if(offset != 0)
+				{
+					using(SeekToken t = reader.AtOffset(offset))
+					{
+						int keyframeCount = keyframeCounts[index];
+
+						switch(flag)
+						{
+							case KeyframeAttributes.Position:
+								reader.ReadVector3Set(keyframeCount, Position, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.EulerRotation:
+								reader.ReadVector3Set(keyframeCount, EulerRotation, context.FileContext.ShortRotations ? FloatIOType.BAMSF16 : FloatIOType.BAMSF32);
+								break;
+							case KeyframeAttributes.Scale:
+								reader.ReadVector3Set(keyframeCount, Scale, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.Vector:
+								reader.ReadVector3Set(keyframeCount, Vector, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.Vertex:
+								reader.ReadVector3ArraySet(keyframeCount, "vertex_", Vertex, context.BaseContext.PointerLUT);
+								break;
+							case KeyframeAttributes.Normal:
+								reader.ReadVector3ArraySet(keyframeCount, "normal_", Normal, context.BaseContext.PointerLUT);
+								break;
+							case KeyframeAttributes.Target:
+								reader.ReadVector3Set(keyframeCount, Target, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.Roll:
+								reader.ReadFloatSet(keyframeCount, Roll, FloatIOType.BAMSF32);
+								break;
+							case KeyframeAttributes.Angle:
+								reader.ReadFloatSet(keyframeCount, Angle, FloatIOType.BAMSF32);
+								break;
+							case KeyframeAttributes.LightColor:
+								reader.ReadColorSet(keyframeCount, LightColor, ColorIOType.ARGB8_32);
+								break;
+							case KeyframeAttributes.Intensity:
+								reader.ReadFloatSet(keyframeCount, Intensity, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.Spot:
+								reader.ReadSpotSet(keyframeCount, Spot);
+								break;
+							case KeyframeAttributes.Point:
+								reader.ReadVector2Set(keyframeCount, Point, FloatIOType.Float);
+								break;
+							case KeyframeAttributes.QuaternionRotation:
+								reader.ReadQuaternionSet(keyframeCount, QuaternionRotation);
+								break;
+							default:
+								break;
+						}
+
+					}
+				}
+
+				index++;
+			}
+		}
+
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
+		{
+			int channelCount = context.KeyframeType.ChannelCount();
+
+			List<int> frameCounts = [];
 
 			foreach((KeyframeAttributes type, IEnumerable<uint> keys) in GetTypeKeyEnumerable())
 			{
-				if(!writeAttributes.HasFlag(type))
+				if(!context.KeyframeType.HasFlag(type))
 				{
 					continue;
 				}
-
-				channelIndex++;
 
 				int count = keys.Count();
+				frameCounts.Add(count);
 				if(count == 0)
 				{
+					writer.WriteOffsetValue(0);
 					continue;
 				}
-
-				uint[]? arrayData = null;
-				if(type == KeyframeAttributes.Vertex)
-				{
-					arrayData = writer.WriteVector3ArrayData(Vertex, lut);
-				}
-				else if(type == KeyframeAttributes.Normal)
-				{
-					arrayData = writer.WriteVector3ArrayData(Normal, lut);
-				}
-
-				keyframeLocs[channelIndex] = (writer.PointerPosition, (uint)count);
 
 				switch(type)
 				{
 					case KeyframeAttributes.Position:
-						writer.WriteVector3Set(Position, FloatIOType.Float);
+						writer.WriteOffset(() => writer.WriteVector3Set(Position, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.EulerRotation:
-						writer.WriteVector3Set(EulerRotation, shortRot ? FloatIOType.BAMS16F : FloatIOType.BAMS32F);
+						writer.WriteOffset(() => writer.WriteVector3Set(EulerRotation, context.FileContext.ShortRotations ? FloatIOType.BAMSF16 : FloatIOType.BAMSF32));
 						break;
 					case KeyframeAttributes.Scale:
-						writer.WriteVector3Set(Scale, FloatIOType.Float);
+						writer.WriteOffset(() => writer.WriteVector3Set(Scale, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Vector:
-						writer.WriteVector3Set(Vector, FloatIOType.Float);
+						writer.WriteOffset(() => writer.WriteVector3Set(Vector, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Vertex:
+						writer.WriteOffset(() => writer.WriteVector3ArrayData(Vertex, context.BaseContext.PointerLUT));
+						break;
 					case KeyframeAttributes.Normal:
-						writer.WriteVector3ArraySet(arrayData!);
+						writer.WriteOffset(() => writer.WriteVector3ArrayData(Normal, context.BaseContext.PointerLUT));
 						break;
 					case KeyframeAttributes.Target:
-						writer.WriteVector3Set(Target, FloatIOType.Float);
+						writer.WriteOffset(() => writer.WriteVector3Set(Target, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Roll:
-						writer.WriteFloatSet(Roll, true);
+						writer.WriteOffset(() => writer.WriteFloatSet(Roll, FloatIOType.BAMSF32));
 						break;
 					case KeyframeAttributes.Angle:
-						writer.WriteFloatSet(Angle, true);
+						writer.WriteOffset(() => writer.WriteFloatSet(Angle, FloatIOType.BAMSF32));
 						break;
 					case KeyframeAttributes.LightColor:
-						writer.WriteColorSet(LightColor, ColorIOType.ARGB8_32);
+						writer.WriteOffset(() => writer.WriteColorSet(LightColor, ColorIOType.ARGB8_32));
 						break;
 					case KeyframeAttributes.Intensity:
-						writer.WriteFloatSet(Intensity, false);
+						writer.WriteOffset(() => writer.WriteFloatSet(Intensity, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Spot:
-						writer.WriteSpotlightSet(Spot);
+						writer.WriteOffset(() => writer.WriteSpotlightSet(Spot));
 						break;
 					case KeyframeAttributes.Point:
-						writer.WriteVector2Set(Point, FloatIOType.Float);
+						writer.WriteOffset(() => writer.WriteVector2Set(Point, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.QuaternionRotation:
-						writer.WriteQuaternionSet(QuaternionRotation);
+						writer.WriteOffset(() => writer.WriteQuaternionSet(QuaternionRotation));
 						break;
 					default:
 						break;
 				}
 			}
-
-			return keyframeLocs;
 		}
-
-		/// <summary>
-		/// Reads a set of keyframes off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="type">Channels that the keyframes contain.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <param name="shortRot">Whether to write euler rotations 16-bit instead of 32-bit.</param>
-		/// <returns>The keyframes that were read.</returns>
-		public static Keyframes Read(EndianStackReader reader, ref uint address, KeyframeAttributes type, PointerLUT lut, bool shortRot = false)
-		{
-			int channelCount = type.ChannelCount();
-			uint keyframePointerArray = address;
-			uint keyframeCountArray = (uint)(address + (4 * channelCount));
-
-			Keyframes result = new();
-
-			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
-			{
-				if(!type.HasFlag(flag))
-				{
-					continue;
-				}
-
-				if(reader.TryReadPointer(keyframePointerArray, out uint setAddress))
-				{
-					uint frameCount = reader.ReadUInt(keyframeCountArray);
-					switch(flag)
-					{
-						case KeyframeAttributes.Position:
-							reader.ReadVector3Set(setAddress, frameCount, result.Position, FloatIOType.Float);
-							break;
-						case KeyframeAttributes.EulerRotation:
-							reader.ReadVector3Set(setAddress, frameCount, result.EulerRotation, shortRot ? FloatIOType.BAMS16F : FloatIOType.BAMS32F);
-							break;
-						case KeyframeAttributes.Scale:
-							reader.ReadVector3Set(setAddress, frameCount, result.Scale, FloatIOType.Float);
-							break;
-						case KeyframeAttributes.Vector:
-							reader.ReadVector3Set(setAddress, frameCount, result.Vector, FloatIOType.Float);
-							break;
-						case KeyframeAttributes.Vertex:
-							reader.ReadVector3ArraySet(setAddress, frameCount, "vertex_", result.Vertex, lut);
-							break;
-						case KeyframeAttributes.Normal:
-							reader.ReadVector3ArraySet(setAddress, frameCount, "normal_", result.Normal, lut);
-							break;
-						case KeyframeAttributes.Target:
-							reader.ReadVector3Set(setAddress, frameCount, result.Target, FloatIOType.Float);
-							break;
-						case KeyframeAttributes.Roll:
-							reader.ReadFloatSet(setAddress, frameCount, result.Roll, true);
-							break;
-						case KeyframeAttributes.Angle:
-							reader.ReadFloatSet(setAddress, frameCount, result.Angle, true);
-							break;
-						case KeyframeAttributes.LightColor:
-							reader.ReadColorSet(setAddress, frameCount, result.LightColor, ColorIOType.ARGB8_32);
-							break;
-						case KeyframeAttributes.Intensity:
-							reader.ReadFloatSet(setAddress, frameCount, result.Intensity, false);
-							break;
-						case KeyframeAttributes.Spot:
-							reader.ReadSpotSet(setAddress, frameCount, result.Spot);
-							break;
-						case KeyframeAttributes.Point:
-							reader.ReadVector2Set(setAddress, frameCount, result.Point, FloatIOType.Float);
-							break;
-						case KeyframeAttributes.QuaternionRotation:
-							reader.ReadQuaternionSet(setAddress, frameCount, result.QuaternionRotation);
-							break;
-						default:
-							break;
-					}
-				}
-
-				keyframePointerArray += 4;
-				keyframeCountArray += 4;
-			}
-
-			address = keyframeCountArray;
-
-			return result;
-		}
-
 	}
 }

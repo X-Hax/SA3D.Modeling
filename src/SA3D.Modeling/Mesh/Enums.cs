@@ -6,24 +6,19 @@
 	public enum AttachFormat
 	{
 		/// <summary>
-		/// Buffer format; Exclusive to this library.
-		/// </summary>
-		Buffer,
-
-		/// <summary>
 		/// BASIC format.
 		/// </summary>
-		BASIC,
+		Basic,
 
 		/// <summary>
 		/// CHUNK format.
 		/// </summary>
-		CHUNK,
+		Chunk,
 
 		/// <summary>
 		/// GC format.
 		/// </summary>
-		GC
+		Ginja
 	}
 
 	/// <summary>
@@ -104,5 +99,31 @@
 		/// Mix between bilinear and trilinear (?).
 		/// </summary>
 		Blend = 3,
+	}
+
+	/// <summary>
+	/// Stripchunk alpha modes
+	/// </summary>
+	public enum AlphaMode
+	{
+		/// <summary>
+		/// No transparency
+		/// </summary>
+		Opaque,
+
+		/// <summary>
+		/// Transparency. Alpha clip mode is sourced from texture
+		/// </summary>
+		Transparent,
+
+		/// <summary>
+		/// Transparency. Forces alpha clipping off (Renderfix only)
+		/// </summary>
+		TransparentForceAlphaClipOff,
+
+		/// <summary>
+		/// Transparency. Forces alpha clipping on (SA2B &amp; Renderfix only)
+		/// </summary>
+		TransparentForceAlphaClipOn
 	}
 }

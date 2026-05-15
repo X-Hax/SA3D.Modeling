@@ -1,6 +1,10 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
+using SA3D.Modeling.Mesh.Basic;
+using SA3D.Modeling.Mesh.Chunk;
+using SA3D.Modeling.Mesh.Ginja;
 using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.Structs;
 using System;
@@ -12,15 +16,13 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Hierarchy object making up models.
 	/// </summary>
-	public partial class Node : ILabel
+	public partial class Node : ILabel, IBinarySerializable<IOContext>
 	{
-		/// <summary>
-		/// Byte size of a node structure.
-		/// </summary>
-		public const uint StructSize = 0x34;
-
 		/// <inheritdoc/>
 		public string Label { get; set; }
+
+		/// <inheritdoc/>
+		public string LabelPrefix => "object_";
 
 
 		/// <summary>
@@ -28,121 +30,85 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public Node()
 		{
-			Label = "object_" + StringExtensions.GenerateIdentifier();
+			Label = LabelPrefix.GenerateIdentifier();
 		}
 
 
-		/// <summary>
-		/// Writes the node and its contents to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="format">Format to write the model in.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The address at which the node was written.</returns>
-		/// <exception cref="NullReferenceException"></exception>
-		public uint Write(EndianStackWriter writer, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, IOContext context)
 		{
-			uint onWrite()
+			SetAllNodeAttributes((NodeAttributes)reader.ReadUInt32(), RotationUpdateMode.Keep);
+
+			Attach = context.MeshFormat switch
 			{
-				uint childAddress = Child?.Write(writer, format, lut) ?? 0;
-				uint nextAddress = Next?.Write(writer, format, lut) ?? 0;
-				uint attachAddress = Attach?.Write(writer, format, lut) ?? 0;
+				Format.Basic
+				or Format.BasicDX => reader.ReadObject<BasicMesh, IOContext>(context, context.PointerLUT),
+				Format.Chunk => reader.ReadObject<ChunkMesh, IOContext>(context, context.PointerLUT),
+				Format.Ginja => reader.ReadObject<GinjaMesh, IOContext>(context, context.PointerLUT),
+				_ => throw new InvalidOperationException(),
+			};
 
-				uint result = writer.PointerPosition;
+			Vector3 position = reader.ReadVector3();
+			Vector3 rotation = reader.ReadVector3(UseQuaternionRotation ? FloatIOType.Float : FloatIOType.BAMS32);
+			Vector3 scale = reader.ReadVector3();
 
-				writer.WriteUInt((uint)Attributes);
-				writer.WriteUInt(attachAddress);
+			long childOffset = reader.ReadOffsetValue();
+			long siblingOffset = reader.ReadOffsetValue();
 
-				writer.WriteVector3(Position);
+			Quaternion quaternion = new(rotation, reader.ReadSingle());
 
-				if(UseQuaternionRotation)
-				{
-					writer.WriteFloat(QuaternionRotation.X);
-					writer.WriteFloat(QuaternionRotation.Y);
-					writer.WriteFloat(QuaternionRotation.Z);
-				}
-				else
-				{
-					writer.WriteVector3(EulerRotation, FloatIOType.BAMS32);
-				}
+			UpdateTransforms(
+				position,
+				UseQuaternionRotation ? null : rotation,
+				UseQuaternionRotation ? quaternion : null,
+				scale,
+				RotationUpdateMode.Keep
+			);
 
-				writer.WriteVector3(Scale);
-
-				writer.WriteUInt(childAddress);
-				writer.WriteUInt(nextAddress);
-
-				if(UseQuaternionRotation)
-				{
-					writer.WriteFloat(QuaternionRotation.W);
-				}
-				else
-				{
-					writer.WriteEmpty(4);
-				}
-
-				return result;
+			if(reader.ReadObject<Node, IOContext>(context, context.PointerLUT) is Node child)
+			{
+				SetChild(child);
 			}
 
-			return lut.GetAddAddress(this, onWrite);
+			if(reader.ReadObject<Node, IOContext>(context, context.PointerLUT) is Node next)
+			{
+				SetNext(next);
+			}
 		}
 
-		/// <summary>
-		/// Reads a node and its contents off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="format">Format of the model to read.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The node that was read.</returns>
-		public static Node Read(EndianStackReader reader, uint address, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			Node onRead()
+			writer.WriteUInt32((uint)Attributes);
+			writer.WriteObjectOffset(Attach, context, context.PointerLUT);
+
+			writer.WriteVector3(Position);
+
+			if(UseQuaternionRotation)
 			{
-				Node result = new();
-
-				NodeAttributes attributes = (NodeAttributes)reader.ReadUInt(address);
-				result.SetAllNodeAttributes(attributes, RotationUpdateMode.Keep);
-
-				if(reader.TryReadPointer(address + 4, out uint attachAddress))
-				{
-					result.Attach = Mesh.Attach.Read(reader, attachAddress, format, lut);
-				}
-
-				address += 8;
-				Vector3 position = reader.ReadVector3(ref address);
-				Vector3? eulerRotation = null;
-				Quaternion? quaternionRotation = null;
-
-				if(result.UseQuaternionRotation)
-				{
-					Vector3 vectorPart = reader.ReadVector3(ref address);
-					float scalaPart = reader.ReadFloat(address + 20);
-
-					quaternionRotation = new(vectorPart, scalaPart);
-				}
-				else
-				{
-					eulerRotation = reader.ReadVector3(ref address, FloatIOType.BAMS32);
-				}
-
-				Vector3 scale = reader.ReadVector3(ref address);
-
-				result.UpdateTransforms(position, eulerRotation, quaternionRotation, scale, RotationUpdateMode.Keep);
-
-				if(reader.TryReadPointer(address, out uint childAddr))
-				{
-					result.SetChild(Read(reader, childAddr, format, lut));
-				}
-
-				if(reader.TryReadPointer(address + 4, out uint siblingAddr))
-				{
-					result.SetNext(Read(reader, siblingAddr, format, lut));
-				}
-
-				return result;
+				writer.WriteVector3(
+					new(QuaternionRotation.X, QuaternionRotation.Y, QuaternionRotation.Z),
+					FloatIOType.Float
+				);
+			}
+			else
+			{
+				writer.WriteVector3(EulerRotation, FloatIOType.BAMS32);
 			}
 
-			return lut.GetAddLabeledValue(address, "object_", onRead);
+			writer.WriteVector3(Scale);
+
+			writer.WriteObjectOffset(Child, context, context.PointerLUT);
+			writer.WriteObjectOffset(Next, context, context.PointerLUT);
+
+			if(UseQuaternionRotation)
+			{
+				writer.WriteSingle(QuaternionRotation.W);
+			}
+			else
+			{
+				writer.WriteInt32(0);
+			}
 		}
 
 

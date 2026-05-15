@@ -1,23 +1,24 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using System;
 using System.Collections.Generic;
 
-namespace SA3D.Modeling.File.Structs
+namespace SA3D.Modeling.File.MetaData.Weights
 {
 	/// <summary>
 	/// Vertex with weights
 	/// </summary>
-	public readonly struct MetaWeightVertex : IEquatable<MetaWeightVertex>
+	public struct MetaWeightVertex : IEquatable<MetaWeightVertex>, IBinarySerializable
 	{
 		/// <summary>
 		/// Index to the vertex that the weights influence.
 		/// </summary>
-		public uint DestinationVertexIndex { get; }
+		public uint DestinationVertexIndex { get; set; }
 
 		/// <summary>
 		/// Weights for the vertex.
 		/// </summary>
-		public MetaWeight[] Weights { get; }
+		public MetaWeight[] Weights { get; set; }
 
 
 		/// <summary>
@@ -32,41 +33,20 @@ namespace SA3D.Modeling.File.Structs
 		}
 
 
-		/// <summary>
-		/// Writes the meta weight vertex to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public void Write(EndianStackWriter writer)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUInt(DestinationVertexIndex);
-			writer.WriteInt(Weights.Length);
-
-			foreach(MetaWeight weight in Weights)
-			{
-				weight.Write(writer);
-			}
+			DestinationVertexIndex = reader.ReadUInt32();
+			int weightCount = reader.ReadInt32();
+			Weights = reader.ReadObjectArray<MetaWeight>(weightCount);
 		}
 
-		/// <summary>
-		/// Reads a meta weight vertex off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The read meta weight vertex</returns>
-		public static MetaWeightVertex Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			uint destinationVertexIndex = reader.ReadUInt(address);
-			int weightCount = reader.ReadInt(address + 4);
-
-			address += 8;
-			MetaWeight[] weights = new MetaWeight[weightCount];
-			for(int i = 0; i < weightCount; i++)
-			{
-				weights[i] = MetaWeight.Read(reader, address);
-				address += MetaWeight.StructSize;
-			}
-
-			return new(destinationVertexIndex, weights);
+			writer.WriteUInt32(DestinationVertexIndex);
+			writer.WriteInt32(Weights.Length);
+			writer.WriteObjectArray(Weights);
 		}
 
 

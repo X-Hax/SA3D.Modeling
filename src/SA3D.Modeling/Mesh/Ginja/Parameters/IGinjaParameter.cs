@@ -1,51 +1,66 @@
-﻿using SA3D.Common.IO;
-using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using Amicitia.IO.Binary;
+using SA3D.Modeling.Mesh.Ginja.Enums;
 using System;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Base interface for all GC parameter types. 
 	/// <br/> Used to store geometry information (like materials).
 	/// </summary>
-	public interface IGCParameter
+	public interface IGinjaParameter : IBinarySerializable
 	{
 		/// <summary>
 		/// The type of parameter.
 		/// </summary>
-		public GCParameterType Type { get; }
+		public GinjaParameterType Type { get; }
 
 		/// <summary>
 		/// All parameter data is stored in these 4 bytes.
 		/// </summary>
 		public uint Data { get; set; }
 
+		/// <inheritdoc/>
+		void IBinarySerializable.Read(BinaryObjectReader reader)
+		{
+			reader.Skip(4);
+			Data = reader.ReadUInt32();
+		}
+
+		/// <inheritdoc/>
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
+		{
+			writer.WriteByte((byte)Type);
+			writer.WriteBytes([0, 0, 0]);
+			writer.WriteUInt32(Data);
+		}
+
 		/// <summary>
 		/// Reads a parameter from an endian stack reader.
 		/// </summary>
 		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which the parameter is located</param>
 		/// <returns>The parameter that was read.</returns>
-		public static IGCParameter Read(EndianStackReader reader, uint address)
+		public static IGinjaParameter ReadParameter(BinaryObjectReader reader)
 		{
-			GCParameterType paramType = (GCParameterType)reader[address];
+			GinjaParameterType paramType = (GinjaParameterType)reader.ReadByte();
+			reader.Skip(3);
 
-			IGCParameter result = paramType switch
+			IGinjaParameter result = paramType switch
 			{
-				GCParameterType.VertexFormat => new GCVertexFormatParameter(),
-				GCParameterType.IndexFormat => new GCIndexFormatParameter(),
-				GCParameterType.Lighting => new GCLightingParameter(),
-				GCParameterType.BlendAlpha => new GCBlendAlphaParameter(),
-				GCParameterType.AmbientColor => new GCAmbientColorParameter(),
-				GCParameterType.DiffuseColor => new GCDiffuseColorParameter(),
-				GCParameterType.SpecularColor => new GCSpecularColorParameter(),
-				GCParameterType.Texture => new GCTextureParameter(),
-				GCParameterType.Unknown => new GCUnknownParameter(),
-				GCParameterType.Texcoord => new GCTexCoordParameter(),
+				GinjaParameterType.VertexFormat => new GinjaVertexFormatParameter(),
+				GinjaParameterType.IndexFormat => new GinjaIndexFormatParameter(),
+				GinjaParameterType.StripFlags => new GinjaStripFlagsParameter(),
+				GinjaParameterType.BlendAlpha => new GinjaBlendAlphaParameter(),
+				GinjaParameterType.DiffuseColor => new GinjaDiffuseColorParameter(),
+				GinjaParameterType.AmbientColor => new GinjaAmbientColorParameter(),
+				GinjaParameterType.SpecularColor => new GinjaSpecularColorParameter(),
+				GinjaParameterType.Texture => new GinjaTextureParameter(),
+				GinjaParameterType.TevStage => new GinjaTevStageParameter(),
+				GinjaParameterType.TexGen => new GinjaTexGenParameter(),
 				_ => throw new NotSupportedException($"GC parameter type {paramType} not supported.")
 			};
 
-			result.Data = reader.ReadUInt(address + 4);
+			result.Data = reader.ReadUInt32();
 
 			return result;
 		}

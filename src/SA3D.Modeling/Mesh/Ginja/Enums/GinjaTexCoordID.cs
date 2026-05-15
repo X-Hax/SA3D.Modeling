@@ -1,57 +1,57 @@
-﻿namespace SA3D.Modeling.Mesh.Gamecube.Enums
+﻿namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
-	/// Output channel to which calculated texture coordinates should be written to.
+	/// Output slot to which calculated texture coordinates should be written to.
 	/// </summary>
-	public enum GCTexCoordID : byte
+	public enum GinjaTexCoordID : byte
 	{
 		/// <summary>
-		/// First channel.
+		/// First slot.
 		/// </summary>
 		TexCoord0 = 0,
 
 		/// <summary>
-		/// First channel.
+		/// First slot.
 		/// </summary>
 		TexCoord1 = 1,
 
 		/// <summary>
-		/// Second channel.
+		/// Second slot.
 		/// </summary>
 		TexCoord2 = 2,
 
 		/// <summary>
-		/// Third channel.
+		/// Third slot.
 		/// </summary>
 		TexCoord3 = 3,
 
 		/// <summary>
-		/// Fourth channel.
+		/// Fourth slot.
 		/// </summary>
 		TexCoord4 = 4,
 
 		/// <summary>
-		/// Fifth channel.
+		/// Fifth slot.
 		/// </summary>
 		TexCoord5 = 5,
 
 		/// <summary>
-		/// Sixth channel.
+		/// Sixth slot.
 		/// </summary>
 		TexCoord6 = 6,
 
 		/// <summary>
-		/// Seventh channel.
+		/// Seventh slot.
 		/// </summary>
 		TexCoord7 = 7,
 
 		/// <summary>
-		/// Maximum available channel.
+		/// Maximum available slot.
 		/// </summary>
 		TexCoordMax = 8,
 
 		/// <summary>
-		/// No channel.
+		/// No slot.
 		/// </summary>
 		TexCoordNull = 0xFF,
 	}

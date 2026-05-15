@@ -1,13 +1,13 @@
 ﻿using SA3D.Common;
 using System;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Enums
+namespace SA3D.Modeling.Mesh.Ginja.Enums
 {
 	/// <summary>
-	/// Gamecube specific texture tiling modes.
+	/// Ginja specific texture tiling modes.
 	/// </summary>
 	[Flags]
-	public enum GCTileMode : byte
+	public enum GinjaTileMode : byte
 	{
 		/// <summary>
 		/// Repeats texture coordinates outside of 0-1 on the vertical axis. 

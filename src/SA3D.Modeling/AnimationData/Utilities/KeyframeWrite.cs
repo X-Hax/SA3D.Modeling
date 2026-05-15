@@ -1,20 +1,39 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace SA3D.Modeling.Animation.Utilities
+namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeWrite
 	{
-		public static void WriteVector3Set(this EndianStackWriter writer, SortedDictionary<uint, Vector3> dict, FloatIOType ioType)
+		public static void WriteFloatSet(this BinaryObjectWriter writer, SortedDictionary<uint, float> dict, FloatIOType ioType)
 		{
-			if(ioType is FloatIOType.BAMS16 or FloatIOType.BAMS16F or FloatIOType.Short)
+			foreach(KeyValuePair<uint, float> pair in dict)
+			{
+				writer.WriteUInt32(pair.Key);
+				writer.WriteSingle(pair.Value, ioType);
+			}
+		}
+
+		public static void WriteVector2Set(this BinaryObjectWriter writer, SortedDictionary<uint, Vector2> dict, FloatIOType ioType)
+		{
+			foreach(KeyValuePair<uint, Vector2> pair in dict)
+			{
+				writer.WriteUInt32(pair.Key);
+				writer.WriteVector2(pair.Value, ioType);
+			}
+		}
+
+		public static void WriteVector3Set(this BinaryObjectWriter writer, SortedDictionary<uint, Vector3> dict, FloatIOType ioType)
+		{
+			if(ioType.GetByteSize() == 2)
 			{
 				foreach(KeyValuePair<uint, Vector3> pair in dict)
 				{
-					writer.WriteUShort((ushort)pair.Key);
+					writer.WriteUInt16((ushort)pair.Key);
 					writer.WriteVector3(pair.Value, ioType);
 				}
 			}
@@ -22,92 +41,44 @@ namespace SA3D.Modeling.Animation.Utilities
 			{
 				foreach(KeyValuePair<uint, Vector3> pair in dict)
 				{
-					writer.WriteUInt(pair.Key);
+					writer.WriteUInt32(pair.Key);
 					writer.WriteVector3(pair.Value, ioType);
 				}
 			}
 		}
 
-		public static void WriteVector2Set(this EndianStackWriter writer, SortedDictionary<uint, Vector2> dict, FloatIOType ioType)
+		public static void WriteVector3ArrayData(this BinaryObjectWriter writer, SortedDictionary<uint, LabeledArray<Vector3>> dict, PointerLUT lut)
 		{
-			foreach(KeyValuePair<uint, Vector2> pair in dict)
+			foreach(KeyValuePair<uint, LabeledArray<Vector3>> pair in dict)
 			{
-				writer.WriteUInt(pair.Key);
-				writer.WriteVector2(pair.Value, ioType);
+				writer.WriteUInt32(pair.Key);
+				writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, pair.Value, lut);
 			}
 		}
 
-		public static void WriteColorSet(this EndianStackWriter writer, SortedDictionary<uint, Color> dict, ColorIOType ioType)
+		public static void WriteColorSet(this BinaryObjectWriter writer, SortedDictionary<uint, Color> dict, ColorIOType ioType)
 		{
 			foreach(KeyValuePair<uint, Color> pair in dict)
 			{
-				writer.WriteUInt(pair.Key);
-				writer.WriteColor(pair.Value, ioType);
+				writer.WriteUInt32(pair.Key);
+				writer.WriteObject(pair.Value, ioType);
 			}
 		}
 
-		public static uint[] WriteVector3ArrayData(this EndianStackWriter writer, SortedDictionary<uint, ILabeledArray<Vector3>> dict, PointerLUT lut)
-		{
-			uint[] result = new uint[dict.Count * 2];
-			int i = 0;
-
-			foreach(KeyValuePair<uint, ILabeledArray<Vector3>> pair in dict)
-			{
-				result[i++] = pair.Key;
-				result[i++] = lut.GetAddAddress(pair.Value, (array) =>
-				{
-					uint result = writer.PointerPosition;
-
-					foreach(Vector3 v in pair.Value)
-					{
-						writer.WriteVector3(v);
-					}
-
-					return result;
-				});
-			}
-
-			return result;
-		}
-
-		public static void WriteVector3ArraySet(this EndianStackWriter writer, uint[] arrayData)
-		{
-			foreach(uint value in arrayData)
-			{
-				writer.WriteUInt(value);
-			}
-		}
-
-		public static void WriteFloatSet(this EndianStackWriter writer, SortedDictionary<uint, float> dict, bool BAMS)
-		{
-			foreach(KeyValuePair<uint, float> pair in dict)
-			{
-				writer.WriteUInt(pair.Key);
-				if(BAMS)
-				{
-					writer.WriteInt(BAMSFHelper.RadToBAMSF(pair.Value));
-				}
-				else
-				{
-					writer.WriteFloat(pair.Value);
-				}
-			}
-		}
-
-		public static void WriteSpotlightSet(this EndianStackWriter writer, SortedDictionary<uint, Spotlight> dict)
+		public static void WriteSpotlightSet(this BinaryObjectWriter writer, SortedDictionary<uint, Spotlight> dict)
 		{
 			foreach(KeyValuePair<uint, Spotlight> pair in dict)
 			{
-				writer.WriteUInt(pair.Key);
+				writer.WriteUInt32(pair.Key);
 				pair.Value.Write(writer);
 			}
 		}
 
-		public static void WriteQuaternionSet(this EndianStackWriter writer, SortedDictionary<uint, Quaternion> dict)
+		public static void WriteQuaternionSet(this BinaryObjectWriter writer, SortedDictionary<uint, Quaternion> dict)
 		{
 			foreach(KeyValuePair<uint, Quaternion> pair in dict)
 			{
-				writer.WriteUInt(pair.Key);
+				writer.WriteUInt32(pair.Key);
 				writer.WriteQuaternion(pair.Value);
 			}
 		}

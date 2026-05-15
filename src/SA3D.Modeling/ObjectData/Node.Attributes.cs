@@ -116,8 +116,8 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public bool CacheRotation
 		{
-			get => GetNodeAttribute(NodeAttributes.CacheRotation);
-			set => SetNodeAttribute(NodeAttributes.CacheRotation, value);
+			get => GetNodeAttribute(NodeAttributes.CacheMatrix);
+			set => SetNodeAttribute(NodeAttributes.CacheMatrix, value);
 		}
 
 		/// <summary>
@@ -125,8 +125,8 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public bool ApplyCachedRotation
 		{
-			get => GetNodeAttribute(NodeAttributes.ApplyCachedRotation);
-			set => SetNodeAttribute(NodeAttributes.ApplyCachedRotation, value);
+			get => GetNodeAttribute(NodeAttributes.ApplyCachedMatrix);
+			set => SetNodeAttribute(NodeAttributes.ApplyCachedMatrix, value);
 		}
 
 		/// <summary>

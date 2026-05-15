@@ -1,293 +1,185 @@
-﻿using SA3D.Modeling.Mesh;
-using SA3D.Modeling.ObjectData.Enums;
-using SA3D.Modeling.ObjectData;
-using SA3D.Modeling.Structs;
+﻿using Amicitia.IO.Binary;
+using Amicitia.IO.Binary.Extensions;
+using Amicitia.IO.Streams;
 using SA3D.Common.IO;
-using System.IO;
-using System;
-using static SA3D.Modeling.File.FileHeaders;
-using SA3D.Modeling.File.Structs;
+using SA3D.Common.Lookup;
+using SA3D.Modeling.File.MetaData;
+using SA3D.Modeling.File.MetaData.Blocks;
+using SA3D.Modeling.File.MetaData.Weights;
+using SA3D.Modeling.Mesh;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.ObjectData.Structs;
+using SA3D.Modeling.Structs;
 using SA3D.Texturing.Texname;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using static SA3D.Modeling.File.FileHeaders;
 
 namespace SA3D.Modeling.File
 {
 	/// <summary>
 	/// Node model with attach data file contents.
 	/// </summary>
-	public class ModelFile
+	public class ModelFile : IFile
 	{
 		/// <summary>
 		/// Whether the file is an NJ binary.
 		/// </summary>
-		public bool NJFile { get; }
+		public bool NJFile { get; set; }
 
 		/// <summary>
 		/// Attach format of the file.
 		/// </summary>
-		public ModelFormat Format { get; }
+		public Format Format { get; set; }
 
 		/// <summary>
 		/// Hierarchy tip of the file.
 		/// </summary>
-		public Node Model { get; }
+		public Node Model { get; set; }
 
 		/// <summary>
 		/// Texture name list from NJ files
 		/// </summary>
-		public TextureNameList? TextureNames { get; }
+		public TextureNameList? TextureNames { get; set; }
 
 		/// <summary>
 		/// Meta data of the file.
 		/// </summary>
-		public MetaData MetaData { get; }
+		public MetaDataBlocks MetaData { get; set; }
 
 
 		/// <summary>
-		/// Creates a new model file.
+		/// Creates a new blank model file
 		/// </summary>
-		/// <param name="format">Whether the file is an NJ binary.</param>
-		/// <param name="model">Attach format of the file.</param>
-		/// <param name="metaData">Hierarchy tip of the file.</param>
-		/// <param name="nj">Meta data of the file.</param>
-		/// <param name="textureNames">Texture name list of the file.</param>
-		public ModelFile(ModelFormat format, Node model, MetaData metaData, bool nj, TextureNameList? textureNames)
+		public ModelFile() : this(new()) { }
+
+		/// <summary>
+		/// Creates a model file for a model
+		/// </summary>
+		/// <param name="model">Model of the file</param>
+		public ModelFile(Node model)
 		{
-			Format = format;
+			Format = model.GetAttachFormat()?.ToFormat() ?? Format.Basic;
 			Model = model;
-			MetaData = metaData;
-			NJFile = nj;
-			TextureNames = textureNames;
+			MetaData = new();
 		}
 
 
-		/// <summary>
-		/// Checks whether data is formatted as a model file.
-		/// </summary>
-		/// <param name="data">The data to check.</param>
-		public static bool CheckIsModelFile(byte[] data)
+		#region Checking
+
+
+		/// <inheritdoc/>
+		public bool Check(BinaryObjectReader reader)
 		{
-			return CheckIsModelFile(data, 0);
+			return CheckIsSAFile(reader) || CheckIsNJFile(reader);
 		}
 
-		/// <summary>
-		/// Checks whether data is formatted as a model file.
-		/// </summary>
-		/// <param name="data">The data to check.</param>
-		/// <param name="address">Address at which to check.</param>
-		public static bool CheckIsModelFile(byte[] data, uint address)
+		private bool CheckIsSAFile(BinaryObjectReader reader)
 		{
-			return CheckIsModelFile(new EndianStackReader(data), address);
-		}
+			using SeekToken seekToken = reader.At();
+			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
 
-		/// <summary>
-		/// Checks whether data is formatted as a model file.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		public static bool CheckIsModelFile(EndianStackReader reader)
-		{
-			return CheckIsModelFile(reader, 0);
-		}
-
-		/// <summary>
-		/// Checks whether data is formatted as a model file.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to check.</param>
-		public static bool CheckIsModelFile(EndianStackReader reader, uint address)
-		{
-			if(CheckIsSAModelFile(reader, address))
+			bool result = (reader.ReadUInt64() & HeaderMask) switch
 			{
-				return true;
-			}
-
-			return CheckIsNJModelFile(reader, address);
-		}
-
-		private static bool CheckIsSAModelFile(EndianStackReader reader, uint address)
-		{
-			reader.PushBigEndian(false);
-
-			bool result = (reader.ReadULong(address) & HeaderMask) switch
-			{
-				SA1MDL or SADXMDL or SA2MDL or SA2BMDL or BUFMDL => true,
+				SA1MDL or SADXMDL or SA2MDL or SA2BMDL => true,
 				_ => false,
 			};
-
-			reader.PopEndian();
 
 			return result;
 		}
 
-		private static bool CheckIsNJModelFile(EndianStackReader reader, uint address)
+		private bool CheckIsNJFile(BinaryObjectReader reader)
 		{
-			return NJBlockUtility.FindBlockAddress(reader, address, ModelBlockHeaders, out _);
+			return NJBlockUtility.FindBlockOffset(reader, ModelBlockHeaders, out _);
 		}
 
-		/// <summary>
-		/// Reads a model file.
-		/// </summary>
-		/// <param name="filepath">The path to the file that should be read.</param>
-		/// <returns>The model file that was read.</returns>
-		public static ModelFile ReadFromFile(string filepath)
-		{
-			return ReadFromBytes(System.IO.File.ReadAllBytes(filepath));
-		}
+		#endregion
 
-		/// <summary>
-		/// Reads a model file off byte data.
-		/// </summary>
-		/// <param name="data">Data to read.</param>
-		/// <returns>The model file that was read.</returns>
-		public static ModelFile ReadFromBytes(byte[] data)
-		{
-			return ReadFromBytes(data, 0);
-		}
+		#region Reading
 
-		/// <summary>
-		/// Reads a model file off byte data.
-		/// </summary>
-		/// <param name="data">The data to read from.</param>
-		/// <param name="address">The address at which to start reading.</param>
-		/// <returns>The model file that was read.</returns>
-		public static ModelFile ReadFromBytes(byte[] data, uint address)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			using(EndianStackReader reader = new(data))
+			if(CheckIsSAFile(reader))
 			{
-				return Read(reader, address);
+				ReadSA(reader);
+			}
+			else if(CheckIsNJFile(reader))
+			{
+				ReadNJ(reader);
+			}
+			else
+			{
+				throw new FormatException("File is not a model file");
 			}
 		}
 
-		/// <summary>
-		/// Reads a model file off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <returns>The model file that was read.</returns>
-		public static ModelFile Read(EndianStackReader reader)
+
+		private void ReadSA(BinaryObjectReader reader)
 		{
-			return Read(reader, 0);
-		}
+			using EndiannessToken endiannesToken = reader.WithEndian(Endianness.Little);
 
-		/// <summary>
-		/// Reads a model file off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <returns>The model file that was read.</returns>
-		public static ModelFile Read(EndianStackReader reader, uint address)
-		{
-			if(CheckIsSAModelFile(reader, address))
+			ulong headerVersion = reader.ReadUInt64();
+
+			Format = (headerVersion & HeaderMask) switch
 			{
-				try
-				{
-					reader.PushBigEndian(false);
-					return ReadSA(reader, address);
-				}
-				finally
-				{
-					reader.PopEndian();
-				}
-			}
-
-			uint prevImageBase = reader.ImageBase;
-			if(CheckIsNJModelFile(reader, address))
-			{
-				try
-				{
-					reader.PushBigEndian(reader.CheckBigEndian32(address + 4));
-					return ReadNJ(reader, address);
-				}
-				finally
-				{
-					reader.ImageBase = prevImageBase;
-					reader.PopEndian();
-				}
-			}
-
-			throw new FormatException("File is not a model file");
-		}
-
-		private static ModelFile ReadNJ(EndianStackReader reader, uint address)
-		{
-			Dictionary<uint, uint> blocks = NJBlockUtility.GetBlockAddresses(reader, address);
-			uint prevImageBase = reader.ImageBase;
-
-			TextureNameList? textureNames = null;
-			if(NJBlockUtility.FindBlockAddress(blocks, TextureListBlockHeaders, out uint? texturelistBlockAddress))
-			{
-				uint textureListAddress = texturelistBlockAddress!.Value + 8;
-				reader.ImageBase = unchecked((uint)-textureListAddress);
-				textureNames = TextureNameList.Read(reader, textureListAddress, new());
-				reader.ImageBase = prevImageBase;
-			}
-
-			NJBlockUtility.FindBlockAddress(blocks, ModelBlockHeaders, out uint? modelBlockAddress);
-			uint modelAddress = modelBlockAddress!.Value + 8;
-			reader.ImageBase = unchecked((uint)-modelAddress);
-
-			uint blockHeader = blocks[modelBlockAddress!.Value];
-			ModelFormat format = (blockHeader >> 16) switch
-			{
-				BM => ModelFormat.SA1,
-				CM => ModelFormat.SA2,
-				_ => throw new FormatException()
-			};
-
-			Node model = Node.Read(reader, modelAddress, format, new());
-
-			return new(format, model, new(), true, textureNames);
-		}
-
-		private static ModelFile ReadSA(EndianStackReader reader, uint address)
-		{
-			ulong header8 = reader.ReadULong(address) & HeaderMask;
-			ModelFormat format = header8 switch
-			{
-				SA1MDL => ModelFormat.SA1,
-				SADXMDL => ModelFormat.SADX,
-				SA2MDL => ModelFormat.SA2,
-				SA2BMDL => ModelFormat.SA2B,
-				BUFMDL => ModelFormat.Buffer,
+				SA1MDL => Format.Basic,
+				SADXMDL => Format.BasicDX,
+				SA2MDL => Format.Chunk,
+				SA2BMDL => Format.Ginja,
 				_ => throw new FormatException("File invalid; Header malformed"),
 			};
 
-			// checking the version
-			byte version = reader[address + 7];
+			byte version = (byte)(headerVersion >> 56);
 			if(version > CurrentModelVersion)
 			{
-				throw new FormatException("File invalid; Unsupported version");
+				throw new FormatException($"File invalid; Unsupported version {version}; Maximum supported version: {CurrentModelVersion}");
 			}
 
-			MetaData metaData = MetaData.Read(reader, address + 0xC, version, true);
-			PointerLUT lut = new(metaData.Labels);
-
-			uint prevImageBase = reader.ImageBase;
-			if(address != 0)
+			using(reader.At(4, SeekOrigin.Current))
 			{
-				reader.ImageBase = unchecked((uint)-address);
+				MetaDataIOContext metaDataContext = new()
+				{
+					Version = version,
+					HasAnimMorphFiles = true
+				};
+
+				MetaData = reader.ReadObject<MetaDataBlocks, MetaDataIOContext>(metaDataContext);
 			}
 
-			uint modelAddr = reader.ReadPointer(address + 8);
-			Node model = Node.Read(reader, modelAddr, format, lut);
-
-			if(metaData.MetaWeights.Count > 0)
+			Dictionary<long, string> labels = [];
+			if(MetaData.TryGetBlock(out LabelsMetaDataBlock? labelBlock))
 			{
-				CreateWeldings(metaData, lut);
+				labels = labelBlock!.Labels.GetDictFrom();
 			}
 
-			reader.ImageBase = prevImageBase;
 
-			return new(format, model, metaData, false, null);
+			IOContext context = new()
+			{
+				MeshFormat = Format,
+				PointerLUT = new(labels)
+			};
+
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(ModelFile), nameof(Model));
+
+			if(MetaData.TryGetBlock(out WeightsMetaDataBlock? weightsBlock))
+			{
+				CreateWeldings(weightsBlock!.Weights, context.PointerLUT);
+			}
+
+			NJFile = false;
 		}
 
-		private static void CreateWeldings(MetaData metadata, PointerLUT lut)
+		private static void CreateWeldings(IEnumerable<MetaWeightNode> weights, PointerLUT lut)
 		{
-			foreach(MetaWeightNode metaWeightNode in metadata.MetaWeights)
+			foreach(MetaWeightNode metaWeightNode in weights)
 			{
-				if(!lut.Nodes.TryGetValue(metaWeightNode.NodePointer, out Node? node))
+				if(!lut.Nodes.TryGetValue(metaWeightNode.NodeOffset, out Node? node))
 				{
-					throw new InvalidDataException($"Metadata has weights for a node at {metaWeightNode.NodePointer:X8}, but no node has been read at that address!");
+					throw new InvalidDataException($"Metadata has weights for a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that address!");
 				}
 
 				VertexWelding[] vertexWelds = new VertexWelding[metaWeightNode.VertexWeights.Length];
@@ -302,9 +194,9 @@ namespace SA3D.Modeling.File
 					{
 						MetaWeight metaWeight = metaWeightVertex.Weights[j];
 
-						if(!lut.Nodes.TryGetValue(metaWeight.NodePointer, out Node? sourceNode))
+						if(!lut.Nodes.TryGetValue(metaWeight.NodeOffset, out Node? sourceNode))
 						{
-							throw new InvalidDataException($"Metadata draws weight influence from a node at {metaWeightNode.NodePointer:X8}, but no node has been read at that address!");
+							throw new InvalidDataException($"Metadata draws weight influence from a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that address!");
 						}
 
 						welds[j] = new(sourceNode, metaWeight.VertexIndex, metaWeight.Weight);
@@ -321,186 +213,154 @@ namespace SA3D.Modeling.File
 		}
 
 
-		/// <summary>
-		/// Write the model file to a file. Previous labels may get lost.
-		/// </summary>
-		/// <param name="filepath">Path to the file to write to.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public void WriteToFile(string filepath)
+		private void ReadNJ(BinaryObjectReader reader)
 		{
-			WriteToFile(filepath, Model, NJFile, MetaData, Format);
+			using EndiannessToken endiannesToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
+			Dictionary<long, string> blocks = NJBlockUtility.GetBlockOffsets(reader);
+
+			Model = ReadNJModel(reader, blocks, out IOContext context);
+			Format = context.MeshFormat;
+			TextureNames = ReadNJTextureList(reader, blocks, context.PointerLUT);
+			NJFile = true;
 		}
 
-		/// <summary>
-		/// Writes the model file to a byte array. Previous labels may get lost.
-		/// </summary>
-		/// <exception cref="InvalidOperationException"></exception>
-		/// <returns>The written byte data.</returns>
-		public byte[] WriteToBytes()
+		private static Node ReadNJModel(BinaryObjectReader reader, Dictionary<long, string> blocks, out IOContext context)
 		{
-			return WriteToBytes(Model, NJFile, MetaData, Format);
-		}
-
-		/// <summary>
-		/// Writes the model file to an endian stack writer. Previous labels may get lost.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public void Write(EndianStackWriter writer)
-		{
-			Write(writer, Model, NJFile, MetaData, Format);
-		}
-
-
-		/// <summary>
-		/// Write a model file to a file.
-		/// </summary>
-		/// <param name="filepath">Path to the file to write to.</param>
-		/// <param name="model">The model to write.</param>
-		/// <param name="nj">Whether to format as an NJ file.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <param name="format">The format to write in.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static void WriteToFile(string filepath, Node model, bool nj = false, MetaData? metaData = null, ModelFormat? format = null)
-		{
-			using(FileStream stream = System.IO.File.Create(filepath))
+			if(!NJBlockUtility.FindBlockOffset(blocks, ModelBlockHeaders, out long? modelBlockAddress))
 			{
-				EndianStackWriter writer = new(stream);
-				Write(writer, model, nj, metaData, format);
+				throw new InvalidOperationException("NJ model file has no model block!");
 			}
-		}
 
-		/// <summary>
-		/// Writes a model file to a byte array.
-		/// </summary>
-		/// <param name="model">The model to write.</param>
-		/// <param name="nj">Whether to format as an NJ file.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <param name="format">The format to write in.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		/// <returns>The written byte data.</returns>
-		public static byte[] WriteToBytes(Node model, bool nj = false, MetaData? metaData = null, ModelFormat? format = null)
-		{
-			using(MemoryStream stream = new())
+			string blockHeader = blocks[modelBlockAddress!.Value];
+			Format format = blockHeader[2..] switch
 			{
-				EndianStackWriter writer = new(stream);
-				Write(writer, model, nj, metaData, format);
-				return stream.ToArray();
-			}
-		}
-
-		/// <summary>
-		/// Writes a model file to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="model">The model to write.</param>
-		/// <param name="nj">Whether to format as an NJ file.</param>
-		/// <param name="metaData">The metadata to include.</param>
-		/// <param name="format">The format to write in.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static void Write(EndianStackWriter writer, Node model, bool nj = false, MetaData? metaData = null, ModelFormat? format = null)
-		{
-			format ??= model.GetAttachFormat() switch
-			{
-				AttachFormat.Buffer => ModelFormat.Buffer,
-				AttachFormat.BASIC => ModelFormat.SA1,
-				AttachFormat.CHUNK => ModelFormat.SA2,
-				AttachFormat.GC => ModelFormat.SA2B,
-				_ => throw new InvalidOperationException(),
+				BasicModelBlockType => Format.Basic,
+				ChunkModelBlockType => Format.Chunk,
+				_ => throw new UnreachableException()
 			};
 
-			if(nj)
+			long modelOffset = modelBlockAddress!.Value + (sizeof(uint) * 2);
+			using SeekToken seekToken = reader.At(modelOffset, SeekOrigin.Begin);
+			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin();
+
+			context = new()
 			{
-				WriteNJ(writer, model, format.Value);
+				MeshFormat = format,
+				PointerLUT = new()
+			};
+
+			return reader.ReadObject<Node, IOContext>(context, context.PointerLUT);
+		}
+
+		private static TextureNameList? ReadNJTextureList(BinaryObjectReader reader, Dictionary<long, string> blocks, BaseLUT lut)
+		{
+			if(!NJBlockUtility.FindBlockOffset(blocks, TextureListBlockHeaders, out long? texturelistBlockOffset))
+			{
+				return null;
+			}
+
+			long textureListOffset = texturelistBlockOffset!.Value + (sizeof(uint) * 2);
+			using SeekToken seekToken = reader.At(textureListOffset, SeekOrigin.Begin);
+			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin();
+
+			return reader.ReadObject<TextureNameList, BaseLUT>(lut);
+		}
+
+		#endregion
+
+		#region Writing
+
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer)
+		{
+			if(NJFile)
+			{
+				WriteNJ(writer);
 			}
 			else
 			{
-				WriteSA(writer, model, format.Value, metaData);
+				WriteSA(writer);
 			}
 		}
 
-		private static void WriteNJ(EndianStackWriter writer, Node model, ModelFormat format)
+
+		private void WriteNJ(BinaryObjectWriter writer)
 		{
-			writer.WriteUShort(NJ);
-			switch(format)
+			writer.WriteString(StringBinaryFormat.FixedLength, NinjaModelBlockIdentifier, 2);
+
+			switch(Format)
 			{
-				case ModelFormat.SA1 or ModelFormat.SADX:
-					writer.WriteUShort(BM);
+				case Format.Basic or Format.BasicDX:
+					writer.WriteString(StringBinaryFormat.FixedLength, BasicModelBlockType, 2);
 					break;
-				case ModelFormat.SA2:
-					writer.WriteUShort(CM);
+				case Format.Chunk:
+					writer.WriteString(StringBinaryFormat.FixedLength, ChunkModelBlockType, 2);
 					break;
-				case ModelFormat.SA2B:
-				case ModelFormat.Buffer:
+				case Format.Ginja:
 				default:
-					throw new ArgumentException($"Attach format {format} not supported for NJ binaries");
+					throw new ArgumentException($"Attach format {Format} not supported for NJ binaries");
 			}
 
-			uint placeholderAddress = writer.Position;
-			writer.WriteEmpty(4); // file length placeholder
+			SeekToken fileSizeOffset = writer.At();
+			writer.WriteUInt32(0);
 
-			uint nodeStart = writer.Position;
-			writer.ImageBase = unchecked((uint)-nodeStart);
-			writer.WriteEmpty(Node.StructSize);
-
-			PointerLUT lut = new();
-
-			model.Child?.Write(writer, format, lut);
-			model.Next?.Write(writer, format, lut);
-			model.Attach?.Write(writer, format, lut);
-
-			uint byteSize = writer.Position - nodeStart;
-
-			// write the root node to the start
-			uint end = writer.Position;
-			writer.Seek(placeholderAddress, SeekOrigin.Begin);
-			writer.WriteUInt(byteSize);
-			model.Write(writer, format, lut);
-
-			// replace size
-			writer.Seek(end, SeekOrigin.Begin);
-		}
-
-		private static void WriteSA(EndianStackWriter writer, Node model, ModelFormat format, MetaData? metadata)
-		{
-			ulong header = format switch
+			IOContext context = new()
 			{
-				ModelFormat.SA1 => SA1MDLVer,
-				ModelFormat.SADX => SADXMDLVer,
-				ModelFormat.SA2 => SA2MDLVer,
-				ModelFormat.SA2B => SA2BMDLVer,
-				ModelFormat.Buffer => BUFMDLVer,
-				_ => throw new ArgumentException($"Model format {format} not supported for SAMDL files"),
+				MeshFormat = Format,
+				LevelFormat = Format,
+				PointerLUT = new()
 			};
 
-			writer.WriteULong(header);
+			long modelStart = writer.Position;
 
-			uint placeholderAddr = writer.Position;
-			// 4 bytes: node address placeholder
-			// 4 bytes: metadata placeholder
-			writer.WriteEmpty(8);
+			using(writer.WithOffsetOrigin())
+			{
+				writer.WriteObject(Model, context, context.PointerLUT);
+			}
 
-			PointerLUT lut = new();
-			uint modelAddress = model.Write(writer, format, lut);
+			uint byteSize = (uint)(writer.Position - modelStart);
 
-			metadata ??= new();
-			metadata.Labels = lut.Labels.GetDictFrom();
-
-			CreateMetaWeights(model, metadata, lut);
-
-			uint metadataAddress = metadata.Write(writer);
-
-			uint end = writer.Position;
-			writer.Seek(placeholderAddr, SeekOrigin.Begin);
-			writer.WriteUInt(modelAddress);
-			writer.WriteUInt(metadataAddress);
-			writer.Seek(end, SeekOrigin.Begin);
+			using(writer.At())
+			{
+				fileSizeOffset.Dispose();
+				writer.WriteUInt32(byteSize);
+			}
 		}
 
-		private static void CreateMetaWeights(Node model, MetaData metadata, PointerLUT lut)
+
+		private void WriteSA(BinaryObjectWriter writer)
 		{
-			metadata.MetaWeights.Clear();
-			Node[] nodes = model.GetTreeNodes();
+			ulong header = Format switch
+			{
+				Format.Basic => SA1MDLVer,
+				Format.BasicDX => SADXMDLVer,
+				Format.Chunk => SA2MDLVer,
+				Format.Ginja => SA2BMDLVer,
+				_ => throw new ArgumentException($"Model format {Format} not supported for SAMDL files"),
+			};
+
+			writer.WriteUInt64(header);
+
+			IOContext context = new()
+			{
+				MeshFormat = Format,
+				LevelFormat = Format,
+				PointerLUT = new()
+			};
+
+			writer.WriteObjectOffset(Model, context);
+
+			MetaData.ReplaceLabels(context.PointerLUT.Labels);
+			CreateMetaWeights(context.PointerLUT);
+
+			writer.WriteObject(MetaData);
+		}
+
+		private void CreateMetaWeights(PointerLUT lut)
+		{
+			MetaData.Blocks.RemoveAll(x => x.Type is MetaDataBlockType.Weight);
+			Node[] nodes = Model.GetTreeNodes();
+			WeightsMetaDataBlock weightsBlock = new();
 
 			foreach(Node node in nodes)
 			{
@@ -509,7 +369,7 @@ namespace SA3D.Modeling.File
 					continue;
 				}
 
-				uint nodePointer = lut.Nodes.GetAddress(node)!.Value;
+				long nodeOffset = lut.Nodes.GetAddress(node)!.Value;
 				MetaWeightVertex[] metaWeightVertices = new MetaWeightVertex[node.Welding.Length];
 
 				for(int i = 0; i < metaWeightVertices.Length; i++)
@@ -521,21 +381,25 @@ namespace SA3D.Modeling.File
 					{
 						Weld weld = vertexWelding.Welds[j];
 
-						if(!lut.Nodes.TryGetAddress(weld.SourceNode, out uint sourceNodePointer))
+						if(!lut.Nodes.TryGetAddress(weld.SourceNode, out long sourceNodeOffset))
 						{
 							throw new InvalidDataException($"Source node \"{weld.SourceNode.Label}\" is not part of the model that is being written!");
 						}
 
-						metaWeights[j] = new MetaWeight(sourceNodePointer, weld.VertexIndex, weld.Weight);
+						metaWeights[j] = new MetaWeight(sourceNodeOffset, weld.VertexIndex, weld.Weight);
 					}
 
 					metaWeightVertices[i] = new(vertexWelding.DestinationVertexIndex, metaWeights);
 				}
 
-				metadata.MetaWeights.Add(new(nodePointer, metaWeightVertices));
+
+				weightsBlock.Weights.Add(new(nodeOffset, metaWeightVertices));
 			}
+
+			MetaData.Blocks.Add(weightsBlock);
 		}
 
+		#endregion
 
 		/// <inheritdoc/>
 		public override string ToString()

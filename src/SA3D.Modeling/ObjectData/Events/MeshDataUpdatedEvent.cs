@@ -11,17 +11,17 @@ namespace SA3D.Modeling.ObjectData.Events
 		/// <summary>
 		/// Attach before changing.
 		/// </summary>
-		public Attach? OldAttach { get; }
+		public MeshData? OldMeshData { get; }
 
 		/// <summary>
 		/// Attach after changing.
 		/// </summary>
-		public Attach? NewAttach { get; }
+		public MeshData? NewMeshData { get; }
 
-		internal AttachUpdatedEventArgs(Attach? oldAttach, Attach? newAttach)
+		internal AttachUpdatedEventArgs(MeshData? oldMeshData, MeshData? newMeshData)
 		{
-			OldAttach = oldAttach;
-			NewAttach = newAttach;
+			OldMeshData = oldMeshData;
+			NewMeshData = newMeshData;
 		}
 	}
 

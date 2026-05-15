@@ -16,7 +16,7 @@
 		UpdateEuler,
 
 		/// <summary>
-		/// Keeps animation values as they are. (not recommended)
+		/// Keeps rotation values as they are. (not recommended)
 		/// </summary>
 		Keep,
 	}

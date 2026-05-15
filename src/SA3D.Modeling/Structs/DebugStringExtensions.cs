@@ -46,5 +46,15 @@ namespace SA3D.Modeling.Structs
 		{
 			return $"({vector.X.DebugString()}, {vector.Y.DebugString()}, {vector.Z.DebugString()})";
 		}
+
+		/// <summary>
+		/// Creates an easily readable debug string for a vector.
+		/// </summary>
+		/// <param name="vector">The vector to create the string for.</param>
+		/// <returns>The debug string.</returns>
+		public static string DebugString(this Vector4 vector)
+		{
+			return $"({vector.X.DebugString()}, {vector.Y.DebugString()}, {vector.Z.DebugString()}, {vector.W.DebugString()})";
+		}
 	}
 }

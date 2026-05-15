@@ -1,20 +1,20 @@
-﻿using SA3D.Modeling.Mesh.Gamecube.Enums;
+﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 
-namespace SA3D.Modeling.Mesh.Gamecube.Parameters
+namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// The blending information for the surface of the geometry
 	/// </summary>
-	public struct GCBlendAlphaParameter : IGCParameter
+	public struct GinjaBlendAlphaParameter : IGinjaParameter
 	{
 		/// <summary>
 		/// Blend alpha parameter with default values.
 		/// </summary>
-		public static readonly GCBlendAlphaParameter DefaultBlendParameter
+		public static readonly GinjaBlendAlphaParameter DefaultBlendParameter
 			= new() { SourceAlpha = BlendMode.SrcAlpha, DestinationAlpha = BlendMode.SrcAlphaInverted, UseAlpha = true };
 
 		/// <inheritdoc/>
-		public readonly GCParameterType Type => GCParameterType.BlendAlpha;
+		public readonly GinjaParameterType Type => GinjaParameterType.BlendAlpha;
 
 		/// <inheritdoc/>
 		public uint Data { get; set; }

@@ -198,7 +198,7 @@ namespace SA3D.Modeling.ObjectData
 		/// Iterates over the attaches of the entire tree, starting at the root node.
 		/// <br/> First <see cref="Child"/>, then <see cref="Next"/>.
 		/// </summary>
-		public IEnumerable<Attach> GetTreeAttachEnumerable()
+		public IEnumerable<MeshData> GetTreeAttachEnumerable()
 		{
 			foreach(Node node in GetTreeNodeEnumerable())
 			{
@@ -222,7 +222,7 @@ namespace SA3D.Modeling.ObjectData
 		/// Returns the attaches in the entire tree, starting at the root node.
 		/// <br/> First <see cref="Child"/>, then <see cref="Next"/>.
 		/// </summary>
-		public Attach[] GetTreeAttaches()
+		public MeshData[] GetTreeAttaches()
 		{
 			return GetTreeAttachEnumerable().ToArray();
 		}
