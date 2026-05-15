@@ -15,7 +15,7 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Level geometry file contents.
 	/// </summary>
-	public class LevelFile : IFile
+	public class LevelFile : IFileSerializable
 	{
 		/// <summary>
 		/// Landtable of the file.

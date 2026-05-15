@@ -22,7 +22,7 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Node model with attach data file contents.
 	/// </summary>
-	public class ModelFile : IFile
+	public class ModelFile : IFileSerializable
 	{
 		/// <summary>
 		/// Whether the file is an NJ binary.
