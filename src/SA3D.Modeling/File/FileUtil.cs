@@ -8,7 +8,6 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// File helper class
 	/// </summary>
-	/// <typeparam name="T">File type</typeparam>
 	public static class FileUtil
 	{
 		/// <summary>

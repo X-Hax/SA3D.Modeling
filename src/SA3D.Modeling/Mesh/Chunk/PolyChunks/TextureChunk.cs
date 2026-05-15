@@ -103,7 +103,6 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// Creates a new texture chunk.
 		/// </summary>
-		/// <param name="second">Whether it is <see cref="PolyChunkType.TextureID2"/></param>
 		public TextureChunk() : base(PolyChunkType.TextureID) { }
 
 		/// <inheritdoc/>
