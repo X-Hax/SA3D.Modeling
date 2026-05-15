@@ -21,7 +21,7 @@ jobs:
         submodules: 'recursive'
 
     - name: "Setup Library SDKs & Components"
-      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@main
+      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@net8_fix
 
     - name: Build
       run: dotnet build -c Release ./src
