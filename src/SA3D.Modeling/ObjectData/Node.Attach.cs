@@ -9,40 +9,40 @@ namespace SA3D.Modeling.ObjectData
 {
 	public partial class Node
 	{
-		private MeshData? _attach;
+		private MeshData? _meshData;
 
 
 		/// <summary>
 		/// Mesh data attached to this node.
 		/// </summary>
-		public MeshData? Attach
+		public MeshData? MeshData
 		{
-			get => _attach;
+			get => _meshData;
 			set
 			{
-				if(value == _attach)
+				if(value == _meshData)
 				{
 					return;
 				}
 
-				AttachFormat? format = GetAttachFormat();
+				MeshFormat? format = GetMeshFormat();
 
 				if(value != null && format != null && format != value.MeshFormat)
 				{
-					throw new FormatException($"Node uses {format} attaches, and the attach that is being set is of type {value.MeshFormat}! Cannot set attach!");
+					throw new FormatException($"Node uses {format} mesh data, and the mesh data that is being set is of type {value.MeshFormat}! Cannot set mesh data!");
 				}
 
-				MeshData? previous = _attach;
-				_attach = value;
+				MeshData? previous = _meshData;
+				_meshData = value;
 
-				OnAttachUpdated?.Invoke(this, new(previous, _attach));
+				OnMeshDataUpdated?.Invoke(this, new(previous, _meshData));
 			}
 		}
 
 		/// <summary>
-		/// Raised when the attach of the node changes.
+		/// Raised when the mesh data of the node changes.
 		/// </summary>
-		public event AttachUpdatedEventHandler? OnAttachUpdated;
+		public event MeshDataUpdatedEventHandler? OnMeshDataUpdated;
 
 		/// <summary>
 		/// Vertex welding info. Used for Deforming meshes with no native weight support.
@@ -51,63 +51,63 @@ namespace SA3D.Modeling.ObjectData
 
 
 		/// <summary>
-		/// Determines Attach format across the whole tree that this node belongs to.
+		/// Determines the MeshData format across the whole tree that this node belongs to.
 		/// </summary>
-		public AttachFormat? GetAttachFormat()
+		public MeshFormat? GetMeshFormat()
 		{
 			foreach(Node node in GetTreeNodeEnumerable())
 			{
-				if(node.Attach != null)
+				if(node.MeshData != null)
 				{
-					return node.Attach.MeshFormat;
+					return node.MeshData.MeshFormat;
 				}
 			}
 
 			return null;
 		}
 
-		private void CheckAttachCompatibility(Node other)
+		private void CheckMeshDataCompatibility(Node other)
 		{
-			AttachFormat? format = GetAttachFormat();
+			MeshFormat? format = GetMeshFormat();
 
-			if(other.CheckHasBranchAttaches()
+			if(other.CheckHasBranchMeshData()
 				&& format != null
-				&& other.GetAttachFormat() != format)
+				&& other.GetMeshFormat() != format)
 			{
-				throw new InvalidOperationException("The node you are trying to insert has an incompatible attach format!");
+				throw new InvalidOperationException("The node you are trying to insert has an incompatible meshdata format!");
 			}
 		}
 
 		/// <summary>
-		/// Checks if <see langword="this"/> or any node directly below has an attach.
+		/// Checks if <see langword="this"/> or any node directly below has an meshdata.
 		/// </summary>
-		public bool CheckHasBranchAttaches()
+		public bool CheckHasBranchMeshData()
 		{
-			return GetBranchNodeEnumerable(false).Any(x => x._attach != null);
+			return GetBranchNodeEnumerable(false).Any(x => x._meshData != null);
 		}
 
 		/// <summary>
-		/// Removes all of the attaches from the tree, allowing for changing the attach format.
+		/// Removes all of the meshdata from the tree, allowing for changing the mesh data format.
 		/// </summary>
-		public void ClearAttachesFromTree()
+		public void ClearMeshDataFromTree()
 		{
 			foreach(Node node in GetTreeNodeEnumerable())
 			{
-				if(node._attach != null)
+				if(node._meshData != null)
 				{
-					MeshData? previous = node._attach;
-					node._attach = null;
-					node.OnAttachUpdated?.Invoke(node, new(previous, null));
+					MeshData? previous = node._meshData;
+					node._meshData = null;
+					node.OnMeshDataUpdated?.Invoke(node, new(previous, null));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Whether this node tree has weighted attaches
+		/// Whether this node tree has weighted meshdata
 		/// </summary>
 		public bool CheckHasTreeWeightedMesh()
 		{
-			return GetTreeAttachEnumerable().Any(x => x.CheckHasWeights());
+			return GetTreeMeshDataEnumerable().Any(x => x.CheckHasWeights());
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Returns groups of nodes in the tree that influence each others attaches via weldings.
+		/// Returns groups of nodes in the tree that influence each others meshdata via weldings.
 		/// </summary>
 		/// <param name="includeUnwelded">Create one-node groups for nodes that are not linked to other nodes. Otherwise ignore them</param>
 		/// <exception cref="InvalidOperationException"/>
@@ -235,6 +235,5 @@ namespace SA3D.Modeling.ObjectData
 				node.Welding = null;
 			}
 		}
-	
 	}
 }

@@ -59,8 +59,8 @@ namespace SA3D.Modeling.Mesh.Basic
 		public LabeledArray<BasicMaterial> Materials { get; set; }
 
 		/// <inheritdoc/>
-		public override AttachFormat MeshFormat
-			=> AttachFormat.Basic;
+		public override MeshFormat MeshFormat
+			=> MeshFormat.Basic;
 
 
 		/// <summary>

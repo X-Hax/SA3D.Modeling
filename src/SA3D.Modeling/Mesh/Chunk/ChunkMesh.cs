@@ -37,8 +37,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 		public LabeledArray<PolyChunk>? PolyChunks { get; set; }
 
 		/// <inheritdoc/>
-		public override AttachFormat MeshFormat
-			=> AttachFormat.Chunk;
+		public override MeshFormat MeshFormat
+			=> MeshFormat.Chunk;
 
 		/// <inheritdoc/>
 		public override string LabelPrefix => "chunkMesh_";

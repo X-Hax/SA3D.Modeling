@@ -5,7 +5,7 @@ abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.AlignWithFour.get -> bool
 abstract SA3D.Modeling.Mesh.MeshData.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
 abstract SA3D.Modeling.Mesh.MeshData.Clone() -> SA3D.Modeling.Mesh.MeshData!
 abstract SA3D.Modeling.Mesh.MeshData.LabelPrefix.get -> string!
-abstract SA3D.Modeling.Mesh.MeshData.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+abstract SA3D.Modeling.Mesh.MeshData.MeshFormat.get -> SA3D.Modeling.Mesh.MeshFormat
 abstract SA3D.Modeling.Mesh.MeshData.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 abstract SA3D.Modeling.Mesh.MeshData.RecalculateBounds() -> void
 abstract SA3D.Modeling.Mesh.MeshData.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
@@ -69,7 +69,7 @@ override SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.ToString() -> stri
 override SA3D.Modeling.Mesh.Basic.BasicMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
 override SA3D.Modeling.Mesh.Basic.BasicMesh.Clone() -> SA3D.Modeling.Mesh.MeshData!
 override SA3D.Modeling.Mesh.Basic.BasicMesh.LabelPrefix.get -> string!
-override SA3D.Modeling.Mesh.Basic.BasicMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Basic.BasicMesh.MeshFormat.get -> SA3D.Modeling.Mesh.MeshFormat
 override SA3D.Modeling.Mesh.Basic.BasicMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 override SA3D.Modeling.Mesh.Basic.BasicMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Basic.BasicMesh.ToString() -> string!
@@ -78,7 +78,7 @@ override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CanWrite(SA3D.Modeling.Structs.Forma
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CheckHasWeights() -> bool
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Clone() -> SA3D.Modeling.Mesh.Chunk.ChunkMesh!
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.LabelPrefix.get -> string!
-override SA3D.Modeling.Mesh.Chunk.ChunkMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.MeshFormat.get -> SA3D.Modeling.Mesh.MeshFormat
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.ToString() -> string!
@@ -108,7 +108,7 @@ override SA3D.Modeling.Mesh.Ginja.GinjaCorner.ToString() -> string!
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Clone() -> SA3D.Modeling.Mesh.Ginja.GinjaMesh!
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.LabelPrefix.get -> string!
-override SA3D.Modeling.Mesh.Ginja.GinjaMesh.MeshFormat.get -> SA3D.Modeling.Mesh.AttachFormat
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.MeshFormat.get -> SA3D.Modeling.Mesh.MeshFormat
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.ToString() -> string!
@@ -424,9 +424,6 @@ SA3D.Modeling.Mesh.AlphaMode.Opaque = 0 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.Transparent = 1 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOff = 2 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOn = 3 -> SA3D.Modeling.Mesh.AlphaMode
-SA3D.Modeling.Mesh.AttachFormat.Basic = 0 -> SA3D.Modeling.Mesh.AttachFormat
-SA3D.Modeling.Mesh.AttachFormat.Chunk = 1 -> SA3D.Modeling.Mesh.AttachFormat
-SA3D.Modeling.Mesh.AttachFormat.Ginja = 2 -> SA3D.Modeling.Mesh.AttachFormat
 SA3D.Modeling.Mesh.Basic.BasicMaterial.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.Mesh.Basic.BasicMaterial.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.BasicMesh.BasicMesh() -> void
@@ -929,6 +926,10 @@ SA3D.Modeling.Mesh.MeshData.Label.set -> void
 SA3D.Modeling.Mesh.MeshData.MeshBounds.get -> SA3D.Modeling.Structs.Bounds
 SA3D.Modeling.Mesh.MeshData.MeshBounds.set -> void
 SA3D.Modeling.Mesh.MeshData.MeshData() -> void
+SA3D.Modeling.Mesh.MeshFormat
+SA3D.Modeling.Mesh.MeshFormat.Basic = 0 -> SA3D.Modeling.Mesh.MeshFormat
+SA3D.Modeling.Mesh.MeshFormat.Chunk = 1 -> SA3D.Modeling.Mesh.MeshFormat
+SA3D.Modeling.Mesh.MeshFormat.Ginja = 2 -> SA3D.Modeling.Mesh.MeshFormat
 SA3D.Modeling.ObjectData.Enums.IsCollisionAttributeAttribute
 SA3D.Modeling.ObjectData.Enums.IsCollisionAttributeAttribute.IsCollisionAttributeAttribute() -> void
 SA3D.Modeling.ObjectData.Enums.IsDisplayAttributeAttribute
@@ -941,8 +942,10 @@ SA3D.Modeling.ObjectData.Enums.LevelAttributes.LoadTextureFile = 8 -> SA3D.Model
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.ApplyCachedMatrix = 4096 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.CacheMatrix = 2048 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.Envelope = 8192 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
-SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.NewMeshData.get -> SA3D.Modeling.Mesh.MeshData?
-SA3D.Modeling.ObjectData.Events.AttachUpdatedEventArgs.OldMeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventArgs
+SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventArgs.NewMeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventArgs.OldMeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventHandler
 SA3D.Modeling.ObjectData.Level
 SA3D.Modeling.ObjectData.Level.Attributes.get -> SA3D.Modeling.ObjectData.Enums.LevelAttributes
 SA3D.Modeling.ObjectData.Level.Attributes.set -> void
@@ -983,18 +986,26 @@ SA3D.Modeling.ObjectData.LevelModel.UpdateBounds() -> void
 SA3D.Modeling.ObjectData.LevelModel.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.set -> void
-SA3D.Modeling.ObjectData.Node.Attach.get -> SA3D.Modeling.Mesh.MeshData?
 SA3D.Modeling.ObjectData.Node.CacheRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.CacheRotation.set -> void
+SA3D.Modeling.ObjectData.Node.CheckHasBranchMeshData() -> bool
+SA3D.Modeling.ObjectData.Node.ClearMeshDataFromTree() -> void
 SA3D.Modeling.ObjectData.Node.Clip.get -> bool
 SA3D.Modeling.ObjectData.Node.Clip.set -> void
+SA3D.Modeling.ObjectData.Node.DeepMeshDataCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Envelope.get -> bool
 SA3D.Modeling.ObjectData.Node.Envelope.set -> void
-SA3D.Modeling.ObjectData.Node.GetTreeAttachEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.MeshData!>!
-SA3D.Modeling.ObjectData.Node.GetTreeAttaches() -> SA3D.Modeling.Mesh.MeshData![]!
+SA3D.Modeling.ObjectData.Node.GetMeshFormat() -> SA3D.Modeling.Mesh.MeshFormat?
+SA3D.Modeling.ObjectData.Node.GetTreeMeshData() -> SA3D.Modeling.Mesh.MeshData![]!
+SA3D.Modeling.ObjectData.Node.GetTreeMeshDataCount() -> int
+SA3D.Modeling.ObjectData.Node.GetTreeMeshDataEnumerable() -> System.Collections.Generic.IEnumerable<SA3D.Modeling.Mesh.MeshData!>!
 SA3D.Modeling.ObjectData.Node.LabelPrefix.get -> string!
+SA3D.Modeling.ObjectData.Node.MeshData.get -> SA3D.Modeling.Mesh.MeshData?
+SA3D.Modeling.ObjectData.Node.MeshData.set -> void
+SA3D.Modeling.ObjectData.Node.MeshDataCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Modifier.get -> bool
 SA3D.Modeling.ObjectData.Node.Modifier.set -> void
+SA3D.Modeling.ObjectData.Node.OnMeshDataUpdated -> SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventHandler?
 SA3D.Modeling.ObjectData.Node.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.ObjectData.Node.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.Structs.Bounds.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
@@ -1017,7 +1028,7 @@ SA3D.Modeling.Structs.IOContext.MeshFormat.get -> SA3D.Modeling.Structs.Format
 SA3D.Modeling.Structs.IOContext.MeshFormat.init -> void
 SA3D.Modeling.Structs.IOContext.PointerLUT.get -> SA3D.Modeling.Structs.PointerLUT!
 SA3D.Modeling.Structs.IOContext.PointerLUT.init -> void
-SA3D.Modeling.Structs.PointerLUT.Attaches.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.MeshData!>!
+SA3D.Modeling.Structs.PointerLUT.MeshData.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.MeshData!>!
 SA3D.Modeling.Structs.PointerLUT.Motions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.Animation!>!
 SA3D.Modeling.Structs.PointerLUT.NodeMotions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.ModelAnimation!>!
 SA3D.Modeling.Structs.PointerLUT.PointerLUT(System.Collections.Generic.Dictionary<long, string!>! labels) -> void
@@ -1066,7 +1077,7 @@ static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator ==(SA3D.Mod
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> int
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetReadCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Action<Amicitia.IO.Binary.BinaryObjectWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
-static SA3D.Modeling.Mesh.EnumExtensions.ToFormat(this SA3D.Modeling.Mesh.AttachFormat attachFormat) -> SA3D.Modeling.Structs.Format
+static SA3D.Modeling.Mesh.EnumExtensions.ToFormat(this SA3D.Modeling.Mesh.MeshFormat attachFormat) -> SA3D.Modeling.Structs.Format
 static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetDataByteSize(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType dataType) -> int
 static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetDataReflectionType(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaDataType dataType) -> System.Type!
 static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetStructComponentCount(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType structType) -> int

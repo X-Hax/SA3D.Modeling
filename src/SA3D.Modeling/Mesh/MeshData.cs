@@ -20,7 +20,7 @@ namespace SA3D.Modeling.Mesh
 		/// <summary>
 		/// Format of the attach.
 		/// </summary>
-		public abstract AttachFormat MeshFormat { get; }
+		public abstract MeshFormat MeshFormat { get; }
 
 		/// <summary>
 		/// Bounding sphere of the attach.

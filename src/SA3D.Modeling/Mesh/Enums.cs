@@ -1,9 +1,9 @@
 ﻿namespace SA3D.Modeling.Mesh
 {
 	/// <summary>
-	/// The different available Attach formats.
+	/// The different available meshdata formats.
 	/// </summary>
-	public enum AttachFormat
+	public enum MeshFormat
 	{
 		/// <summary>
 		/// BASIC format.

@@ -39,7 +39,7 @@ namespace SA3D.Modeling.ObjectData
 		{
 			SetAllNodeAttributes((NodeAttributes)reader.ReadUInt32(), RotationUpdateMode.Keep);
 
-			Attach = context.MeshFormat switch
+			MeshData = context.MeshFormat switch
 			{
 				Format.Basic
 				or Format.BasicDX => reader.ReadObject<BasicMesh, IOContext>(context, context.PointerLUT),
@@ -80,7 +80,7 @@ namespace SA3D.Modeling.ObjectData
 		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteUInt32((uint)Attributes);
-			writer.WriteObjectOffset(Attach, context, context.PointerLUT);
+			writer.WriteObjectOffset(MeshData, context, context.PointerLUT);
 
 			writer.WriteVector3(Position);
 
@@ -129,15 +129,15 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Creates a copy of the node with no relationships and a deep cloned attach.
+		/// Creates a copy of the node with no relationships and deep cloned meshdata.
 		/// </summary>
 		/// <returns>The cloned node.</returns>
-		public Node AttachCopy()
+		public Node MeshDataCopy()
 		{
 			Node result = SimpleCopy();
-			if(result.Attach != null)
+			if(result.MeshData != null)
 			{
-				result.Attach = result.Attach.Clone();
+				result.MeshData = result.MeshData.Clone();
 			}
 
 			return result;
@@ -178,7 +178,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Clones the entire tree and returns the clone of the node that the calling node. Attaches are reused.
+		/// Clones the entire tree and returns the clone of the node that the calling node. Meshdata is reused.
 		/// </summary>
 		/// <returns>The cloned instance of the calling node</returns>
 		public Node DeepSimpleCopy()
@@ -187,19 +187,19 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Clones the entire tree including attaches and returns the clone of the node that the calling node.
+		/// Clones the entire tree including meshdata and returns the clone of the node that the calling node.
 		/// </summary>
 		/// <returns>The cloned instance of the calling node</returns>
-		public Node DeepAttachCopy()
+		public Node DeepMeshDataCopy()
 		{
-			return BaseClone((n) => n.AttachCopy());
+			return BaseClone((n) => n.MeshDataCopy());
 		}
 
 
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return Attach == null ? $"{Label} - /" : $"{Label} - {Attach}";
+			return MeshData == null ? $"{Label} - /" : $"{Label} - {MeshData}";
 		}
 	}
 }

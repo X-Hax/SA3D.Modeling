@@ -20,7 +20,7 @@ using static SA3D.Modeling.File.FileHeaders;
 namespace SA3D.Modeling.File
 {
 	/// <summary>
-	/// Node model with attach data file contents.
+	/// Node model with meshdata.
 	/// </summary>
 	public class ModelFile : IFileSerializable
 	{
@@ -30,7 +30,7 @@ namespace SA3D.Modeling.File
 		public bool NJFile { get; set; }
 
 		/// <summary>
-		/// Attach format of the file.
+		/// Meshdata format of the file.
 		/// </summary>
 		public Format Format { get; set; }
 
@@ -61,7 +61,7 @@ namespace SA3D.Modeling.File
 		/// <param name="model">Model of the file</param>
 		public ModelFile(Node model)
 		{
-			Format = model.GetAttachFormat()?.ToFormat() ?? Format.Basic;
+			Format = model.GetMeshFormat()?.ToFormat() ?? Format.Basic;
 			Model = model;
 			MetaData = new();
 		}
@@ -298,7 +298,7 @@ namespace SA3D.Modeling.File
 					break;
 				case Format.Ginja:
 				default:
-					throw new ArgumentException($"Attach format {Format} not supported for NJ binaries");
+					throw new ArgumentException($"Meshdata format {Format} not supported for NJ binaries");
 			}
 
 			SeekToken fileSizeOffset = writer.At();
