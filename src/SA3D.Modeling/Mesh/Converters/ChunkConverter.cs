@@ -220,7 +220,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				attaches.Add(new(new[] { lastVertexChunk }, polyChunks.ToArray()));
 
 				return new(
-					wba.Label ?? "CHUNK_" + StringExtensions.GenerateIdentifier(),
+					wba.Label ?? ("CHUNK_" + StringExtensions.GenerateIdentifier()),
 					sortedVertices.Length,
 					true,
 					nodeAttachIndices.ToArray(),
@@ -411,7 +411,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				attaches.Add(new(lastVertexChunk, polyChunks.ToArray()));
 
 				return new(
-					wba.Label ?? "CHUNK_" + StringExtensions.GenerateIdentifier(),
+					wba.Label ?? ("CHUNK_" + StringExtensions.GenerateIdentifier()),
 					wba.Vertices.Length,
 					true,
 					nodeAttachIndices.ToArray(),
@@ -535,7 +535,7 @@ namespace SA3D.Modeling.Mesh.Converters
 				}
 
 				return new(
-					wba.Label ?? "CHUNK_" + StringExtensions.GenerateIdentifier(),
+					wba.Label ?? ("CHUNK_" + StringExtensions.GenerateIdentifier()),
 					vertices.Length,
 					false,
 					wba.RootIndices.ToArray(),

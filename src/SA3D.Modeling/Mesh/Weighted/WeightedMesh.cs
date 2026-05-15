@@ -325,7 +325,7 @@ namespace SA3D.Modeling.Mesh.Weighted
 		/// <exception cref="InvalidOperationException"></exception>
 		public Attach ToAttach(AttachFormat format, bool optimize, out int[]?[] vertexMapping)
 		{
-			HashSet<int> backup = new(RootIndices);
+			HashSet<int> backup = [.. RootIndices];
 			RootIndices.Clear();
 			RootIndices.Add(0);
 
@@ -662,8 +662,8 @@ namespace SA3D.Modeling.Mesh.Weighted
 				Vertices.ContentClone(),
 				TriangleSets.ContentClone(),
 				Materials.ToArray(),
-				new(RootIndices),
-				new(DependingNodeIndices),
+				[.. RootIndices],
+				[.. DependingNodeIndices],
 				HasColors,
 				HasNormals);
 		}

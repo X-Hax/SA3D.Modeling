@@ -95,8 +95,7 @@ namespace SA3D.Modeling.Mesh.Gamecube
 		/// </summary>
 		public void OptimizeVertexData()
 		{
-			List<GCMesh> allMeshes = new(OpaqueMeshes);
-			allMeshes.AddRange(TransparentMeshes);
+			List<GCMesh> allMeshes = [.. OpaqueMeshes, .. TransparentMeshes];
 
 			foreach(GCVertexSet item in VertexData.Values)
 			{

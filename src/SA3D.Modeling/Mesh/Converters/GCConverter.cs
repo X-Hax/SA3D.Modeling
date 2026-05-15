@@ -300,7 +300,7 @@ namespace SA3D.Modeling.Mesh.Converters
 
 				GCAttach result = new(vertexData, opaqueMeshes, translucentMeshes)
 				{
-					Label = weightedMesh.Label ?? "GC_" + StringExtensions.GenerateIdentifier()
+					Label = weightedMesh.Label ?? ("GC_" + StringExtensions.GenerateIdentifier())
 				};
 
 				if(optimize)
