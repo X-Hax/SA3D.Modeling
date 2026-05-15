@@ -42,9 +42,9 @@ namespace SA3D.Modeling.ObjectData
 			MeshData = context.MeshFormat switch
 			{
 				Format.Basic
-				or Format.BasicDX => reader.ReadObject<BasicMesh, IOContext>(context, context.PointerLUT),
-				Format.Chunk => reader.ReadObject<ChunkMesh, IOContext>(context, context.PointerLUT),
-				Format.Ginja => reader.ReadObject<GinjaMesh, IOContext>(context, context.PointerLUT),
+				or Format.BasicDX => reader.ReadObjectOffset<BasicMesh, IOContext>(context, context.PointerLUT),
+				Format.Chunk => reader.ReadObjectOffset<ChunkMesh, IOContext>(context, context.PointerLUT),
+				Format.Ginja => reader.ReadObjectOffset<GinjaMesh, IOContext>(context, context.PointerLUT),
 				_ => throw new InvalidOperationException(),
 			};
 
@@ -65,12 +65,12 @@ namespace SA3D.Modeling.ObjectData
 				RotationUpdateMode.Keep
 			);
 
-			if(reader.ReadObject<Node, IOContext>(context, context.PointerLUT) is Node child)
+			if(reader.ReadObjectAtOffset<Node, IOContext>(childOffset, context, context.PointerLUT) is Node child)
 			{
 				SetChild(child);
 			}
 
-			if(reader.ReadObject<Node, IOContext>(context, context.PointerLUT) is Node next)
+			if(reader.ReadObjectAtOffset<Node, IOContext>(siblingOffset, context, context.PointerLUT) is Node next)
 			{
 				SetNext(next);
 			}
