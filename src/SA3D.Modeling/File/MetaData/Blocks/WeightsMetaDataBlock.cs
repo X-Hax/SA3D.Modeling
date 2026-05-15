@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using SA3D.Common.IO;
+using SA3D.Modeling.File.MetaData.Weights;
 using System.Collections.Generic;
 
 namespace SA3D.Modeling.File.MetaData.Blocks
@@ -15,7 +16,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 		/// <summary>
 		/// Weights
 		/// </summary>
-		public List<Weights.MetaWeightNode> Weights { get; set; } = [];
+		public List<MetaWeightNode> Weights { get; set; } = [];
 
 
 		/// <inheritdoc/>
@@ -29,7 +30,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 
 			while(peek != uint.MaxValue)
 			{
-				Weights.Add(reader.ReadObject<Weights.MetaWeightNode>());
+				Weights.Add(reader.ReadObject<MetaWeightNode>());
 
 				using(reader.At())
 				{
