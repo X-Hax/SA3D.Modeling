@@ -232,48 +232,6 @@ namespace SA3D.Modeling.AnimationData
 		}
 
 		/// <summary>
-		/// Optimizes the keyframes.
-		/// </summary>
-		/// <param name="generalThreshold"></param>
-		/// <param name="quaternionThreshold">Difference threshold to use between quaternion keyframes.</param>
-		/// <param name="colorThreshold">Difference threshold to use between colors.</param>
-		/// <param name="asDegrees">Compare angle keyframes as degrees and not as radians.</param>
-		/// <param name="start">Frame from which to start optimizing. <see langword="null"/> uses default.</param>
-		/// <param name="end">Frame at which to end optimizing. <see langword="null"/> uses default.</param>
-		public void Optimize(
-			float generalThreshold,
-			float quaternionThreshold,
-			float colorThreshold,
-			bool asDegrees,
-			uint? start = null,
-			uint? end = null)
-		{
-			Position.OptimizeVector3(generalThreshold, start, end);
-
-			if(asDegrees)
-			{
-				EulerRotation.OptimizeVector3Degrees(generalThreshold, start, end);
-				Roll.OptimizeFloat(generalThreshold, start, end);
-				Angle.OptimizeFloat(generalThreshold, start, end);
-			}
-			else
-			{
-				EulerRotation.OptimizeVector3(generalThreshold, start, end);
-				Roll.OptimizeFloat(generalThreshold, start, end);
-				Angle.OptimizeFloat(generalThreshold, start, end);
-			}
-
-			Scale.OptimizeVector3(generalThreshold, start, end);
-			Vector.OptimizeVector3(generalThreshold, start, end);
-			Target.OptimizeVector3(generalThreshold, start, end);
-			LightColor.OptimizeColor(colorThreshold, start, end);
-			Intensity.OptimizeFloat(generalThreshold, start, end);
-			Spot.OptimizeSpotlight(generalThreshold, start, end);
-			Point.OptimizeVector2(generalThreshold, start, end);
-			QuaternionRotation.OptimizeQuaternion(quaternionThreshold, start, end);
-		}
-
-		/// <summary>
 		/// Ensures that specified node transform properties have start- and end-frames.
 		/// </summary>
 		/// <param name="node">The node for which to ensure frames. If no keyframes exist, then they will be added with the values from this node.</param>

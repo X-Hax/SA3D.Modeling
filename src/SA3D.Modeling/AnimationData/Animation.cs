@@ -124,29 +124,6 @@ namespace SA3D.Modeling.AnimationData
 		}
 
 		/// <summary>
-		/// Optimizes all keyframes across the motion.
-		/// </summary>
-		/// <param name="generalThreshold"></param>
-		/// <param name="quaternionThreshold">Difference threshold to use between quaternion keyframes.</param>
-		/// <param name="colorThreshold">Difference threshold to use between colors.</param>
-		/// <param name="asDegrees">Compare angle keyframes as degrees and not as radians.</param>
-		/// <param name="start">Frame from which to start optimizing. <see langword="null"/> uses default.</param>
-		/// <param name="end">Frame at which to end optimizing. <see langword="null"/> uses default.</param>
-		public void Optimize(
-			float generalThreshold,
-			float quaternionThreshold,
-			float colorThreshold,
-			bool asDegrees,
-			uint? start = null,
-			uint? end = null)
-		{
-			foreach(KeyframeSet keyframes in KeyframeSets)
-			{
-				keyframes.Optimize(generalThreshold, quaternionThreshold, colorThreshold, asDegrees, start, end);
-			}
-		}
-
-		/// <summary>
 		/// Ensures that the transform properties of all nodes in a model tree have start- and end-frames.
 		/// </summary>
 		/// <param name="model">Any node from a tree for which keyframes should be ensured..</param>
