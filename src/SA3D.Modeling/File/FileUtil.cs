@@ -147,6 +147,7 @@ namespace SA3D.Modeling.File
 		public static void WriteToStream<T>(this T file, Stream stream) where T : IFileSerializable, new()
 		{
 			using BinaryObjectWriter writer = new(stream, StreamOwnership.Retain, Endianness.Little);
+			writer.OffsetFlushMode = OffsetFlushMode.Recursive;
 			writer.WriteObject(file);
 		}
 
@@ -188,6 +189,7 @@ namespace SA3D.Modeling.File
 		public static void WriteToStream<T, C>(this T file, C context, Stream stream) where T : IFileSerializable<C>, new()
 		{
 			using BinaryObjectWriter writer = new(stream, StreamOwnership.Retain, Endianness.Little);
+			writer.OffsetFlushMode = OffsetFlushMode.Recursive;
 			writer.WriteObject(file, context);
 		}
 	}

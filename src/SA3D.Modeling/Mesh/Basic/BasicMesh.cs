@@ -130,7 +130,7 @@ namespace SA3D.Modeling.Mesh.Basic
 
 			Positions = ReadArray(StructBinaryHelper.ReadVector3, positionsOffset, vertexCount, PositionsLabelPrefix, nameof(Positions), false)!;
 			Normals = ReadArray(StructBinaryHelper.ReadVector3, normalsOffset, vertexCount, NormalsLabelPrefix, nameof(Normals), true);
-			Meshes = ReadArray(r => r.ReadObject<BasicMeshSet>(), meshesOffset, meshCount, MeshesLabelPrefix, nameof(Meshes), false)!;
+			Meshes = ReadArray(r => r.ReadObject<BasicMeshSet, IOContext>(context), meshesOffset, meshCount, MeshesLabelPrefix, nameof(Meshes), false)!;
 			Materials = ReadArray(r => r.ReadObject<BasicMaterial>(), materialsOffset, materialCount, MaterialsLabelPrefix, nameof(Materials), false)!;
 		}
 
@@ -140,7 +140,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Positions, context.PointerLUT);
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
 			writer.WriteInt32(Positions.Length);
-			writer.WriteObjectArrayOffset(Meshes, context.PointerLUT);
+			writer.WriteObjectArrayOffset(Meshes, context, context.PointerLUT);
 			writer.WriteObjectArrayOffset(Materials, context.PointerLUT);
 			writer.WriteUInt16((ushort)Meshes.Length);
 			writer.WriteUInt16((ushort)Materials.Length);

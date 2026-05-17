@@ -59,6 +59,9 @@ namespace SA3D.Modeling.AnimationData
 					KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
 				}
 			};
+
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(animationContext, context.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Animation));
 		}
 
 		/// <inheritdoc/>

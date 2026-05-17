@@ -434,8 +434,6 @@ namespace SA3D.Modeling.AnimationData
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
-			int channelCount = context.KeyframeType.ChannelCount();
-
 			List<int> frameCounts = [];
 
 			foreach((KeyframeAttributes type, IEnumerable<uint> keys) in GetTypeKeyEnumerable())
@@ -501,6 +499,8 @@ namespace SA3D.Modeling.AnimationData
 						break;
 				}
 			}
+
+			writer.WriteCollection(frameCounts);
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using Amicitia.IO.Binary.Extensions;
 using Amicitia.IO.Streams;
 using SA3D.Common.IO;
+using System.Net;
 
 namespace SA3D.Modeling.File.MetaData
 {
@@ -24,6 +25,7 @@ namespace SA3D.Modeling.File.MetaData
 				return;
 			}
 
+			reader.Skip(sizeof(uint)); // skipping type
 			int blockSize = reader.ReadInt32();
 			long nextBlockStart = reader.Position + blockSize;
 
@@ -51,7 +53,8 @@ namespace SA3D.Modeling.File.MetaData
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, MetaDataIOContext context)
 		{
-			SeekToken writeStart = writer.At();
+			writer.WriteUInt32((uint)Type);
+			SeekToken blockSizeOffset = writer.At();
 			writer.WriteUInt32(0); // placeholder
 
 			long start = writer.Position;
@@ -65,7 +68,7 @@ namespace SA3D.Modeling.File.MetaData
 
 			using(writer.At())
 			{
-				writeStart.Dispose();
+				blockSizeOffset.Dispose();
 				writer.WriteUInt32((uint)(end - start));
 			}
 		}

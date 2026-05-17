@@ -1,4 +1,5 @@
-﻿using Amicitia.IO.Binary;
+﻿using Amicitia.IO;
+using Amicitia.IO.Binary;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
@@ -64,6 +65,8 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <inheritdoc/>
 		public void Read(BinaryObjectReader reader, GinjaIOContext context)
 		{
+			string identifier = StringExtensions.GenerateIdentifier();
+
 			long parametersOffset = reader.ReadOffsetValue();
 			int parametersCount = reader.ReadInt32();
 
@@ -71,30 +74,40 @@ namespace SA3D.Modeling.Mesh.Ginja
 			int polygonsSize = reader.ReadInt32();
 
 			Parameters = reader.ReadLabeledObjectArrayAtOffset(IGinjaParameter.ReadParameter, parametersOffset, parametersCount, ParametersLabelPrefix, context.BaseContext.PointerLUT)
-				?? throw reader.ReadNullReference(nameof(GinjaMeshSet), nameof(Parameters));
+				?? new(ParametersLabelPrefix + identifier, 0);
 
 			context.IndexFormat = GetIndexFormat() ?? context.IndexFormat;
 
 			Polygons = reader.ReadLUTItemAtOffset(polygonsOffset, context.BaseContext.PointerLUT, PolygonsLabelPrefix,
 				(r) => GinjaPolygon.ReadArray(r, polygonsSize, context.IndexFormat))
-				?? throw reader.ReadNullReference(nameof(GinjaMeshSet), nameof(Parameters));
+				?? new(PolygonsLabelPrefix + identifier, 0);
 		}
 
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, GinjaIOContext context)
 		{
 			context.IndexFormat = GetIndexFormat() ?? context.IndexFormat;
+			GinjaIndexFormat currentIndexFormat = context.IndexFormat;
 
-			writer.WriteObjectArrayOffset(Parameters, context.BaseContext.PointerLUT, 0x20);
+			writer.WriteObjectOffset(Parameters.EmptyNull(), (w, v) =>
+			{
+				long alignOrigin = w.Position;
+				w.WriteObjectArray(v);
+				w.Align(0x20, alignOrigin);
+			}, context.BaseContext.PointerLUT);
+
 			writer.WriteInt32(Parameters.Length);
 
-			writer.WriteObjectArrayOffset(Polygons, context.IndexFormat, context.BaseContext.PointerLUT, 0x20);
-
-			int size = Polygons.Length * (GinjaPolygon.GetIndexSizes(context.IndexFormat).Sum() + 3);
-			if(size % 0x20 != 0)
+			writer.WriteObjectOffset(Polygons.EmptyNull(), (w, v) =>
 			{
-				size = 0x20 - (size % 0x20);
-			}
+				long alignOrigin = w.Position;
+				w.WriteObjectArray(v, currentIndexFormat);
+				w.Align(0x20, alignOrigin);
+			}, context.BaseContext.PointerLUT);
+
+			int cornerSize = GinjaPolygon.GetIndexSizes(currentIndexFormat).Sum();
+			int size = Polygons.Sum(x => (x.Corners.Length * cornerSize) + 3);
+			size = AlignmentHelper.Align(size, 0x20);
 
 			writer.WriteInt32(size);
 		}

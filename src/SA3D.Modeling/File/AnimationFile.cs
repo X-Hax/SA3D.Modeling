@@ -233,9 +233,7 @@ namespace SA3D.Modeling.File
 			};
 
 			writer.WriteObjectOffset(Animation, ioContext);
-
-			MetaData.ReplaceLabels(ioContext.BaseContext.PointerLUT.Labels);
-			writer.WriteObject(MetaData);
+			SeekToken metadataToken = MetaDataBlocks.ReserveWrite(writer);
 
 			uint animFileInfo = (uint)Animation.KeyframeSets.Length;
 			if(Animation.ShortRotations)
@@ -244,6 +242,8 @@ namespace SA3D.Modeling.File
 			}
 
 			writer.WriteUInt32(animFileInfo);
+
+			MetaData.Write(writer, ioContext.BaseContext.PointerLUT.Labels, metadataToken, null);
 		}
 
 		private void WriteNJ(BinaryObjectWriter writer)

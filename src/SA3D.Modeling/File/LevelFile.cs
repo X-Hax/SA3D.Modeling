@@ -127,10 +127,8 @@ namespace SA3D.Modeling.File
 				PointerLUT = new()
 			};
 
-			writer.WriteObjectOffset(Level, context);
-
-			MetaData.ReplaceLabels(context.PointerLUT.Labels);
-			writer.WriteObject(MetaData);
+			writer.WriteObjectOffset(Level, context, context.PointerLUT);
+			MetaData.Write(writer, context.PointerLUT.Labels, null, null);
 		}
 	}
 }

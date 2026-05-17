@@ -102,10 +102,12 @@ namespace SA3D.Modeling.ObjectData
 		/// <inheritdoc/>
 		public void Read(BinaryObjectReader reader, IOContext context)
 		{
+			Format = context.LevelFormat;
+
 			short modelCount = reader.ReadInt16();
 			short displayCount = 0;
 
-			if(context.LevelFormat is Format.Chunk or Format.Ginja)
+			if(Format is Format.Chunk or Format.Ginja)
 			{
 				displayCount = reader.ReadInt16();
 				// "direct-display model count" (runtime field)
@@ -127,16 +129,16 @@ namespace SA3D.Modeling.ObjectData
 
 			reader.ReadAtOffset(modelsOffset, () =>
 			{
-				short baseCount = context.LevelFormat is Format.Chunk or Format.Ginja ? displayCount : modelCount;
+				short baseCount = Format is Format.Chunk or Format.Ginja ? displayCount : modelCount;
 				Models = reader.ReadLabeledObjectArray<LevelModel, IOContext>(baseCount, ModelsLabelPrefix, context, context.PointerLUT);
 
-				if(context.LevelFormat is Format.Chunk or Format.Ginja)
+				if(Format is Format.Chunk or Format.Ginja)
 				{
 					int collisionCount = modelCount - displayCount;
 
 					IOContext collisionModelContext = new()
 					{
-						LevelFormat = context.LevelFormat,
+						LevelFormat = Format,
 						MeshFormat = Format.Basic,
 						PointerLUT = context.PointerLUT
 					};
@@ -155,12 +157,24 @@ namespace SA3D.Modeling.ObjectData
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
+			short displayCount = 0;
+
 			if(Format is Format.Chunk or Format.Ginja)
 			{
 				bool visiblesFinished = false;
 				foreach(LevelModel model in Models)
 				{
-					bool isVisible = model.SurfaceAttributes.HasFlag(SurfaceAttributes.Visible);
+					if(model.Model.MeshData == null)
+					{
+						continue;
+					}
+
+					bool isVisible = model.Model.MeshData.MeshFormat is Mesh.MeshFormat.Ginja or Mesh.MeshFormat.Chunk;
+
+					if(isVisible)
+					{
+						displayCount++;
+					}
 
 					if(!visiblesFinished)
 					{
@@ -177,7 +191,7 @@ namespace SA3D.Modeling.ObjectData
 
 			if(Format is Format.Chunk or Format.Ginja)
 			{
-				writer.WriteInt16((short)Models.Count(x => x.SurfaceAttributes.HasFlag(SurfaceAttributes.Visible)));
+				writer.WriteInt16(displayCount);
 				writer.WriteInt16(0); // direct display models (runtime field)
 			}
 

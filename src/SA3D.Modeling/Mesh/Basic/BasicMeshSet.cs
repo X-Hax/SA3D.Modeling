@@ -107,7 +107,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			{
 				BasicPolygonType.Triangles => typeof(BasicTriangle),
 				BasicPolygonType.Quads => typeof(BasicQuad),
-				BasicPolygonType.NPoly or BasicPolygonType.TriangleStrips => typeof(BasicTriangle),
+				BasicPolygonType.NPoly or BasicPolygonType.TriangleStrips => typeof(BasicMultiPolygon),
 				_ => throw new InvalidDataException($"Invalid polygon type \"{PolygonType}\"!"),
 			};
 
@@ -123,17 +123,17 @@ namespace SA3D.Modeling.Mesh.Basic
 
 			int cornerCount = PolygonCornerCount;
 
-			if(Normals != null && Normals.Length != cornerCount)
+			if(Normals != null && Normals.Length < cornerCount)
 			{
 				throw new InvalidDataException($"Mesh has {cornerCount} corners, but {Normals.Length} normals!");
 			}
 
-			if(Colors != null && Colors.Length != cornerCount)
+			if(Colors != null && Colors.Length < cornerCount)
 			{
 				throw new InvalidDataException($"Mesh has {cornerCount} corners, but {Colors.Length} colors!");
 			}
 
-			if(TextureCoordinates != null && TextureCoordinates.Length != cornerCount)
+			if(TextureCoordinates != null && TextureCoordinates.Length < cornerCount)
 			{
 				throw new InvalidDataException($"Mesh has {cornerCount} corners, but {TextureCoordinates.Length} texture coordinates!");
 			}
@@ -149,7 +149,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			ushort polyCount = reader.ReadUInt16();
 
 			Polygons = reader.ReadLabeledObjectArrayOffset(IBasicPolygon.GetReader(PolygonType), polyCount, "poly_", context.PointerLUT)
-				?? throw reader.ReadNullReference(nameof(BasicMeshSet), nameof(Polygon));
+				?? new(PolygonLabelPrefix.GenerateIdentifier(), 0);
 
 			PolygonAttributes = reader.ReadUInt32();
 
@@ -168,11 +168,11 @@ namespace SA3D.Modeling.Mesh.Basic
 			ushort header = (ushort)((MaterialIndex & 0x3FFFu) | (ushort)((int)PolygonType << 14));
 			writer.WriteUInt16(header);
 			writer.WriteUInt16((ushort)Polygons.Length);
-			writer.WriteObjectArrayOffset(Polygons, context.PointerLUT);
+			writer.WriteObjectArrayOffset(Polygons.EmptyNull(), context.PointerLUT);
 			writer.WriteUInt32(PolygonAttributes);
-			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals, context.PointerLUT);
-			writer.WriteObjectArrayOffset((w, v) => w.WriteObject(v, ColorIOType.ARGB8_32), Colors, context.PointerLUT);
-			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates, context.PointerLUT);
+			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
+			writer.WriteObjectArrayOffset((w, v) => w.WriteObject(v, ColorIOType.ARGB8_32), Colors.EmptyNull(), context.PointerLUT);
+			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates.EmptyNull(), context.PointerLUT);
 		}
 
 		object ICloneable.Clone()

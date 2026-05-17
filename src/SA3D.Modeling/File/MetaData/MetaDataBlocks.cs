@@ -1,8 +1,11 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Binary.Extensions;
+using Amicitia.IO.Streams;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.File.MetaData.Blocks;
+using SA3D.Modeling.Structs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -46,7 +49,13 @@ namespace SA3D.Modeling.File.MetaData
 
 		private void ReadVersion2Up(BinaryObjectReader reader, MetaDataIOContext context)
 		{
-			MetaDataBlockType type = (MetaDataBlockType)reader.ReadUInt32();
+			MetaDataBlockType type;
+
+			using(reader.At())
+			{
+				type = (MetaDataBlockType)reader.ReadUInt32();
+			}
+
 			while(type != MetaDataBlockType.End)
 			{
 				AddBlock(type switch
@@ -63,7 +72,10 @@ namespace SA3D.Modeling.File.MetaData
 					_ => reader.ReadObject<UnknownMetaDataBlock, MetaDataIOContext>(context),
 				});
 
-				type = (MetaDataBlockType)reader.ReadUInt32();
+				using(reader.At())
+				{
+					type = (MetaDataBlockType)reader.ReadUInt32();
+				}
 			}
 		}
 
@@ -97,6 +109,47 @@ namespace SA3D.Modeling.File.MetaData
 			});
 		}
 
+		/// <summary>
+		/// Write metadata; Appropriately flushes the writer and provides an update callback to update the metadata before writing
+		/// </summary>
+		/// <param name="writer">Writer to write to</param>
+		/// <param name="newLabels">Labels to insert into the metadata</param>
+		/// <param name="metadataPosition">Seektoken to the position at which the metadata should be written</param>
+		/// <param name="metadataUpdate">Update to perform after flushing the writer and before writing the metadata</param>
+		public void Write(BinaryObjectWriter writer, LabelDictionary? newLabels, SeekToken? metadataPosition, Action? metadataUpdate)
+		{
+			metadataPosition ??= ReserveWrite(writer);
+			writer.Flush();
+
+			Blocks.RemoveAll(x => x.Type is MetaDataBlockType.Label);
+			if(newLabels != null && newLabels.Count > 0)
+			{
+				Blocks.Add(new LabelsMetaDataBlock()
+				{
+					Labels = newLabels
+				});
+			}
+
+			metadataUpdate?.Invoke();
+
+			using(writer.At())
+			{
+				metadataPosition.Value.Dispose();
+				writer.WriteObject(this);
+			}
+		}
+
+		/// <summary>
+		/// Reserves writing space for metadata and returns a <see cref="SeekToken"/> to the reserved spot
+		/// </summary>
+		/// <param name="writer">The writer to reserve space for</param>
+		/// <returns></returns>
+		public static SeekToken ReserveWrite(BinaryObjectWriter writer)
+		{
+			SeekToken result = writer.At();
+			writer.WriteOffsetValue(0);
+			return result;
+		}
 
 		/// <summary>
 		/// Tries to get a block of a reflection type
@@ -134,21 +187,5 @@ namespace SA3D.Modeling.File.MetaData
 			return false;
 		}
 
-
-		/// <summary>
-		/// Replaces the labels in the dictionary
-		/// </summary>
-		/// <param name="newLabels">The new labels</param>
-		public void ReplaceLabels(LabelDictionary newLabels)
-		{
-			Blocks.RemoveAll(x => x.Type is MetaDataBlockType.Label);
-			if(newLabels.Count > 0)
-			{
-				Blocks.Add(new LabelsMetaDataBlock()
-				{
-					Labels = newLabels
-				});
-			}
-		}
 	}
 }

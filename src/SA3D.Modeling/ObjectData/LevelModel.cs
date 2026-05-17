@@ -1,4 +1,5 @@
 ﻿using Amicitia.IO.Binary;
+using SA3D.Common.IO;
 using SA3D.Modeling.ObjectData.Enums;
 using SA3D.Modeling.ObjectData.Events;
 using SA3D.Modeling.Structs;
@@ -108,7 +109,8 @@ namespace SA3D.Modeling.ObjectData
 				reader.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			Model = reader.ReadObjectOffset<Node, IOContext>(context);
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(LevelModel), nameof(Model));
 
 			if(context.LevelFormat >= Format.Chunk)
 			{
@@ -133,7 +135,7 @@ namespace SA3D.Modeling.ObjectData
 				writer.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			writer.WriteObjectOffset(Model, context);
+			writer.WriteObjectOffset(Model, context, context.PointerLUT);
 
 			if(context.LevelFormat >= Format.Chunk)
 			{

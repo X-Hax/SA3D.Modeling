@@ -349,11 +349,7 @@ namespace SA3D.Modeling.File
 			};
 
 			writer.WriteObjectOffset(Model, context);
-
-			MetaData.ReplaceLabels(context.PointerLUT.Labels);
-			CreateMetaWeights(context.PointerLUT);
-
-			writer.WriteObject(MetaData);
+			MetaData.Write(writer, context.PointerLUT.Labels, null, () => CreateMetaWeights(context.PointerLUT));
 		}
 
 		private void CreateMetaWeights(PointerLUT lut)

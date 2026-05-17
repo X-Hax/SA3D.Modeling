@@ -391,13 +391,18 @@ namespace SA3D.Modeling.Mesh.Ginja
 			StructType = (GinjaStructType)(structure & 0x0F);
 			_dataType = (GinjaDataType)((structure >> 4) & 0x0F);
 
-			int structSize = StructType.GetStructComponentCount() * DataType.GetDataByteSize();
-			if(readStructSize != structSize)
+			if(Type != GinjaVertexType.End)
 			{
-				throw new Exception($"Read structure size doesnt match calculated structure size: {readStructSize} != {structSize}");
+				// verify the struct size
+				int structSize = StructType.GetStructComponentCount() * DataType.GetDataByteSize();
+				if(readStructSize != structSize)
+				{
+					throw new Exception($"Read structure size doesnt match calculated structure size: {readStructSize} != {structSize}");
+				}
 			}
 
 			long dataOffset = reader.ReadOffsetValue();
+			reader.Skip(sizeof(uint)); // Skipping data byte size
 
 			if(Type == GinjaVertexType.End)
 			{
@@ -436,11 +441,18 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			byte structSize = (byte)(StructType.GetStructComponentCount() * DataType.GetDataByteSize());
+			int structComponentCount = StructType.GetStructComponentCount();
+			if(DataLength % structComponentCount != 0)
+			{
+				throw new InvalidOperationException($"Length of data with struct type \"{StructType}\" must be a multiple of {structComponentCount}; Is {DataLength} (off by {DataLength % structComponentCount})");
+			}
+
+			byte structSize = (byte)(structComponentCount * DataType.GetDataByteSize());
+			ushort dataLength = (ushort)(DataLength / structComponentCount);
 
 			writer.WriteByte((byte)Type);
 			writer.WriteByte(structSize);
-			writer.WriteUInt16((ushort)DataLength);
+			writer.WriteUInt16(dataLength);
 
 			uint structure = (uint)StructType;
 			structure |= (uint)((byte)DataType << 4);
@@ -478,7 +490,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 					throw new InvalidDataException($"Invalid data type \"{DataType}\"!");
 			}
 
-			writer.WriteUInt32((uint)(DataLength * structSize));
+			writer.WriteUInt32((uint)(dataLength * structSize));
 		}
 
 		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<GinjaVertexSet> vertexSets, IOContext context)

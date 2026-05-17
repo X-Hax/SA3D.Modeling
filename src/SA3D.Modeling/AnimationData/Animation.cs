@@ -115,7 +115,12 @@ namespace SA3D.Modeling.AnimationData
 		/// <returns></returns>
 		public uint GetFrameCount()
 		{
-			return KeyframeSets.Max(x => x?.KeyframeCount ?? 0);
+			if(KeyframeSets.Length == 0)
+			{
+				return 0;
+			}
+
+			return KeyframeSets.Max(x => x.KeyframeCount);
 		}
 
 		/// <summary>
@@ -200,13 +205,14 @@ namespace SA3D.Modeling.AnimationData
 
 			long keyframeOffset = reader.ReadOffsetValue();
 
-			reader.Skip(sizeof(int)); // keyframe type count
+			int framecount = reader.ReadInt32();
 			ManualKeyframeTypes = (KeyframeAttributes)reader.ReadUInt16();
 			ushort attributes = reader.ReadUInt16();
 			InterpolationMode = (InterpolationMode)((attributes >> 6) & 0x3);
 
 			context.KeyframeType = ManualKeyframeTypes;
-			KeyframeSets = reader.ReadLabeledObjectArrayOffset<KeyframeSet, AnimationIOContext>((int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
+
+			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
 				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
 		}
 
@@ -214,7 +220,15 @@ namespace SA3D.Modeling.AnimationData
 		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
 			context.KeyframeType = KeyframeTypes;
-			writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.PointerLUT);
+			if(context.KeyframeType == default)
+			{
+				// just to have some valid pointer here, as i think that is necessary(?)
+				writer.WriteOffsetValue(writer.GetPositionOffset() + (sizeof(uint) * 2));
+			}
+			else
+			{
+				writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.PointerLUT);
+			}
 
 			int channels = context.KeyframeType.ChannelCount();
 			writer.WriteUInt32(GetFrameCount());
