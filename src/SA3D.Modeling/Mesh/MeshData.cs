@@ -1,7 +1,12 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.Mesh
@@ -9,8 +14,84 @@ namespace SA3D.Modeling.Mesh
 	/// <summary>
 	/// 3D mesh data. Its possible for multiple attaches to make up one full mesh.
 	/// </summary>
+	[JsonConverter(typeof(BaseJsonConverter))]
 	public abstract class MeshData : ICloneable, ILabel, IBinarySerializable<IOContext>
 	{
+		internal class BaseJsonConverter : ParentJsonObjectConverter<MeshFormat, MeshData>
+		{
+			public static readonly BaseJsonConverter instance = new();
+
+			public const string _meshFormat = nameof(MeshFormat);
+			public const string _label = nameof(Label);
+			public const string _meshBounds = nameof(MeshBounds);
+
+			/// <inheritdoc/>
+			protected override string KeyPropertyName => _meshFormat;
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _meshFormat, new(PropertyTokenType.String, null) },
+				{ _label, new(PropertyTokenType.String, string.Empty) },
+				{ _meshBounds, new(PropertyTokenType.Object, default(Bounds)) }
+			});
+
+
+			/// <inheritdoc/>
+			protected override object? ReadBaseValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _meshFormat:
+						return JsonSerializer.Deserialize<MeshFormat>(ref reader, options);
+					case _label:
+						return reader.GetString();
+					case _meshBounds:
+						return JsonSerializer.Deserialize<Bounds>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override MeshData CreateBase(ReadOnlyDictionary<string, object?> values)
+			{
+				throw new NotSupportedException();
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteBaseValues(Utf8JsonWriter writer, MeshData value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_meshFormat);
+				JsonSerializer.Serialize(writer, value.MeshFormat, options);
+
+				writer.WriteString(_label, value.Label);
+
+				if(value.MeshBounds != default)
+				{
+					writer.WritePropertyName(_meshBounds);
+					JsonSerializer.Serialize(writer, value.MeshBounds, options);
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override MeshFormat GetKeyFromValue(MeshData value)
+			{
+				return value.MeshFormat;
+			}
+
+			/// <inheritdoc/>
+			protected override Dictionary<MeshFormat, IChildJsonConverter<MeshData>> CreateConverters()
+			{
+				return new()
+				{
+					{ MeshFormat.Basic, new Basic.BasicMesh.JsonConverter() },
+					{ MeshFormat.Ginja, new Ginja.GinjaMesh.JsonConverter() },
+					{ MeshFormat.Chunk, new Chunk.ChunkMesh.JsonConverter() },
+				};
+			}
+		}
+
 		/// <inheritdoc/>
 		public abstract string LabelPrefix { get; }
 

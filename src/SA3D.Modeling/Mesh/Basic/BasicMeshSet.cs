@@ -1,13 +1,19 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Basic.Polygon;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.Mesh.Basic
@@ -15,8 +21,138 @@ namespace SA3D.Modeling.Mesh.Basic
 	/// <summary>
 	/// BASIC format mesh structure for holding polygon information.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class BasicMeshSet : ICloneable, IBinarySerializable<IOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<BasicMeshSet>
+		{
+			private const string _materialIndex = nameof(MaterialIndex);
+			private const string _polygonType = nameof(PolygonType);
+			private const string _polygons = nameof(Polygons);
+			private const string _polygonAttributes = nameof(PolygonAttributes);
+			private const string _normals = nameof(Normals);
+			private const string _colors = nameof(Colors);
+			private const string _textureCoordinates = nameof(TextureCoordinates);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _materialIndex, new(PropertyTokenType.Number, 0u) },
+				{ _polygonType, new(PropertyTokenType.String, null) },
+				{ _polygons, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _polygonAttributes, new(PropertyTokenType.String, 0u) },
+				{ _normals, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
+				{ _colors, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
+				{ _textureCoordinates, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _materialIndex:
+						return reader.GetUInt16();
+					case _polygonType:
+						return JsonSerializer.Deserialize<BasicPolygonType>(ref reader, options);
+					case _polygons:
+						BasicPolygonType type = (BasicPolygonType?)values[_polygonType]
+							?? throw new InvalidDataException($"Basic meshes require property \"{_polygonType}\" before the \"{_polygons}\" array!");
+
+						string label;
+						IBasicPolygon[] polygons;
+
+						switch(type)
+						{
+							case BasicPolygonType.Triangles:
+								LabeledArray<BasicTriangle> triangles = JsonSerializer.Deserialize<LabeledArray<BasicTriangle>>(ref reader, options)!;
+								label = triangles.Label;
+								polygons = triangles.Array.Cast<IBasicPolygon>().ToArray();
+
+								break;
+							case BasicPolygonType.Quads:
+								LabeledArray<BasicQuad> quads = JsonSerializer.Deserialize<LabeledArray<BasicQuad>>(ref reader, options)!;
+								label = quads.Label;
+								polygons = quads.Array.Cast<IBasicPolygon>().ToArray();
+
+								break;
+							case BasicPolygonType.NPoly:
+							case BasicPolygonType.TriangleStrips:
+								LabeledArray<BasicMultiPolygon> multiPolygons = JsonSerializer.Deserialize<LabeledArray<BasicMultiPolygon>>(ref reader, options)!;
+								label = multiPolygons.Label;
+								polygons = multiPolygons.Array.Cast<IBasicPolygon>().ToArray();
+
+								break;
+							default:
+								throw new InvalidOperationException("Cannot be reached; If reached, basic polygon type somehow invalid.");
+						}
+
+						return new LabeledArray<IBasicPolygon>(label, polygons);
+					case _polygonAttributes:
+						return UInt32HexConverter.ConvertFrom(reader.GetString()!, _polygonAttributes);
+					case _normals:
+						return JsonSerializer.Deserialize<LabeledArray<Vector3>>(ref reader, options);
+					case _colors:
+						return JsonSerializer.Deserialize<LabeledArray<Color>>(ref reader, options);
+					case _textureCoordinates:
+						return JsonSerializer.Deserialize<LabeledArray<Vector2>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override BasicMeshSet Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					MaterialIndex = (ushort)values[_materialIndex]!,
+					PolygonType = (BasicPolygonType)values[_polygonType]!,
+					Polygons = (LabeledArray<IBasicPolygon>)values[_polygons]!,
+					Normals = (LabeledArray<Vector3>?)values[_normals],
+					Colors = (LabeledArray<Color>?)values[_colors],
+					TextureCoordinates = (LabeledArray<Vector2>?)values[_textureCoordinates],
+					PolygonAttributes = (uint)values[_polygonAttributes]!
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, BasicMeshSet value, JsonSerializerOptions options)
+			{
+				writer.WriteNumber(_materialIndex, value.MaterialIndex);
+
+				writer.WritePropertyName(_polygonType);
+				JsonSerializer.Serialize(writer, value.PolygonType, options);
+
+				writer.WritePropertyName(_polygons);
+				JsonSerializer.Serialize(writer, value.Polygons, options);
+
+				if(value.PolygonAttributes != 0)
+				{
+					writer.WriteString(_polygonAttributes, UInt32HexConverter.ConvertTo(value.PolygonAttributes));
+				}
+
+				if(value.Normals != null)
+				{
+					writer.WritePropertyName(_normals);
+					JsonSerializer.Serialize(writer, value.Normals, options);
+				}
+
+				if(value.Colors != null)
+				{
+					writer.WritePropertyName(_colors);
+					JsonSerializer.Serialize(writer, value.Colors, options);
+				}
+
+				if(value.TextureCoordinates != null)
+				{
+					writer.WritePropertyName(_textureCoordinates);
+					JsonSerializer.Serialize(writer, value.TextureCoordinates, options);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Default label prefix for <see cref="Polygons"/>
 		/// </summary>
@@ -37,16 +173,6 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// </summary>
 		public const string TextureCoordinatesLabelPrefix = "polygon_texcoords_";
 
-
-		/// <summary>
-		/// Number of bytes the structure occupies.
-		/// </summary>
-		public const uint StructSize = 24;
-
-		/// <summary>
-		/// Number of bytes the structure occupies. (SADX)
-		/// </summary>
-		public const uint StructSizeDX = 28;
 
 		/// <summary>
 		/// Index indicating which material to use from <see cref="BasicMesh.Materials"/>.

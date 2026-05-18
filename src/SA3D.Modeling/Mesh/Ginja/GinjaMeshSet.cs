@@ -1,20 +1,80 @@
 ﻿using Amicitia.IO;
 using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Mesh.Ginja.Parameters;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Ginja
 {
 	/// <summary>
 	/// A single mesh, with its own parameter and primitive data <br/>
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class GinjaMeshSet : ICloneable, IBinarySerializable<GinjaIOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<GinjaMeshSet>
+		{
+			private const string _parameters = nameof(Parameters);
+			private const string _polygons = nameof(Polygons);
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _parameters, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _polygons, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _parameters:
+						return JsonSerializer.Deserialize<LabeledArray<IGinjaParameter>>(ref reader, options);
+					case _polygons:
+						return JsonSerializer.Deserialize<LabeledArray<GinjaPolygon>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override GinjaMeshSet Create(ReadOnlyDictionary<string, object?> values)
+			{
+				LabeledArray<IGinjaParameter> parameters = (LabeledArray<IGinjaParameter>?)values[_parameters]
+					?? throw new InvalidDataException($"GinjaMeshSet requires property \"{_parameters}\"!");
+
+				LabeledArray<GinjaPolygon> polygons = (LabeledArray<GinjaPolygon>?)values[_polygons]
+					?? throw new InvalidDataException($"GinjaMeshSet requires property \"{_polygons}\"!");
+
+				return new()
+				{
+					Parameters = parameters,
+					Polygons = polygons
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, GinjaMeshSet value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_parameters);
+				JsonSerializer.Serialize(writer, value.Parameters, options);
+
+				writer.WritePropertyName(_polygons);
+				JsonSerializer.Serialize(writer, value.Polygons, options);
+			}
+		}
+
 		/// <summary>
 		/// Label prefix for <see cref="Parameters"/>
 		/// </summary>

@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Streams;
+using J113D.Json;
 using SA3D.Common.IO;
 using SA3D.Modeling.File.MetaData;
 using SA3D.Modeling.File.MetaData.Blocks;
@@ -7,7 +8,10 @@ using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Modeling.File.FileHeaders;
 
 namespace SA3D.Modeling.File
@@ -15,8 +19,59 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Level geometry file contents.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class LevelFile : IFileSerializable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<LevelFile>
+		{
+			private const string _level = nameof(Level);
+			private const string _metaData = nameof(MetaData);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _level, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _metaData, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _level:
+						return JsonSerializer.Deserialize<Level>(ref reader, options);
+					case _metaData:
+						return JsonSerializer.Deserialize<MetaDataBlocks>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override LevelFile Create(ReadOnlyDictionary<string, object?> values)
+			{
+				Level level = (Level?)values[_level]
+					?? throw new InvalidDataException($"Levelfile requires \"{_level}\" property");
+
+				return new(level)
+				{
+					MetaData = (MetaDataBlocks?)values[_metaData] ?? new()
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, LevelFile value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_metaData);
+				JsonSerializer.Serialize(writer, value.MetaData, options);
+
+				writer.WritePropertyName(_level);
+				JsonSerializer.Serialize(writer, value.Level, options);
+			}
+		}
+
 		/// <summary>
 		/// Landtable of the file.
 		/// </summary>

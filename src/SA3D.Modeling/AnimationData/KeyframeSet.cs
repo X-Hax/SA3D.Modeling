@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Streams;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
@@ -8,16 +9,155 @@ using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Keyframe storage for an animation.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class KeyframeSet : IBinarySerializable<AnimationIOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<KeyframeSet>
+		{
+			private const string _position = nameof(Position);
+			private const string _eulerRotation = nameof(EulerRotation);
+			private const string _scale = nameof(Scale);
+			private const string _vector = nameof(Vector);
+			private const string _vertex = nameof(Vertex);
+			private const string _normal = nameof(Normal);
+			private const string _target = nameof(Target);
+			private const string _roll = nameof(Roll);
+			private const string _angle = nameof(Angle);
+			private const string _lightColor = nameof(LightColor);
+			private const string _intensity = nameof(Intensity);
+			private const string _spot = nameof(Spot);
+			private const string _point = nameof(Point);
+			private const string _quaternionRotation = nameof(QuaternionRotation);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+		{
+			{ _position, new(PropertyTokenType.Object, null) },
+			{ _eulerRotation, new(PropertyTokenType.Object, null) },
+			{ _scale, new(PropertyTokenType.Object, null) },
+			{ _vector, new(PropertyTokenType.Object, null) },
+			{ _vertex, new(PropertyTokenType.Object, null) },
+			{ _normal, new(PropertyTokenType.Object, null) },
+			{ _target, new(PropertyTokenType.Object, null) },
+			{ _roll, new(PropertyTokenType.Object, null) },
+			{ _angle, new(PropertyTokenType.Object, null) },
+			{ _lightColor, new(PropertyTokenType.Object, null) },
+			{ _intensity, new(PropertyTokenType.Object, null) },
+			{ _spot, new(PropertyTokenType.Object, null) },
+			{ _point, new(PropertyTokenType.Object, null) },
+			{ _quaternionRotation, new(PropertyTokenType.Object, null) },
+		});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _position:
+					case _eulerRotation:
+					case _scale:
+					case _vector:
+					case _target:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, Vector3>>(ref reader, options);
+					case _vertex:
+					case _normal:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, LabeledArray<Vector3>>>(ref reader, options);
+					case _roll:
+					case _angle:
+					case _intensity:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, float>>(ref reader, options);
+					case _lightColor:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, Color>>(ref reader, options);
+					case _spot:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, Spotlight>>(ref reader, options);
+					case _point:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, Vector2>>(ref reader, options);
+					case _quaternionRotation:
+						return JsonSerializer.Deserialize<SortedDictionary<uint, Quaternion>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override KeyframeSet Create(ReadOnlyDictionary<string, object?> values)
+			{
+				KeyframeSet result = new();
+
+				void copyKeyframeSet<T>(string name, SortedDictionary<uint, T> target)
+				{
+					if(values[name] is not SortedDictionary<uint, T> source)
+					{
+						return;
+					}
+
+					foreach(KeyValuePair<uint, T> item in source)
+					{
+						target.Add(item.Key, item.Value);
+					}
+				}
+
+				copyKeyframeSet(_position, result.Position);
+				copyKeyframeSet(_eulerRotation, result.EulerRotation);
+				copyKeyframeSet(_scale, result.Scale);
+				copyKeyframeSet(_vector, result.Vector);
+				copyKeyframeSet(_vertex, result.Vertex);
+				copyKeyframeSet(_normal, result.Normal);
+				copyKeyframeSet(_target, result.Target);
+				copyKeyframeSet(_roll, result.Roll);
+				copyKeyframeSet(_angle, result.Angle);
+				copyKeyframeSet(_lightColor, result.LightColor);
+				copyKeyframeSet(_intensity, result.Intensity);
+				copyKeyframeSet(_spot, result.Spot);
+				copyKeyframeSet(_point, result.Point);
+				copyKeyframeSet(_quaternionRotation, result.QuaternionRotation);
+
+				return result;
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, KeyframeSet value, JsonSerializerOptions options)
+			{
+				void writeKeyframeSet<T>(string name, SortedDictionary<uint, T> target)
+				{
+					if(target.Count == 0)
+					{
+						return;
+					}
+
+					writer.WritePropertyName(name);
+					JsonSerializer.Serialize(writer, target, options);
+				}
+
+				writeKeyframeSet(_position, value.Position);
+				writeKeyframeSet(_eulerRotation, value.EulerRotation);
+				writeKeyframeSet(_scale, value.Scale);
+				writeKeyframeSet(_vector, value.Vector);
+				writeKeyframeSet(_vertex, value.Vertex);
+				writeKeyframeSet(_normal, value.Normal);
+				writeKeyframeSet(_target, value.Target);
+				writeKeyframeSet(_roll, value.Roll);
+				writeKeyframeSet(_angle, value.Angle);
+				writeKeyframeSet(_lightColor, value.LightColor);
+				writeKeyframeSet(_intensity, value.Intensity);
+				writeKeyframeSet(_spot, value.Spot);
+				writeKeyframeSet(_point, value.Point);
+				writeKeyframeSet(_quaternionRotation, value.QuaternionRotation);
+			}
+		}
+
 		/// <summary>
 		/// Base label for all the keyframes
 		/// </summary>

@@ -1,12 +1,15 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
 	/// BASIC interface for storing polygon information. Read/Write are only responsible for writing vertex index structures
 	/// </summary>
+	[JsonConverter(typeof(InterfaceJsonSerializer<IBasicPolygon>))]
 	public interface IBasicPolygon : ICloneable, IEnumerable<ushort>, IBinarySerializable
 	{
 		/// <summary>

@@ -1,15 +1,70 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common.IO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.File.MetaData.Weights
 {
 	/// <summary>
 	/// Vertex with weights
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct MetaWeightVertex : IEquatable<MetaWeightVertex>, IBinarySerializable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<MetaWeightVertex>
+		{
+			private const string _destinationVertexIndex = nameof(DestinationVertexIndex);
+			private const string _weights = nameof(Weights);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _destinationVertexIndex, new(PropertyTokenType.Number, 0) },
+				{ _weights, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _destinationVertexIndex:
+						return reader.GetUInt32();
+					case _weights:
+						return JsonSerializer.Deserialize<MetaWeight[]>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override MetaWeightVertex Create(ReadOnlyDictionary<string, object?> values)
+			{
+				uint destinationVertexIndex = (uint?)values[_destinationVertexIndex]
+					?? throw new InvalidDataException($"MetaWeightVertex requires a \"{_destinationVertexIndex}\" property");
+
+				MetaWeight[] weights = (MetaWeight[]?)values[_weights]
+					?? throw new InvalidDataException($"MetaWeightVertex requires a \"{_weights}\" property");
+
+				return new(destinationVertexIndex, weights);
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, MetaWeightVertex value, JsonSerializerOptions options)
+			{
+				writer.WriteNumber(_destinationVertexIndex, value.DestinationVertexIndex);
+
+				writer.WritePropertyName(_weights);
+				JsonSerializer.Serialize(writer, value.Weights, options);
+			}
+		}
+
 		/// <summary>
 		/// Index to the vertex that the weights influence.
 		/// </summary>

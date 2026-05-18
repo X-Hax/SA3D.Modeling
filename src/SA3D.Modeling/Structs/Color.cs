@@ -1,6 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using System;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SA3D.Modeling.Structs
@@ -8,8 +10,31 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// RGBA Color value.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public partial struct Color : IEquatable<Color>, IBinarySerializable<ColorIOType>
 	{
+		private class JsonConverter : JsonConverter<Color>
+		{
+			/// <inheritdoc/>
+			public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			{
+				if(reader.TokenType != JsonTokenType.String)
+				{
+					throw new JsonException("Expected a string for Color!");
+				}
+
+				Color result = default;
+				result.Hex = reader.GetString()!;
+				return result;
+			}
+
+			/// <inheritdoc/>
+			public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
+			{
+				writer.WriteStringValue(value.Hex);
+			}
+		}
+
 		private byte _red, _green, _blue, _alpha;
 		private float _redF, _greenF, _blueF, _alphaF;
 		private const float _fDivFac = byte.MaxValue;

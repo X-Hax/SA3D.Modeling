@@ -10,7 +10,6 @@ abstract SA3D.Modeling.Mesh.MeshData.Read(Amicitia.IO.Binary.BinaryObjectReader!
 abstract SA3D.Modeling.Mesh.MeshData.RecalculateBounds() -> void
 abstract SA3D.Modeling.Mesh.MeshData.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
 const SA3D.Modeling.AnimationData.Animation.KeyframeSetLabelPrefix = "keyframes_" -> string!
-const SA3D.Modeling.File.MetaData.Weights.MetaWeight.StructSize = 12 -> uint
 const SA3D.Modeling.Mesh.Basic.BasicMesh.MaterialsLabelPrefix = "materials_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMesh.MeshesLabelPrefix = "meshes_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMesh.NormalsLabelPrefix = "normals_" -> string!
@@ -18,8 +17,6 @@ const SA3D.Modeling.Mesh.Basic.BasicMesh.PositionsLabelPrefix = "positions_" -> 
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.ColorsLabelPrefix = "polygon_colors_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.NormalsLabelPrefix = "polygon_normals_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonLabelPrefix = "polygons_" -> string!
-const SA3D.Modeling.Mesh.Basic.BasicMeshSet.StructSize = 24 -> uint
-const SA3D.Modeling.Mesh.Basic.BasicMeshSet.StructSizeDX = 28 -> uint
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinatesLabelPrefix = "polygon_texcoords_" -> string!
 const SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunksLabelPrefix = "poly_" -> string!
 const SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunksLabelPrefix = "vertex_" -> string!
@@ -51,6 +48,8 @@ override SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.ReadContents
 override SA3D.Modeling.File.MetaData.Blocks.StringListMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
 override SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 override SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.File.MetaData.Blocks.ToolMetaDataBlock.ToString() -> string!
+override SA3D.Modeling.File.MetaData.Blocks.ToolMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
 override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.ReadContents(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
 override SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
@@ -137,11 +136,11 @@ SA3D.Modeling.AnimationData.Animation.EnsureNodeKeyframes(SA3D.Modeling.ObjectDa
 SA3D.Modeling.AnimationData.Animation.GetFrameCount() -> uint
 SA3D.Modeling.AnimationData.Animation.InterpolationMode.get -> SA3D.Modeling.AnimationData.InterpolationMode
 SA3D.Modeling.AnimationData.Animation.InterpolationMode.set -> void
-SA3D.Modeling.AnimationData.Animation.IsCameraMotion.get -> bool
-SA3D.Modeling.AnimationData.Animation.IsLightMotion.get -> bool
-SA3D.Modeling.AnimationData.Animation.IsNodeMotion.get -> bool
-SA3D.Modeling.AnimationData.Animation.IsShapeMotion.get -> bool
-SA3D.Modeling.AnimationData.Animation.IsSpotLightMotion.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsCameraAnimation.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsLightAnimation.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsNodeAnimation.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsShapeAnimation.get -> bool
+SA3D.Modeling.AnimationData.Animation.IsSpotLightAnimation.get -> bool
 SA3D.Modeling.AnimationData.Animation.KeyframeSets.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.AnimationData.KeyframeSet!>!
 SA3D.Modeling.AnimationData.Animation.KeyframeSets.set -> void
 SA3D.Modeling.AnimationData.Animation.KeyframeTypes.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
@@ -150,7 +149,6 @@ SA3D.Modeling.AnimationData.Animation.Label.set -> void
 SA3D.Modeling.AnimationData.Animation.LabelPrefix.get -> string!
 SA3D.Modeling.AnimationData.Animation.ManualKeyframeTypes.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
 SA3D.Modeling.AnimationData.Animation.ManualKeyframeTypes.set -> void
-SA3D.Modeling.AnimationData.Animation.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
 SA3D.Modeling.AnimationData.Animation.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.AnimationData.AnimationIOContext context) -> void
 SA3D.Modeling.AnimationData.Animation.ShortRotations.get -> bool
 SA3D.Modeling.AnimationData.Animation.ShortRotations.set -> void
@@ -229,7 +227,6 @@ SA3D.Modeling.AnimationData.KeyframeSet.KeyframeCount.get -> uint
 SA3D.Modeling.AnimationData.KeyframeSet.KeyframeSet() -> void
 SA3D.Modeling.AnimationData.KeyframeSet.LightColor.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Modeling.Structs.Color>!
 SA3D.Modeling.AnimationData.KeyframeSet.Normal.get -> System.Collections.Generic.SortedDictionary<uint, SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>!>!
-SA3D.Modeling.AnimationData.KeyframeSet.Optimize(float generalThreshold, float quaternionThreshold, float colorThreshold, bool asDegrees, uint? start = null, uint? end = null) -> void
 SA3D.Modeling.AnimationData.KeyframeSet.Point.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector2>!
 SA3D.Modeling.AnimationData.KeyframeSet.Position.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
 SA3D.Modeling.AnimationData.KeyframeSet.QuaternionRotation.get -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
@@ -282,7 +279,6 @@ SA3D.Modeling.AnimationData.Spotlight.OutsideAngle.set -> void
 SA3D.Modeling.AnimationData.Spotlight.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.AnimationData.Spotlight.Spotlight() -> void
 SA3D.Modeling.AnimationData.Spotlight.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
-SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils
 SA3D.Modeling.File.AnimationFile.Animation.get -> SA3D.Modeling.AnimationData.Animation!
 SA3D.Modeling.File.AnimationFile.Animation.set -> void
 SA3D.Modeling.File.AnimationFile.AnimationFile() -> void
@@ -337,6 +333,8 @@ SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock
 SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.StringMetaDataBlock() -> void
 SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.Value.get -> string!
 SA3D.Modeling.File.MetaData.Blocks.StringMetaDataBlock.Value.set -> void
+SA3D.Modeling.File.MetaData.Blocks.ToolMetaDataBlock
+SA3D.Modeling.File.MetaData.Blocks.ToolMetaDataBlock.ToolMetaDataBlock() -> void
 SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock
 SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Data.get -> byte[]!
 SA3D.Modeling.File.MetaData.Blocks.UnknownMetaDataBlock.Data.set -> void
@@ -356,9 +354,9 @@ SA3D.Modeling.File.MetaData.MetaDataBlocks.Blocks.get -> System.Collections.Gene
 SA3D.Modeling.File.MetaData.MetaDataBlocks.Blocks.set -> void
 SA3D.Modeling.File.MetaData.MetaDataBlocks.MetaDataBlocks() -> void
 SA3D.Modeling.File.MetaData.MetaDataBlocks.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
-SA3D.Modeling.File.MetaData.MetaDataBlocks.ReplaceLabels(SA3D.Common.Lookup.LabelDictionary! newLabels) -> void
 SA3D.Modeling.File.MetaData.MetaDataBlocks.TryGetBlock(SA3D.Modeling.File.MetaData.MetaDataBlockType type, out SA3D.Modeling.File.MetaData.MetaDataBlock? block) -> bool
 SA3D.Modeling.File.MetaData.MetaDataBlocks.TryGetBlock<T>(out T? block) -> bool
+SA3D.Modeling.File.MetaData.MetaDataBlocks.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Common.Lookup.LabelDictionary? newLabels, Amicitia.IO.Streams.SeekToken? metadataPosition, System.Action? metadataUpdate) -> void
 SA3D.Modeling.File.MetaData.MetaDataBlocks.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.MetaData.MetaDataIOContext context) -> void
 SA3D.Modeling.File.MetaData.MetaDataBlockType
 SA3D.Modeling.File.MetaData.MetaDataBlockType.ActionName = 1094931534 -> SA3D.Modeling.File.MetaData.MetaDataBlockType
@@ -380,7 +378,7 @@ SA3D.Modeling.File.MetaData.MetaDataIOContext.Version.get -> int
 SA3D.Modeling.File.MetaData.MetaDataIOContext.Version.init -> void
 SA3D.Modeling.File.MetaData.Weights.MetaWeight
 SA3D.Modeling.File.MetaData.Weights.MetaWeight.MetaWeight() -> void
-SA3D.Modeling.File.MetaData.Weights.MetaWeight.MetaWeight(long nodePointer, uint vertexIndex, float weight) -> void
+SA3D.Modeling.File.MetaData.Weights.MetaWeight.MetaWeight(long nodeOffset, uint vertexIndex, float weight) -> void
 SA3D.Modeling.File.MetaData.Weights.MetaWeight.NodeOffset.get -> long
 SA3D.Modeling.File.MetaData.Weights.MetaWeight.NodeOffset.set -> void
 SA3D.Modeling.File.MetaData.Weights.MetaWeight.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
@@ -1034,25 +1032,12 @@ SA3D.Modeling.Structs.PointerLUT.NodeMotions.get -> SA3D.Common.Lookup.PointerDi
 SA3D.Modeling.Structs.PointerLUT.PointerLUT(System.Collections.Generic.Dictionary<long, string!>! labels) -> void
 static readonly SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.EndVertexSet -> SA3D.Modeling.Mesh.Ginja.GinjaVertexSet!
 static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter.DefaultBlendParameter -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaBlendAlphaParameter
+static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter.DefaultValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTevStageParameter
 static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.DefaultValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter
 static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.EnvironmentMapValues -> SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter
 static SA3D.Modeling.AnimationData.EnumExtensions.ChannelCount(this SA3D.Modeling.AnimationData.KeyframeAttributes attributes) -> int
 static SA3D.Modeling.AnimationData.Spotlight.Distance(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to) -> float
 static SA3D.Modeling.AnimationData.Spotlight.Lerp(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to, float time) -> SA3D.Modeling.AnimationData.Spotlight
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EnsurePositiveEulerRotationAngles(SA3D.Modeling.AnimationData.KeyframeSet! keyframes, bool forBAMS) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.EulerToQuaternion(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, float deviationThreshold, bool rotateZYX, bool clearEuler) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.GetRotationMatrices(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, bool targetQuaternion, float deviationThreshold, bool rotateZYX, out bool converted, out System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>!
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToEuler(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.Dictionary<uint, System.Numerics.Matrix4x4[]!>? complementary) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>!
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! result) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.MatrixToQuaternion(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Matrix4x4>! source, bool wasQuaternion, float deviationThreshold, bool rotateZYX) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX) -> System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>!
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(System.Collections.Generic.SortedDictionary<uint, System.Numerics.Quaternion>! source, float deviationThreshold, bool rotateZYX, System.Collections.Generic.SortedDictionary<uint, System.Numerics.Vector3>! result) -> void
-static SA3D.Modeling.AnimationData.Utilities.KeyframeRotationUtils.QuaternionToEuler(this SA3D.Modeling.AnimationData.KeyframeSet! keyframes, float deviationThreshold, bool rotateZYX, bool clearQuaternion) -> void
 static SA3D.Modeling.File.FileUtil.CheckBytes<T>(byte[]! data) -> bool
 static SA3D.Modeling.File.FileUtil.CheckFile<T>(string! filepath) -> bool
 static SA3D.Modeling.File.FileUtil.CheckStream<T>(System.IO.Stream! stream) -> bool
@@ -1068,6 +1053,7 @@ static SA3D.Modeling.File.FileUtil.WriteToFile<T, C>(this T file, C context, str
 static SA3D.Modeling.File.FileUtil.WriteToFile<T>(this T file, string! filepath) -> void
 static SA3D.Modeling.File.FileUtil.WriteToStream<T, C>(this T file, C context, System.IO.Stream! stream) -> void
 static SA3D.Modeling.File.FileUtil.WriteToStream<T>(this T file, System.IO.Stream! stream) -> void
+static SA3D.Modeling.File.MetaData.MetaDataBlocks.ReserveWrite(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> Amicitia.IO.Streams.SeekToken
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeightNode left, SA3D.Modeling.File.MetaData.Weights.MetaWeightNode right) -> bool

@@ -1,4 +1,5 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
@@ -7,18 +8,122 @@ using SA3D.Modeling.Structs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Ginja
 {
 	/// <summary>
 	/// A vertex data set, which can hold various types of data
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class GinjaVertexSet : ICloneable, IBinarySerializable<IOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<GinjaVertexSet>
+		{
+			private const string _data = "Data";
+			private const string _type = nameof(GinjaVertexSet.Type);
+			private const string _dataType = nameof(DataType);
+			private const string _structType = nameof(StructType);
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _type, new(PropertyTokenType.String, null) },
+				{ _dataType, new(PropertyTokenType.String, null) },
+				{ _structType, new(PropertyTokenType.String, null) },
+				{ _data, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _type:
+						return JsonSerializer.Deserialize<GinjaVertexType>(ref reader, options);
+					case _dataType:
+						return JsonSerializer.Deserialize<GinjaDataType>(ref reader, options);
+					case _structType:
+						return JsonSerializer.Deserialize<GinjaStructType>(ref reader, options);
+					case _data:
+						GinjaDataType dataType = (GinjaDataType?)values[_dataType]
+							?? throw new InvalidDataException($"{_structType} property of  GinjaVertexSet has to be specified before {_data} property!");
+
+						switch(dataType)
+						{
+							case GinjaDataType.Unsigned8:
+								return JsonSerializer.Deserialize<LabeledArray<byte>>(ref reader, options);
+							case GinjaDataType.Signed8:
+								return JsonSerializer.Deserialize<LabeledArray<sbyte>>(ref reader, options);
+							case GinjaDataType.Unsigned16:
+								return JsonSerializer.Deserialize<LabeledArray<ushort>>(ref reader, options);
+							case GinjaDataType.Signed16:
+								return JsonSerializer.Deserialize<LabeledArray<short>>(ref reader, options);
+							case GinjaDataType.Float32:
+								return JsonSerializer.Deserialize<LabeledArray<float>>(ref reader, options);
+							case GinjaDataType.RGB565:
+							case GinjaDataType.RGB8:
+							case GinjaDataType.RGBX8:
+							case GinjaDataType.RGBA4:
+							case GinjaDataType.RGBA6:
+							case GinjaDataType.RGBA8:
+								return JsonSerializer.Deserialize<LabeledArray<Color>>(ref reader, options);
+							default:
+								throw new NotSupportedException($"Ginja VertexSet data type of \"{dataType}\" is not supported.");
+						}
+
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override GinjaVertexSet Create(ReadOnlyDictionary<string, object?> values)
+			{
+				GinjaVertexType type = (GinjaVertexType?)values[_type]
+					?? throw new InvalidDataException($"GinjaVertexSet requires \"{_type}\" property!");
+
+				GinjaDataType dataType = (GinjaDataType?)values[_dataType]
+					?? throw new InvalidDataException($"GinjaVertexSet requires \"{_dataType}\" property!");
+
+				GinjaStructType structType = (GinjaStructType?)values[_structType]
+					?? throw new InvalidDataException($"GinjaVertexSet requires \"{_structType}\" property!");
+
+				object data = values[_data]
+					?? throw new InvalidDataException($"GinjaVertexSet requires \"{_data}\" property!");
+
+				return new()
+				{
+					Type = type,
+					DataType = dataType,
+					StructType = structType,
+					Data = data
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, GinjaVertexSet value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_type);
+				JsonSerializer.Serialize(writer, value.Type, options);
+
+				writer.WritePropertyName(_dataType);
+				JsonSerializer.Serialize(writer, value.DataType, options);
+
+				writer.WritePropertyName(_structType);
+				JsonSerializer.Serialize(writer, value.StructType, options);
+
+				writer.WritePropertyName(_data);
+				JsonSerializer.Serialize(writer, value.Data, options);
+			}
+		}
+
 		private GinjaDataType _dataType;
 
 		/// <summary>

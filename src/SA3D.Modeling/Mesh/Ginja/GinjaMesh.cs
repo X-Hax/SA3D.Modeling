@@ -1,20 +1,103 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Structs;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.Mesh.Ginja
 {
 	/// <summary>
-	/// A GC format attach
+	/// A Ginja format attach
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public sealed class GinjaMesh : MeshData
 	{
+		internal class JsonConverter : ChildJsonObjectConverter<MeshFormat, GinjaMesh, MeshData>
+		{
+			private const string _vertexData = nameof(VertexData);
+			private const string _opaqueMeshes = nameof(OpaqueMeshes);
+			private const string _transparentMeshes = nameof(TransparentMeshes);
+
+
+			/// <inheritdoc/>
+			protected override ParentJsonObjectConverter<MeshFormat, MeshData> ParentConverter => BaseJsonConverter.instance;
+
+			/// <inheritdoc/>
+			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _vertexData, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _opaqueMeshes, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _transparentMeshes, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+
+			/// <inheritdoc/>
+			protected override bool CheckTypeMatches(MeshFormat key)
+			{
+				return key == MeshFormat.Ginja;
+			}
+
+			/// <inheritdoc/>
+			protected override object? ReadTargetValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _vertexData:
+						return JsonSerializer.Deserialize<LabeledArray<GinjaVertexSet>>(ref reader, options);
+					case _opaqueMeshes:
+					case _transparentMeshes:
+						return JsonSerializer.Deserialize< LabeledArray<GinjaMeshSet>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override GinjaMesh CreateTarget(ReadOnlyDictionary<string, object?> values)
+			{
+				LabeledArray<GinjaVertexSet> vertexData = (LabeledArray<GinjaVertexSet>?)values[_vertexData]
+					?? throw new InvalidDataException("GinjaMesh requires Vertexdata!");
+
+				return new()
+				{
+					Label = (string)values[BaseJsonConverter._label]!,
+					MeshBounds = (Bounds)values[BaseJsonConverter._meshBounds]!,
+					VertexData = vertexData,
+					OpaqueMeshes = (LabeledArray<GinjaMeshSet>?)values[_opaqueMeshes],
+					TransparentMeshes = (LabeledArray<GinjaMeshSet>?)values[_transparentMeshes],
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteTargetValues(Utf8JsonWriter writer, GinjaMesh value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_vertexData);
+				JsonSerializer.Serialize(writer, value.VertexData, options);
+
+				if(value.OpaqueMeshes?.Length > 0)
+				{
+					writer.WritePropertyName(_opaqueMeshes);
+					JsonSerializer.Serialize(writer, value.OpaqueMeshes, options);
+				}
+
+				if(value.TransparentMeshes?.Length > 0)
+				{
+					writer.WritePropertyName(_transparentMeshes);
+					JsonSerializer.Serialize(writer, value.TransparentMeshes, options);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Label prefix for <see cref="VertexData"/>
 		/// </summary>
@@ -125,7 +208,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return $"{Label} - GC: {VertexData?.Length ?? 0} - {OpaqueMeshes?.Length ?? 0} - {TransparentMeshes?.Length ?? 0}";
+			return $"{Label} - Ginja: {VertexData?.Length ?? 0} - {OpaqueMeshes?.Length ?? 0} - {TransparentMeshes?.Length ?? 0}";
 		}
 	}
 }

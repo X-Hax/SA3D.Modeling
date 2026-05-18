@@ -2,14 +2,50 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
 	/// A polygon with four indices.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct BasicQuad : IBasicPolygon
 	{
+		private class JsonConverter : JsonConverter<BasicQuad>
+		{
+			/// <inheritdoc/>
+			public override BasicQuad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			{
+				if(reader.TokenType != JsonTokenType.StartArray)
+				{
+					throw new InvalidDataException("Expected an array for BasicQuad!");
+				}
+
+				ushort[] indices = JsonSerializer.Deserialize<ushort[]>(ref reader, options)!;
+
+				if(indices.Length < 4)
+				{
+					throw new InvalidDataException("BasicQuad has too few indices! At least 4 needed!");
+				}
+
+				return new(indices[0], indices[1], indices[2], indices[3]);
+			}
+
+			/// <inheritdoc/>
+			public override void Write(Utf8JsonWriter writer, BasicQuad value, JsonSerializerOptions options)
+			{
+				writer.WriteStartArray();
+				writer.WriteNumberValue(value.Index1);
+				writer.WriteNumberValue(value.Index2);
+				writer.WriteNumberValue(value.Index3);
+				writer.WriteNumberValue(value.Index4);
+				writer.WriteEndArray();
+			}
+		}
+
 		/// <inheritdoc/>
 		public readonly uint Size => 8;
 

@@ -1,18 +1,70 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.File.MetaData.Weights
 {
 	/// <summary>
 	/// Metadata weight.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct MetaWeight : IEquatable<MetaWeight>, IBinarySerializable
 	{
-		/// <summary>
-		/// Size of the structure in bytes.
-		/// </summary>
-		public const uint StructSize = 12;
+		private class JsonConverter : SimpleJsonObjectConverter<MetaWeight>
+		{
+			private const string _nodeOffset = nameof(NodeOffset);
+			private const string _vertexIndex = nameof(VertexIndex);
+			private const string _weight = nameof(Weight);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _nodeOffset, new(PropertyTokenType.Number, 0L) },
+				{ _vertexIndex, new(PropertyTokenType.Number, 0u) },
+				{ _weight, new(PropertyTokenType.Number, 0f) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _nodeOffset:
+						return (long)UInt32HexConverter.ConvertFrom(reader.GetString()!, propertyName);
+					case _vertexIndex:
+						return reader.GetUInt32();
+					case _weight:
+						return reader.GetSingle();
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override MetaWeight Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new(
+					((long?)values[_nodeOffset]!).Value,
+					((uint?)values[_vertexIndex]!).Value,
+					((float?)values[_weight]!).Value
+				);
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, MetaWeight value, JsonSerializerOptions options)
+			{
+				writer.WriteString(_nodeOffset, UInt32HexConverter.ConvertTo((uint)value.NodeOffset));
+				writer.WriteNumber(_vertexIndex, value.VertexIndex);
+				writer.WriteNumber(_weight, value.Weight);
+			}
+		}
 
 
 		/// <summary>
@@ -34,12 +86,12 @@ namespace SA3D.Modeling.File.MetaData.Weights
 		/// <summary>
 		/// Creates a new meta weight.
 		/// </summary>
-		/// <param name="nodePointer">Pointer to the node that is weighted to.</param>
+		/// <param name="nodeOffset">Offset to the node that is weighted to.</param>
 		/// <param name="vertexIndex">Vertex cache index.</param>
 		/// <param name="weight">Weight.</param>
-		public MetaWeight(long nodePointer, uint vertexIndex, float weight)
+		public MetaWeight(long nodeOffset, uint vertexIndex, float weight)
 		{
-			NodeOffset = nodePointer;
+			NodeOffset = nodeOffset;
 			VertexIndex = vertexIndex;
 			Weight = weight;
 		}

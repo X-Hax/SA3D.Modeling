@@ -1,9 +1,15 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.ObjectData;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.AnimationData
@@ -11,8 +17,93 @@ namespace SA3D.Modeling.AnimationData
 	/// <summary>
 	/// Animation data for various targets.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<Animation>
+		{
+			private const string _label = nameof(Label);
+			private const string _interpolationMode = nameof(InterpolationMode);
+			private const string _shortRotations = nameof(ShortRotations);
+			private const string _keyframeSets = nameof(KeyframeSets);
+			private const string _manualKeyframeTypes = nameof(ManualKeyframeTypes);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _label, new(PropertyTokenType.String, string.Empty) },
+				{ _interpolationMode, new(PropertyTokenType.String, InterpolationMode.Linear) },
+				{ _shortRotations, new(PropertyTokenType.Bool, false) },
+				{ _manualKeyframeTypes, new(PropertyTokenType.String | PropertyTokenType.Number, default(KeyframeAttributes)) },
+				{ _keyframeSets, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _label:
+						return reader.GetString();
+					case _interpolationMode:
+						return JsonSerializer.Deserialize<InterpolationMode>(ref reader, options);
+					case _shortRotations:
+						return reader.GetBoolean();
+					case _manualKeyframeTypes:
+						return JsonSerializer.Deserialize<KeyframeAttributes>(ref reader, options);
+					case _keyframeSets:
+						return JsonSerializer.Deserialize<LabeledArray<KeyframeSet>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override Animation Create(ReadOnlyDictionary<string, object?> values)
+			{
+				LabeledArray<KeyframeSet> keyframeSets = (LabeledArray<KeyframeSet>?)values[_keyframeSets]
+					?? throw new InvalidDataException($"Animation requires property \"{_keyframeSets}\"!");
+
+				Animation result = new()
+				{
+					Label = (string)values[_label]!,
+					InterpolationMode = (InterpolationMode)values[_interpolationMode]!,
+					ShortRotations = (bool)values[_shortRotations]!,
+					ManualKeyframeTypes = (KeyframeAttributes)values[_manualKeyframeTypes]!,
+					KeyframeSets = keyframeSets,
+				};
+
+				return result;
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, Animation value, JsonSerializerOptions options)
+			{
+				writer.WriteString(_label, value.Label);
+
+				if(value.InterpolationMode != InterpolationMode.Linear)
+				{
+					writer.WritePropertyName(_interpolationMode);
+					JsonSerializer.Serialize(writer, value.InterpolationMode, options);
+				}
+
+				if(value.ShortRotations)
+				{
+					writer.WriteBoolean(_shortRotations, value.ShortRotations);
+				}
+
+				if(value.ManualKeyframeTypes != default)
+				{
+					writer.WritePropertyName(_manualKeyframeTypes);
+					JsonSerializer.Serialize(writer, value.ManualKeyframeTypes, options);
+				}
+
+				writer.WritePropertyName(_keyframeSets);
+				JsonSerializer.Serialize(writer, value.KeyframeSets, options);
+			}
+		}
+
 		/// <summary>
 		/// Label prefix for <see cref="KeyframeSets"/>
 		/// </summary>
@@ -65,31 +156,31 @@ namespace SA3D.Modeling.AnimationData
 		/// <summary>
 		/// Whether the motion transforms nodes.
 		/// </summary>
-		public bool IsNodeMotion
-			=> !IsShapeMotion && !IsCameraMotion && !IsSpotLightMotion && !IsLightMotion;
+		public bool IsNodeAnimation
+			=> !IsShapeAnimation && !IsCameraAnimation && !IsSpotLightAnimation && !IsLightAnimation;
 
 		/// <summary>
 		/// Whether the motion alters vertex positions and/or normals of meshes.
 		/// </summary>
-		public bool IsShapeMotion
+		public bool IsShapeAnimation
 			=> HasAnyAttributes(KeyframeAttributes.Vertex | KeyframeAttributes.Normal);
 
 		/// <summary>
 		/// Whether the motion transforms a camera. 
 		/// </summary>
-		public bool IsCameraMotion
+		public bool IsCameraAnimation
 			=> HasAnyAttributes(KeyframeAttributes.Angle | KeyframeAttributes.Roll | KeyframeAttributes.Target);
 
 		/// <summary>
 		/// Whether the motion targets a spotlight
 		/// </summary>
-		public bool IsSpotLightMotion
+		public bool IsSpotLightAnimation
 			=> HasAnyAttributes(KeyframeAttributes.Spot);
 
 		/// <summary>
 		/// Whether the motion targets lights
 		/// </summary>
-		public bool IsLightMotion
+		public bool IsLightAnimation
 			=> HasAnyAttributes(KeyframeAttributes.Intensity | KeyframeAttributes.LightColor | KeyframeAttributes.Vector);
 
 

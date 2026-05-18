@@ -1,17 +1,140 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
 	/// <summary>
 	/// Chunk holding polygon data for rendering.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class StripChunk : SizedChunk
 	{
+		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, StripChunk, PolyChunk>
+		{
+			private const string _ignoreLight = nameof(IgnoreLight);
+			private const string _ignoreSpecular = nameof(IgnoreSpecular);
+			private const string _ignoreAmbient = nameof(IgnoreAmbient);
+			private const string _doubleSide = nameof(DoubleSide);
+			private const string _flatShading = nameof(FlatShading);
+			private const string _environmentMapping = nameof(EnvironmentMapping);
+			private const string _alphaMode = nameof(AlphaMode);
+			private const string _strips = nameof(Strips);
+			private const string _triangleAttributeCount = nameof(TriangleAttributeCount);
+
+
+			/// <inheritdoc/>
+			protected override ParentJsonObjectConverter<PolyChunkType, PolyChunk> ParentConverter => BaseJsonConverter.instance;
+
+			/// <inheritdoc/>
+			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _ignoreLight, new(PropertyTokenType.Bool, false) },
+				{ _ignoreSpecular, new(PropertyTokenType.Bool, false) },
+				{ _ignoreAmbient, new(PropertyTokenType.Bool, false) },
+				{ _doubleSide, new(PropertyTokenType.Bool, false) },
+				{ _flatShading, new(PropertyTokenType.Bool, false) },
+				{ _environmentMapping, new(PropertyTokenType.Bool, false) },
+				{ _alphaMode, new(PropertyTokenType.String, AlphaMode.Opaque) },
+				{ _strips, new(PropertyTokenType.Array, null) },
+				{ _triangleAttributeCount, new(PropertyTokenType.Number, 0) },
+
+			});
+
+
+			/// <inheritdoc/>
+			protected override bool CheckTypeMatches(PolyChunkType key)
+			{
+				return key is >= PolyChunkType.Strip_Blank and <= PolyChunkType.Strip_HDTexDouble;
+			}
+
+			/// <inheritdoc/>
+			protected override object? ReadTargetValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _ignoreLight:
+					case _ignoreSpecular:
+					case _ignoreAmbient:
+					case _doubleSide:
+					case _flatShading:
+					case _environmentMapping:
+						return reader.GetBoolean();
+					case _alphaMode:
+						return JsonSerializer.Deserialize<AlphaMode>(ref reader, options);
+					case _strips:
+						return JsonSerializer.Deserialize<ChunkStrip[]>(ref reader, options);
+					case _triangleAttributeCount:
+						return reader.GetInt32();
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override StripChunk CreateTarget(ReadOnlyDictionary<string, object?> values)
+			{
+				ChunkStrip[] strips = (ChunkStrip[]?)values[_strips]
+					?? throw new InvalidDataException($"Strip chunk requires \"{_strips}\" property!");
+
+				return new()
+				{
+					Type = (PolyChunkType)values[BaseJsonConverter._type]!,
+					Strips = strips,
+					TriangleAttributeCount = (int)values[_triangleAttributeCount]!,
+					IgnoreLight = (bool)values[_ignoreLight]!,
+					IgnoreSpecular = (bool)values[_ignoreSpecular]!,
+					IgnoreAmbient = (bool)values[_ignoreAmbient]!,
+					DoubleSide = (bool)values[_doubleSide]!,
+					FlatShading = (bool)values[_flatShading]!,
+					EnvironmentMapping = (bool)values[_environmentMapping]!,
+					AlphaMode = (AlphaMode)values[_alphaMode]!,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteTargetValues(Utf8JsonWriter writer, StripChunk value, JsonSerializerOptions options)
+			{
+				void writeBoolean(string name, bool value)
+				{
+					if(value)
+					{
+						writer.WriteBoolean(name, value);
+					}
+				}
+
+				writeBoolean(_ignoreLight, value.IgnoreLight);
+				writeBoolean(_ignoreSpecular, value.IgnoreSpecular);
+				writeBoolean(_ignoreAmbient, value.IgnoreAmbient);
+				writeBoolean(_doubleSide, value.DoubleSide);
+				writeBoolean(_flatShading, value.FlatShading);
+				writeBoolean(_environmentMapping, value.EnvironmentMapping);
+
+				if(value.AlphaMode != AlphaMode.Opaque)
+				{
+					writer.WritePropertyName(_alphaMode);
+					JsonSerializer.Serialize(writer, value.AlphaMode, options);
+				}
+
+				if(value.TriangleAttributeCount != 0)
+				{
+					writer.WriteNumber(_triangleAttributeCount, value.TriangleAttributeCount);
+				}
+
+				writer.WritePropertyName(_strips);
+				JsonSerializer.Serialize(writer, value.Strips, options);
+			}
+		}
+
 		#region Attribute Properties
 
 		/// <summary>

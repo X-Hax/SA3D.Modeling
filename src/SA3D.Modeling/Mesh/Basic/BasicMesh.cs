@@ -1,19 +1,114 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic
 {
 	/// <summary>
 	/// Mesh data format used by SA1 and SA2
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public sealed class BasicMesh : MeshData
 	{
+		internal class JsonConverter : ChildJsonObjectConverter<MeshFormat, BasicMesh, MeshData>
+		{
+			private const string _positions = nameof(Positions);
+			private const string _normals = nameof(Normals);
+			private const string _meshes = nameof(Meshes);
+			private const string _materials = nameof(Materials);
+
+
+			/// <inheritdoc/>
+			protected override ParentJsonObjectConverter<MeshFormat, MeshData> ParentConverter => BaseJsonConverter.instance;
+
+			/// <inheritdoc/>
+			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _positions, new (PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _normals, new (PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _meshes, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _materials, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+
+			/// <inheritdoc/>
+			protected override bool CheckTypeMatches(MeshFormat key)
+			{
+				return key == MeshFormat.Basic;
+			}
+
+			/// <inheritdoc/>
+			protected override object? ReadTargetValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _positions:
+					case _normals:
+						return JsonSerializer.Deserialize<LabeledArray<Vector3>>(ref reader, options);
+					case _meshes:
+						return JsonSerializer.Deserialize<LabeledArray<BasicMeshSet>>(ref reader, options);
+					case _materials:
+						return JsonSerializer.Deserialize<LabeledArray<BasicMaterial>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override BasicMesh CreateTarget(ReadOnlyDictionary<string, object?> values)
+			{
+				LabeledArray<Vector3> positions = (LabeledArray<Vector3>?)values[_positions]
+					?? throw new InvalidDataException($"Basic attach requires property \"{_positions}\"!");
+
+				LabeledArray<Vector3> normals = (LabeledArray<Vector3>?)values[_normals]
+					?? throw new InvalidDataException($"Basic attach requires property \"{_normals}\"!");
+
+				LabeledArray<BasicMeshSet> meshes = (LabeledArray<BasicMeshSet>?)values[_meshes]
+					?? throw new InvalidDataException($"Basic attach requires property \"{_meshes}\"!");
+
+				LabeledArray<BasicMaterial> materials = (LabeledArray<BasicMaterial>?)values[_materials]
+					?? throw new InvalidDataException($"Basic attach requires property \"{_materials}\"!");
+
+				return new()
+				{
+					Label = (string)values[BaseJsonConverter._label]!,
+					MeshBounds = (Bounds)values[BaseJsonConverter._meshBounds]!,
+					Positions = positions,
+					Normals = normals,
+					Meshes = meshes,
+					Materials = materials
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteTargetValues(Utf8JsonWriter writer, BasicMesh value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_positions);
+				JsonSerializer.Serialize(writer, value.Positions, options);
+
+				writer.WritePropertyName(_normals);
+				JsonSerializer.Serialize(writer, value.Normals, options);
+
+				writer.WritePropertyName(_meshes);
+				JsonSerializer.Serialize(writer, value.Meshes, options);
+
+				writer.WritePropertyName(_materials);
+				JsonSerializer.Serialize(writer, value.Materials, options);
+			}
+		}
+
+
 		/// <summary>
 		/// Label prefix for <see cref="Positions"/>.
 		/// </summary>
@@ -161,7 +256,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				Label = Label,
 				Positions = Positions.Clone(),
 				Normals = Normals?.Clone(),
-				Meshes = new(Meshes.Label, Meshes.Select(x => x.Clone()).ToArray()),
+				Meshes = new(Meshes.Label, [.. Meshes.Select(x => x.Clone())]),
 				Materials = Materials.Clone(),
 				MeshBounds = MeshBounds
 			};

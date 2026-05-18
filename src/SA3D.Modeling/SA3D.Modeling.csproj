@@ -23,7 +23,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="J113D.Strippify" Version="1.1.0" />
 		<!--<PackageReference Include="SA3D.Texturing" Version="1.4.0" />-->
 	</ItemGroup>
 

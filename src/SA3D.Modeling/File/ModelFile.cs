@@ -1,6 +1,7 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Binary.Extensions;
 using Amicitia.IO.Streams;
+using J113D.Json;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.File.MetaData;
@@ -13,8 +14,11 @@ using SA3D.Modeling.Structs;
 using SA3D.Texturing.Texname;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Modeling.File.FileHeaders;
 
 namespace SA3D.Modeling.File
@@ -22,8 +26,94 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Node model with meshdata.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class ModelFile : IFileSerializable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ModelFile>
+		{
+			private const string _njFile = nameof(NJFile);
+			private const string _format = nameof(Format);
+			private const string _model = nameof(Model);
+			private const string _textureNames = nameof(TextureNames);
+			private const string _metaData = nameof(MetaData);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _njFile, new(PropertyTokenType.Bool, false) },
+				{ _format, new(PropertyTokenType.String, null) },
+				{ _model, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _textureNames, new(PropertyTokenType.Object, null) },
+				{ _metaData, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _njFile:
+						return reader.GetBoolean();
+					case _format:
+						return JsonSerializer.Deserialize<Format>(ref reader, options);
+					case _model:
+						return JsonSerializer.Deserialize<Node>(ref reader, options);
+					case _textureNames:
+						return JsonSerializer.Deserialize<TextureNameList>(ref reader, options);
+					case _metaData:
+						return JsonSerializer.Deserialize<MetaDataBlocks>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ModelFile Create(ReadOnlyDictionary<string, object?> values)
+			{
+				Node model = (Node?)values[_model]
+					?? throw new InvalidDataException($"Modelfile requires \"{_model}\" property");
+
+				ModelFile result = new(model)
+				{
+					NJFile = (bool)values[_njFile]!,
+					TextureNames = (TextureNameList?)values[_textureNames],
+					MetaData = (MetaDataBlocks?)values[_metaData] ?? new()
+				};
+
+				if((Format?)values[_format] is Format format)
+				{
+					result.Format = format;
+				}
+
+				return result;
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ModelFile value, JsonSerializerOptions options)
+			{
+				if(value.NJFile)
+				{
+					writer.WriteBoolean(_njFile, value.NJFile);
+				}
+
+				writer.WritePropertyName(_format);
+				JsonSerializer.Serialize(writer, value.Format, options);
+
+				writer.WritePropertyName(_metaData);
+				JsonSerializer.Serialize(writer, value.MetaData, options);
+
+				if(value.TextureNames != null)
+				{
+					writer.WritePropertyName(_textureNames);
+					JsonSerializer.Serialize(writer, value.TextureNames, options);
+				}
+
+				writer.WritePropertyName(_model);
+				JsonSerializer.Serialize(writer, value.Model, options);
+			}
+		}
+
 		/// <summary>
 		/// Whether the file is an NJ binary.
 		/// </summary>

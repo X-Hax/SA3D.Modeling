@@ -1,17 +1,83 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.AnimationData
 {
 	/// <summary>
 	/// Pairs a node and motion together.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class ModelAnimation : ILabel, IBinarySerializable<IOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ModelAnimation>
+		{
+			private const string _label = nameof(Label);
+			private const string _model = nameof(Model);
+			private const string _animation = nameof(Animation);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _label, new(PropertyTokenType.String, string.Empty) },
+				{ _model, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _animation, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _label:
+						return reader.GetString();
+					case _model:
+						return JsonSerializer.Deserialize<Node>(ref reader, options);
+					case _animation:
+						return JsonSerializer.Deserialize<Animation>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ModelAnimation Create(ReadOnlyDictionary<string, object?> values)
+			{
+				Node model = (Node?)values[_model]
+					?? throw new InvalidDataException($"ModelAnimation requires \"{_model}\" property");
+
+				Animation animation = (Animation?)values[_animation]
+					?? throw new InvalidDataException($"ModelAnimation requires \"{_animation}\" property");
+
+				return new(model, animation)
+				{
+					Label = (string)values[_label]!
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ModelAnimation value, JsonSerializerOptions options)
+			{
+				writer.WriteString(_label, value.Label);
+
+				writer.WritePropertyName(_model);
+				JsonSerializer.Serialize(writer, value.Model, options);
+
+				writer.WritePropertyName(_animation);
+				JsonSerializer.Serialize(writer, value.Animation, options);
+			}
+		}
+
 		/// <inheritdoc/>
 		public string LabelPrefix => "action_";
 

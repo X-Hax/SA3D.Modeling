@@ -1,6 +1,7 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Binary.Extensions;
 using Amicitia.IO.Streams;
+using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.IO;
 using SA3D.Modeling.AnimationData;
@@ -8,7 +9,10 @@ using SA3D.Modeling.File.MetaData;
 using SA3D.Modeling.File.MetaData.Blocks;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static SA3D.Modeling.File.FileHeaders;
 
 namespace SA3D.Modeling.File
@@ -16,8 +20,69 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Animation file contents.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class AnimationFile : IFileSerializable<AnimationFileIOContext>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<AnimationFile>
+		{
+			private const string _njFile = nameof(NJFile);
+			private const string _animation = nameof(Animation);
+			private const string _metaData = nameof(MetaData);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _njFile, new(PropertyTokenType.Bool, false) },
+				{ _animation, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _metaData, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _njFile:
+						return reader.GetBoolean();
+					case _animation:
+						return JsonSerializer.Deserialize<Animation>(ref reader, options);
+					case _metaData:
+						return JsonSerializer.Deserialize<MetaDataBlocks>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override AnimationFile Create(ReadOnlyDictionary<string, object?> values)
+			{
+				Animation animation = (Animation?)values[_animation]
+					?? throw new InvalidDataException($"Animationfile requires \"{_animation}\" property");
+
+				return new(animation)
+				{
+					NJFile = (bool)values[_njFile]!,
+					MetaData = (MetaDataBlocks?)values[_metaData] ?? new()
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, AnimationFile value, JsonSerializerOptions options)
+			{
+				if(value.NJFile)
+				{
+					writer.WriteBoolean(_njFile, value.NJFile);
+				}
+
+				writer.WritePropertyName(_metaData);
+				JsonSerializer.Serialize(writer, value.MetaData, options);
+
+				writer.WritePropertyName(_animation);
+				JsonSerializer.Serialize(writer, value.Animation, options);
+			}
+		}
+
 		/// <summary>
 		/// Whether the file is an NJ binary.
 		/// </summary>

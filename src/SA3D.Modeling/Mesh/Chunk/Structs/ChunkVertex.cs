@@ -1,16 +1,104 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Numerics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
 {
 	/// <summary>
 	/// Single vertex of a vertex chunk
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct ChunkVertex : IEquatable<ChunkVertex>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ChunkVertex>
+		{
+			private const string _position = nameof(Position);
+			private const string _normal = nameof(Normal);
+			private const string _diffuse = nameof(Diffuse);
+			private const string _specular = nameof(Specular);
+			private const string _attributes = nameof(Attributes);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _position, new(PropertyTokenType.String, DefaultValues.Position) },
+				{ _normal, new(PropertyTokenType.String, DefaultValues.Normal) },
+				{ _diffuse, new(PropertyTokenType.String, DefaultValues.Diffuse) },
+				{ _specular, new(PropertyTokenType.String, DefaultValues.Specular) },
+				{ _attributes, new(PropertyTokenType.String, DefaultValues.Attributes) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _position:
+					case _normal:
+						return JsonSerializer.Deserialize<Vector3>(ref reader, options);
+					case _diffuse:
+					case _specular:
+						return JsonSerializer.Deserialize<Color>(ref reader, options);
+					case _attributes:
+						return UInt32HexConverter.ConvertFrom(reader.GetString()!, propertyName);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ChunkVertex Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					Position = (Vector3)values[_position]!,
+					Normal = (Vector3)values[_normal]!,
+					Diffuse = (Color)values[_diffuse]!,
+					Specular = (Color)values[_specular]!,
+					Attributes = (uint)values[_attributes]!,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ChunkVertex value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_position);
+				JsonSerializer.Serialize(writer, value.Position, options);
+
+				if(value.Normal != DefaultValues.Normal)
+				{
+					writer.WritePropertyName(_normal);
+					JsonSerializer.Serialize(writer, value.Normal, options);
+				}
+
+				if(value.Diffuse != DefaultValues.Diffuse)
+				{
+					writer.WritePropertyName(_diffuse);
+					JsonSerializer.Serialize(writer, value.Diffuse, options);
+				}
+
+				if(value.Specular != DefaultValues.Specular)
+				{
+					writer.WritePropertyName(_specular);
+					JsonSerializer.Serialize(writer, value.Specular, options);
+				}
+
+				if(value.Attributes != DefaultValues.Attributes)
+				{
+					writer.WriteString(_attributes, UInt32HexConverter.ConvertTo(value.Attributes));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Default chunk vertex values.
 		/// </summary>

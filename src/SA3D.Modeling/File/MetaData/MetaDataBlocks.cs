@@ -4,20 +4,43 @@ using Amicitia.IO.Streams;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.File.MetaData.Blocks;
-using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.File.MetaData
 {
 	/// <summary>
 	/// Metadata block container
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public class MetaDataBlocks : IBinarySerializable<MetaDataIOContext>
 	{
+		private class JsonConverter : JsonConverter<MetaDataBlocks>
+		{
+			public override MetaDataBlocks? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			{
+				if(reader.TokenType != JsonTokenType.StartArray)
+				{
+					throw new JsonException("MetaDataBlocks must be an array!");
+				}
+
+				return new()
+				{
+					Blocks = JsonSerializer.Deserialize<List<MetaDataBlock>>(ref reader, options)!
+				};
+			}
+
+			public override void Write(Utf8JsonWriter writer, MetaDataBlocks value, JsonSerializerOptions options)
+			{
+				JsonSerializer.Serialize(writer, value.Blocks, options);
+			}
+		}
+
 		/// <summary>
 		/// Metadata blocks
 		/// </summary>
@@ -65,6 +88,7 @@ namespace SA3D.Modeling.File.MetaData
 					MetaDataBlockType.Morph => reader.ReadObject<MorphFilesMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.Author => reader.ReadObject<AuthorMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.Description => reader.ReadObject<DescriptionMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Tool => reader.ReadObject<ToolMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.ActionName => reader.ReadObject<ActionNameMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.ObjectName => reader.ReadObject<ObjectNameMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.Weight => reader.ReadObject<WeightsMetaDataBlock, MetaDataIOContext>(context),

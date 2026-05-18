@@ -1,14 +1,204 @@
 ﻿using Amicitia.IO.Binary;
+using J113D.Json;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic
 {
 	/// <summary>
 	/// BASIC format material
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct BasicMaterial : IBinarySerializable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<BasicMaterial>
+		{
+			private const string _diffuseColor = nameof(DiffuseColor);
+			private const string _specularColor = nameof(SpecularColor);
+			private const string _specularExponent = nameof(SpecularExponent);
+			private const string _textureID = nameof(TextureID);
+			private const string _userAttributes = nameof(UserAttributes);
+			private const string _pickStatus = nameof(PickStatus);
+			private const string _mipmapDistanceMultiplier = nameof(MipmapDistanceMultiplier);
+			private const string _superSample = nameof(SuperSample);
+			private const string _filterMode = nameof(FilterMode);
+			private const string _clampV = nameof(ClampV);
+			private const string _clampU = nameof(ClampU);
+			private const string _mirrorV = nameof(MirrorV);
+			private const string _mirrorU = nameof(MirrorU);
+			private const string _ignoreSpecular = nameof(IgnoreSpecular);
+			private const string _useAlpha = nameof(UseAlpha);
+			private const string _useTexture = nameof(UseTexture);
+			private const string _environmentMap = nameof(EnvironmentMap);
+			private const string _doubleSided = nameof(DoubleSided);
+			private const string _flatShading = nameof(FlatShading);
+			private const string _ignoreLighting = nameof(IgnoreLighting);
+			private const string _destinationAlpha = nameof(DestinationAlpha);
+			private const string _sourceAlpha = nameof(SourceAlpha);
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+		{
+			{ _diffuseColor, new(PropertyTokenType.String, DefaultValues.DiffuseColor ) },
+			{ _specularColor, new(PropertyTokenType.String, DefaultValues.SpecularColor) },
+			{ _specularExponent, new(PropertyTokenType.Number, DefaultValues.SpecularExponent) },
+			{ _textureID, new(PropertyTokenType.Number, DefaultValues.TextureID) },
+			{ _userAttributes, new(PropertyTokenType.Number, DefaultValues.UserAttributes) },
+			{ _pickStatus, new(PropertyTokenType.Bool, DefaultValues.PickStatus) },
+			{ _mipmapDistanceMultiplier, new(PropertyTokenType.Number, DefaultValues.MipmapDistanceMultiplier) },
+			{ _superSample, new(PropertyTokenType.Bool, DefaultValues.SuperSample) },
+			{ _filterMode, new(PropertyTokenType.String, DefaultValues.FilterMode) },
+			{ _clampV, new(PropertyTokenType.Bool, DefaultValues.ClampV) },
+			{ _clampU, new(PropertyTokenType.Bool, DefaultValues.ClampU) },
+			{ _mirrorV, new(PropertyTokenType.Bool, DefaultValues.MirrorV) },
+			{ _mirrorU, new(PropertyTokenType.Bool, DefaultValues.MirrorU) },
+			{ _ignoreSpecular, new(PropertyTokenType.Bool, DefaultValues.IgnoreSpecular) },
+			{ _useAlpha, new(PropertyTokenType.Bool, DefaultValues.UseAlpha) },
+			{ _useTexture, new(PropertyTokenType.Bool, DefaultValues.UseTexture) },
+			{ _environmentMap, new(PropertyTokenType.Bool, DefaultValues.EnvironmentMap) },
+			{ _doubleSided, new(PropertyTokenType.Bool, DefaultValues.DoubleSided) },
+			{ _flatShading, new(PropertyTokenType.Bool, DefaultValues.FlatShading) },
+			{ _ignoreLighting, new(PropertyTokenType.Bool, DefaultValues.IgnoreLighting) },
+			{ _destinationAlpha, new(PropertyTokenType.String, DefaultValues.DestinationAlpha) },
+			{ _sourceAlpha, new(PropertyTokenType.String, DefaultValues.SourceAlpha) },
+		});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				return propertyName switch
+				{
+					_diffuseColor
+					or _specularColor => JsonSerializer.Deserialize<Color>(ref reader, options),
+
+					_textureID => reader.GetUInt32(),
+					_userAttributes => reader.GetByte(),
+
+					_specularExponent
+					or _mipmapDistanceMultiplier => reader.GetSingle(),
+
+					_filterMode => JsonSerializer.Deserialize<FilterMode>(ref reader, options),
+
+					_pickStatus
+					or _superSample
+					or _clampV
+					or _clampU
+					or _mirrorV
+					or _mirrorU
+					or _ignoreSpecular
+					or _useAlpha
+					or _useTexture
+					or _environmentMap
+					or _doubleSided
+					or _flatShading
+					or _ignoreLighting => reader.GetBoolean(),
+
+					_destinationAlpha
+					or _sourceAlpha => JsonSerializer.Deserialize<BlendMode>(ref reader, options),
+					_ => throw new InvalidPropertyException(),
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override BasicMaterial Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					DiffuseColor = (Color)values[_diffuseColor]!,
+					SpecularColor = (Color)values[_specularColor]!,
+					SpecularExponent = (float)values[_specularExponent]!,
+					TextureID = (uint)values[_textureID]!,
+					UserAttributes = (byte)values[_userAttributes]!,
+					PickStatus = (bool)values[_pickStatus]!,
+					MipmapDistanceMultiplier = (float)values[_mipmapDistanceMultiplier]!,
+					SuperSample = (bool)values[_superSample]!,
+					FilterMode = (FilterMode)values[_filterMode]!,
+					ClampV = (bool)values[_clampV]!,
+					ClampU = (bool)values[_clampU]!,
+					MirrorV = (bool)values[_mirrorV]!,
+					MirrorU = (bool)values[_mirrorU]!,
+					IgnoreSpecular = (bool)values[_ignoreSpecular]!,
+					UseAlpha = (bool)values[_useAlpha]!,
+					UseTexture = (bool)values[_useTexture]!,
+					EnvironmentMap = (bool)values[_environmentMap]!,
+					DoubleSided = (bool)values[_doubleSided]!,
+					FlatShading = (bool)values[_flatShading]!,
+					IgnoreLighting = (bool)values[_ignoreLighting]!,
+					DestinationAlpha = (BlendMode)values[_destinationAlpha]!,
+					SourceAlpha = (BlendMode)values[_sourceAlpha]!,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, BasicMaterial value, JsonSerializerOptions options)
+			{
+				void serialize<T>(string name, T value, T def) where T : notnull
+				{
+					if(!value.Equals(def))
+					{
+						writer.WritePropertyName(name);
+						JsonSerializer.Serialize<T>(writer, value, options);
+					}
+				}
+
+				void writeBoolean(string name, bool value, bool def)
+				{
+					if(value != def)
+					{
+						writer.WriteBoolean(name, value);
+					}
+				}
+
+				serialize(_diffuseColor, value.DiffuseColor, DefaultValues.DiffuseColor);
+				serialize(_specularColor, value.SpecularColor, DefaultValues.SpecularColor);
+
+				if(value.SpecularExponent != DefaultValues.SpecularExponent)
+				{
+					writer.WriteNumber(_specularExponent, value.SpecularExponent);
+				}
+
+				if(value.TextureID != DefaultValues.TextureID)
+				{
+					writer.WriteNumber(_textureID, value.TextureID);
+				}
+
+				if(value.UserAttributes != DefaultValues.UserAttributes)
+				{
+					writer.WriteNumber(_userAttributes, value.UserAttributes);
+				}
+
+				writeBoolean(_pickStatus, value.PickStatus, DefaultValues.PickStatus);
+
+				if(value.MipmapDistanceMultiplier != DefaultValues.MipmapDistanceMultiplier)
+				{
+					writer.WriteNumber(_mipmapDistanceMultiplier, value.MipmapDistanceMultiplier);
+				}
+
+				writeBoolean(_superSample, value.SuperSample, DefaultValues.SuperSample);
+
+				serialize(_filterMode, value.FilterMode, DefaultValues.FilterMode);
+
+				writeBoolean(_clampV, value.ClampV, DefaultValues.ClampV);
+				writeBoolean(_clampU, value.ClampU, DefaultValues.ClampU);
+				writeBoolean(_mirrorV, value.MirrorV, DefaultValues.MirrorV);
+				writeBoolean(_mirrorU, value.MirrorU, DefaultValues.MirrorU);
+				writeBoolean(_ignoreSpecular, value.IgnoreSpecular, DefaultValues.IgnoreSpecular);
+				writeBoolean(_useAlpha, value.UseAlpha, DefaultValues.UseAlpha);
+				writeBoolean(_useTexture, value.UseTexture, DefaultValues.UseTexture);
+				writeBoolean(_environmentMap, value.EnvironmentMap, DefaultValues.EnvironmentMap);
+				writeBoolean(_doubleSided, value.DoubleSided, DefaultValues.DoubleSided);
+				writeBoolean(_flatShading, value.FlatShading, DefaultValues.FlatShading);
+				writeBoolean(_ignoreLighting, value.IgnoreLighting, DefaultValues.IgnoreLighting);
+
+				serialize(_destinationAlpha, value.DestinationAlpha, DefaultValues.DestinationAlpha);
+				serialize(_sourceAlpha, value.SourceAlpha, DefaultValues.SourceAlpha);
+			}
+		}
+
 		/// <summary>
 		/// Number of bytes the structure occupies.
 		/// </summary>

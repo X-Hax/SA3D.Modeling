@@ -1,12 +1,133 @@
-﻿using SA3D.Modeling.Mesh.Ginja.Enums;
+﻿using J113D.Json;
+using SA3D.Modeling.Mesh.Ginja.Enums;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Ginja.Parameters
 {
 	/// <summary>
 	/// Holds lighting information
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct GinjaStripFlagsParameter : IGinjaParameter
 	{
+		internal class JsonConverter : ChildJsonObjectConverter<GinjaParameterType, GinjaStripFlagsParameter, IGinjaParameter>
+		{
+			private const string _channelCount = nameof(ChannelCount);
+			private const string _texGenCount = nameof(TexGenCount);
+			private const string _ignoreLight = nameof(IgnoreLight);
+			private const string _ignoreSpecular = nameof(IgnoreSpecular);
+			private const string _ignoreAmbient = nameof(IgnoreAmbient);
+			private const string _useVertexColorForDiffuse = nameof(UseVertexColorForDiffuse);
+			private const string _useVertexColorForAmbient = nameof(UseVertexColorForAmbient);
+			private const string _useAlpha = nameof(UseAlpha);
+			private const string _noPunchThrough = nameof(NoPunchThrough);
+			private const string _doubleSided = nameof(DoubleSided);
+			private const string _tevStageCount = nameof(TevStageCount);
+
+			/// <inheritdoc/>
+			protected override ParentJsonObjectConverter<GinjaParameterType, IGinjaParameter> ParentConverter => IGinjaParameter.BaseJsonConverter.instance;
+
+			/// <inheritdoc/>
+			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _channelCount, new(PropertyTokenType.Number, 0) },
+				{ _texGenCount, new(PropertyTokenType.Number, 0) },
+				{ _ignoreLight, new(PropertyTokenType.Bool, false) },
+				{ _ignoreSpecular, new(PropertyTokenType.Bool, false) },
+				{ _ignoreAmbient, new(PropertyTokenType.Bool, false) },
+				{ _useVertexColorForDiffuse, new(PropertyTokenType.Bool, false) },
+				{ _useVertexColorForAmbient, new(PropertyTokenType.Bool, false) },
+				{ _useAlpha, new(PropertyTokenType.Bool, false) },
+				{ _noPunchThrough, new(PropertyTokenType.Bool, false) },
+				{ _doubleSided, new(PropertyTokenType.Bool, false) },
+				{ _tevStageCount, new(PropertyTokenType.Number, 0) }
+			});
+
+
+			/// <inheritdoc/>
+			protected override bool CheckTypeMatches(GinjaParameterType key)
+			{
+				return key == GinjaParameterType.StripFlags;
+			}
+
+			/// <inheritdoc/>
+			protected override object? ReadTargetValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _channelCount:
+					case _texGenCount:
+					case _tevStageCount:
+						return reader.GetByte();
+					case _ignoreLight:
+					case _ignoreSpecular:
+					case _ignoreAmbient:
+					case _useVertexColorForDiffuse:
+					case _useVertexColorForAmbient:
+					case _useAlpha:
+					case _noPunchThrough:
+					case _doubleSided:
+						return reader.GetBoolean();
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override GinjaStripFlagsParameter CreateTarget(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					ChannelCount = (byte)values[_channelCount]!,
+					TexGenCount = (byte)values[_texGenCount]!,
+					IgnoreLight = (bool)values[_ignoreLight]!,
+					IgnoreSpecular = (bool)values[_ignoreSpecular]!,
+					IgnoreAmbient = (bool)values[_ignoreAmbient]!,
+					UseVertexColorForDiffuse = (bool)values[_useVertexColorForDiffuse]!,
+					UseVertexColorForAmbient = (bool)values[_useVertexColorForAmbient]!,
+					UseAlpha = (bool)values[_useAlpha]!,
+					NoPunchThrough = (bool)values[_noPunchThrough]!,
+					DoubleSided = (bool)values[_doubleSided]!,
+					TevStageCount = (byte)values[_tevStageCount]!
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteTargetValues(Utf8JsonWriter writer, GinjaStripFlagsParameter value, JsonSerializerOptions options)
+			{
+				void writeByte(string name, byte value)
+				{
+					if(value != 0)
+					{
+						writer.WriteNumber(name, value);
+					}
+				}
+
+				void writeBoolean(string name, bool value)
+				{
+					if(value)
+					{
+						writer.WriteBoolean(name, value);
+					}
+				}
+
+				writeByte(_channelCount, value.ChannelCount);
+				writeByte(_texGenCount, value.TexGenCount);
+				writeBoolean(_ignoreLight, value.IgnoreLight);
+				writeBoolean(_ignoreSpecular, value.IgnoreSpecular);
+				writeBoolean(_ignoreAmbient, value.IgnoreAmbient);
+				writeBoolean(_useVertexColorForDiffuse, value.UseVertexColorForDiffuse);
+				writeBoolean(_useVertexColorForAmbient, value.UseVertexColorForAmbient);
+				writeBoolean(_useAlpha, value.UseAlpha);
+				writeBoolean(_noPunchThrough, value.NoPunchThrough);
+				writeBoolean(_doubleSided, value.DoubleSided);
+				writeByte(_tevStageCount, value.TevStageCount);
+			}
+		}
+
 		/// <inheritdoc/>
 		public readonly GinjaParameterType Type => GinjaParameterType.StripFlags;
 
