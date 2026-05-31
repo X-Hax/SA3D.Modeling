@@ -1,6 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Common.Lookup;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace SA3D.Modeling.Mesh
 	/// 3D mesh data. Its possible for multiple attaches to make up one full mesh.
 	/// </summary>
 	[JsonConverter(typeof(BaseJsonConverter))]
-	public abstract class MeshData : ICloneable, ILabel, IBinarySerializable<IOContext>
+	public abstract class MeshData : ICloneable, ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiContext>
 	{
 		internal class BaseJsonConverter : ParentJsonObjectConverter<MeshFormat, MeshData>
 		{
@@ -145,6 +147,9 @@ namespace SA3D.Modeling.Mesh
 
 		/// <inheritdoc/>
 		public abstract void Write(BinaryObjectWriter writer, IOContext context);
+
+		/// <inheritdoc/>
+		public abstract void Write(AsciiWriter writer, ModelAsciiContext context);
 
 
 		object ICloneable.Clone()

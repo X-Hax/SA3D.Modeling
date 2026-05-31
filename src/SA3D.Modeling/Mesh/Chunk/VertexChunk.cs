@@ -1,10 +1,14 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Streams;
 using J113D.Json;
+using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,7 +24,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Set of vertex data of a chunk model
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class VertexChunk : ICloneable, IBinarySerializable
+	public class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<VertexChunk>
 		{
@@ -202,8 +206,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			return new([.. chunks]);
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		private void SplitWrite(Action<ushort, ushort, ushort, ushort> write)
 		{
 			if(Vertices.Length > short.MaxValue)
 			{
@@ -213,10 +216,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			int vertSize = Type.GetIntegerSize();
 			ushort vertexLimitPerChunk = (ushort)((ushort.MaxValue - 1) / vertSize); // -1 because header2 also counts as part of the size, which is always there
 
-			uint header1Base = (uint)Type | (uint)(Attributes << 8);
 			ushort offset = 0;
-
-			Action<BinaryObjectWriter, ChunkVertex> vertexWrite = ChunkVertex.GetWriteCallback(Type);
 
 			while(offset < Vertices.Length)
 			{
@@ -224,13 +224,24 @@ namespace SA3D.Modeling.Mesh.Chunk
 				ushort size = (ushort)((vertCount * vertSize) + 1);
 				ushort indexOffset = (ushort)(IndexOffset + (Type.CheckHasWeights() ? 0 : offset));
 
-				writer.WriteUInt32(header1Base | (uint)(size << 16));
-				writer.WriteUInt32((uint)(indexOffset | (vertCount << 16)));
-				writer.WriteObjectArray(vertexWrite, Vertices.Skip(offset).Take(vertCount));
+				write(size, indexOffset, vertCount, offset);
 				offset += vertCount;
 			}
 		}
 
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer)
+		{
+			uint header1Base = (uint)Type | (uint)(Attributes << 8);
+			Action<BinaryObjectWriter, ChunkVertex> vertexWrite = ChunkVertex.GetWriteCallback(Type);
+
+			SplitWrite((size, indexOffset, vertCount, offset) =>
+			{
+				writer.WriteUInt32(header1Base | (uint)(size << 16));
+				writer.WriteUInt32((uint)(indexOffset | (vertCount << 16)));
+				writer.WriteObjectArray(vertexWrite, Vertices.Skip(offset).Take(vertCount));
+			});
+		}
 
 		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<VertexChunk> chunks)
 		{
@@ -242,6 +253,42 @@ namespace SA3D.Modeling.Mesh.Chunk
 		}
 
 
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			string chunkType = AsciiMaps.VertexChunkTypeMap.FindKey(Type);
+			string chunkFlags = string.Empty;
+
+			if(VertexCalculationContinue)
+			{
+				chunkFlags += "FV_CONT|";
+			}
+
+			if(CompactShape)
+			{
+				chunkFlags += "FV_SHAPE|";
+			}
+
+			if(Type.CheckHasWeights())
+			{
+				chunkFlags += AsciiMaps.WeightModeMap.FindKey(WeightMode) + "|";
+			}
+
+			chunkFlags = chunkFlags == string.Empty ? "0x0" : chunkFlags[^1..];
+
+			Action<AsciiWriter, ChunkVertex> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
+
+			SplitWrite((size, indexOffset, vertCount, offset) =>
+			{
+				writer.WriteLine($"\t{chunkType}({chunkFlags},{size})");
+				writer.WriteLine($"\tOffnbIdx({indexOffset}, {vertCount})");
+
+				foreach(ChunkVertex vertex in Vertices.Skip(offset).Take(vertCount))
+				{
+					vertexWrite(writer, vertex);
+				}
+			});
+		}
 
 		object ICloneable.Clone()
 		{

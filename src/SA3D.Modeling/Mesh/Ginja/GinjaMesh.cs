@@ -1,10 +1,13 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Ginja.Enums;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -189,6 +192,12 @@ namespace SA3D.Modeling.Mesh.Ginja
 			writer.WriteInt16((short)(OpaqueMeshes?.Length ?? 0));
 			writer.WriteInt16((short)(TransparentMeshes?.Length ?? 0));
 			writer.WriteObject(MeshBounds);
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			throw new NotImplementedException();
 		}
 
 

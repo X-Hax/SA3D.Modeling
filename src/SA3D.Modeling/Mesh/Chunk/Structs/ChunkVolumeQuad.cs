@@ -1,6 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
+using SA3D.Modeling.ObjectData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -268,6 +270,14 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		public override readonly string ToString()
 		{
 			return $"Quad - {{ {Index1}, {Index2}, {Index3}, {Index4} }}";
+		}
+
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer, (ModelAsciiContext context, int attributeCount) context)
+		{
+			writer.Write($"\t\t{Index1}, {Index2}, {Index3}, {Index4}, ");
+			writer.WritePolygonUserflags(context.attributeCount, Attribute1, Attribute2, Attribute3, context.context.BaseContext.PolygonAttributesAsColor);
+			writer.WriteLine();
 		}
 	}
 }

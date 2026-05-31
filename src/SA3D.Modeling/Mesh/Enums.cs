@@ -91,14 +91,14 @@
 		Bilinear = 1,
 
 		/// <summary>
-		/// Linearly interpolates between the pixels and mitpmaps.
+		/// Mode A for linearly interpolating between mipmap levels
 		/// </summary>
-		Trilinear = 2,
+		TrilinearA = 2,
 
 		/// <summary>
-		/// Mix between bilinear and trilinear (?).
+		/// Mode B for linearly interpolating between mipmap levels
 		/// </summary>
-		Blend = 3,
+		TrilinearB = 3,
 	}
 
 	/// <summary>

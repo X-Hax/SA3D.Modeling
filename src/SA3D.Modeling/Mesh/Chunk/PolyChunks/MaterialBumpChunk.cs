@@ -2,6 +2,8 @@
 
 using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -101,12 +103,27 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			base.WriteData(writer);
+			base.Write(writer);
 
 			writer.WriteVector3(Dir, FloatIOType.NormalizedShort);
 			writer.WriteVector3(Up, FloatIOType.NormalizedShort);
+		}
+
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			return "0x0";
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			base.Write(writer, context);
+			writer.WriteLine();
+			writer.WriteLine($"\t_BuDir( {Dir.ToAscii()} ),");
+			writer.WriteLine($"\t_BuUp( {Dir.ToAscii()} ),");
 		}
 	}
 }

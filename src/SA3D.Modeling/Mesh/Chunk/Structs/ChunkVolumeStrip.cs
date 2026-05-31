@@ -1,6 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
+using SA3D.Modeling.ObjectData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -240,6 +242,49 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer, (ModelAsciiContext context, int attributeCount) context)
+		{
+			writer.Write($"\tStrip{(Reversed ? 'R' : 'L')}({Indices.Length}),");
+
+			if(context.attributeCount == 0)
+			{
+				if(Indices.Length > 10)
+				{
+					writer.WriteLine();
+				}
+
+				for(int i = 0; i < Indices.Length; i++)
+				{
+					writer.Write($"{Indices[i]}, ");
+
+					if(i > 0 && i % 10 == 0)
+					{
+						writer.WriteLine();
+						writer.Write("\t\t");
+					}
+				}
+
+				writer.WriteLine();
+			}
+			else
+			{
+
+				for(int i = 0; i < Indices.Length; i++)
+				{
+					writer.Write($"\t{Indices[i]},");
+
+					if(i > 1)
+					{
+						int triangleIndex = i - 2;
+						writer.WritePolygonUserflags(context.attributeCount, TriangleAttributes[triangleIndex, 0], TriangleAttributes[triangleIndex, 1], TriangleAttributes[triangleIndex, 2], context.context.BaseContext.PolygonAttributesAsColor);
+					}
+
+					writer.WriteLine();
+				}
+			}
+		}
+
 
 		readonly object ICloneable.Clone()
 		{
@@ -257,7 +302,5 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 				(ushort[,])TriangleAttributes.Clone(),
 				Reversed);
 		}
-
-
 	}
 }

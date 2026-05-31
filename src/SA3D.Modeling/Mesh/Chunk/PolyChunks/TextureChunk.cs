@@ -1,5 +1,9 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -135,8 +139,8 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public float MipmapDistanceMultiplier
 		{
-			get => (Attributes & 0xF) * 0.25f;
-			set => Attributes = (byte)((Attributes & 0xF0) | (byte)Math.Max(0, Math.Min(0xF, Math.Round(value / 0.25, MidpointRounding.AwayFromZero))));
+			get => byte.Max(1, (byte)(Attributes & 0xF)) * 0.25f;
+			set => Attributes = (byte)((Attributes & 0xF0) | (byte)Math.Max(1, Math.Min(0xF, Math.Round(value / 0.25, MidpointRounding.AwayFromZero))));
 		}
 
 		/// <summary>
@@ -228,10 +232,71 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			base.WriteData(writer);
+			base.Write(writer);
 			writer.WriteUInt16(Data);
+		}
+
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			string result;
+
+			if((Attributes & 0xF0) == 0)
+			{
+				result = "0x0";
+			}
+			else
+			{
+				result = string.Empty;
+				if(ClampU)
+				{
+					result += "|FCL_U";
+				}
+
+				if(ClampV)
+				{
+					result += "|FCL_V";
+				}
+
+				if(MirrorU)
+				{
+					result += "|FFL_U";
+				}
+
+				if(MirrorV)
+				{
+					result += "|FFL_V";
+				}
+
+				result = result[1..];
+			}
+
+			if((Attributes & 0xF) == 0)
+			{
+				result += "|FDA_100";
+			}
+			else
+			{
+				result += $"|FDA_{(Attributes & 0xF) * 25:D3}";
+			}
+
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			base.Write(writer, context);
+
+			string filterMode = AsciiMaps.FilterModeMap.FindKey(FilterMode);
+			if(SuperSample)
+			{
+				filterMode += "|FSS";
+			}
+
+			writer.WriteLine($" _TID({filterMode}, {TextureID}),");
 		}
 
 		/// <inheritdoc/>

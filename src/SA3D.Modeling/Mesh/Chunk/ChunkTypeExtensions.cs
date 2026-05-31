@@ -71,7 +71,9 @@ namespace SA3D.Modeling.Mesh.Chunk
 				or VertexChunkType.NormalDiffuseSpecular5
 				or VertexChunkType.NormalDiffuseSpecular4
 				or VertexChunkType.NormalIntensity
-				or VertexChunkType.Normal32Diffuse;
+				or VertexChunkType.Normal32Diffuse
+				or VertexChunkType.AttributesDiffuse
+				or VertexChunkType.DiffuseSpecular;
 
 		}
 
@@ -88,19 +90,29 @@ namespace SA3D.Modeling.Mesh.Chunk
 				or VertexChunkType.Intensity
 				or VertexChunkType.NormalDiffuseSpecular5
 				or VertexChunkType.NormalDiffuseSpecular4
-				or VertexChunkType.NormalIntensity;
+				or VertexChunkType.NormalIntensity
+				or VertexChunkType.DiffuseSpecular;
 		}
 
 		/// <summary>
-		/// Checks whether a vertex chunktype has attributes (user attributes included too).
+		/// Checks whether a vertex chunktype has attributes.
 		/// </summary>
 		/// <param name="type">The type to check.</param>
 		/// <returns></returns>
 		public static bool CheckHasAttributes(this VertexChunkType type)
 		{
 			return type is VertexChunkType.Attributes
-				or VertexChunkType.UserAttributes
-				or VertexChunkType.NormalAttributes
+				or VertexChunkType.NormalAttributes;
+		}
+
+		/// <summary>
+		/// Checks whether a vertex chunktype has user attributes.
+		/// </summary>
+		/// <param name="type">The type to check.</param>
+		/// <returns></returns>
+		public static bool CheckHasUserAttributes(this VertexChunkType type)
+		{
+			return type is VertexChunkType.UserAttributes
 				or VertexChunkType.NormalUserAttributes
 				or VertexChunkType.Normal32UserAttributes;
 		}
@@ -113,7 +125,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 		public static bool CheckHasWeights(this VertexChunkType type)
 		{
 			return type is VertexChunkType.Attributes
-				or VertexChunkType.NormalAttributes;
+				or VertexChunkType.NormalAttributes
+				or VertexChunkType.AttributesDiffuse;
 		}
 
 

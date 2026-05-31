@@ -6,7 +6,7 @@
 	public readonly struct IOContext
 	{
 		/// <summary>
-		/// Format that the level data is serialized with
+		/// Format that the mesh data is serialized with
 		/// </summary>
 		public Format MeshFormat { init;  get; }
 

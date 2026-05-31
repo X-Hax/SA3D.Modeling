@@ -1,8 +1,10 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -345,6 +347,20 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			return result;
 		}
 
+		private void WriteCheck()
+		{
+			if(Strips.Length > 0x3FFF)
+			{
+				throw new InvalidOperationException($"Strip count ({Strips.Length}) exceeds maximum ({0x3FFF})");
+			}
+
+			uint size = CalculateByteSize() / 2;
+			if(size > ushort.MaxValue)
+			{
+				throw new InvalidOperationException($"Strip chunk size ({size}) exceeds maximum size ({ushort.MaxValue}).");
+			}
+		}
+
 		/// <inheritdoc/>
 		public override void Read(BinaryObjectReader reader)
 		{
@@ -416,20 +432,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			if(Strips.Length > 0x3FFF)
-			{
-				throw new InvalidOperationException($"Strip count ({Strips.Length}) exceeds maximum ({0x3FFF})");
-			}
-
-			uint size = CalculateByteSize() / 2;
-			if(size > ushort.MaxValue)
-			{
-				throw new InvalidOperationException($"Strip chunk size ({size}) exceeds maximum size ({ushort.MaxValue}).");
-			}
-
-			base.WriteData(writer);
+			WriteCheck();
+			base.Write(writer);
 
 			writer.WriteUInt16((ushort)(Strips.Length | (TriangleAttributeCount << 14)));
 
@@ -491,6 +497,131 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			}
 		}
 
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			string result = string.Empty;
+
+			if(IgnoreLight)
+			{
+				result += "|FST_IL";
+			}
+
+			if(IgnoreSpecular)
+			{
+				result += "|FST_IS";
+			}
+
+			if(IgnoreAmbient)
+			{
+				result += "|FST_IA";
+			}
+
+			if(UseAlpha)
+			{
+				result += "|FST_UA";
+			}
+
+			if(DoubleSide)
+			{
+				result += "|FST_DB";
+			}
+
+			if(FlatShading)
+			{
+				result += "|FST_FL";
+			}
+
+			if(EnvironmentMapping)
+			{
+				result += "|FST_ENV";
+			}
+
+			if(ExtendedUseAlpha)
+			{
+				result += "|FST_EUA";
+			}
+
+			return result == string.Empty ? "0x0" : result[1..];
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			WriteCheck();
+			base.Write(writer, context);
+			writer.WriteLine($" _NB( UFO_{TriangleAttributeCount}, {Strips.Length} ),");
+
+			bool hasNormals = Type.CheckStripHasNormals();
+			bool hasColors = Type.CheckStripHasColors();
+
+			bool hasUV = Type.GetStripTexCoordCount() > 0;
+			bool hasUV2 = Type.GetStripTexCoordCount() > 1;
+			string uvMode = Type.CheckStripHasHDTexcoords() ? "Uvh" : "Uvn";
+
+			foreach(ChunkStrip strip in Strips)
+			{
+				writer.Write($"\tStrip{(strip.Reversed ? 'R' : 'L')}({strip.Corners.Length}),");
+
+				if(Type is PolyChunkType.Strip_Blank or PolyChunkType.Strip_BlankDouble)
+				{
+					if(strip.Corners.Length > 10)
+					{
+						writer.WriteLine();
+					}
+
+					for(int i = 0; i < strip.Corners.Length; i++)
+					{
+						writer.Write($"{strip.Corners[i].Index}, ");
+
+						if(i > 0 && i % 10 == 0)
+						{
+							writer.WriteLine();
+							writer.Write("\t\t");
+						}
+					}
+
+					writer.WriteLine();
+				}
+				else
+				{
+					writer.WriteLine();
+					for(int i = 0; i < strip.Corners.Length; i++)
+					{
+						ChunkCorner c = strip.Corners[i];
+
+						writer.Write($"\t{c.Index},".PadRight(5));
+
+						if(hasUV)
+						{
+							writer.Write($"\t{uvMode}( {c.Texcoord.X}, {c.Texcoord.Y} ),");
+
+							if(hasUV2)
+							{
+								writer.Write($"\t{uvMode}( {c.Texcoord2.X}, {c.Texcoord2.Y} ),");
+							}
+						}
+
+						if(hasNormals)
+						{
+							writer.Write($"\tPvn( {c.Normal.ToAscii()} ),");
+						}
+
+						if(hasColors)
+						{
+							writer.Write($"\tMDiff( {c.Color.Alpha}, {c.Color.Red}, {c.Color.Green}, {c.Color.Blue} ),");
+						}
+
+						if(i > 1)
+						{
+							writer.WritePolygonUserflags(TriangleAttributeCount, c.Attributes1, c.Attributes2, c.Attributes3, context.BaseContext.PolygonAttributesAsColor);
+						}
+
+						writer.WriteLine();
+					}
+				}
+			}
+		}
 
 		/// <inheritdoc/>
 		public override StripChunk Clone()

@@ -1,12 +1,17 @@
 ﻿using Amicitia.IO.Binary;
 using Amicitia.IO.Streams;
 using J113D.Json;
+using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.PolyChunks;
+using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -16,7 +21,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Polychunk base class.
 	/// </summary>
 	[JsonConverter(typeof(BaseJsonConverter))]
-	public abstract class PolyChunk : ICloneable, IBinarySerializable
+	public abstract class PolyChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiContext>
 	{
 		internal class BaseJsonConverter : ParentJsonObjectConverter<PolyChunkType, PolyChunk>
 		{
@@ -266,7 +271,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		}
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		public virtual void Write(BinaryObjectWriter writer)
 		{
 			if(AlignWithFour)
 			{
@@ -274,14 +279,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 
 			writer.WriteUInt16((ushort)((byte)Type | (Attributes << 8)));
-			WriteData(writer);
 		}
-
-		/// <summary>
-		/// Writes additional polychunk data
-		/// </summary>
-		/// <param name="writer">The writer to write to</param>
-		protected virtual void WriteData(BinaryObjectWriter writer) { }
 
 		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks)
 		{
@@ -291,6 +289,18 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteUInt16((ushort)PolyChunkType.End);
 		}
 
+		/// <inheritdoc/>
+		public virtual void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			string chunkType = AsciiMaps.PolyChunkTypeMap.FindKey(Type);
+			string bits = GetAsciiBits();
+			writer.Write($"\t{chunkType}( {bits} ),");
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected abstract string GetAsciiBits();
 
 		object ICloneable.Clone()
 		{
@@ -311,6 +321,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		{
 			return Type.ToString();
 		}
+
 
 	}
 }

@@ -1,8 +1,10 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -247,6 +249,12 @@ namespace SA3D.Modeling.Mesh.Basic
 			}
 		}
 
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			throw new NotImplementedException();
+		}
+
 
 		/// <inheritdoc/>
 		public override MeshData Clone()
@@ -267,8 +275,6 @@ namespace SA3D.Modeling.Mesh.Basic
 		{
 			return $"{Label} - BASIC";
 		}
-
-
 	}
 }
 

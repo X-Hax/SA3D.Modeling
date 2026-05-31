@@ -76,6 +76,12 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public CacheListChunk() : base(PolyChunkType.CacheList) { }
 
 		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			return List.ToString();
+		}
+
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return $"Cache list - {List}";

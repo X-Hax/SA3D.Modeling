@@ -1,5 +1,7 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData;
 using System;
 using System.Text.Json.Serialization;
 
@@ -9,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 	/// Chunk volume polygon interface.
 	/// </summary>
 	[JsonConverter(typeof(InterfaceJsonSerializer<IChunkVolumePolygon>))]
-	public interface IChunkVolumePolygon : ICloneable, IBinarySerializable<int>
+	public interface IChunkVolumePolygon : ICloneable, IBinarySerializable<int>, IAsciiSerializable<(ModelAsciiContext context, int attributeCount)>
 	{
 		/// <summary>
 		/// Number of indices in the polygon.

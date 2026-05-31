@@ -1,10 +1,12 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.PolyChunks;
 using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,8 +25,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<MeshFormat, ChunkMesh, MeshData>
 		{
-			private const string _vertexChunks = nameof(ChunkMesh.VertexChunks);
-			private const string _polyChunks = nameof(ChunkMesh.PolyChunks);
+			private const string _vertexChunks = nameof(VertexChunks);
+			private const string _polyChunks = nameof(PolyChunks);
 
 
 			/// <inheritdoc/>
@@ -190,6 +192,44 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteObjectOffset(VertexChunks.EmptyNull(), VertexChunk.WriteArray, context.PointerLUT);
 			writer.WriteObjectOffset(PolyChunks.EmptyNull(), PolyChunk.WriteArray, context.PointerLUT);
 			writer.WriteObject(MeshBounds);
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			WriteChunkArray(writer, "PLIST", PolyChunks, context);
+			WriteChunkArray(writer, "VLIST", VertexChunks, context);
+
+			using(writer.WriteStructBlock("CNKMODEL", this))
+			{
+				writer.WriteObjectPropertyLine("VList", VertexChunks);
+				writer.WriteObjectPropertyLine("PList", PolyChunks);
+				writer.WritePropertyLine("Center", MeshBounds.Position.ToAscii());
+				writer.WritePropertyLine("Radius", MeshBounds.Radius.ToAscii());
+			}
+		}
+
+		private static void WriteChunkArray<T>(AsciiWriter writer, string type, LabeledArray<T>? chunks, ModelAsciiContext context) where T : IAsciiSerializable<ModelAsciiContext>
+		{
+			if(chunks == null)
+			{
+				return;
+			}
+
+			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference(type, chunks))
+			{
+				if(block == null)
+				{
+					return;
+				}
+
+				foreach(T chunk in chunks)
+				{
+					chunk.Write(writer, context);
+				}
+
+				writer.WriteLine("\tCnkEnd()");
+			}
 		}
 
 		/// <inheritdoc/>

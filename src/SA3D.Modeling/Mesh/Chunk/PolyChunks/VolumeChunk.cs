@@ -1,9 +1,11 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.ObjectData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -224,6 +226,14 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			return result;
 		}
 
+		private void WriteCheck()
+		{
+			if(Polygons.Length > 0x3FFF)
+			{
+				throw new InvalidOperationException($"Poly count ({Polygons.Length}) exceeds maximum ({0x3FFF})");
+			}
+		}
+
 		/// <inheritdoc/>
 		public override void Read(BinaryObjectReader reader)
 		{
@@ -243,16 +253,12 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			if(Polygons.Length > 0x3FFF)
-			{
-				throw new InvalidOperationException($"Poly count ({Polygons.Length}) exceeds maximum ({0x3FFF})");
-			}
-
+			WriteCheck();
 			VerifyPolygonData();
 
-			base.WriteData(writer);
+			base.Write(writer);
 
 			writer.WriteUInt16((ushort)(Polygons.Length | (PolygonAttributeCount << 14)));
 
@@ -262,6 +268,25 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			}
 		}
 
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			return "0x0";
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			WriteCheck();
+			VerifyPolygonData();
+			base.Write(writer, context);
+			writer.WriteLine($" _NB( UFO_{PolygonAttributeCount}, {Polygons.Length} ),");
+
+			foreach(IChunkVolumePolygon p in Polygons)
+			{
+				p.Write(writer, (context, PolygonAttributeCount));
+			}
+		}
 
 		/// <inheritdoc/>
 		public override VolumeChunk Clone()
@@ -280,5 +305,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		{
 			return $"{Type} - {PolygonAttributeCount} : {Polygons.Length}";
 		}
+
+
 	}
 }

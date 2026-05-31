@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Basic;
@@ -16,7 +17,7 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Hierarchy object making up models.
 	/// </summary>
-	public partial class Node : ILabel, IBinarySerializable<IOContext>
+	public partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiContext>
 	{
 		/// <inheritdoc/>
 		public string Label { get; set; }
@@ -111,6 +112,53 @@ namespace SA3D.Modeling.ObjectData
 			}
 		}
 
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			writer.WriteObject(Next, context);
+			writer.WriteObject(Child, context);
+
+			string typePrefix = context.Format switch
+			{
+				Format.Chunk => "CNK",
+				Format.Ginja => "GJ",
+				_ => string.Empty,
+			};
+
+			string objectType = typePrefix + "OBJECT";
+
+
+			using(writer.WriteObjectBlock(objectType))
+			{
+				writer.WriteObject(MeshData, context);
+
+				using(writer.WriteStructBlock(objectType, this))
+				{
+					writer.WritePropertyLine("EvalFlags", $"( {Attributes.ToAscii(AsciiMaps.NodeAttributesMap)} )");
+					writer.WriteObjectPropertyLine($"{typePrefix}Model", MeshData);
+					writer.WritePropertyLine("OPosition", $"( {Position.ToAscii()} )");
+
+					if(UseQuaternionRotation)
+					{
+						writer.WritePropertyLine("OQuatIm", $"( {QuaternionRotation.X.ToAsciiHex()}, {QuaternionRotation.Y.ToAsciiHex()}, {QuaternionRotation.Z.ToAsciiHex()} )");
+					}
+					else
+					{
+						writer.WritePropertyLine("OAngle", $"( {EulerRotation.ToAsciiDegrees()} )");
+					}
+
+					writer.WritePropertyLine("OScale", $"( {Scale.ToAscii()} )");
+					writer.WriteObjectPropertyLine($"Child", Child);
+					writer.WriteObjectPropertyLine($"Sibling", Next);
+
+					if(context.HasQuaternions || !context.BaseContext.NoQuaternionAppendix)
+					{
+						writer.WritePropertyLine("OQuatRe", $"( {QuaternionRotation.W.ToAscii()} )");
+					}
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a shallow copy of the node with no relationships.
@@ -140,17 +188,6 @@ namespace SA3D.Modeling.ObjectData
 				result.MeshData = result.MeshData.Clone();
 			}
 
-			return result;
-		}
-
-		/// <summary>
-		/// Duplicated the node in place and inserts it after the original node.
-		/// </summary>
-		public Node Duplicate()
-		{
-			Node result = SimpleCopy();
-			result.Label += "_Clone";
-			InsertAfter(result);
 			return result;
 		}
 
@@ -201,5 +238,6 @@ namespace SA3D.Modeling.ObjectData
 		{
 			return MeshData == null ? $"{Label} - /" : $"{Label} - {MeshData}";
 		}
+
 	}
 }

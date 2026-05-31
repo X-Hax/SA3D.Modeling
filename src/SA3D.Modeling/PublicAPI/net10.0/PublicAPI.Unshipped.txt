@@ -2,6 +2,7 @@
 abstract SA3D.Modeling.File.MetaData.MetaDataBlock.Type.get -> SA3D.Modeling.File.MetaData.MetaDataBlockType
 abstract SA3D.Modeling.File.MetaData.MetaDataBlock.WriteContents(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
 abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.AlignWithFour.get -> bool
+abstract SA3D.Modeling.Mesh.Chunk.PolyChunk.GetAsciiBits() -> string!
 abstract SA3D.Modeling.Mesh.MeshData.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
 abstract SA3D.Modeling.Mesh.MeshData.Clone() -> SA3D.Modeling.Mesh.MeshData!
 abstract SA3D.Modeling.Mesh.MeshData.LabelPrefix.get -> string!
@@ -9,6 +10,7 @@ abstract SA3D.Modeling.Mesh.MeshData.MeshFormat.get -> SA3D.Modeling.Mesh.MeshFo
 abstract SA3D.Modeling.Mesh.MeshData.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 abstract SA3D.Modeling.Mesh.MeshData.RecalculateBounds() -> void
 abstract SA3D.Modeling.Mesh.MeshData.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+abstract SA3D.Modeling.Mesh.MeshData.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 const SA3D.Modeling.AnimationData.Animation.KeyframeSetLabelPrefix = "keyframes_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMesh.MaterialsLabelPrefix = "materials_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMesh.MeshesLabelPrefix = "meshes_" -> string!
@@ -73,6 +75,7 @@ override SA3D.Modeling.Mesh.Basic.BasicMesh.Read(Amicitia.IO.Binary.BinaryObject
 override SA3D.Modeling.Mesh.Basic.BasicMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Basic.BasicMesh.ToString() -> string!
 override SA3D.Modeling.Mesh.Basic.BasicMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Basic.BasicMesh.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CanWrite(SA3D.Modeling.Structs.Format format) -> bool
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.CheckHasWeights() -> bool
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Clone() -> SA3D.Modeling.Mesh.Chunk.ChunkMesh!
@@ -82,25 +85,43 @@ override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Read(Amicitia.IO.Binary.BinaryObject
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.ToString() -> string!
 override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.ChunkMesh.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.AlignWithFour.get -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.GetAsciiBits() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.GetAsciiBits() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.DrawListChunk.GetAsciiBits() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.MipmapDistanceMultiplierChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.AlignWithFour.get -> bool
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SizedChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.SpecularExponentChunk.GetAsciiBits() -> string!
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.AlignWithFour.get -> bool
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.TextureChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.GetAsciiBits() -> string!
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+override SA3D.Modeling.Mesh.Chunk.PolyChunks.VolumeChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 override SA3D.Modeling.Mesh.Ginja.GinjaCorner.Equals(object? obj) -> bool
 override SA3D.Modeling.Mesh.Ginja.GinjaCorner.GetHashCode() -> int
 override SA3D.Modeling.Mesh.Ginja.GinjaCorner.ToString() -> string!
@@ -112,6 +133,7 @@ override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Read(Amicitia.IO.Binary.BinaryObject
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.RecalculateBounds() -> void
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.ToString() -> string!
 override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+override SA3D.Modeling.Mesh.Ginja.GinjaMesh.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 override SA3D.Modeling.Mesh.Ginja.GinjaMeshSet.ToString() -> string!
 override SA3D.Modeling.Mesh.Ginja.GinjaPolygon.ToString() -> string!
 override SA3D.Modeling.Mesh.Ginja.GinjaVertexSet.ToString() -> string!
@@ -417,6 +439,7 @@ SA3D.Modeling.File.ModelFile.NJFile.set -> void
 SA3D.Modeling.File.ModelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.File.ModelFile.TextureNames.set -> void
 SA3D.Modeling.File.ModelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.ModelFile.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.Opaque = 0 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.Transparent = 1 -> SA3D.Modeling.Mesh.AlphaMode
@@ -467,11 +490,26 @@ SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunks.get -> SA3D.Common.Lookup.LabeledA
 SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunks.set -> void
 SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunks.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Chunk.VertexChunk!>?
 SA3D.Modeling.Mesh.Chunk.ChunkMesh.VertexChunks.set -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationBlendMode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationBlendMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationSelect.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationSelect.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceBlendMode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceBlendMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceSelect.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceSelect.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Dir.get -> System.Numerics.Vector3
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Dir.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Up.get -> System.Numerics.Vector3
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.Up.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationBlendMode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationBlendMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationSelect.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationSelect.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceBlendMode.get -> SA3D.Modeling.Mesh.BlendMode
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceBlendMode.set -> void
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceSelect.get -> bool
+SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceSelect.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.AlphaMode.get -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.AlphaMode.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.StripChunk.CalculateByteSize() -> uint
@@ -498,15 +536,20 @@ SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, uint attributes) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, uint attributes, SA3D.Modeling.Structs.Color diffuse) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.ChunkVertex(System.Numerics.Vector3 position, ushort index, float weight) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Weight2.get -> float
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.Weight2.set -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeQuad.Write(SA3D.Common.Ascii.AsciiWriter! writer, (SA3D.Modeling.ObjectData.ModelAsciiContext context, int attributeCount) context) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Indices.set -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.TriangleAttributes.set -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.VerifyPolygonData() -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeStrip.Write(SA3D.Common.Ascii.AsciiWriter! writer, (SA3D.Modeling.ObjectData.ModelAsciiContext context, int attributeCount) context) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, int polygonAttributeCount) -> void
 SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, int polygonAttributeCount) -> void
+SA3D.Modeling.Mesh.Chunk.Structs.ChunkVolumeTriangle.Write(SA3D.Common.Ascii.AsciiWriter! writer, (SA3D.Modeling.ObjectData.ModelAsciiContext context, int attributeCount) context) -> void
 SA3D.Modeling.Mesh.Chunk.VertexChunk.Attributes.set -> void
 SA3D.Modeling.Mesh.Chunk.VertexChunk.CompactShape.get -> bool
 SA3D.Modeling.Mesh.Chunk.VertexChunk.CompactShape.set -> void
@@ -519,6 +562,7 @@ SA3D.Modeling.Mesh.Chunk.VertexChunk.Vertices.set -> void
 SA3D.Modeling.Mesh.Chunk.VertexChunk.WeightMode.get -> SA3D.Modeling.Mesh.Chunk.WeightMode
 SA3D.Modeling.Mesh.Chunk.VertexChunk.WeightMode.set -> void
 SA3D.Modeling.Mesh.Chunk.VertexChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Chunk.VertexChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 SA3D.Modeling.Mesh.Chunk.VertexChunkType.AttributesDiffuse = 52 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
 SA3D.Modeling.Mesh.Chunk.VertexChunkType.DiffuseSpecular = 51 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
 SA3D.Modeling.Mesh.Chunk.WeightMode
@@ -526,6 +570,8 @@ SA3D.Modeling.Mesh.Chunk.WeightMode.End = 2 -> SA3D.Modeling.Mesh.Chunk.WeightMo
 SA3D.Modeling.Mesh.Chunk.WeightMode.Middle = 1 -> SA3D.Modeling.Mesh.Chunk.WeightMode
 SA3D.Modeling.Mesh.Chunk.WeightMode.Start = 0 -> SA3D.Modeling.Mesh.Chunk.WeightMode
 SA3D.Modeling.Mesh.EnumExtensions
+SA3D.Modeling.Mesh.FilterMode.TrilinearA = 2 -> SA3D.Modeling.Mesh.FilterMode
+SA3D.Modeling.Mesh.FilterMode.TrilinearB = 3 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
 SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Alpha0 = 2 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
 SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID.Alpha1 = 3 -> SA3D.Modeling.Mesh.Ginja.Enums.GinjaColorChannelID
@@ -982,6 +1028,14 @@ SA3D.Modeling.ObjectData.LevelModel.Unknown.get -> uint
 SA3D.Modeling.ObjectData.LevelModel.Unknown.set -> void
 SA3D.Modeling.ObjectData.LevelModel.UpdateBounds() -> void
 SA3D.Modeling.ObjectData.LevelModel.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.ModelAsciiContext
+SA3D.Modeling.ObjectData.ModelAsciiContext.BaseContext.get -> SA3D.Modeling.Structs.AsciiContext
+SA3D.Modeling.ObjectData.ModelAsciiContext.BaseContext.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiContext.HasQuaternions.get -> bool
+SA3D.Modeling.ObjectData.ModelAsciiContext.HasQuaternions.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiContext.ModelAsciiContext() -> void
+SA3D.Modeling.ObjectData.ModelAsciiContext.UseVersion2Weights.get -> bool
+SA3D.Modeling.ObjectData.ModelAsciiContext.UseVersion2Weights.init -> void
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.set -> void
 SA3D.Modeling.ObjectData.Node.CacheRotation.get -> bool
@@ -1006,6 +1060,24 @@ SA3D.Modeling.ObjectData.Node.Modifier.set -> void
 SA3D.Modeling.ObjectData.Node.OnMeshDataUpdated -> SA3D.Modeling.ObjectData.Events.MeshDataUpdatedEventHandler?
 SA3D.Modeling.ObjectData.Node.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.ObjectData.Node.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.ObjectData.Node.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
+SA3D.Modeling.Structs.AsciiContext
+SA3D.Modeling.Structs.AsciiContext.AsciiContext() -> void
+SA3D.Modeling.Structs.AsciiContext.Format.get -> SA3D.Modeling.Structs.Format
+SA3D.Modeling.Structs.AsciiContext.Format.init -> void
+SA3D.Modeling.Structs.AsciiContext.NoQuaternionAppendix.get -> bool
+SA3D.Modeling.Structs.AsciiContext.NoQuaternionAppendix.init -> void
+SA3D.Modeling.Structs.AsciiContext.PolygonAttributesAsColor.get -> bool
+SA3D.Modeling.Structs.AsciiContext.PolygonAttributesAsColor.init -> void
+SA3D.Modeling.Structs.AsciiContext.VertexUserAttributesAsColor.get -> bool
+SA3D.Modeling.Structs.AsciiContext.VertexUserAttributesAsColor.init -> void
+SA3D.Modeling.Structs.AsciiContext.WeightFormat.get -> SA3D.Modeling.Structs.AsciiWeightFormat
+SA3D.Modeling.Structs.AsciiContext.WeightFormat.init -> void
+SA3D.Modeling.Structs.AsciiMaps
+SA3D.Modeling.Structs.AsciiWeightFormat
+SA3D.Modeling.Structs.AsciiWeightFormat.Automatic = 0 -> SA3D.Modeling.Structs.AsciiWeightFormat
+SA3D.Modeling.Structs.AsciiWeightFormat.Force1 = 1 -> SA3D.Modeling.Structs.AsciiWeightFormat
+SA3D.Modeling.Structs.AsciiWeightFormat.Force2 = 2 -> SA3D.Modeling.Structs.AsciiWeightFormat
 SA3D.Modeling.Structs.Bounds.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.Structs.Bounds.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
 SA3D.Modeling.Structs.Color.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.Structs.ColorIOType type) -> void
@@ -1060,7 +1132,9 @@ static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator !=(SA3D.Model
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightNode.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeightNode left, SA3D.Modeling.File.MetaData.Weights.MetaWeightNode right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex left, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex left, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex right) -> bool
+static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasUserAttributes(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> int
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetAsciiWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> System.Action<SA3D.Common.Ascii.AsciiWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetReadCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Action<Amicitia.IO.Binary.BinaryObjectWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.EnumExtensions.ToFormat(this SA3D.Modeling.Mesh.MeshFormat attachFormat) -> SA3D.Modeling.Structs.Format
@@ -1069,6 +1143,14 @@ static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetDataReflectionType(
 static SA3D.Modeling.Mesh.Ginja.Enums.GinjaEnumExtensions.GetStructComponentCount(this SA3D.Modeling.Mesh.Ginja.Enums.GinjaStructType structType) -> int
 static SA3D.Modeling.Mesh.Ginja.GinjaCorner.operator !=(SA3D.Modeling.Mesh.Ginja.GinjaCorner left, SA3D.Modeling.Mesh.Ginja.GinjaCorner right) -> bool
 static SA3D.Modeling.Mesh.Ginja.GinjaCorner.operator ==(SA3D.Modeling.Mesh.Ginja.GinjaCorner left, SA3D.Modeling.Mesh.Ginja.GinjaCorner right) -> bool
+static SA3D.Modeling.ObjectData.ModelAsciiContext.FromModel(SA3D.Modeling.ObjectData.Node! model, SA3D.Modeling.Structs.AsciiContext baseContext) -> SA3D.Modeling.ObjectData.ModelAsciiContext
+static SA3D.Modeling.Structs.AsciiMaps.DestinationBlendModeMap.get -> System.Collections.Generic.Dictionary<string!, SA3D.Modeling.Mesh.BlendMode>!
+static SA3D.Modeling.Structs.AsciiMaps.FilterModeMap.get -> System.Collections.Generic.Dictionary<string!, SA3D.Modeling.Mesh.FilterMode>!
+static SA3D.Modeling.Structs.AsciiMaps.NodeAttributesMap.get -> System.Collections.ObjectModel.ReadOnlyDictionary<string!, SA3D.Modeling.ObjectData.Enums.NodeAttributes>!
+static SA3D.Modeling.Structs.AsciiMaps.PolyChunkTypeMap.get -> System.Collections.ObjectModel.ReadOnlyDictionary<string!, SA3D.Modeling.Mesh.Chunk.PolyChunkType>!
+static SA3D.Modeling.Structs.AsciiMaps.SourceBlendModeMap.get -> System.Collections.Generic.Dictionary<string!, SA3D.Modeling.Mesh.BlendMode>!
+static SA3D.Modeling.Structs.AsciiMaps.VertexChunkTypeMap.get -> System.Collections.ObjectModel.ReadOnlyDictionary<string!, SA3D.Modeling.Mesh.Chunk.VertexChunkType>!
+static SA3D.Modeling.Structs.AsciiMaps.WeightModeMap.get -> System.Collections.ObjectModel.ReadOnlyDictionary<string!, SA3D.Modeling.Mesh.Chunk.WeightMode>!
 static SA3D.Modeling.Structs.BAMSFHelper.ReadBAMSF16(this Amicitia.IO.Binary.BinaryValueReader! reader) -> float
 static SA3D.Modeling.Structs.BAMSFHelper.ReadBAMSF32(this Amicitia.IO.Binary.BinaryValueReader! reader) -> float
 static SA3D.Modeling.Structs.BAMSFHelper.WriteBAMSF16(this Amicitia.IO.Binary.BinaryValueWriter! writer, float radians) -> void
@@ -1092,5 +1174,6 @@ static SA3D.Modeling.Structs.FloatIOTypeExtensions.WriteVector2(this Amicitia.IO
 static SA3D.Modeling.Structs.FloatIOTypeExtensions.WriteVector3(this Amicitia.IO.Binary.BinaryValueWriter! writer, System.Numerics.Vector3 value, SA3D.Modeling.Structs.FloatIOType type) -> void
 virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.IsTypeApplicable(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.WriteData(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+virtual SA3D.Modeling.Mesh.Chunk.PolyChunk.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 virtual SA3D.Modeling.Mesh.MeshData.CheckHasWeights() -> bool

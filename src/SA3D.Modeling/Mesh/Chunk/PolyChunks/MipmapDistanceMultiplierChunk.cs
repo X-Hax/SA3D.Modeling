@@ -68,14 +68,25 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public float MipmapDistanceMultiplier
 		{
-			get => (Attributes & 0xF) * 0.25f;
-			set => Attributes = (byte)((Attributes & 0xF0) | (byte)Math.Max(0, Math.Min(0xF, Math.Round(value / 0.25, MidpointRounding.AwayFromZero))));
+			get => byte.Max(1, (byte)(Attributes & 0xF)) * 0.25f;
+			set => Attributes = (byte)((Attributes & 0xF0) | (byte)Math.Max(1, Math.Min(0xF, Math.Round(value / 0.25, MidpointRounding.AwayFromZero))));
 		}
 
 		/// <summary>
 		/// Creates a new mipmap distance multiplier chunk.
 		/// </summary>
 		public MipmapDistanceMultiplierChunk() : base(PolyChunkType.MipmapDistanceMultiplier) { }
+
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			if((Attributes & 0xF) == 0)
+			{
+				return "FDA_100";
+			}
+
+			return $"FDA_{(Attributes & 0xF) * 25:D3}";
+		}
 
 		/// <inheritdoc/>
 		public override string ToString()

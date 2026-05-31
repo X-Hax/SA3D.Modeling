@@ -1,5 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,8 +19,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, MaterialChunk, PolyChunk>
 		{
-			private const string _sourceAlpha = nameof(SourceAlpha);
-			private const string _destinationAlpha = nameof(DestinationAlpha);
+			private const string _sourceBlendMode = nameof(SourceBlendMode);
+			private const string _destinationBlendMode = nameof(DestinationBlendMode);
+			private const string _sourceSelect = nameof(SourceSelect);
+			private const string _destinationSelect = nameof(DestinationSelect);
 			private const string _diffuse = nameof(Diffuse);
 			private const string _ambient = nameof(Ambient);
 			private const string _specular = nameof(Specular);
@@ -30,8 +35,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			/// <inheritdoc/>
 			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
 			{
-				{ _sourceAlpha, new(PropertyTokenType.String, BlendMode.Zero) },
-				{ _destinationAlpha, new(PropertyTokenType.String, BlendMode.Zero) },
+				{ _sourceBlendMode, new(PropertyTokenType.String, BlendMode.Zero) },
+				{ _destinationBlendMode, new(PropertyTokenType.String, BlendMode.Zero) },
+				{ _sourceSelect, new(PropertyTokenType.Bool, false) },
+				{ _destinationSelect, new(PropertyTokenType.Bool, false) },
 				{ _diffuse, new(PropertyTokenType.String, null, true) },
 				{ _ambient, new(PropertyTokenType.String, null, true) },
 				{ _specular, new(PropertyTokenType.String, null, true) },
@@ -52,9 +59,12 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			{
 				switch(propertyName)
 				{
-					case _sourceAlpha:
-					case _destinationAlpha:
+					case _sourceBlendMode:
+					case _destinationBlendMode:
 						return JsonSerializer.Deserialize<BlendMode>(ref reader, options);
+					case _sourceSelect:
+					case _destinationSelect:
+						return reader.GetBoolean();
 					case _diffuse:
 					case _ambient:
 					case _specular:
@@ -82,8 +92,10 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 
 				return new()
 				{
-					SourceAlpha = (BlendMode)values[_sourceAlpha]!,
-					DestinationAlpha = (BlendMode)values[_destinationAlpha]!,
+					SourceBlendMode = (BlendMode)values[_sourceBlendMode]!,
+					DestinationBlendMode = (BlendMode)values[_destinationBlendMode]!,
+					SourceSelect = (bool)values[_sourceSelect]!,
+					DestinationSelect = (bool)values[_destinationSelect]!,
 					Diffuse = (Color?)values[_diffuse]!,
 					Ambient = (Color?)values[_ambient]!,
 					Specular = (Color?)values[_specular]!,
@@ -95,11 +107,21 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			/// <inheritdoc/>
 			protected override void WriteTargetValues(Utf8JsonWriter writer, MaterialChunk value, JsonSerializerOptions options)
 			{
-				writer.WritePropertyName(_sourceAlpha);
-				JsonSerializer.Serialize(writer, value.SourceAlpha, options);
+				writer.WritePropertyName(_sourceBlendMode);
+				JsonSerializer.Serialize(writer, value.SourceBlendMode, options);
 
-				writer.WritePropertyName(_destinationAlpha);
-				JsonSerializer.Serialize(writer, value.DestinationAlpha, options);
+				writer.WritePropertyName(_destinationBlendMode);
+				JsonSerializer.Serialize(writer, value.DestinationBlendMode, options);
+
+				if(value.SourceSelect)
+				{
+					writer.WriteBoolean(_sourceSelect, value.SourceSelect);
+				}
+
+				if(value.DestinationSelect)
+				{
+					writer.WriteBoolean(_destinationSelect, value.DestinationSelect);
+				}
 
 				if(value.Diffuse != null)
 				{
@@ -153,7 +175,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// Source blendmode
 		/// </summary>
-		public BlendMode SourceAlpha
+		public BlendMode SourceBlendMode
 		{
 			get => (BlendMode)((Attributes >> 3) & 7);
 			set => Attributes = (byte)((Attributes & ~0x38) | ((byte)value << 3));
@@ -162,10 +184,28 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// Destination blendmode
 		/// </summary>
-		public BlendMode DestinationAlpha
+		public BlendMode DestinationBlendMode
 		{
 			get => (BlendMode)(Attributes & 7);
 			set => Attributes = (byte)((Attributes & ~7) | (byte)value);
+		}
+
+		/// <summary>
+		/// Source select flag
+		/// </summary>
+		public bool SourceSelect
+		{
+			get => (Attributes & (byte)Flag8.B7) != 0;
+			set => Attributes = (byte)(value ? (Attributes | (byte)Flag8.B7) : (Attributes & ~(byte)Flag8.B7));
+		}
+
+		/// <summary>
+		/// Source select flag
+		/// </summary>
+		public bool DestinationSelect
+		{
+			get => (Attributes & (byte)Flag8.B6) != 0;
+			set => Attributes = (byte)(value ? (Attributes | (byte)Flag8.B6) : (Attributes & ~(byte)Flag8.B6));
 		}
 
 		/// <summary>
@@ -261,9 +301,9 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			base.WriteData(writer);
+			base.Write(writer);
 
 			if(Diffuse.HasValue)
 			{
@@ -280,6 +320,48 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 				Color wSpecular = Specular.Value;
 				wSpecular.Alpha = SpecularExponent;
 				writer.WriteObject(wSpecular, ColorIOType.ARGB8_16);
+			}
+		}
+
+		/// <inheritdoc/>
+		protected override string GetAsciiBits()
+		{
+			string result =
+				AsciiMaps.SourceBlendModeMap.FindKey(SourceBlendMode)
+				+ "|" + AsciiMaps.DestinationBlendModeMap.FindKey(DestinationBlendMode);
+
+			if(SourceSelect)
+			{
+				result += "|FBS_SEL";
+			}
+
+			if(DestinationSelect)
+			{
+				result += "|FBD_SEL";
+			}
+
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			base.Write(writer, context);
+			writer.WriteLine();
+
+			if(Diffuse.HasValue)
+			{
+				writer.WriteLine($"\tMDiff( {Diffuse.Value.Alpha}, {Diffuse.Value.Red}, {Diffuse.Value.Green}, {Diffuse.Value.Blue} ),");
+			}
+
+			if(Ambient.HasValue)
+			{
+				writer.WriteLine($"\tMAmbi( {Ambient.Value.Alpha}, {Ambient.Value.Red}, {Ambient.Value.Green}, {Ambient.Value.Blue} ),");
+			}
+
+			if(Specular.HasValue)
+			{
+				writer.WriteLine($"\tMSpec( {SpecularExponent}, {Specular.Value.Red}, {Specular.Value.Green}, {Specular.Value.Blue} ),");
 			}
 		}
 	}

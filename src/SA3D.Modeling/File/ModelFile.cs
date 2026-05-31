@@ -2,12 +2,18 @@
 using Amicitia.IO.Binary.Extensions;
 using Amicitia.IO.Streams;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.File.MetaData;
 using SA3D.Modeling.File.MetaData.Blocks;
 using SA3D.Modeling.File.MetaData.Weights;
 using SA3D.Modeling.Mesh;
+using SA3D.Modeling.Mesh.Basic;
+using SA3D.Modeling.Mesh.Chunk;
+using SA3D.Modeling.Mesh.Chunk.Structs;
+using SA3D.Modeling.Mesh.Ginja;
+using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
@@ -17,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static SA3D.Modeling.File.FileHeaders;
@@ -27,7 +34,7 @@ namespace SA3D.Modeling.File
 	/// Node model with meshdata.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ModelFile : IFileSerializable
+	public class ModelFile : IFileSerializable, IAsciiSerializable<AsciiContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<ModelFile>
 		{
@@ -485,6 +492,96 @@ namespace SA3D.Modeling.File
 			MetaData.Blocks.Add(weightsBlock);
 		}
 
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, AsciiContext context)
+		{
+			string format = Format switch
+			{
+				Format.Chunk => "Cnk",
+				Format.Ginja => "Gj",
+				_ => string.Empty,
+			};
+
+			int nodeCount = Model.GetTreeNodeCount();
+
+			Stack<(Node, int)> depthStack = [];
+			depthStack.Push((Model, 1));
+
+			int depth = 0;
+			while(depthStack.Count > 0)
+			{
+				(Node node, int nodeDepth) = depthStack.Pop();
+				if(nodeDepth > depth)
+				{
+					depth = nodeDepth;
+				}
+
+				foreach(Node child in node)
+				{
+					depthStack.Push((child, nodeDepth + 1));
+				}
+			}
+
+			int vertexCount;
+
+			switch(Format)
+			{
+				case Format.Basic:
+				case Format.BasicDX:
+					vertexCount = Model.GetTreeMeshDataEnumerable().OfType<BasicMesh>().Max(x => x.Positions.Length);
+					break;
+				case Format.Chunk:
+					vertexCount = Model.GetTreeMeshDataEnumerable().OfType<ChunkMesh>()
+						.Max(x => x.VertexChunks?
+							.Max<VertexChunk, int>(y => y.Type.CheckHasAttributes() ?
+								y.Vertices.Max<ChunkVertex, int>(z => z.Index + y.IndexOffset)
+								: y.IndexOffset + y.Vertices.Length
+							) ?? 0);
+					break;
+				case Format.Ginja:
+					vertexCount = Model.GetTreeMeshDataEnumerable().OfType<GinjaMesh>()
+						.Max(x => x.VertexData?
+							.Where(x => x.Type == GinjaVertexType.Position)
+							.Max<GinjaVertexSet, int>(x => x.DataLength / 3) ?? 0);
+					break;
+				default:
+					throw new InvalidOperationException();
+			}
+
+			writer.WriteLine($"/* NJA 2.10.00 SA3DAscii {format}Model */", 2);
+			writer.WriteLine($"/* ROOT OBJECT : {Model.Label} n({nodeCount}) d({depth}) v({vertexCount}) */");
+
+			if(TextureNames != null)
+			{
+				writer.WriteLine($"/* TEXLIST     : {TextureNames.Label} n(?) */", 2);
+				writer.WriteObject(TextureNames);
+			}
+			else
+			{
+				writer.WriteLine();
+			}
+
+			writer.WriteLine();
+
+			ModelAsciiContext modelContext = ModelAsciiContext.FromModel(Format, Model, context);
+			writer.WriteObject(Model, modelContext);
+
+			using(writer.WriteBlock("DEFAULT_"))
+			{
+				writer.WriteLine("#ifndef DEFAULT_OBJECT_NAME");
+				writer.WriteObjectPropertyLine("#define DEFAULT_OBJECT_NAME", Model);
+				writer.WriteLine("#endif");
+
+				if(TextureNames != null)
+				{
+					writer.WriteLine("#ifndef DEFAULT_TEXLIST_NAME");
+					writer.WriteObjectPropertyLine("#define DEFAULT_TEXLIST_NAME", TextureNames);
+					writer.WriteLine("#endif");
+				}
+			}
+		}
+
 		#endregion
 
 		/// <inheritdoc/>
@@ -492,5 +589,6 @@ namespace SA3D.Modeling.File
 		{
 			return $"{(NJFile ? "" : "NJ")} Modelfile - {Format}";
 		}
+
 	}
 }

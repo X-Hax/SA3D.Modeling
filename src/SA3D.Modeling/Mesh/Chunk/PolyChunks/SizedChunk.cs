@@ -1,4 +1,6 @@
 ﻿using Amicitia.IO.Binary;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
@@ -29,10 +31,17 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override void WriteData(BinaryObjectWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			base.WriteData(writer);
+			base.Write(writer);
 			writer.WriteUInt16(Size);
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		{
+			base.Write(writer, context);
+			writer.Write($" {Size},");
 		}
 	}
 }
