@@ -190,6 +190,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 
 			List<PolyChunk> chunks = [];
+
 			while(true)
 			{
 				PolyChunk chunk;
@@ -283,10 +284,16 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks)
 		{
+			long start = writer.Position;
 			writer.WriteObjectArray(chunks);
 
 			// End chunk
 			writer.WriteUInt16((ushort)PolyChunkType.End);
+
+			if((writer.Position - start) % 4 == 2)
+			{
+				writer.WriteUInt16(0);
+			}
 		}
 
 		/// <summary>
