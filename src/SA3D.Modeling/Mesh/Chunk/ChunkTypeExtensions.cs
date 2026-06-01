@@ -102,7 +102,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 		public static bool CheckHasAttributes(this VertexChunkType type)
 		{
 			return type is VertexChunkType.Attributes
-				or VertexChunkType.NormalAttributes;
+				or VertexChunkType.NormalAttributes
+				or VertexChunkType.AttributesDiffuse;
 		}
 
 		/// <summary>
@@ -115,18 +116,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 			return type is VertexChunkType.UserAttributes
 				or VertexChunkType.NormalUserAttributes
 				or VertexChunkType.Normal32UserAttributes;
-		}
-
-		/// <summary>
-		/// Checks whether a vertex chunktype has weights.
-		/// </summary>
-		/// <param name="type">The type to check.</param>
-		/// <returns></returns>
-		public static bool CheckHasWeights(this VertexChunkType type)
-		{
-			return type is VertexChunkType.Attributes
-				or VertexChunkType.NormalAttributes
-				or VertexChunkType.AttributesDiffuse;
 		}
 
 

@@ -78,7 +78,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public MipmapDistanceMultiplierChunk() : base(PolyChunkType.MipmapDistanceMultiplier) { }
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			if((Attributes & 0xF) == 0)
 			{

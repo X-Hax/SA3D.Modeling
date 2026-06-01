@@ -153,7 +153,7 @@ namespace SA3D.Modeling.ObjectData
 
 					if(context.HasQuaternions || !context.BaseContext.NoQuaternionAppendix)
 					{
-						writer.WritePropertyLine("OQuatRe", $"( {QuaternionRotation.W.ToAscii()} )");
+						writer.WritePropertyLine("OQuatRe", $"( {(UseQuaternionRotation ? QuaternionRotation.W : 0f).ToAscii()} )");
 					}
 				}
 			}

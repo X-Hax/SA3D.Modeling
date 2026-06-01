@@ -239,7 +239,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			string result;
 
@@ -296,7 +296,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 				filterMode += "|FSS";
 			}
 
-			writer.WriteLine($" _TID({filterMode}, {TextureID}),");
+			writer.WriteLine($" _TID( {filterMode}, {TextureID} ),");
 		}
 
 		/// <inheritdoc/>

@@ -549,17 +549,13 @@ namespace SA3D.Modeling.File
 					throw new InvalidOperationException();
 			}
 
-			writer.WriteLine($"/* NJA 2.10.00 SA3DAscii {format}Model */", 2);
-			writer.WriteLine($"/* ROOT OBJECT : {Model.Label} n({nodeCount}) d({depth}) v({vertexCount}) */");
+			writer.WriteLine($"/* NJA by SA3D 2.10.00 Mixed {format}Model */", 2);
+			writer.WriteLine($"/* ROOT OBJECT  : {Model.Label} n({nodeCount}) d({depth}) v({vertexCount}) */");
 
 			if(TextureNames != null)
 			{
-				writer.WriteLine($"/* TEXLIST     : {TextureNames.Label} n(?) */", 2);
+				writer.WriteLine($"/* TEXLIST     : {TextureNames.Label} n(?) */");
 				writer.WriteObject(TextureNames);
-			}
-			else
-			{
-				writer.WriteLine();
 			}
 
 			writer.WriteLine();

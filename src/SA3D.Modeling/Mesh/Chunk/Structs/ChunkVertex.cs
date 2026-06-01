@@ -732,25 +732,25 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex)
 			{
-				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {vertex.Weight.ToAscii()} ),");
+				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {(vertex.Weight * 100).ToAscii()} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			static void WriteWeights2(AsciiWriter writer, ChunkVertex vertex)
 			{
-				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {vertex.Weight2.ToAscii()} ),");
+				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {(vertex.Weight2 * 100).ToAscii()} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			static void WriteWeights2to1(AsciiWriter writer, ChunkVertex vertex)
 			{
-				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {vertex.Weight2.ToAscii()} ),");
+				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {(vertex.Weight2 * 100).ToAscii()} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			static void WriteWeights1to2(AsciiWriter writer, ChunkVertex vertex)
 			{
-				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {vertex.Weight.ToAscii()} ),");
+				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {(vertex.Weight * 100).ToAscii()} ),");
 			}
 
 			switch(type)

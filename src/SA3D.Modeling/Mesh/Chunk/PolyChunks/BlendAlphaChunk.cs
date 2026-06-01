@@ -131,7 +131,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public BlendAlphaChunk() : base(PolyChunkType.BlendAlpha) { }
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			string result = 
 				AsciiMaps.SourceBlendModeMap.FindKey(SourceBlendMode)

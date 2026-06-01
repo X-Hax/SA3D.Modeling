@@ -294,7 +294,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 
 		/// <inheritdoc/>
 		public override ushort Size
-			=> (ushort)uint.Clamp(CalculateByteSize() / 2, 0, ushort.MaxValue);
+			=> (ushort)uint.Min(CalculateByteSize() / 2, ushort.MaxValue);
 
 
 		/// <summary>
@@ -331,7 +331,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			uint structSize = (uint)(
 				2u // vertex index
 				+ (Type.GetStripTexCoordCount() * 4u)
-				+ (Type.CheckStripHasNormals() ? 12u : 0u)
+				+ (Type.CheckStripHasNormals() ? 6u : 0u)
 				+ (Type.CheckStripHasColors() ? 4u : 0u)
 			);
 
@@ -498,7 +498,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			string result = string.Empty;
 
@@ -568,6 +568,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 					if(strip.Corners.Length > 10)
 					{
 						writer.WriteLine();
+						writer.Write("\t\t");
 					}
 
 					for(int i = 0; i < strip.Corners.Length; i++)

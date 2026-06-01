@@ -78,7 +78,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public SpecularExponentChunk() : base(PolyChunkType.SpecularExponent) { }
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			return $"FEXP_{SpecularExponent:D2}";
 		}

@@ -131,6 +131,15 @@ namespace SA3D.Modeling.Mesh.Chunk
 		}
 
 		/// <summary>
+		/// Compact shape motions
+		/// </summary>
+		public bool CompactShape
+		{
+			get => (Attributes & 0x40) != 0;
+			set => Attributes = (byte)((Attributes & ~0x40) | (value ? 0x40 : 0));
+		}
+
+		/// <summary>
 		/// Indicates that the chunks vertex data is not yet finished.
 		/// <br/>
 		/// <br/> In a complete implementation of the Ninja SDK, enabling this prevents checking all vertices affected by a vertex chunk against clip space. 
@@ -140,18 +149,11 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// </summary>
 		public bool VertexCalculationContinue
 		{
-			get => (Attributes & 0x40) != 0;
-			set => Attributes = (byte)((Attributes & ~0x40) | (value ? 0x40 : 0));
-		}
-
-		/// <summary>
-		/// Ninja2: compact shape motions
-		/// </summary>
-		public bool CompactShape
-		{
 			get => (Attributes & 0x80) != 0;
 			set => Attributes = (byte)((Attributes & ~0x80) | (value ? 0x80 : 0));
 		}
+
+
 
 		/// <summary>
 		/// Index offset value to be added when moving vertices to the global vertex cache
@@ -222,7 +224,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			{
 				ushort vertCount = ushort.Min((ushort)(Vertices.Length - offset), vertexLimitPerChunk);
 				ushort size = (ushort)((vertCount * vertSize) + 1);
-				ushort indexOffset = (ushort)(IndexOffset + (Type.CheckHasWeights() ? 0 : offset));
+				ushort indexOffset = (ushort)(IndexOffset + (Type.CheckHasAttributes() ? 0 : offset));
 
 				write(size, indexOffset, vertCount, offset);
 				offset += vertCount;
@@ -261,26 +263,26 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 			if(VertexCalculationContinue)
 			{
-				chunkFlags += "FV_CONT|";
+				chunkFlags += "|FV_CONT";
 			}
 
 			if(CompactShape)
 			{
-				chunkFlags += "FV_SHAPE|";
+				chunkFlags += "|FV_SHAPE";
 			}
 
-			if(Type.CheckHasWeights())
+			if(Type.CheckHasAttributes())
 			{
-				chunkFlags += AsciiMaps.WeightModeMap.FindKey(WeightMode) + "|";
+				chunkFlags += '|' + AsciiMaps.WeightModeMap.FindKey(WeightMode);
 			}
 
-			chunkFlags = chunkFlags == string.Empty ? "0x0" : chunkFlags[^1..];
+			chunkFlags = chunkFlags == string.Empty ? "0x0" : chunkFlags[1..];
 
 			Action<AsciiWriter, ChunkVertex> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
 
 			SplitWrite((size, indexOffset, vertCount, offset) =>
 			{
-				writer.WriteLine($"\t{chunkType}({chunkFlags},{size})");
+				writer.WriteLine($"\t{chunkType}({chunkFlags}, {size})");
 				writer.WriteLine($"\tOffnbIdx({indexOffset}, {vertCount})");
 
 				foreach(ChunkVertex vertex in Vertices.Skip(offset).Take(vertCount))
@@ -289,6 +291,30 @@ namespace SA3D.Modeling.Mesh.Chunk
 				}
 			});
 		}
+
+		internal static void WriteArray(AsciiWriter writer, LabeledArray<VertexChunk>? chunks, ModelAsciiContext context)
+		{
+			if(chunks == null)
+			{
+				return;
+			}
+
+			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("VLIST", chunks))
+			{
+				if(block == null)
+				{
+					return;
+				}
+
+				foreach(VertexChunk chunk in chunks)
+				{
+					chunk.Write(writer, context);
+				}
+
+				writer.WriteLine("\tCnkEnd()");
+			}
+		}
+
 
 		object ICloneable.Clone()
 		{

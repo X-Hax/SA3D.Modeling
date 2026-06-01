@@ -289,18 +289,62 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteUInt16((ushort)PolyChunkType.End);
 		}
 
+		/// <summary>
+		/// Retrieve chunk header flags
+		/// </summary>
+		/// <returns></returns>
+		protected abstract string GetAsciiAttributes();
+
 		/// <inheritdoc/>
 		public virtual void Write(AsciiWriter writer, ModelAsciiContext context)
 		{
 			string chunkType = AsciiMaps.PolyChunkTypeMap.FindKey(Type);
-			string bits = GetAsciiBits();
-			writer.Write($"\t{chunkType}( {bits} ),");
+			string attributes = GetAsciiAttributes();
+			writer.Write($"\t{chunkType}( {attributes} ),");
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		protected abstract string GetAsciiBits();
+		internal static void WriteArray(AsciiWriter writer, LabeledArray<PolyChunk>? chunks, ModelAsciiContext context)
+		{
+			if(chunks == null)
+			{
+				return;
+			}
+
+			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("PLIST", chunks))
+			{
+				if(block == null)
+				{
+					return;
+				}
+
+				int offset = 0;
+
+				foreach(PolyChunk chunk in chunks)
+				{
+					if(chunk.AlignWithFour && offset % 4 != 0)
+					{
+						offset += 2;
+						writer.WriteLine("\tCnkNull(),");
+					}
+
+					chunk.Write(writer, context);
+					offset += 2;
+
+					if(chunk is not BitsChunk)
+					{
+						offset += 2;
+
+						if(chunk is SizedChunk sizedChunk)
+						{
+							offset += sizedChunk.Size * 2;
+						}
+					}
+				}
+
+				writer.WriteLine("\tCnkEnd()");
+			}
+		}
+
 
 		object ICloneable.Clone()
 		{

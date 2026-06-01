@@ -76,7 +76,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public DrawListChunk() : base(PolyChunkType.DrawList) { }
 
 		/// <inheritdoc/>
-		protected override string GetAsciiBits()
+		protected override string GetAsciiAttributes()
 		{
 			return List.ToString();
 		}

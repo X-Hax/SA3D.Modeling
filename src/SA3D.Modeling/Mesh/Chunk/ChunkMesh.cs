@@ -34,10 +34,10 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 			/// <inheritdoc/>
 			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
-		{
-			{ _vertexChunks, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
-			{ _polyChunks, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
-		});
+			{
+				{ _vertexChunks, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
+				{ _polyChunks, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
+			});
 
 
 			/// <inheritdoc/>
@@ -124,7 +124,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 				return false;
 			}
 
-			if(VertexChunks.Any(x => x.Type.CheckHasWeights()))
+			if(VertexChunks.Any(x => x.Type.CheckHasAttributes()))
 			{
 				return true;
 			}
@@ -197,40 +197,18 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <inheritdoc/>
 		public override void Write(AsciiWriter writer, ModelAsciiContext context)
 		{
-			WriteChunkArray(writer, "PLIST", PolyChunks, context);
-			WriteChunkArray(writer, "VLIST", VertexChunks, context);
+			PolyChunk.WriteArray(writer, PolyChunks, context);
+			VertexChunk.WriteArray(writer, VertexChunks, context);
 
 			using(writer.WriteStructBlock("CNKMODEL", this))
 			{
-				writer.WriteObjectPropertyLine("VList", VertexChunks);
-				writer.WriteObjectPropertyLine("PList", PolyChunks);
+				writer.WriteObjectPropertyLine("Vlist", VertexChunks);
+				writer.WriteObjectPropertyLine("Plist", PolyChunks);
 				writer.WritePropertyLine("Center", MeshBounds.Position.ToAscii());
 				writer.WritePropertyLine("Radius", MeshBounds.Radius.ToAscii());
 			}
 		}
 
-		private static void WriteChunkArray<T>(AsciiWriter writer, string type, LabeledArray<T>? chunks, ModelAsciiContext context) where T : IAsciiSerializable<ModelAsciiContext>
-		{
-			if(chunks == null)
-			{
-				return;
-			}
-
-			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference(type, chunks))
-			{
-				if(block == null)
-				{
-					return;
-				}
-
-				foreach(T chunk in chunks)
-				{
-					chunk.Write(writer, context);
-				}
-
-				writer.WriteLine("\tCnkEnd()");
-			}
-		}
 
 		/// <inheritdoc/>
 		public override ChunkMesh Clone()
