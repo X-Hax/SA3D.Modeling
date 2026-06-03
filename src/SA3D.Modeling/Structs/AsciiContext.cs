@@ -24,5 +24,10 @@
 		/// How to format weights when writing
 		/// </summary>
 		public AsciiWeightFormat WeightFormat { init; get; }
+
+		/// <summary>
+		/// Add comments to improve readability of the file
+		/// </summary>
+		public bool WriteComments { init; get; }
 	}
 }

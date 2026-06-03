@@ -649,400 +649,301 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// Return the appropriate <see cref="ChunkVertex"/> ascii-write callback for the given <see cref="VertexChunkType"/>
 		/// </summary>
 		/// <param name="type"></param>
+		/// <param name="context"></param>
 		/// <returns></returns>
-		public static Action<AsciiWriter, ChunkVertex> GetAsciiWriteCallback(VertexChunkType type, ModelAsciiContext context)
+		public static Action<AsciiWriter, ChunkVertex, ModelAsciiContext> GetAsciiWriteCallback(VertexChunkType type, ModelAsciiContext context)
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WritePosition(AsciiWriter writer, ChunkVertex vertex)
+			static void WritePosition(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tVERT( {vertex.Position.ToAsciiHex()} ),");
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Position.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tVERT( {vertex.Position.ToAsciiHex()} ),{comment}");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WritePosition4(AsciiWriter writer, ChunkVertex vertex)
+			static void WritePosition4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tVERT_SH( {vertex.Position.ToAsciiHex()} ),");
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Position.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tVERT_SH( {vertex.Position.ToAsciiHex()} ),{comment}");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteNormal(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tNORM( {vertex.Normal.ToAsciiHex()} ),");
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM( {vertex.Normal.ToAsciiHex()} ),{comment}");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal4(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteNormal4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tNORM_SH( {vertex.Normal.ToAsciiHex()} ),");
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM_SH( {vertex.Normal.ToAsciiHex()} ),{comment}");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal32(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteNormal32(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tNORM32( {CompressNormalComponent(vertex.Normal.X).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Y).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Z).ToAsciiHex()} ),");
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM32( {CompressNormalComponent(vertex.Normal.X).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Y).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Z).ToAsciiHex()} ),{comment}");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuse(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteDiffuse(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
 				writer.WriteLine($"D8888( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuseSpecular5(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteDiffuseSpecular5(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
 				writer.WriteLine($"D565S565( {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuseSpecular4(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteDiffuseSpecular4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
 				writer.WriteLine($"D4444S565( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteIntensity(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteIntensity(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
 				writer.WriteLine($"D16S16( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteSpecular(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteSpecular(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
 				writer.WriteLine($"S888( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteUserattributes(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteUserattributes(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tUFlags( {vertex.Attributes.ToAsciiHex()} ),");
-			}
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteUserattributesAsColor(AsciiWriter writer, ChunkVertex vertex)
-			{
-				Color color = new()
+				if(context.BaseContext.VertexUserAttributesAsColor)
 				{
-					ARGB = vertex.Attributes
-				};
+					Color color = new()
+					{
+						ARGB = vertex.Attributes
+					};
 
-				writer.WriteLine($"D8888( {color.Alpha}, {color.Red}, {color.Green}, {color.Blue} ),");
+					writer.WriteLine($"D8888( {color.Alpha}, {color.Red}, {color.Green}, {color.Blue} ),");
+				}
+				else
+				{
+					writer.WriteLine($"\tUFlags( {vertex.Attributes.ToAsciiHex()} ),");
+				}
+
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex)
+			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
 			{
-				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {(vertex.Weight * 100).ToAscii()} ),");
-			}
+				float weight;
+				string type;
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteWeights2(AsciiWriter writer, ChunkVertex vertex)
-			{
-				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {(vertex.Weight2 * 100).ToAscii()} ),");
-			}
+				if(context.UseVersion2Weights)
+				{
+					weight = vertex.Weight2;
+					type = "NFlagsW2";
+				}
+				else
+				{
+					weight = vertex.Weight;
+					type = "NFlagsW";
+				}
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteWeights2to1(AsciiWriter writer, ChunkVertex vertex)
-			{
-				writer.WriteLine($"\tNFlagsW( {vertex.Index}, {(vertex.Weight2 * 100).ToAscii()} ),");
-			}
+				weight *= 100;
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteWeights1to2(AsciiWriter writer, ChunkVertex vertex)
-			{
-				writer.WriteLine($"\tNFlagsW2( {vertex.Index}, {(vertex.Weight * 100).ToAscii()} ),");
+				switch(context.BaseContext.WeightFormat)
+				{
+					case AsciiWeightFormat.Force1:
+						type = "NFlagsW";
+						break;
+					case AsciiWeightFormat.Force2:
+						type = "NFlagsW2";
+						break;
+				}
+
+				writer.WriteLine($"\t{type}( {vertex.Index}, {weight.ToAscii()} ),");
 			}
 
 			switch(type)
 			{
 				case VertexChunkType.BlankVec4:
-					return (w, v) => WritePosition4(w, v);
+					return (w, v, c) => WritePosition4(w, v, c);
 
 				case VertexChunkType.NormalVec4:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition4(w, v);
-						WriteNormal4(w, v);
+						WritePosition4(w, v, c);
+						WriteNormal4(w, v, c);
 					};
 
 				case VertexChunkType.Blank:
-					return (w, v) => WritePosition(w, v);
+					return (w, v, c) => WritePosition(w, v, c);
 
 				case VertexChunkType.Diffuse:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteDiffuse(w, v);
+						WritePosition(w, v, c);
+						WriteDiffuse(w, v, c);
 					};
 
 				case VertexChunkType.UserAttributes:
-					if(context.BaseContext.VertexUserAttributesAsColor)
+					return (w, v, c) =>
 					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteUserattributesAsColor(w, v);
-						};
-					}
-					else
-					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteUserattributes(w, v);
-						};
-					}
+						WritePosition(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
 
 				case VertexChunkType.Attributes:
-					if(context.UseVersion2Weights)
+					return (w, v, c) =>
 					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force1)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights2to1(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights2(w, v);
-							};
-						}
-					}
-					else
-					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force2)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights1to2(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights(w, v);
-							};
-						}
-					}
+						WritePosition(w, v, c);
+						WriteWeights(w, v, c);
+					};
 
 				case VertexChunkType.DiffuseSpecular5:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteDiffuseSpecular5(w, v);
+						WritePosition(w, v, c);
+						WriteDiffuseSpecular5(w, v, c);
 					};
 
 				case VertexChunkType.DiffuseSpecular4:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteDiffuseSpecular4(w, v);
+						WritePosition(w, v, c);
+						WriteDiffuseSpecular4(w, v, c);
 					};
 
 				case VertexChunkType.Intensity:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteIntensity(w, v);
+						WritePosition(w, v, c);
+						WriteIntensity(w, v, c);
 					};
 
 				case VertexChunkType.Normal:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal(w, v);
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
 					};
 
 				case VertexChunkType.NormalDiffuse:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal(w, v);
-						WriteDiffuse(w, v);
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuse(w, v, c);
 					};
 
 				case VertexChunkType.NormalUserAttributes:
-					if(context.BaseContext.VertexUserAttributesAsColor)
+					return (w, v, c) =>
 					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteNormal(w, v);
-							WriteUserattributesAsColor(w, v);
-						};
-					}
-					else
-					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteNormal(w, v);
-							WriteUserattributes(w, v);
-						};
-					}
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
 
 				case VertexChunkType.NormalAttributes:
-					if(context.UseVersion2Weights)
+					return (w, v, c) =>
 					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force1)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights2to1(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights2(w, v);
-							};
-						}
-					}
-					else
-					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force2)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights1to2(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights(w, v);
-							};
-						}
-					}
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteWeights(w, v, c);
+					};
 
 				case VertexChunkType.NormalDiffuseSpecular5:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal(w, v);
-						WriteDiffuseSpecular5(w, v);
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuseSpecular5(w, v, c);
 					};
 
 				case VertexChunkType.NormalDiffuseSpecular4:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal(w, v);
-						WriteDiffuseSpecular4(w, v);
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuseSpecular4(w, v, c);
 					};
 
 				case VertexChunkType.NormalIntensity:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal(w, v);
-						WriteIntensity(w, v);
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteIntensity(w, v, c);
 					};
 
 				case VertexChunkType.Normal32:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal32(w, v);
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
 					};
 
 				case VertexChunkType.Normal32Diffuse:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteNormal32(w, v);
-						WriteDiffuse(w, v);
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
+						WriteDiffuse(w, v, c);
 					};
 
 				case VertexChunkType.Normal32UserAttributes:
-					if(context.BaseContext.VertexUserAttributesAsColor)
+					return (w, v, c) =>
 					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteNormal32(w, v);
-							WriteUserattributesAsColor(w, v);
-						};
-					}
-					else
-					{
-						return (w, v) =>
-						{
-							WritePosition(w, v);
-							WriteNormal32(w, v);
-							WriteUserattributes(w, v);
-						};
-					}
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
 
 				case VertexChunkType.DiffuseSpecular:
-					return (w, v) =>
+					return (w, v, c) =>
 					{
-						WritePosition(w, v);
-						WriteDiffuse(w, v);
-						WriteSpecular(w, v);
+						WritePosition(w, v, c);
+						WriteDiffuse(w, v, c);
+						WriteSpecular(w, v, c);
 					};
 
 				case VertexChunkType.AttributesDiffuse:
-					if(context.UseVersion2Weights)
+					return (w, v, c) =>
 					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force1)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights2to1(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteNormal(w, v);
-								WriteWeights2(w, v);
-							};
-						}
-					}
-					else
-					{
-						if(context.BaseContext.WeightFormat == AsciiWeightFormat.Force2)
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights1to2(w, v);
-								WriteDiffuse(w, v);
-							};
-						}
-						else
-						{
-							return (w, v) =>
-							{
-								WritePosition(w, v);
-								WriteWeights(w, v);
-								WriteDiffuse(w, v);
-							};
-						}
-					}
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteWeights(w, v, c);
+					};
 
 				case VertexChunkType.Null:
 				case VertexChunkType.End:

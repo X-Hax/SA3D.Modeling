@@ -278,7 +278,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 			chunkFlags = chunkFlags == string.Empty ? "0x0" : chunkFlags[1..];
 
-			Action<AsciiWriter, ChunkVertex> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
+			Action<AsciiWriter, ChunkVertex, ModelAsciiContext> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
 
 			SplitWrite((size, indexOffset, vertCount, offset) =>
 			{
@@ -287,7 +287,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 				foreach(ChunkVertex vertex in Vertices.Skip(offset).Take(vertCount))
 				{
-					vertexWrite(writer, vertex);
+					vertexWrite(writer, vertex, context);
 				}
 			});
 		}

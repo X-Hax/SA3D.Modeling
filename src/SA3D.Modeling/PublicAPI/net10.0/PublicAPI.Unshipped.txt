@@ -1065,8 +1065,6 @@ SA3D.Modeling.ObjectData.Node.Write(Amicitia.IO.Binary.BinaryObjectWriter! write
 SA3D.Modeling.ObjectData.Node.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> void
 SA3D.Modeling.Structs.AsciiContext
 SA3D.Modeling.Structs.AsciiContext.AsciiContext() -> void
-SA3D.Modeling.Structs.AsciiContext.Format.get -> SA3D.Modeling.Structs.Format
-SA3D.Modeling.Structs.AsciiContext.Format.init -> void
 SA3D.Modeling.Structs.AsciiContext.NoQuaternionAppendix.get -> bool
 SA3D.Modeling.Structs.AsciiContext.NoQuaternionAppendix.init -> void
 SA3D.Modeling.Structs.AsciiContext.PolygonAttributesAsColor.get -> bool
@@ -1075,6 +1073,8 @@ SA3D.Modeling.Structs.AsciiContext.VertexUserAttributesAsColor.get -> bool
 SA3D.Modeling.Structs.AsciiContext.VertexUserAttributesAsColor.init -> void
 SA3D.Modeling.Structs.AsciiContext.WeightFormat.get -> SA3D.Modeling.Structs.AsciiWeightFormat
 SA3D.Modeling.Structs.AsciiContext.WeightFormat.init -> void
+SA3D.Modeling.Structs.AsciiContext.WriteComments.get -> bool
+SA3D.Modeling.Structs.AsciiContext.WriteComments.init -> void
 SA3D.Modeling.Structs.AsciiMaps
 SA3D.Modeling.Structs.AsciiWeightFormat
 SA3D.Modeling.Structs.AsciiWeightFormat.Automatic = 0 -> SA3D.Modeling.Structs.AsciiWeightFormat
@@ -1136,7 +1136,7 @@ static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator !=(SA3D.Mod
 static SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex left, SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex right) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasUserAttributes(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.GetIntegerSize(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> int
-static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetAsciiWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> System.Action<SA3D.Common.Ascii.AsciiWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
+static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetAsciiWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type, SA3D.Modeling.ObjectData.ModelAsciiContext context) -> System.Action<SA3D.Common.Ascii.AsciiWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex, SA3D.Modeling.ObjectData.ModelAsciiContext>!
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetReadCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex.GetWriteCallback(SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> System.Action<Amicitia.IO.Binary.BinaryObjectWriter!, SA3D.Modeling.Mesh.Chunk.Structs.ChunkVertex>!
 static SA3D.Modeling.Mesh.EnumExtensions.ToFormat(this SA3D.Modeling.Mesh.MeshFormat attachFormat) -> SA3D.Modeling.Structs.Format

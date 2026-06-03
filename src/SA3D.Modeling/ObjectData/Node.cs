@@ -140,7 +140,11 @@ namespace SA3D.Modeling.ObjectData
 
 					if(UseQuaternionRotation)
 					{
-						writer.WritePropertyLine("OQuatIm", $"( {QuaternionRotation.X.ToAsciiHex()}, {QuaternionRotation.Y.ToAsciiHex()}, {QuaternionRotation.Z.ToAsciiHex()} )");
+						writer.WritePropertyLine(
+							"OQuatIm",
+							$"( {QuaternionRotation.X.ToAsciiHex()}, {QuaternionRotation.Y.ToAsciiHex()}, {QuaternionRotation.Z.ToAsciiHex()} )",
+							context.BaseContext.WriteComments ? QuaternionRotation.AsVector4().AsVector3().ToAscii() : null
+						);
 					}
 					else
 					{
