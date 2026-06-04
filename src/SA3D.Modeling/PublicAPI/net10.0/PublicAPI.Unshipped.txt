@@ -18,6 +18,7 @@ const SA3D.Modeling.Mesh.Basic.BasicMesh.NormalsLabelPrefix = "normals_" -> stri
 const SA3D.Modeling.Mesh.Basic.BasicMesh.PositionsLabelPrefix = "positions_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.ColorsLabelPrefix = "polygon_colors_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.NormalsLabelPrefix = "polygon_normals_" -> string!
+const SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributesLabelPrefix = "polygon_attributes_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonLabelPrefix = "polygons_" -> string!
 const SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinatesLabelPrefix = "polygon_texcoords_" -> string!
 const SA3D.Modeling.Mesh.Chunk.ChunkMesh.PolyChunksLabelPrefix = "poly_" -> string!
@@ -446,12 +447,17 @@ SA3D.Modeling.Mesh.AlphaMode.Transparent = 1 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOff = 2 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.TransparentForceAlphaClipOn = 3 -> SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.Basic.BasicMaterial.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureAttributes.get -> byte
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureAttributes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureData.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMaterial.TextureData.set -> void
 SA3D.Modeling.Mesh.Basic.BasicMaterial.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.BasicMaterial.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.BasicMesh.BasicMesh() -> void
 SA3D.Modeling.Mesh.Basic.BasicMesh.Materials.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.BasicMaterial>!
 SA3D.Modeling.Mesh.Basic.BasicMesh.Materials.set -> void
-SA3D.Modeling.Mesh.Basic.BasicMesh.Meshes.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.BasicMeshSet!>!
-SA3D.Modeling.Mesh.Basic.BasicMesh.Meshes.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMesh.MeshSets.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.BasicMeshSet!>!
+SA3D.Modeling.Mesh.Basic.BasicMesh.MeshSets.set -> void
 SA3D.Modeling.Mesh.Basic.BasicMesh.Normals.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>?
 SA3D.Modeling.Mesh.Basic.BasicMesh.Positions.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>!
 SA3D.Modeling.Mesh.Basic.BasicMesh.Positions.set -> void
@@ -460,13 +466,14 @@ SA3D.Modeling.Mesh.Basic.BasicMeshSet.BasicMeshSet() -> void
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Clone() -> SA3D.Modeling.Mesh.Basic.BasicMeshSet!
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Colors.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Structs.Color>?
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Colors.set -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.GetPolygonCornerCount() -> int
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.GetPolygonCount() -> int
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.MaterialIndex.get -> ushort
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.MaterialIndex.set -> void
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Normals.get -> SA3D.Common.Lookup.LabeledArray<System.Numerics.Vector3>?
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Normals.set -> void
-SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributes.get -> uint
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributes.get -> SA3D.Common.Lookup.LabeledArray<uint>?
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonAttributes.set -> void
-SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonCornerCount.get -> int
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Polygons.get -> SA3D.Common.Lookup.LabeledArray<SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>!
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Polygons.set -> void
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.PolygonType.get -> SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType
@@ -476,13 +483,17 @@ SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinates.get -> SA3D.Common.Look
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.TextureCoordinates.set -> void
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.VerifyPolygonData() -> void
 SA3D.Modeling.Mesh.Basic.BasicMeshSet.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
+SA3D.Modeling.Mesh.Basic.BasicMeshSet.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.BasicMultiPolygon(ushort[]! corners, bool reversed) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicMultiPolygon.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicQuad.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.Mesh.Basic.Polygon.BasicTriangle.Write(SA3D.Common.Ascii.AsciiWriter! writer) -> void
 SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon.GetReader(SA3D.Modeling.Mesh.Basic.Polygon.BasicPolygonType type) -> System.Func<Amicitia.IO.Binary.BinaryObjectReader!, SA3D.Modeling.Mesh.Basic.Polygon.IBasicPolygon!>!
 SA3D.Modeling.Mesh.Chunk.ChunkMesh
 SA3D.Modeling.Mesh.Chunk.ChunkMesh.ChunkMesh() -> void

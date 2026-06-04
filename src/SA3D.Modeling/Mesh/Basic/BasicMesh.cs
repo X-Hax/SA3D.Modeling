@@ -27,7 +27,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		{
 			private const string _positions = nameof(Positions);
 			private const string _normals = nameof(Normals);
-			private const string _meshes = nameof(Meshes);
+			private const string _meshes = nameof(MeshSets);
 			private const string _materials = nameof(Materials);
 
 
@@ -88,7 +88,7 @@ namespace SA3D.Modeling.Mesh.Basic
 					MeshBounds = (Bounds)values[BaseJsonConverter._meshBounds]!,
 					Positions = positions,
 					Normals = normals,
-					Meshes = meshes,
+					MeshSets = meshes,
 					Materials = materials
 				};
 			}
@@ -103,7 +103,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				JsonSerializer.Serialize(writer, value.Normals, options);
 
 				writer.WritePropertyName(_meshes);
-				JsonSerializer.Serialize(writer, value.Meshes, options);
+				JsonSerializer.Serialize(writer, value.MeshSets, options);
 
 				writer.WritePropertyName(_materials);
 				JsonSerializer.Serialize(writer, value.Materials, options);
@@ -122,7 +122,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		public const string NormalsLabelPrefix = "normals_";
 
 		/// <summary>
-		/// Label prefix for <see cref="Meshes"/>.
+		/// Label prefix for <see cref="MeshSets"/>.
 		/// </summary>
 		public const string MeshesLabelPrefix = "meshes_";
 
@@ -148,7 +148,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// <summary>
 		/// Polygon structures.
 		/// </summary>
-		public LabeledArray<BasicMeshSet> Meshes { get; set; }
+		public LabeledArray<BasicMeshSet> MeshSets { get; set; }
 
 		/// <summary>
 		/// Materials for the meshes.
@@ -167,7 +167,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		{
 			string identifier = StringExtensions.GenerateIdentifier();
 			Positions = new(PositionsLabelPrefix + identifier, 0);
-			Meshes = new LabeledArray<BasicMeshSet>(MeshesLabelPrefix + identifier, 0);
+			MeshSets = new LabeledArray<BasicMeshSet>(MeshesLabelPrefix + identifier, 0);
 			Materials = new LabeledArray<BasicMaterial>(MaterialsLabelPrefix + identifier, 0);
 		}
 
@@ -227,7 +227,7 @@ namespace SA3D.Modeling.Mesh.Basic
 
 			Positions = ReadArray(StructBinaryHelper.ReadVector3, positionsOffset, vertexCount, PositionsLabelPrefix, nameof(Positions), false)!;
 			Normals = ReadArray(StructBinaryHelper.ReadVector3, normalsOffset, vertexCount, NormalsLabelPrefix, nameof(Normals), true);
-			Meshes = ReadArray(r => r.ReadObject<BasicMeshSet, IOContext>(context), meshesOffset, meshCount, MeshesLabelPrefix, nameof(Meshes), false)!;
+			MeshSets = ReadArray(r => r.ReadObject<BasicMeshSet, IOContext>(context), meshesOffset, meshCount, MeshesLabelPrefix, nameof(MeshSets), false)!;
 			Materials = ReadArray(r => r.ReadObject<BasicMaterial>(), materialsOffset, materialCount, MaterialsLabelPrefix, nameof(Materials), false)!;
 		}
 
@@ -237,9 +237,9 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Positions, context.PointerLUT);
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
 			writer.WriteInt32(Positions.Length);
-			writer.WriteObjectArrayOffset(Meshes, context, context.PointerLUT);
+			writer.WriteObjectArrayOffset(MeshSets, context, context.PointerLUT);
 			writer.WriteObjectArrayOffset(Materials, context.PointerLUT);
-			writer.WriteUInt16((ushort)Meshes.Length);
+			writer.WriteUInt16((ushort)MeshSets.Length);
 			writer.WriteUInt16((ushort)Materials.Length);
 			writer.WriteObject(MeshBounds);
 
@@ -252,7 +252,35 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// <inheritdoc/>
 		public override void Write(AsciiWriter writer, ModelAsciiContext context)
 		{
-			throw new NotImplementedException();
+			writer.WriteArray("MATERIAL", Materials, 1);
+
+			foreach(BasicMeshSet meshSet in MeshSets)
+			{
+				string polyType = meshSet.PolygonType == Polygon.BasicPolygonType.TriangleStrips ? "STRIP" : "POLY";
+
+				writer.WriteArray("POLYGON", meshSet.Polygons, 0);
+				writer.WriteArray(polyType + "ATTR", meshSet.PolygonAttributes, 0, (w, v) => w.WriteLine($"\tNORM( {v.ToAsciiHex()} ),"));
+				writer.WriteArray(polyType + "NORMAL", meshSet.Normals, 0, (w, v) => w.WriteLine($"\tPNORM( {v.ToAscii()} ),"));
+				writer.WriteArray("VERTCOLOR", meshSet.Colors, 0, (w, v) => w.WriteLine($"\tARGB( {v.Alpha}, {v.Red}, {v.Green}, {v.Blue} ),"));
+				writer.WriteArray("VERTUV", meshSet.TextureCoordinates, 0, (w, v) => w.WriteLine($"\tUV( {(int)v.X}, {(int)v.Y} ),"));
+			}
+
+			writer.WriteArray("MESHSET", MeshSets, 1);
+			writer.WriteArray("POINT", Positions, 0, (w, v) => w.WriteLine($"\tVERT( {v.ToAscii()} ),"));
+			writer.WriteArray("NORMAL", Normals, 0, (w, v) => w.WriteLine($"\tNORM( {v.ToAscii()} ),"));
+
+			using(writer.WriteStructBlock("MODEL", this))
+			{
+				writer.WriteObjectPropertyLine("Points", Positions);
+				writer.WriteObjectPropertyLine("Normal", Normals);
+				writer.WritePropertyLine("PointNum", Positions.Length.ToString());
+				writer.WriteObjectPropertyLine("Meshset", MeshSets);
+				writer.WriteObjectPropertyLine("Materials", Materials);
+				writer.WritePropertyLine("MeshsetNum", MeshSets.Length.ToString());
+				writer.WritePropertyLine("MatNum", Materials.Length.ToString());
+				writer.WritePropertyLine("Center", MeshBounds.Position.ToAscii());
+				writer.WritePropertyLine("Radius", MeshBounds.Radius.ToAscii());
+			}
 		}
 
 
@@ -264,7 +292,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				Label = Label,
 				Positions = Positions.Clone(),
 				Normals = Normals?.Clone(),
-				Meshes = new(Meshes.Label, [.. Meshes.Select(x => x.Clone())]),
+				MeshSets = new(MeshSets.Label, [.. MeshSets.Select(x => x.Clone())]),
 				Materials = Materials.Clone(),
 				MeshBounds = MeshBounds
 			};

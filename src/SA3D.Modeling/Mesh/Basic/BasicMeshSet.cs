@@ -1,7 +1,8 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
-using SA3D.Common.Converters;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
+using SA3D.Common.JsonConverters;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Basic.Polygon;
 using SA3D.Modeling.Structs;
@@ -22,7 +23,7 @@ namespace SA3D.Modeling.Mesh.Basic
 	/// BASIC format mesh structure for holding polygon information.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class BasicMeshSet : ICloneable, IBinarySerializable<IOContext>
+	public class BasicMeshSet : ICloneable, IBinarySerializable<IOContext>, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<BasicMeshSet>
 		{
@@ -41,7 +42,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				{ _materialIndex, new(PropertyTokenType.Number, 0u) },
 				{ _polygonType, new(PropertyTokenType.String, null) },
 				{ _polygons, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
-				{ _polygonAttributes, new(PropertyTokenType.String, 0u) },
+				{ _polygonAttributes, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
 				{ _normals, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
 				{ _colors, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
 				{ _textureCoordinates, new(PropertyTokenType.Object | PropertyTokenType.String, null, true) },
@@ -90,7 +91,9 @@ namespace SA3D.Modeling.Mesh.Basic
 
 						return new LabeledArray<IBasicPolygon>(label, polygons);
 					case _polygonAttributes:
-						return UInt32HexConverter.ConvertFrom(reader.GetString()!, _polygonAttributes);
+						JsonSerializerOptions polygonAttributeOptions = new(options);
+						polygonAttributeOptions.Converters.Add(new UInt32HexJsonConverter());
+						return JsonSerializer.Deserialize<LabeledArray<uint>>(ref reader, polygonAttributeOptions);
 					case _normals:
 						return JsonSerializer.Deserialize<LabeledArray<Vector3>>(ref reader, options);
 					case _colors:
@@ -113,7 +116,7 @@ namespace SA3D.Modeling.Mesh.Basic
 					Normals = (LabeledArray<Vector3>?)values[_normals],
 					Colors = (LabeledArray<Color>?)values[_colors],
 					TextureCoordinates = (LabeledArray<Vector2>?)values[_textureCoordinates],
-					PolygonAttributes = (uint)values[_polygonAttributes]!
+					PolygonAttributes = (LabeledArray<uint>?)values[_polygonAttributes]!
 				};
 			}
 
@@ -128,9 +131,13 @@ namespace SA3D.Modeling.Mesh.Basic
 				writer.WritePropertyName(_polygons);
 				JsonSerializer.Serialize(writer, value.Polygons, options);
 
-				if(value.PolygonAttributes != 0)
+				if(value.PolygonAttributes != null)
 				{
-					writer.WriteString(_polygonAttributes, UInt32HexConverter.ConvertTo(value.PolygonAttributes));
+					writer.WritePropertyName(_polygonAttributes);
+
+					JsonSerializerOptions polygonAttributeOptions = new(options);
+					polygonAttributeOptions.Converters.Add(new UInt32HexJsonConverter());
+					JsonSerializer.Serialize(writer, value.PolygonAttributes, polygonAttributeOptions);
 				}
 
 				if(value.Normals != null)
@@ -159,6 +166,11 @@ namespace SA3D.Modeling.Mesh.Basic
 		public const string PolygonLabelPrefix = "polygons_";
 
 		/// <summary>
+		/// Default label prefix for <see cref="PolygonAttributes"/>
+		/// </summary>
+		public const string PolygonAttributesLabelPrefix = "polygon_attributes_";
+
+		/// <summary>
 		/// Default label prefix for <see cref="Normals"/>
 		/// </summary>
 		public const string NormalsLabelPrefix = "polygon_normals_";
@@ -180,11 +192,6 @@ namespace SA3D.Modeling.Mesh.Basic
 		public ushort MaterialIndex { get; set; }
 
 		/// <summary>
-		/// Polygon attributes (unused)
-		/// </summary>
-		public uint PolygonAttributes { get; set; }
-
-		/// <summary>
 		/// Indicating how polygons are stored.
 		/// </summary>
 		public BasicPolygonType PolygonType { get; set; }
@@ -195,9 +202,9 @@ namespace SA3D.Modeling.Mesh.Basic
 		public LabeledArray<IBasicPolygon> Polygons { get; set; }
 
 		/// <summary>
-		/// Total number of corners in <see cref="Polygons"/>. Also the expected array length for <see cref="Normals"/>, <see cref="Colors"/> and <see cref="TextureCoordinates"/>
+		/// Polygon corner attributes
 		/// </summary>
-		public int PolygonCornerCount => Polygons.Sum(x => x.NumIndices);
+		public LabeledArray<uint>? PolygonAttributes { get; set; }
 
 		/// <summary>
 		/// Polygon corner normals
@@ -224,6 +231,29 @@ namespace SA3D.Modeling.Mesh.Basic
 		}
 
 		/// <summary>
+		/// Counts up the number of polygon corners in the mesh set
+		/// </summary>
+		public int GetPolygonCornerCount()
+		{
+			return Polygons.Sum(x => x.NumIndices);
+		}
+
+		/// <summary>
+		/// Counts up the number of individual polygons in the mesh
+		/// </summary>
+		public int GetPolygonCount()
+		{
+			if(PolygonType == BasicPolygonType.TriangleStrips)
+			{
+				return Polygons.Sum(x => x.NumIndices - 2);
+			}
+			else
+			{
+				return Polygons.Length;
+			}
+		}
+
+		/// <summary>
 		/// Checks whether polygon data is valid and throws an <see cref="InvalidDataException"/> if not.
 		/// </summary>
 		/// <exception cref="InvalidDataException"></exception>
@@ -242,16 +272,22 @@ namespace SA3D.Modeling.Mesh.Basic
 				throw new InvalidDataException($"Not all polygons are of the expected type {expectedPolygonType}!");
 			}
 
-			if(Normals == null && Colors == null && TextureCoordinates == null)
+			if(PolygonAttributes == null && Normals == null && Colors == null && TextureCoordinates == null)
 			{
 				return;
 			}
 
-			int cornerCount = PolygonCornerCount;
+			int polygonCount = GetPolygonCount();
+			int cornerCount = GetPolygonCornerCount();
 
-			if(Normals != null && Normals.Length < cornerCount)
+			if(PolygonAttributes != null && PolygonAttributes.Length < polygonCount)
 			{
-				throw new InvalidDataException($"Mesh has {cornerCount} corners, but {Normals.Length} normals!");
+				throw new InvalidDataException($"Mesh has {polygonCount} polygons, but {PolygonAttributes.Length} polygon attributes!");
+			}
+
+			if(Normals != null && Normals.Length < polygonCount)
+			{
+				throw new InvalidDataException($"Mesh has {polygonCount} polygons, but {Normals.Length} normals!");
 			}
 
 			if(Colors != null && Colors.Length < cornerCount)
@@ -277,11 +313,11 @@ namespace SA3D.Modeling.Mesh.Basic
 			Polygons = reader.ReadLabeledObjectArrayOffset(IBasicPolygon.GetReader(PolygonType), polyCount, "poly_", context.PointerLUT)
 				?? new(PolygonLabelPrefix.GenerateIdentifier(), 0);
 
-			PolygonAttributes = reader.ReadUInt32();
+			int polygonCount = GetPolygonCount();
+			int cornerCount = GetPolygonCornerCount();
 
-			int cornerCount = PolygonCornerCount;
-
-			Normals = reader.ReadLabeledObjectArrayOffset(StructBinaryHelper.ReadVector3, cornerCount, NormalsLabelPrefix, context.PointerLUT);
+			PolygonAttributes = reader.ReadLabeledObjectArrayOffset(r => r.ReadUInt32(), polygonCount, PolygonAttributesLabelPrefix, context.PointerLUT);
+			Normals = reader.ReadLabeledObjectArrayOffset(StructBinaryHelper.ReadVector3, polygonCount, NormalsLabelPrefix, context.PointerLUT);
 			Colors = reader.ReadLabeledObjectArrayOffset(r => r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32), cornerCount, ColorsLabelPrefix, context.PointerLUT);
 			TextureCoordinates = reader.ReadLabeledObjectArrayOffset(FloatIOType.Short.GetVector2Reader(), cornerCount, TextureCoordinatesLabelPrefix, context.PointerLUT);
 		}
@@ -295,10 +331,25 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteUInt16(header);
 			writer.WriteUInt16((ushort)Polygons.Length);
 			writer.WriteObjectArrayOffset(Polygons.EmptyNull(), context.PointerLUT);
-			writer.WriteUInt32(PolygonAttributes);
+			writer.WriteObjectArrayOffset((w, v) => w.WriteUInt32(v), PolygonAttributes, context.PointerLUT);
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
 			writer.WriteObjectArrayOffset((w, v) => w.WriteObject(v, ColorIOType.ARGB8_32), Colors.EmptyNull(), context.PointerLUT);
 			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates.EmptyNull(), context.PointerLUT);
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer)
+		{
+			using(writer.WriteBlock("MESH"))
+			{
+				writer.WritePropertyLine("TypeMatId", $"( 0x{(ushort)(((int)PolygonType) << 14):x2}, {MaterialIndex} )");
+				writer.WritePropertyLine("MeshNum", Polygons.Length.ToString());
+				writer.WriteObjectPropertyLine("Meshes", Polygons.EmptyNull());
+				writer.WriteObjectPropertyLine("PolyAttrs", PolygonAttributes.EmptyNull());
+				writer.WriteObjectPropertyLine("PolyNormal", Normals.EmptyNull());
+				writer.WriteObjectPropertyLine("VertColor", Colors.EmptyNull());
+				writer.WriteObjectPropertyLine("VertUV", TextureCoordinates.EmptyNull());
+			}
 		}
 
 		object ICloneable.Clone()
@@ -323,5 +374,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				TextureCoordinates = TextureCoordinates?.Clone()
 			};
 		}
+
+
 	}
 }

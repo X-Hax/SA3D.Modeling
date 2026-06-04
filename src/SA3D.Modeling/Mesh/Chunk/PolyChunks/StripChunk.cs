@@ -561,7 +561,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 
 			foreach(ChunkStrip strip in Strips)
 			{
-				writer.Write($"\tStrip{(strip.Reversed ? 'R' : 'L')}({strip.Corners.Length}),");
+				writer.Write($"\tStrip{(strip.Reversed ? 'R' : 'L')}({strip.Corners.Length}), ");
 
 				if(Type is PolyChunkType.Strip_Blank or PolyChunkType.Strip_BlankDouble)
 				{

@@ -1,4 +1,5 @@
 ﻿using Amicitia.IO.Binary;
+using SA3D.Common.Ascii;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -127,6 +128,12 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			writer.WriteUInt16(Index3);
 		}
 
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			writer.WriteLine($"\t{Index1}, {Index2}, {Index3},");
+		}
+
 
 		/// <inheritdoc/>
 		public readonly IEnumerator<ushort> GetEnumerator()
@@ -152,5 +159,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		{
 			return $"Triangle: [{Index1}, {Index2}, {Index3}]";
 		}
+
+
 	}
 }

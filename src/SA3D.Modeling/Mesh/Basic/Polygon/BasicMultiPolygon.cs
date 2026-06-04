@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,8 +18,8 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<BasicMultiPolygon>
 		{
-			private const string _reversed = nameof(BasicMultiPolygon.Reversed);
-			private const string _indices = nameof(BasicMultiPolygon.Indices);
+			private const string _reversed = nameof(Reversed);
+			private const string _indices = nameof(Indices);
 
 			/// <inheritdoc/>
 			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
@@ -123,6 +124,31 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			{
 				writer.WriteUInt16(Indices[i]);
 			}
+		}
+
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			writer.Write($"\tStrip(0x{(Reversed ? "8000" : "0")}, {Indices.Length}), ");
+
+			if(Indices.Length > 10)
+			{
+				writer.WriteLine();
+				writer.Write("\t\t");
+			}
+
+			for(int i = 0; i < Indices.Length; i++)
+			{
+				writer.Write($"{Indices[i]}, ");
+
+				if(i > 0 && i % 10 == 0)
+				{
+					writer.WriteLine();
+					writer.Write("\t\t");
+				}
+			}
+
+			writer.WriteLine();
 		}
 
 		/// <inheritdoc/>

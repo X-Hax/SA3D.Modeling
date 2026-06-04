@@ -1,5 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace SA3D.Modeling.Mesh.Basic
 	/// BASIC format material
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public struct BasicMaterial : IBinarySerializable
+	public struct BasicMaterial : IBinarySerializable, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<BasicMaterial>
 		{
@@ -236,14 +237,38 @@ namespace SA3D.Modeling.Mesh.Basic
 		public float SpecularExponent { get; set; }
 
 		/// <summary>
-		/// Texture ID.
+		/// Texture attributes (unused) and ID
 		/// </summary>
-		public uint TextureID { get; set; }
+		public uint TextureData { get; set; }
 
 		/// <summary>
 		/// Attributes containing various information.
 		/// </summary>
 		public uint Attributes { get; set; }
+
+
+		#region Texture data
+
+		/// <summary>
+		/// Texture ID.
+		/// </summary>
+		public uint TextureID
+		{
+			readonly get => TextureData & 0x1FFFFFFFu;
+			set => TextureData = (TextureData & ~0x1FFFFFFFu) | (value & 0x1FFFFFFFu);
+		}
+
+		/// <summary>
+		/// Texture attributes (3 bits, unused)
+		/// </summary>
+		public byte TextureAttributes
+		{
+			readonly get => (byte)(TextureData >> 29);
+			set => TextureData = (TextureData & 0x1FFFFFFFu) | ((uint)value << 29);
+		}
+
+		#endregion
+
 
 		#region Attribute Properties
 
@@ -464,6 +489,19 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteSingle(SpecularExponent);
 			writer.WriteUInt32(TextureID);
 			writer.WriteUInt32(Attributes);
+		}
+
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			using(writer.WriteBlock("MAT"))
+			{
+				writer.WritePropertyLine("Diffuse", $"( {DiffuseColor.Alpha}, {DiffuseColor.Red}, {DiffuseColor.Green}, {DiffuseColor.Blue} )");
+				writer.WritePropertyLine("Specular", $"( {SpecularColor.Alpha}, {SpecularColor.Red}, {SpecularColor.Green}, {SpecularColor.Blue} )");
+				writer.WritePropertyLine("Exponent", $"( {SpecularExponent.ToAscii()} )");
+				writer.WritePropertyLine("AttrTexId", $"( {(TextureData & ~0x1FFFFFFFu).ToAsciiHex()}, {TextureID} )");
+				writer.WritePropertyLine("AttrFlags", $"( {Attributes.ToAsciiHex()} )");
+			}
 		}
 
 

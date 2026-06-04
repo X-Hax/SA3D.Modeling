@@ -177,10 +177,6 @@ SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk
 SA3D.Modeling.Mesh.Chunk.PolyChunks.BitsChunk.BitsChunk(SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk
 SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.BlendAlphaChunk() -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.DestinationAlpha.set -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Chunk.PolyChunks.BlendAlphaChunk.SourceAlpha.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk
 SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.CacheListChunk() -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.CacheListChunk.List.get -> byte
@@ -194,15 +190,11 @@ SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialBumpChunk.MaterialBumpChunk() -> voi
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Ambient.get -> SA3D.Modeling.Structs.Color?
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Ambient.set -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.DestinationAlpha.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Diffuse.get -> SA3D.Modeling.Structs.Color?
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Diffuse.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.MaterialChunk() -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Second.get -> bool
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Second.set -> void
-SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceAlpha.get -> SA3D.Modeling.Mesh.BlendMode
-SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SourceAlpha.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Specular.get -> SA3D.Modeling.Structs.Color?
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.Specular.set -> void
 SA3D.Modeling.Mesh.Chunk.PolyChunks.MaterialChunk.SpecularExponent.get -> byte
@@ -430,9 +422,7 @@ SA3D.Modeling.Mesh.Chunk.VertexChunkType.Null = 0 -> SA3D.Modeling.Mesh.Chunk.Ve
 SA3D.Modeling.Mesh.Chunk.VertexChunkType.UserAttributes = 36 -> SA3D.Modeling.Mesh.Chunk.VertexChunkType
 SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.FilterMode.Bilinear = 1 -> SA3D.Modeling.Mesh.FilterMode
-SA3D.Modeling.Mesh.FilterMode.Blend = 3 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.Mesh.FilterMode.Nearest = 0 -> SA3D.Modeling.Mesh.FilterMode
-SA3D.Modeling.Mesh.FilterMode.Trilinear = 2 -> SA3D.Modeling.Mesh.FilterMode
 SA3D.Modeling.ObjectData.Enums.EnumExtensions
 SA3D.Modeling.ObjectData.Enums.NodeAttributes
 SA3D.Modeling.ObjectData.Enums.NodeAttributes.Clip = 256 -> SA3D.Modeling.ObjectData.Enums.NodeAttributes
@@ -600,7 +590,6 @@ SA3D.Modeling.ObjectData.Node.DeepSimpleCopy() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.Detach() -> void
 SA3D.Modeling.ObjectData.Node.DetachChildren(bool remainSiblings) -> void
 SA3D.Modeling.ObjectData.Node.DetachSuccessors(bool remainSiblings) -> void
-SA3D.Modeling.ObjectData.Node.Duplicate() -> SA3D.Modeling.ObjectData.Node!
 SA3D.Modeling.ObjectData.Node.EnsurePositiveEulerAngles() -> void
 SA3D.Modeling.ObjectData.Node.EnsurePositiveEulerAnglesTree() -> void
 SA3D.Modeling.ObjectData.Node.EulerRotation.get -> System.Numerics.Vector3
@@ -770,7 +759,6 @@ static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasAttributes(this SA3D
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasDiffuseColor(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasNormal(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasSpecularColor(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
-static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckHasWeights(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsNormal32(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsStrip(this SA3D.Modeling.Mesh.Chunk.PolyChunkType type) -> bool
 static SA3D.Modeling.Mesh.Chunk.ChunkTypeExtensions.CheckIsVec4(this SA3D.Modeling.Mesh.Chunk.VertexChunkType type) -> bool
