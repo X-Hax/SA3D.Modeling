@@ -147,11 +147,20 @@ namespace SA3D.Modeling.AnimationData
 			Step = reader.ReadSingle();
 			MaxFrame = reader.ReadSingle();
 
-			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
-				?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Model));
+			if(context.LevelFormat >= Format.Chunk)
+			{
+				Animation = reader.ReadObject<ModelAnimation, IOContext>(context);
+				Animation.Label = Animation.LabelPrefix + Animation.Animation.Label;
+				Model = Animation.Model;
+			}
+			else
+			{
+				Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+					?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Model));
 
-			Animation = reader.ReadObjectOffset<ModelAnimation, IOContext>(context, context.PointerLUT)
-				?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Animation));
+				Animation = reader.ReadObjectOffset<ModelAnimation, IOContext>(context, context.PointerLUT)
+					?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Animation));
+			}
 
 			TextureListPointer = reader.ReadUInt32();
 		}
@@ -162,8 +171,17 @@ namespace SA3D.Modeling.AnimationData
 			writer.WriteSingle(Frame);
 			writer.WriteSingle(Step);
 			writer.WriteSingle(MaxFrame);
-			writer.WriteObjectOffset(Model, context, context.PointerLUT);
-			writer.WriteObjectOffset(Animation, context, context.PointerLUT);
+
+			if(context.LevelFormat >= Format.Chunk)
+			{
+				writer.WriteObject(new ModelAnimation(Model, Animation.Animation), context);
+			}
+			else
+			{
+				writer.WriteObjectOffset(Model, context, context.PointerLUT);
+				writer.WriteObjectOffset(Animation, context, context.PointerLUT);
+			}
+
 			writer.WriteUInt32(TextureListPointer);
 		}
 	}
