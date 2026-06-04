@@ -549,7 +549,7 @@ namespace SA3D.Modeling.File
 					throw new InvalidOperationException();
 			}
 
-			writer.WriteLine($"/* NJA by SA3D 2.10.00 Mixed {format}Model */", 2);
+			writer.WriteLine($"/* {AsciiHeader} {(TextureNames != null ? "Mixed" : "Model")} {format}Model */", 2);
 			writer.WriteLine($"/* ROOT OBJECT  : {Model.Label} n({nodeCount}) d({depth}) v({vertexCount}) */");
 
 			if(TextureNames != null)
