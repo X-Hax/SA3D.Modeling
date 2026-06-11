@@ -66,7 +66,7 @@ namespace SA3D.Modeling.AnimationData
 		/// <summary>
 		/// Light intensity at the frame.
 		/// </summary>
-		public float? Intensity { get; set; }
+		public Vector2? Intensity { get; set; }
 
 		/// <summary>
 		/// Spotlight at the frame.

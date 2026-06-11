@@ -11,15 +11,26 @@ namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeRead
 	{
-		public static void ReadFloatSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, float> dictionary, FloatIOType type)
+		public static KeyframeArray<T>? ReadKeyframeArrayAtOffset<T>(this BinaryObjectReader reader, long offset, int count, string labelPrefix, BaseLUT lut, Func<BinaryObjectReader, KeyframeArray<T>> read)
 		{
+			if(count == 0)
+			{
+				return null;
+			}
+
+			return reader.ReadLUTItemAtOffset(offset, lut, labelPrefix, r => read(r));
+		}
+
+		public static KeyframeArray<float> ReadFloatSet(this BinaryObjectReader reader, int count, FloatIOType type)
+		{
+			KeyframeArray<float> result = [];
 			Func<BinaryValueReader, float> read = type.GetReader();
 
 			if(type.GetByteSize() == 2)
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt16(),
 						read(reader)
 					);
@@ -29,23 +40,26 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt32(),
 						read(reader)
 					);
 				}
 			}
+
+			return result;
 		}
 
-		public static void ReadVector2Set(this BinaryObjectReader reader, int count, SortedDictionary<uint, Vector2> dictionary, FloatIOType type)
+		public static KeyframeArray<Vector2> ReadVector2Set(this BinaryObjectReader reader, int count, FloatIOType type)
 		{
+			KeyframeArray<Vector2> result = [];
 			Func<BinaryValueReader, Vector2> read = type.GetVector2Reader();
 
 			if(type.GetByteSize() == 2)
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt16(),
 						read(reader)
 					);
@@ -55,23 +69,26 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt32(),
 						read(reader)
 					);
 				}
 			}
+
+			return result;
 		}
 
-		public static void ReadVector3Set(this BinaryObjectReader reader, int count, SortedDictionary<uint, Vector3> dictionary, FloatIOType type)
+		public static KeyframeArray<Vector3> ReadVector3Set(this BinaryObjectReader reader, int count, FloatIOType type)
 		{
+			KeyframeArray<Vector3> result = [];
 			Func<BinaryValueReader, Vector3> read = type.GetVector3Reader();
 
 			if(type.GetByteSize() == 2)
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt16(),
 						read(reader)
 					);
@@ -81,20 +98,23 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			{
 				for(int i = 0; i < count; i++)
 				{
-					dictionary.Add(
+					result.Add(
 						reader.ReadUInt32(),
 						read(reader)
 					);
 				}
 			}
 
+			return result;
 		}
 
-		public static void ReadVector3ArraySet(this BinaryObjectReader reader, int count, string labelPrefix, SortedDictionary<uint, LabeledArray<Vector3>> dictionary, PointerLUT lut)
+		public static KeyframeArray<LabeledArray<Vector3>> ReadVector3ArraySet(this BinaryObjectReader reader, int count, string labelPrefix, PointerLUT lut)
 		{
+			KeyframeArray<LabeledArray<Vector3>> result = [];
+
 			if(count == 0)
 			{
-				return;
+				return result;
 			}
 
 			long startOffset = reader.GetPositionOffset();
@@ -110,7 +130,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			Array.Sort(offsets);
 
 			// get the smallest array size; Start with the largest possible size
-			long size = long.MaxValue;
+			long size = reader.Length - offsets[0];
 			for(int i = 1; i < offsets.Length; i++)
 			{
 				long newSize = (offsets[i] - offsets[i - 1]) / 12;
@@ -122,41 +142,55 @@ namespace SA3D.Modeling.AnimationData.Utilities
 				LabeledArray<Vector3> vectors = reader.ReadLabeledObjectArrayAtOffset(StructBinaryHelper.ReadVector3, item.Value, (int)size, labelPrefix, lut)
 					?? throw reader.ReadNullReference(nameof(KeyframeSet), labelPrefix);
 
-				dictionary.Add(item.Key, vectors);
+				result.Add(item.Key, vectors);
 			}
+
+			return result;
 		}
 
-		public static void ReadColorSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Color> dictionary, ColorIOType type)
+		public static KeyframeArray<Color> ReadColorSet(this BinaryObjectReader reader, int count, ColorIOType type)
 		{
+			KeyframeArray<Color> result = [];
+
 			for(int i = 0; i < count; i++)
 			{
-				dictionary.Add(
+				result.Add(
 					reader.ReadUInt32(),
 					reader.ReadObject<Color, ColorIOType>(type)
 				);
 			}
+
+			return result;
 		}
 
-		public static void ReadSpotSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Spotlight> dictionary)
+		public static KeyframeArray<Spotlight> ReadSpotlightSet(this BinaryObjectReader reader, int count)
 		{
+			KeyframeArray<Spotlight> result = [];
+
 			for(int i = 0; i < count; i++)
 			{
-				dictionary.Add(
+				result.Add(
 					reader.ReadUInt32(),
 					reader.ReadObject<Spotlight>()
 				);
 			}
+
+			return result;
 		}
 
-		public static void ReadQuaternionSet(this BinaryObjectReader reader, int count, SortedDictionary<uint, Quaternion> dictionary)
+		public static KeyframeArray<Quaternion> ReadQuaternionSet(this BinaryObjectReader reader, int count)
 		{
+			KeyframeArray<Quaternion> result = [];
+
 			for(int i = 0; i < count; i++)
 			{
-				dictionary.Add(
+				result.Add(
 					reader.ReadUInt32(),
-					reader.ReadQuaternion()
+					reader.ReadQuaternionRe()
 				);
 			}
+
+			return result;
 		}
 	}
 }

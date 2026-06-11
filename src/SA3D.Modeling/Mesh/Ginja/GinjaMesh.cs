@@ -195,7 +195,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			throw new NotImplementedException();
 		}

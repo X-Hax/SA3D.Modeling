@@ -17,7 +17,7 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Hierarchy object making up models.
 	/// </summary>
-	public partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiContext>
+	public partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		/// <inheritdoc/>
 		public string Label { get; set; }
@@ -113,7 +113,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, ModelAsciiContext context)
+		public void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			writer.WriteObject(Next, context);
 			writer.WriteObject(Child, context);

@@ -1,4 +1,5 @@
-﻿using SA3D.Modeling.Mesh;
+﻿using SA3D.Modeling.AnimationData;
+using SA3D.Modeling.Mesh;
 using SA3D.Modeling.Mesh.Chunk;
 using SA3D.Modeling.ObjectData.Enums;
 using System.Collections.Generic;
@@ -158,6 +159,37 @@ namespace SA3D.Modeling.Structs
 			{ "FFM_BF", FilterMode.Bilinear },
 			{ "FFM_TFA", FilterMode.TrilinearA },
 			{ "FFM_TFB", FilterMode.TrilinearB },
+		});
+
+		/// <summary>
+		/// Keyframe attributes map
+		/// </summary>
+		public static Dictionary<string, KeyframeAttributes> KeyframeAttributesMap { get; } = new(new Dictionary<string, KeyframeAttributes>()
+		{
+			{ "FMK_POS0", KeyframeAttributes.Position },
+			{ "FMK_ANG1", KeyframeAttributes.EulerRotation },
+			{ "FMK_SCA2", KeyframeAttributes.Scale },
+			{ "FMK_VEC3", KeyframeAttributes.Vector },
+			{ "FMK_VEC0", KeyframeAttributes.Vertex },
+			{ "FMK_SAN1", KeyframeAttributes.Normal },
+			{ "FMK_TAR3", KeyframeAttributes.Target },
+			{ "FMK_ROL6", KeyframeAttributes.Roll },
+			{ "FMK_ANG7", KeyframeAttributes.Angle },
+			{ "FMK_RGB8", KeyframeAttributes.LightColor },
+			{ "FMK_INT9", KeyframeAttributes.Intensity },
+			{ "FMK_SPOT", KeyframeAttributes.Spot },
+			{ "FMK_POI9", KeyframeAttributes.Point },
+			{ "FMK_QUA1", KeyframeAttributes.QuaternionRotation },
+		});
+
+		/// <summary>
+		/// Keyframe attributes map
+		/// </summary>
+		public static Dictionary<string, InterpolationMode> InterpolationModeMap { get; } = new(new Dictionary<string, InterpolationMode>()
+		{
+			{ "FMT_L", InterpolationMode.Linear },
+			{ "FMT_S", InterpolationMode.Spline },
+			{ "FMT_U", InterpolationMode.User },
 		});
 	}
 }

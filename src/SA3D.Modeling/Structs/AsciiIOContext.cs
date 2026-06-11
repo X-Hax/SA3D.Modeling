@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Ascii serialization context
 	/// </summary>
-	public readonly struct AsciiContext
+	public readonly struct AsciiIOContext
 	{
 		/// <summary>
 		/// Do not print the quaternion appendix (if the model does not use quaternion)

@@ -1,9 +1,9 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
-using SA3D.Modeling.ObjectData;
-using System;
+using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -18,7 +18,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Animation data for various targets.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>
+	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<Animation>
 		{
@@ -104,6 +104,7 @@ namespace SA3D.Modeling.AnimationData
 			}
 		}
 
+
 		/// <summary>
 		/// Label prefix for <see cref="KeyframeSets"/>
 		/// </summary>
@@ -157,7 +158,7 @@ namespace SA3D.Modeling.AnimationData
 		/// Whether the motion transforms nodes.
 		/// </summary>
 		public bool IsNodeAnimation
-			=> !IsShapeAnimation && !IsCameraAnimation && !IsSpotLightAnimation && !IsLightAnimation;
+			=> !IsShapeAnimation && !IsCameraAnimation && !IsLightAnimation;
 
 		/// <summary>
 		/// Whether the motion alters vertex positions and/or normals of meshes.
@@ -172,16 +173,10 @@ namespace SA3D.Modeling.AnimationData
 			=> HasAnyAttributes(KeyframeAttributes.Angle | KeyframeAttributes.Roll | KeyframeAttributes.Target);
 
 		/// <summary>
-		/// Whether the motion targets a spotlight
-		/// </summary>
-		public bool IsSpotLightAnimation
-			=> HasAnyAttributes(KeyframeAttributes.Spot);
-
-		/// <summary>
 		/// Whether the motion targets lights
 		/// </summary>
 		public bool IsLightAnimation
-			=> HasAnyAttributes(KeyframeAttributes.Intensity | KeyframeAttributes.LightColor | KeyframeAttributes.Vector);
+			=> HasAnyAttributes(KeyframeAttributes.Intensity | KeyframeAttributes.LightColor | KeyframeAttributes.Vector | KeyframeAttributes.Spot);
 
 
 		/// <summary>
@@ -214,58 +209,6 @@ namespace SA3D.Modeling.AnimationData
 			return KeyframeSets.Max(x => x.KeyframeCount);
 		}
 
-		/// <summary>
-		/// Ensures that the transform properties of all nodes in a model tree have start- and end-frames.
-		/// </summary>
-		/// <param name="model">Any node from a tree for which keyframes should be ensured..</param>
-		/// <param name="targetTypes">Keyframe types to target.</param>
-		/// <param name="createKeyframes">If enabled, new keyframe sets will be created for any node that does not have any yet. Otherwise, only preexisting keyframe sets will be ensured to have start and end.</param>
-		public void EnsureNodeKeyframes(Node model, KeyframeAttributes targetTypes, bool createKeyframes)
-		{
-			if(default == (targetTypes & (
-				KeyframeAttributes.Position
-				| KeyframeAttributes.EulerRotation
-				| KeyframeAttributes.QuaternionRotation
-				| KeyframeAttributes.Scale)))
-			{
-				return;
-			}
-
-			uint maxFrame = GetFrameCount() - 1;
-			Node[] animNodes = model.GetAnimTreeNodes();
-
-			if(KeyframeSets.Length < animNodes.Length)
-			{
-				KeyframeSet[] sets = KeyframeSets.Array;
-				Array.Resize(ref sets, animNodes.Length);
-
-				for(int i = KeyframeSets.Length; i < animNodes.Length; i++)
-				{
-					sets[i] = new();
-				}
-
-				KeyframeSets.Array = sets;
-			}
-
-			for(int i = 0; i < animNodes.Length; i++)
-			{
-				KeyframeSets[i]!.EnsureNodeKeyframes(animNodes[i], targetTypes, maxFrame);
-			}
-		}
-
-		/// <summary>
-		/// Ensures that specified keyframe types of all keyframes have start- and end-frames.
-		/// </summary>
-		/// <param name="targetTypes">Keyframe types to target.</param>
-		public void EnsureKeyframes(KeyframeAttributes targetTypes)
-		{
-			uint maxFrame = GetFrameCount() - 1;
-			foreach(KeyframeSet kf in KeyframeSets)
-			{
-				kf.EnsureKeyframes(targetTypes, maxFrame);
-			}
-		}
-
 		/// <inheritdoc/>
 		public void Read(BinaryObjectReader reader, AnimationIOContext context)
 		{
@@ -278,7 +221,12 @@ namespace SA3D.Modeling.AnimationData
 			ushort attributes = reader.ReadUInt16();
 			InterpolationMode = (InterpolationMode)((attributes >> 6) & 0x3);
 
-			context.KeyframeType = ManualKeyframeTypes;
+			context = new()
+			{
+				BaseContext = context.BaseContext,
+				FileContext = context.FileContext,
+				KeyframeType = ManualKeyframeTypes
+			};
 
 			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
 				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
@@ -287,7 +235,13 @@ namespace SA3D.Modeling.AnimationData
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
-			context.KeyframeType = KeyframeTypes;
+			context = new()
+			{
+				BaseContext = context.BaseContext,
+				FileContext = context.FileContext,
+				KeyframeType = KeyframeTypes
+			};
+
 			if(context.KeyframeType == default)
 			{
 				// just to have some valid pointer here, as i think that is necessary(?)
@@ -302,6 +256,55 @@ namespace SA3D.Modeling.AnimationData
 			writer.WriteUInt32(GetFrameCount());
 			writer.WriteUInt16((ushort)context.KeyframeType);
 			writer.WriteUInt16((ushort)((channels & 0xF) | ((int)InterpolationMode << 6)));
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, AsciiIOContext context)
+		{
+			string prefix = string.Empty;
+			string type = string.Empty;
+
+			if(IsLightAnimation)
+			{
+				prefix = "L";
+				type = "LIGHT_";
+			}
+			else if(IsCameraAnimation)
+			{
+				prefix = "C";
+				type = "CAMERA_";
+			}
+			else if(IsShapeAnimation)
+			{
+				type = "SHAPE_";
+			}
+
+			using(writer.WriteObjectBlock(type + "MOTION"))
+			{
+				foreach(KeyframeSet set in KeyframeSets)
+				{
+					set.WriteKeyframes(writer, prefix);
+				}
+
+				AnimationAsciiIOContext animationContext = new()
+				{
+					BaseContext = context,
+					KeyframeType = KeyframeTypes
+				};
+
+				int channels = animationContext.KeyframeType.ChannelCount();
+
+				writer.WriteArray("MDATA" + channels, KeyframeSets, animationContext, 0);
+
+				using(writer.WriteStructBlock("MOTION", this))
+				{
+					writer.WriteObjectPropertyLine("MdataArray", KeyframeSets);
+					writer.WritePropertyLine("MFrameNum", GetFrameCount().ToString());
+					writer.WritePropertyLine("MotionBitF", $"({animationContext.KeyframeType.ToAscii(AsciiMaps.KeyframeAttributesMap)})");
+					writer.WritePropertyLine("InterpolFctF", $"({InterpolationMode.ToAscii(AsciiMaps.InterpolationModeMap)}|FMD_{channels})");
+				}
+			}
+
 		}
 
 		/// <inheritdoc/>

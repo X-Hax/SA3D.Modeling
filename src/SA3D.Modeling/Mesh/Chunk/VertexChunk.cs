@@ -24,7 +24,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Set of vertex data of a chunk model
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiContext>
+	public class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<VertexChunk>
 		{
@@ -256,7 +256,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 
 		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, ModelAsciiContext context)
+		public void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			string chunkType = AsciiMaps.VertexChunkTypeMap.FindKey(Type);
 			string chunkFlags = string.Empty;
@@ -278,7 +278,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 			chunkFlags = chunkFlags == string.Empty ? "0x0" : chunkFlags[1..];
 
-			Action<AsciiWriter, ChunkVertex, ModelAsciiContext> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
+			Action<AsciiWriter, ChunkVertex, ModelAsciiIOContext> vertexWrite = ChunkVertex.GetAsciiWriteCallback(Type, context);
 
 			SplitWrite((size, indexOffset, vertCount, offset) =>
 			{
@@ -292,7 +292,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			});
 		}
 
-		internal static void WriteArray(AsciiWriter writer, LabeledArray<VertexChunk>? chunks, ModelAsciiContext context)
+		internal static void WriteArray(AsciiWriter writer, LabeledArray<VertexChunk>? chunks, ModelAsciiIOContext context)
 		{
 			if(chunks == null)
 			{

@@ -337,6 +337,21 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates.EmptyNull(), context.PointerLUT);
 		}
 
+		/// <summary>
+		/// Write polygon data to an ascii writer
+		/// </summary>
+		/// <param name="writer">The writer to write to</param>
+		public void WritePolygons(AsciiWriter writer)
+		{
+			string polyType = PolygonType == BasicPolygonType.TriangleStrips ? "STRIP" : "POLY";
+
+			writer.WriteArray("POLYGON", Polygons, 0);
+			writer.WriteArray(polyType + "ATTR", PolygonAttributes, 0, (w, v) => w.WriteLine($"\tNORM( {v.ToAsciiHex()} ),"));
+			writer.WriteArray(polyType + "NORMAL", Normals, 0, (w, v) => w.WriteLine($"\tPNORM( {v.ToAscii()} ),"));
+			writer.WriteArray("VERTCOLOR", Colors, 0, (w, v) => w.WriteLine($"\tARGB( {v.Alpha}, {v.Red}, {v.Green}, {v.Blue} ),"));
+			writer.WriteArray("VERTUV", TextureCoordinates, 0, (w, v) => w.WriteLine($"\tUV( {(int)v.X}, {(int)v.Y} ),"));
+		}
+
 		/// <inheritdoc/>
 		public void Write(AsciiWriter writer)
 		{

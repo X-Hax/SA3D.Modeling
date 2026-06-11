@@ -9,7 +9,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeWrite
 	{
-		public static void WriteFloatSet(this BinaryObjectWriter writer, SortedDictionary<uint, float> dict, FloatIOType ioType)
+		public static void WriteFloatSet(this BinaryObjectWriter writer, KeyframeArray<float> dict, FloatIOType ioType)
 		{
 			foreach(KeyValuePair<uint, float> pair in dict)
 			{
@@ -18,7 +18,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteVector2Set(this BinaryObjectWriter writer, SortedDictionary<uint, Vector2> dict, FloatIOType ioType)
+		public static void WriteVector2Set(this BinaryObjectWriter writer, KeyframeArray<Vector2> dict, FloatIOType ioType)
 		{
 			foreach(KeyValuePair<uint, Vector2> pair in dict)
 			{
@@ -27,7 +27,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteVector3Set(this BinaryObjectWriter writer, SortedDictionary<uint, Vector3> dict, FloatIOType ioType)
+		public static void WriteVector3Set(this BinaryObjectWriter writer, KeyframeArray<Vector3> dict, FloatIOType ioType)
 		{
 			if(ioType.GetByteSize() == 2)
 			{
@@ -47,7 +47,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteVector3ArrayData(this BinaryObjectWriter writer, SortedDictionary<uint, LabeledArray<Vector3>> dict, PointerLUT lut)
+		public static void WriteVector3ArrayData(this BinaryObjectWriter writer, KeyframeArray<LabeledArray<Vector3>> dict, PointerLUT lut)
 		{
 			foreach(KeyValuePair<uint, LabeledArray<Vector3>> pair in dict)
 			{
@@ -56,7 +56,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteColorSet(this BinaryObjectWriter writer, SortedDictionary<uint, Color> dict, ColorIOType ioType)
+		public static void WriteColorSet(this BinaryObjectWriter writer, KeyframeArray<Color> dict, ColorIOType ioType)
 		{
 			foreach(KeyValuePair<uint, Color> pair in dict)
 			{
@@ -65,7 +65,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteSpotlightSet(this BinaryObjectWriter writer, SortedDictionary<uint, Spotlight> dict)
+		public static void WriteSpotlightSet(this BinaryObjectWriter writer, KeyframeArray<Spotlight> dict)
 		{
 			foreach(KeyValuePair<uint, Spotlight> pair in dict)
 			{
@@ -74,12 +74,12 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteQuaternionSet(this BinaryObjectWriter writer, SortedDictionary<uint, Quaternion> dict)
+		public static void WriteQuaternionSet(this BinaryObjectWriter writer, KeyframeArray<Quaternion> dict)
 		{
 			foreach(KeyValuePair<uint, Quaternion> pair in dict)
 			{
 				writer.WriteUInt32(pair.Key);
-				writer.WriteQuaternion(pair.Value);
+				writer.WriteQuaternionRe(pair.Value);
 			}
 		}
 

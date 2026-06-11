@@ -1,7 +1,6 @@
 ﻿using SA3D.Common.Lookup;
 using SA3D.Modeling.Structs;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
@@ -24,17 +23,17 @@ namespace SA3D.Modeling.AnimationData.Utilities
 		/// <param name="before">Last Keyframe before given frame</param>
 		/// <param name="next">Next Keyframe after given frame</param>
 		/// <returns></returns>
-		private static bool GetNearestFrames<T>(SortedDictionary<uint, T> keyframes, float timestamp, out float interpolation, out T before, [MaybeNullWhen(false)] out T next)
+		private static bool GetNearestFrames<T>(KeyframeArray<T> keyframes, float timestamp, out float interpolation, out T before, [MaybeNullWhen(false)] out T next)
 		{
+			interpolation = 0;
+			next = default;
+
 			if(timestamp < 0)
 			{
 				timestamp = 0;
 			}
 
 			// if there is only one frame, we can take that one
-			next = default;
-			interpolation = 0;
-
 			if(keyframes.Count == 1)
 			{
 				foreach(T val in keyframes.Values) // faster than converting to an array and accessing the first index
@@ -56,7 +55,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			// this is pretty easy thanks to the fact that the dictionary is always sorted
 
 			// getting the first frame index
-			SortedDictionary<uint, T>.KeyCollection keys = keyframes.Keys;
+			KeyframeArray<T>.KeyCollection keys = keyframes.Keys;
 			uint nextSmallestFrame = keys.First();
 
 			// if the smallest frame is greater than the frame we are at right now, then we can just return the frame
@@ -98,9 +97,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			return true;
 		}
 
-		public static Vector3? ValueAtFrame(this SortedDictionary<uint, Vector3> keyframes, float frame)
+		public static Vector3? ValueAtFrame(this KeyframeArray<Vector3>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -115,9 +114,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static Vector3[]? ValueAtFrame(this SortedDictionary<uint, LabeledArray<Vector3>> keyframes, float frame)
+		public static Vector3[]? ValueAtFrame(this KeyframeArray<LabeledArray<Vector3>>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -136,9 +135,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			return result;
 		}
 
-		public static Vector2? ValueAtFrame(this SortedDictionary<uint, Vector2> keyframes, float frame)
+		public static Vector2? ValueAtFrame(this KeyframeArray<Vector2>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -153,9 +152,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static Color? ValueAtFrame(this SortedDictionary<uint, Color> keyframes, float frame)
+		public static Color? ValueAtFrame(this KeyframeArray<Color>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -170,9 +169,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static float? ValueAtFrame(this SortedDictionary<uint, float> keyframes, float frame)
+		public static float? ValueAtFrame(this KeyframeArray<float>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -187,9 +186,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static Spotlight? ValueAtFrame(this SortedDictionary<uint, Spotlight> keyframes, float frame)
+		public static Spotlight? ValueAtFrame(this KeyframeArray<Spotlight>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}
@@ -204,9 +203,9 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static Quaternion? ValueAtFrame(this SortedDictionary<uint, Quaternion> keyframes, float frame)
+		public static Quaternion? ValueAtFrame(this KeyframeArray<Quaternion>? keyframes, float frame)
 		{
-			if(keyframes.Count == 0)
+			if(keyframes == null || keyframes.Count == 0)
 			{
 				return null;
 			}

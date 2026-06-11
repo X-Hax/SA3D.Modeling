@@ -34,7 +34,7 @@ namespace SA3D.Modeling.File
 	/// Node model with meshdata.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ModelFile : IFileSerializable, IAsciiSerializable<AsciiContext>
+	public class ModelFile : IFileSerializable, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<ModelFile>
 		{
@@ -494,7 +494,7 @@ namespace SA3D.Modeling.File
 
 
 		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, AsciiContext context)
+		public void Write(AsciiWriter writer, AsciiIOContext context)
 		{
 			string format = Format switch
 			{
@@ -560,20 +560,20 @@ namespace SA3D.Modeling.File
 
 			writer.WriteLine();
 
-			ModelAsciiContext modelContext = ModelAsciiContext.FromModel(Format, Model, context);
+			ModelAsciiIOContext modelContext = ModelAsciiIOContext.FromModel(Format, Model, context);
 			writer.WriteObject(Model, modelContext);
 
-			using(writer.WriteBlock("DEFAULT_"))
+			using(writer.WriteObjectBlock("DEFAULT"))
 			{
 				writer.WriteLine("#ifndef DEFAULT_OBJECT_NAME");
 				writer.WriteObjectPropertyLine("#define DEFAULT_OBJECT_NAME", Model);
-				writer.WriteLine("#endif");
+				writer.WriteLine("#endif", 2);
 
 				if(TextureNames != null)
 				{
 					writer.WriteLine("#ifndef DEFAULT_TEXLIST_NAME");
 					writer.WriteObjectPropertyLine("#define DEFAULT_TEXLIST_NAME", TextureNames);
-					writer.WriteLine("#endif");
+					writer.WriteLine("#endif", 2);
 				}
 			}
 		}

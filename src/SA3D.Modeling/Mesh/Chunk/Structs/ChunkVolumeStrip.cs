@@ -243,7 +243,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		}
 
 		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer, (ModelAsciiContext context, int attributeCount) context)
+		public readonly void Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
 		{
 			writer.Write($"\tStrip{(Reversed ? 'R' : 'L')}({Indices.Length}), ");
 

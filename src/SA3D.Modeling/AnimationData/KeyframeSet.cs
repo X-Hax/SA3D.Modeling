@@ -1,13 +1,12 @@
 ﻿using Amicitia.IO.Binary;
-using Amicitia.IO.Streams;
 using J113D.Json;
-using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.AnimationData.Utilities;
-using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Keyframe storage for an animation.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class KeyframeSet : IBinarySerializable<AnimationIOContext>
+	public class KeyframeSet : IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AnimationAsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<KeyframeSet>
 		{
@@ -36,29 +35,29 @@ namespace SA3D.Modeling.AnimationData
 			private const string _angle = nameof(Angle);
 			private const string _lightColor = nameof(LightColor);
 			private const string _intensity = nameof(Intensity);
-			private const string _spot = nameof(Spot);
+			private const string _spotlight = nameof(Spotlight);
 			private const string _point = nameof(Point);
 			private const string _quaternionRotation = nameof(QuaternionRotation);
 
 
 			/// <inheritdoc/>
 			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
-		{
-			{ _position, new(PropertyTokenType.Object, null) },
-			{ _eulerRotation, new(PropertyTokenType.Object, null) },
-			{ _scale, new(PropertyTokenType.Object, null) },
-			{ _vector, new(PropertyTokenType.Object, null) },
-			{ _vertex, new(PropertyTokenType.Object, null) },
-			{ _normal, new(PropertyTokenType.Object, null) },
-			{ _target, new(PropertyTokenType.Object, null) },
-			{ _roll, new(PropertyTokenType.Object, null) },
-			{ _angle, new(PropertyTokenType.Object, null) },
-			{ _lightColor, new(PropertyTokenType.Object, null) },
-			{ _intensity, new(PropertyTokenType.Object, null) },
-			{ _spot, new(PropertyTokenType.Object, null) },
-			{ _point, new(PropertyTokenType.Object, null) },
-			{ _quaternionRotation, new(PropertyTokenType.Object, null) },
-		});
+			{
+				{ _position, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _eulerRotation, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _scale, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _vector, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _vertex, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _normal, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _target, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _roll, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _angle, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _lightColor, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _intensity, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _spotlight, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _point, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+				{ _quaternionRotation, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
 
 			/// <inheritdoc/>
 			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
@@ -70,22 +69,22 @@ namespace SA3D.Modeling.AnimationData
 					case _scale:
 					case _vector:
 					case _target:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, Vector3>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<Vector3>>(ref reader, options);
 					case _vertex:
 					case _normal:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, LabeledArray<Vector3>>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<LabeledArray<Vector3>>>(ref reader, options);
 					case _roll:
 					case _angle:
 					case _intensity:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, float>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<float>>(ref reader, options);
 					case _lightColor:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, Color>>(ref reader, options);
-					case _spot:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, Spotlight>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<Color>>(ref reader, options);
+					case _spotlight:
+						return JsonSerializer.Deserialize<KeyframeArray<Spotlight>>(ref reader, options);
 					case _point:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, Vector2>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<Vector2>>(ref reader, options);
 					case _quaternionRotation:
-						return JsonSerializer.Deserialize<SortedDictionary<uint, Quaternion>>(ref reader, options);
+						return JsonSerializer.Deserialize<KeyframeArray<Quaternion>>(ref reader, options);
 					default:
 						throw new InvalidPropertyException();
 				}
@@ -94,45 +93,31 @@ namespace SA3D.Modeling.AnimationData
 			/// <inheritdoc/>
 			protected override KeyframeSet Create(ReadOnlyDictionary<string, object?> values)
 			{
-				KeyframeSet result = new();
-
-				void copyKeyframeSet<T>(string name, SortedDictionary<uint, T> target)
+				return new()
 				{
-					if(values[name] is not SortedDictionary<uint, T> source)
-					{
-						return;
-					}
-
-					foreach(KeyValuePair<uint, T> item in source)
-					{
-						target.Add(item.Key, item.Value);
-					}
-				}
-
-				copyKeyframeSet(_position, result.Position);
-				copyKeyframeSet(_eulerRotation, result.EulerRotation);
-				copyKeyframeSet(_scale, result.Scale);
-				copyKeyframeSet(_vector, result.Vector);
-				copyKeyframeSet(_vertex, result.Vertex);
-				copyKeyframeSet(_normal, result.Normal);
-				copyKeyframeSet(_target, result.Target);
-				copyKeyframeSet(_roll, result.Roll);
-				copyKeyframeSet(_angle, result.Angle);
-				copyKeyframeSet(_lightColor, result.LightColor);
-				copyKeyframeSet(_intensity, result.Intensity);
-				copyKeyframeSet(_spot, result.Spot);
-				copyKeyframeSet(_point, result.Point);
-				copyKeyframeSet(_quaternionRotation, result.QuaternionRotation);
-
-				return result;
+					Position = (KeyframeArray<Vector3>?)values[_position],
+					EulerRotation = (KeyframeArray<Vector3>?)values[_eulerRotation],
+					Scale = (KeyframeArray<Vector3>?)values[_scale],
+					Vector = (KeyframeArray<Vector3>?)values[_vector],
+					Vertex = (KeyframeArray<LabeledArray<Vector3>>?)values[_vertex],
+					Normal = (KeyframeArray<LabeledArray<Vector3>>?)values[_normal],
+					Target = (KeyframeArray<Vector3>?)values[_target],
+					Roll = (KeyframeArray<float>?)values[_roll],
+					Angle = (KeyframeArray<float>?)values[_angle],
+					LightColor = (KeyframeArray<Color>?)values[_lightColor],
+					Intensity = (KeyframeArray<Vector2>?)values[_intensity],
+					Spotlight = (KeyframeArray<Spotlight>?)values[_spotlight],
+					Point = (KeyframeArray<Vector2>?)values[_point],
+					QuaternionRotation = (KeyframeArray<Quaternion>?)values[_quaternionRotation]
+				};
 			}
 
 			/// <inheritdoc/>
 			protected override void WriteValues(Utf8JsonWriter writer, KeyframeSet value, JsonSerializerOptions options)
 			{
-				void writeKeyframeSet<T>(string name, SortedDictionary<uint, T> target)
+				void writeKeyframeSet<T>(string name, KeyframeArray<T>? target)
 				{
-					if(target.Count == 0)
+					if(target == null || target.Count == 0)
 					{
 						return;
 					}
@@ -152,93 +137,160 @@ namespace SA3D.Modeling.AnimationData
 				writeKeyframeSet(_angle, value.Angle);
 				writeKeyframeSet(_lightColor, value.LightColor);
 				writeKeyframeSet(_intensity, value.Intensity);
-				writeKeyframeSet(_spot, value.Spot);
+				writeKeyframeSet(_spotlight, value.Spotlight);
 				writeKeyframeSet(_point, value.Point);
 				writeKeyframeSet(_quaternionRotation, value.QuaternionRotation);
 			}
 		}
 
+
 		/// <summary>
-		/// Base label for all the keyframes
+		/// Label prefix for <see cref="Position"/>
 		/// </summary>
-		public string BaseLabel { get; set; }
+		public const string PositionLabelPrefix = "position_";
+
+		/// <summary>
+		/// Label prefix for <see cref="EulerRotation"/>
+		/// </summary>
+		public const string EulerRotationLabelPrefix = "rotation_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Scale"/>
+		/// </summary>
+		public const string ScaleLabelPrefix = "scale_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Vector"/>
+		/// </summary>
+		public const string VectorLabelPrefix = "vector_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Vertex"/>
+		/// </summary>
+		public const string VertexLabelPrefix = "vertex_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Normal"/>
+		/// </summary>
+		public const string NormalLabelPrefix = "normal_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Target"/>
+		/// </summary>
+		public const string TargetLabelPrefix = "target_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Roll"/>
+		/// </summary>
+		public const string RollLabelPrefix = "roll_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Angle"/>
+		/// </summary>
+		public const string AngleLabelPrefix = "angle_";
+
+		/// <summary>
+		/// Label prefix for <see cref="LightColor"/>
+		/// </summary>
+		public const string LightColorLabelPrefix = "lightCol_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Intensity"/>
+		/// </summary>
+		public const string IntensityLabelPrefix = "intensity_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Spotlight"/>
+		/// </summary>
+		public const string SpotlightLabelPrefix = "spotlight_";
+
+		/// <summary>
+		/// Label prefix for <see cref="Point"/>
+		/// </summary>
+		public const string PointLabelPrefix = "point_";
+
+		/// <summary>
+		/// Label prefix for <see cref="QuaternionRotation"/>
+		/// </summary>
+		public const string QuaternionRotationLabelPrefix = "quaternion_";
+
 
 
 		/// <summary>
 		/// Transform position keyframes.
 		/// </summary>
-		public SortedDictionary<uint, Vector3> Position { get; private set; }
+		public KeyframeArray<Vector3>? Position { get; set; }
 
 		/// <summary>
 		/// Transform rotation (euler angles) keyframes.
 		/// </summary>
-		public SortedDictionary<uint, Vector3> EulerRotation { get; private set; }
+		public KeyframeArray<Vector3>? EulerRotation { get; set; }
 
 		/// <summary>
 		/// Transform scale keyframes.
 		/// </summary>
-		public SortedDictionary<uint, Vector3> Scale { get; private set; }
+		public KeyframeArray<Vector3>? Scale { get; set; }
 
 		/// <summary>
 		/// General vector3 keyframes.
 		/// </summary>
-		public SortedDictionary<uint, Vector3> Vector { get; private set; }
+		public KeyframeArray<Vector3>? Vector { get; set; }
 
 		/// <summary>
 		/// Mesh vertex positions.
 		/// </summary>
-		public SortedDictionary<uint, LabeledArray<Vector3>> Vertex { get; private set; }
+		public KeyframeArray<LabeledArray<Vector3>>? Vertex { get; set; }
 
 		/// <summary>
 		/// Mesh vertex normals.
 		/// </summary>
-		public SortedDictionary<uint, LabeledArray<Vector3>> Normal { get; private set; }
+		public KeyframeArray<LabeledArray<Vector3>>? Normal { get; set; }
 
 		/// <summary>
 		/// Camera lookat target.
 		/// </summary>
-		public SortedDictionary<uint, Vector3> Target { get; private set; }
+		public KeyframeArray<Vector3>? Target { get; set; }
 
 		/// <summary>
 		/// Camera Roll (euler angle).
 		/// </summary>
-		public SortedDictionary<uint, float> Roll { get; private set; }
+		public KeyframeArray<float>? Roll { get; set; }
 
 		/// <summary>
 		/// Camera field of view (radians).
 		/// </summary>
-		public SortedDictionary<uint, float> Angle { get; private set; }
+		public KeyframeArray<float>? Angle { get; set; }
 
 		/// <summary>
 		/// Light Color.
 		/// </summary>
-		public SortedDictionary<uint, Color> LightColor { get; private set; }
+		public KeyframeArray<Color>? LightColor { get; set; }
 
 		/// <summary>
-		/// Light intensity.
+		/// Light intensity + ambient
 		/// </summary>
-		public SortedDictionary<uint, float> Intensity { get; private set; }
+		public KeyframeArray<Vector2>? Intensity { get; set; }
 
 		/// <summary>
 		/// Spotlights.
 		/// </summary>
-		public SortedDictionary<uint, Spotlight> Spot { get; private set; }
+		public KeyframeArray<Spotlight>? Spotlight { get; set; }
 
 		/// <summary>
 		/// Point light positions.
 		/// </summary>
-		public SortedDictionary<uint, Vector2> Point { get; private set; }
+		public KeyframeArray<Vector2>? Point { get; set; }
 
 		/// <summary>
 		/// Rotation (quaternion) keyframes.
 		/// </summary>
-		public SortedDictionary<uint, Quaternion> QuaternionRotation { get; private set; }
+		public KeyframeArray<Quaternion>? QuaternionRotation { get; set; }
 
 		/// <summary>
 		/// Whether any keyframes exist in this keyframe set
 		/// </summary>
 		public bool HasKeyframes
-			=> GetKeyEnumerable().Any(x => x.Any());
+			=> GetKeyEnumerable().Any(x => x?.Any() == true);
 
 		/// <summary>
 		/// Returns the number of keyframes in the biggest keyframe dictionary.
@@ -249,9 +301,9 @@ namespace SA3D.Modeling.AnimationData
 			{
 				bool hasKeys = false;
 				uint maxKey = 0;
-				foreach(IEnumerable<uint> keys in GetKeyEnumerable())
+				foreach(IEnumerable<uint>? keys in GetKeyEnumerable())
 				{
-					if(!keys.Any())
+					if(keys == null || !keys.Any())
 					{
 						continue;
 					}
@@ -280,9 +332,9 @@ namespace SA3D.Modeling.AnimationData
 			{
 				KeyframeAttributes attribs = 0;
 
-				foreach((KeyframeAttributes type, IEnumerable<uint> keys) in GetTypeKeyEnumerable())
+				foreach((KeyframeAttributes type, IEnumerable<uint>? keys) in GetTypeKeyEnumerable())
 				{
-					if(keys.Any())
+					if(keys != null && keys.Any())
 					{
 						attribs |= type;
 					}
@@ -293,51 +345,29 @@ namespace SA3D.Modeling.AnimationData
 		}
 
 
-		/// <summary>
-		/// Creates an empty keyframe storage
-		/// </summary>
-		public KeyframeSet()
+		private IEnumerable<IEnumerable<uint>?> GetKeyEnumerable()
 		{
-			BaseLabel = "keyframes_".GenerateIdentifier();
-			Position = [];
-			EulerRotation = [];
-			Scale = [];
-			Vector = [];
-			Vertex = [];
-			Normal = [];
-			Target = [];
-			Roll = [];
-			Angle = [];
-			LightColor = [];
-			Intensity = [];
-			Spot = [];
-			Point = [];
-			QuaternionRotation = [];
+			yield return Position?.Keys;
+			yield return EulerRotation?.Keys;
+			yield return Scale?.Keys;
+			yield return Vector?.Keys;
+			yield return Vertex?.Keys;
+			yield return Normal?.Keys;
+			yield return Target?.Keys;
+			yield return Roll?.Keys;
+			yield return Angle?.Keys;
+			yield return LightColor?.Keys;
+			yield return Intensity?.Keys;
+			yield return Spotlight?.Keys;
+			yield return Point?.Keys;
+			yield return QuaternionRotation?.Keys;
+
 		}
 
-
-		private IEnumerable<IEnumerable<uint>> GetKeyEnumerable()
-		{
-			yield return Position.Keys;
-			yield return EulerRotation.Keys;
-			yield return Scale.Keys;
-			yield return Vector.Keys;
-			yield return Vertex.Keys;
-			yield return Normal.Keys;
-			yield return Target.Keys;
-			yield return Roll.Keys;
-			yield return Angle.Keys;
-			yield return LightColor.Keys;
-			yield return Intensity.Keys;
-			yield return Spot.Keys;
-			yield return Point.Keys;
-			yield return QuaternionRotation.Keys;
-		}
-
-		private IEnumerable<(KeyframeAttributes type, IEnumerable<uint> keys)> GetTypeKeyEnumerable()
+		private IEnumerable<(KeyframeAttributes type, IEnumerable<uint>? keys)> GetTypeKeyEnumerable()
 		{
 			uint current = 1;
-			foreach(IEnumerable<uint> keys in GetKeyEnumerable())
+			foreach(IEnumerable<uint>? keys in GetKeyEnumerable())
 			{
 				yield return ((KeyframeAttributes)current, keys);
 				current <<= 1;
@@ -365,84 +395,10 @@ namespace SA3D.Modeling.AnimationData
 				Angle = Angle.ValueAtFrame(frame),
 				Color = LightColor.ValueAtFrame(frame),
 				Intensity = Intensity.ValueAtFrame(frame),
-				Spotlight = Spot.ValueAtFrame(frame),
+				Spotlight = Spotlight.ValueAtFrame(frame),
 				Point = Point.ValueAtFrame(frame),
 				QuaternionRotation = QuaternionRotation.ValueAtFrame(frame),
 			};
-		}
-
-		/// <summary>
-		/// Ensures that specified node transform properties have start- and end-frames.
-		/// </summary>
-		/// <param name="node">The node for which to ensure frames. If no keyframes exist, then they will be added with the values from this node.</param>
-		/// <param name="targets">Keyframe types to target.</param>
-		/// <param name="endFrame">The frame until which keyframes need to exist.</param>
-		public void EnsureNodeKeyframes(Node node, KeyframeAttributes targets, uint endFrame)
-		{
-			void Ensure<T>(SortedDictionary<uint, T> keyframes, KeyframeAttributes type, T value)
-			{
-				if(!targets.HasFlag(type))
-				{
-					return;
-				}
-
-				if(!keyframes.ContainsKey(0))
-				{
-					keyframes.Add(0, value);
-				}
-
-				if(keyframes.Keys.Max() < endFrame)
-				{
-					keyframes.Add(endFrame, value);
-				}
-			}
-
-			Ensure(Position, KeyframeAttributes.Position, node.Position);
-			Ensure(EulerRotation, KeyframeAttributes.EulerRotation, node.EulerRotation);
-			Ensure(QuaternionRotation, KeyframeAttributes.QuaternionRotation, node.QuaternionRotation);
-			Ensure(Scale, KeyframeAttributes.Scale, node.Scale);
-		}
-
-		/// <summary>
-		/// Ensures that specified keyframe types have start- and end-frames
-		/// </summary>
-		/// <param name="targets">Keyframe types to target.</param>
-		/// <param name="endFrame">The frame until which keyframes need to exist.</param>
-		public void EnsureKeyframes(KeyframeAttributes targets, uint endFrame)
-		{
-			void Ensure<T>(SortedDictionary<uint, T> keyframes, KeyframeAttributes type, T value)
-			{
-				if(!targets.HasFlag(type))
-				{
-					return;
-				}
-
-				if(!keyframes.ContainsKey(0))
-				{
-					keyframes.Add(0, value);
-				}
-
-				if(keyframes.Keys.Max() < endFrame)
-				{
-					keyframes.Add(endFrame, value);
-				}
-			}
-
-			Ensure(Position, KeyframeAttributes.Position, Vector3.Zero);
-			Ensure(EulerRotation, KeyframeAttributes.EulerRotation, Vector3.Zero);
-			Ensure(Scale, KeyframeAttributes.Scale, Vector3.One);
-			Ensure(Vector, KeyframeAttributes.Vector, default);
-			Ensure(Vertex, KeyframeAttributes.Vertex, new LabeledArray<Vector3>(0));
-			Ensure(Normal, KeyframeAttributes.Normal, new LabeledArray<Vector3>(0));
-			Ensure(Target, KeyframeAttributes.Target, Vector3.Zero);
-			Ensure(Roll, KeyframeAttributes.Roll, 0);
-			Ensure(Angle, KeyframeAttributes.Angle, 0);
-			Ensure(LightColor, KeyframeAttributes.LightColor, default);
-			Ensure(Intensity, KeyframeAttributes.Intensity, default);
-			Ensure(Spot, KeyframeAttributes.Spot, default);
-			Ensure(Point, KeyframeAttributes.Point, default);
-			Ensure(QuaternionRotation, KeyframeAttributes.QuaternionRotation, Quaternion.Identity);
-
 		}
 
 
@@ -459,6 +415,8 @@ namespace SA3D.Modeling.AnimationData
 
 			int[] keyframeCounts = reader.ReadArray<int>(channelCount);
 
+			PointerLUT lut = context.BaseContext.PointerLUT;
+
 			int index = 0;
 			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
 			{
@@ -468,64 +426,56 @@ namespace SA3D.Modeling.AnimationData
 				}
 
 				long offset = keyframeOffsets[index];
-				if(offset != 0)
-				{
-					using(SeekToken t = reader.AtOffset(offset))
-					{
-						int keyframeCount = keyframeCounts[index];
-
-						switch(flag)
-						{
-							case KeyframeAttributes.Position:
-								reader.ReadVector3Set(keyframeCount, Position, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.EulerRotation:
-								reader.ReadVector3Set(keyframeCount, EulerRotation, context.FileContext.ShortRotations ? FloatIOType.BAMSF16 : FloatIOType.BAMSF32);
-								break;
-							case KeyframeAttributes.Scale:
-								reader.ReadVector3Set(keyframeCount, Scale, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.Vector:
-								reader.ReadVector3Set(keyframeCount, Vector, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.Vertex:
-								reader.ReadVector3ArraySet(keyframeCount, "vertex_", Vertex, context.BaseContext.PointerLUT);
-								break;
-							case KeyframeAttributes.Normal:
-								reader.ReadVector3ArraySet(keyframeCount, "normal_", Normal, context.BaseContext.PointerLUT);
-								break;
-							case KeyframeAttributes.Target:
-								reader.ReadVector3Set(keyframeCount, Target, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.Roll:
-								reader.ReadFloatSet(keyframeCount, Roll, FloatIOType.BAMSF32);
-								break;
-							case KeyframeAttributes.Angle:
-								reader.ReadFloatSet(keyframeCount, Angle, FloatIOType.BAMSF32);
-								break;
-							case KeyframeAttributes.LightColor:
-								reader.ReadColorSet(keyframeCount, LightColor, ColorIOType.ARGB8_32);
-								break;
-							case KeyframeAttributes.Intensity:
-								reader.ReadFloatSet(keyframeCount, Intensity, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.Spot:
-								reader.ReadSpotSet(keyframeCount, Spot);
-								break;
-							case KeyframeAttributes.Point:
-								reader.ReadVector2Set(keyframeCount, Point, FloatIOType.Float);
-								break;
-							case KeyframeAttributes.QuaternionRotation:
-								reader.ReadQuaternionSet(keyframeCount, QuaternionRotation);
-								break;
-							default:
-								break;
-						}
-
-					}
-				}
-
+				int keyframeCount = keyframeCounts[index];
 				index++;
+
+				switch(flag)
+				{
+					case KeyframeAttributes.Position:
+						Position = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, PositionLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.EulerRotation:
+						EulerRotation = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, EulerRotationLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, context.FileContext.RotationAngleType));
+						break;
+					case KeyframeAttributes.Scale:
+						Scale = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, ScaleLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.Vector:
+						Vector = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, VectorLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.Vertex:
+						Vertex = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, VertexLabelPrefix, lut, r => r.ReadVector3ArraySet(keyframeCount, "vertex_", lut));
+						break;
+					case KeyframeAttributes.Normal:
+						Normal = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, NormalLabelPrefix, lut, r => r.ReadVector3ArraySet(keyframeCount, "normal_", lut));
+						break;
+					case KeyframeAttributes.Target:
+						Target = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, TargetLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.Roll:
+						Roll = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, RollLabelPrefix, lut, r => r.ReadFloatSet(keyframeCount, context.FileContext.AngleType));
+						break;
+					case KeyframeAttributes.Angle:
+						Angle = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, AngleLabelPrefix, lut, r => r.ReadFloatSet(keyframeCount, context.FileContext.AngleType));
+						break;
+					case KeyframeAttributes.LightColor:
+						LightColor = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, LightColorLabelPrefix, lut, r => r.ReadColorSet(keyframeCount, ColorIOType.ARGB8_32));
+						break;
+					case KeyframeAttributes.Intensity:
+						Intensity = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, IntensityLabelPrefix, lut, r => r.ReadVector2Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.Spot:
+						Spotlight = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, SpotlightLabelPrefix, lut, r => r.ReadSpotlightSet(keyframeCount));
+						break;
+					case KeyframeAttributes.Point:
+						Point = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, PointLabelPrefix, lut, r => r.ReadVector2Set(keyframeCount, FloatIOType.Float));
+						break;
+					case KeyframeAttributes.QuaternionRotation:
+						QuaternionRotation = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, QuaternionRotationLabelPrefix, lut, r => r.ReadQuaternionSet(keyframeCount));
+						break;
+					default:
+						throw new InvalidOperationException($"Invalid keyframe type {flag}!");
+				}
 			}
 		}
 
@@ -534,14 +484,16 @@ namespace SA3D.Modeling.AnimationData
 		{
 			List<int> frameCounts = [];
 
-			foreach((KeyframeAttributes type, IEnumerable<uint> keys) in GetTypeKeyEnumerable())
+			PointerLUT lut = context.BaseContext.PointerLUT;
+
+			foreach((KeyframeAttributes type, IEnumerable<uint>? keys) in GetTypeKeyEnumerable())
 			{
 				if(!context.KeyframeType.HasFlag(type))
 				{
 					continue;
 				}
 
-				int count = keys.Count();
+				int count = keys?.Count() ?? 0;
 				frameCounts.Add(count);
 				if(count == 0)
 				{
@@ -552,53 +504,144 @@ namespace SA3D.Modeling.AnimationData
 				switch(type)
 				{
 					case KeyframeAttributes.Position:
-						writer.WriteOffset(() => writer.WriteVector3Set(Position, FloatIOType.Float));
+						writer.WriteObjectOffset(Position, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.EulerRotation:
-						writer.WriteOffset(() => writer.WriteVector3Set(EulerRotation, context.FileContext.ShortRotations ? FloatIOType.BAMSF16 : FloatIOType.BAMSF32));
+						writer.WriteObjectOffset(EulerRotation, (w, v) => w.WriteVector3Set(v, context.FileContext.RotationAngleType), lut);
 						break;
 					case KeyframeAttributes.Scale:
-						writer.WriteOffset(() => writer.WriteVector3Set(Scale, FloatIOType.Float));
+						writer.WriteObjectOffset(Scale, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Vector:
-						writer.WriteOffset(() => writer.WriteVector3Set(Vector, FloatIOType.Float));
+						writer.WriteObjectOffset(Vector, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Vertex:
-						writer.WriteOffset(() => writer.WriteVector3ArrayData(Vertex, context.BaseContext.PointerLUT));
+						writer.WriteObjectOffset(Vertex, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.PointerLUT), lut);
 						break;
 					case KeyframeAttributes.Normal:
-						writer.WriteOffset(() => writer.WriteVector3ArrayData(Normal, context.BaseContext.PointerLUT));
+						writer.WriteObjectOffset(Normal, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.PointerLUT), lut);
 						break;
 					case KeyframeAttributes.Target:
-						writer.WriteOffset(() => writer.WriteVector3Set(Target, FloatIOType.Float));
+						writer.WriteObjectOffset(Target, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Roll:
-						writer.WriteOffset(() => writer.WriteFloatSet(Roll, FloatIOType.BAMSF32));
+						writer.WriteObjectOffset(Roll, (w, v) => w.WriteFloatSet(v, context.FileContext.AngleType), lut);
 						break;
 					case KeyframeAttributes.Angle:
-						writer.WriteOffset(() => writer.WriteFloatSet(Angle, FloatIOType.BAMSF32));
+						writer.WriteObjectOffset(Angle, (w, v) => w.WriteFloatSet(v, context.FileContext.AngleType), lut);
 						break;
 					case KeyframeAttributes.LightColor:
-						writer.WriteOffset(() => writer.WriteColorSet(LightColor, ColorIOType.ARGB8_32));
+						writer.WriteObjectOffset(LightColor, (w, v) => w.WriteColorSet(v, ColorIOType.ARGB8_32), lut);
 						break;
 					case KeyframeAttributes.Intensity:
-						writer.WriteOffset(() => writer.WriteFloatSet(Intensity, FloatIOType.Float));
+						writer.WriteObjectOffset(Intensity, (w, v) => w.WriteVector2Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Spot:
-						writer.WriteOffset(() => writer.WriteSpotlightSet(Spot));
+						writer.WriteObjectOffset(Spotlight, (w, v) => w.WriteSpotlightSet(v), lut);
 						break;
 					case KeyframeAttributes.Point:
-						writer.WriteOffset(() => writer.WriteVector2Set(Point, FloatIOType.Float));
+						writer.WriteObjectOffset(Point, (w, v) => w.WriteVector2Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.QuaternionRotation:
-						writer.WriteOffset(() => writer.WriteQuaternionSet(QuaternionRotation));
+						writer.WriteObjectOffset(QuaternionRotation, (w, v) => w.WriteQuaternionSet(v), lut);
 						break;
 					default:
-						break;
+						throw new InvalidOperationException($"Unsupported keyframe type \"{type}\"");
 				}
 			}
 
 			writer.WriteCollection(frameCounts);
+		}
+
+		/// <summary>
+		/// Write keyframe data
+		/// </summary>
+		/// <param name="writer">The writer to write to</param>
+		/// <param name="typePrefix">The type prefix to use for keyframe arrays</param>
+		public void WriteKeyframes(AsciiWriter writer, string typePrefix)
+		{
+			void WriteKeyframes<T>(string type, KeyframeArray<T>? keyframes, string keyframeType, Func<T, string> keyframeToAscii)
+			{
+				if(keyframes == null)
+				{
+					return;
+				}
+
+				using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference(type, keyframes))
+				{
+					if(block == null)
+					{
+						return;
+					}
+
+					foreach(KeyValuePair<uint, T> keyframe in keyframes)
+					{
+						writer.WriteLine($"\t{keyframeType}( {keyframe.Key}, {keyframeToAscii(keyframe.Value)} ),");
+					}
+				}
+			}
+
+			WriteKeyframes(typePrefix + "POSITION", Position, "MKEYF", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "ROTATION", EulerRotation, "MKEYA", v => v.ToAsciiDegrees());
+			WriteKeyframes(typePrefix + "SCALE", Scale, "MKEYF", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "VECTOR", Vector, "MKEYF", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "POINTER", Vertex, "MKEYP", v => v.Label);
+			WriteKeyframes(typePrefix + "POINTER", Normal, "MKEYP", v => v.Label);
+			WriteKeyframes(typePrefix + "TARGET", Target, "MKEYF", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "ROLL", Roll, "MKEYA1", v => v.ToAsciiDegrees());
+			WriteKeyframes(typePrefix + "ANGLE", Angle, "MKEYA1", v => v.ToAsciiDegrees());
+			WriteKeyframes(typePrefix + "COLOR", LightColor, "MKEYF", v => v.FloatVector.AsVector3().ToAscii());
+			WriteKeyframes(typePrefix + "INTENSITY", Intensity, "MKEYF2", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "SPOT_FACTORS", Spotlight, "MKEYSPOT", v => $"{v.Near.ToAscii()}, {v.Far.ToAscii()}, {v.InsideAngle.ToAsciiDegrees()}, {v.OutsideAngle.ToAsciiDegrees()}");
+			WriteKeyframes(typePrefix + "POINT_FACTORS", Point, "MKEYF2", v => v.ToAscii());
+			WriteKeyframes(typePrefix + "QROTATION", QuaternionRotation, "MKEYQ", v => $"{v.W.ToAscii()}, {v.X.ToAscii()}, {v.Y.ToAscii()}, {v.Z.ToAscii()}");
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, AnimationAsciiIOContext context)
+		{
+			List<int> frameCounts = [];
+
+			writer.Write("\t");
+
+			foreach(KeyframeAttributes type in Enum.GetValues<KeyframeAttributes>())
+			{
+				if(!context.KeyframeType.HasFlag(type))
+				{
+					continue;
+				}
+
+				ILabel? keyframes = type switch
+				{
+					KeyframeAttributes.Position => Position,
+					KeyframeAttributes.EulerRotation => EulerRotation,
+					KeyframeAttributes.Scale => Scale,
+					KeyframeAttributes.Vector => Vector,
+					KeyframeAttributes.Vertex => Vertex,
+					KeyframeAttributes.Normal => Normal,
+					KeyframeAttributes.Target => Target,
+					KeyframeAttributes.Roll => Roll,
+					KeyframeAttributes.Angle => Angle,
+					KeyframeAttributes.LightColor => LightColor,
+					KeyframeAttributes.Intensity => Intensity,
+					KeyframeAttributes.Spot => Spotlight,
+					KeyframeAttributes.Point => Point,
+					KeyframeAttributes.QuaternionRotation => QuaternionRotation,
+					_ => throw new InvalidOperationException($"Unsupported keyframe type \"{type}\""),
+				};
+
+				writer.WriteObjectidentifier(keyframes);
+				writer.Write(", ");
+
+				frameCounts.Add(((ICollection?)keyframes)?.Count ?? 0);
+			}
+
+			foreach(int framecount in frameCounts)
+			{
+				writer.Write($"{framecount}, ");
+			}
+
+			writer.WriteLine();
 		}
 	}
 }

@@ -344,7 +344,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			base.Write(writer, context);
 			writer.WriteLine();

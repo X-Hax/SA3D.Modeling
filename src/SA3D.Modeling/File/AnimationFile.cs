@@ -3,10 +3,12 @@ using Amicitia.IO.Binary.Extensions;
 using Amicitia.IO.Streams;
 using J113D.Json;
 using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Modeling.AnimationData;
 using SA3D.Modeling.File.MetaData;
 using SA3D.Modeling.File.MetaData.Blocks;
+using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +23,7 @@ namespace SA3D.Modeling.File
 	/// Animation file contents.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class AnimationFile : IFileSerializable<AnimationFileIOContext>
+	public class AnimationFile : IFileSerializable<AnimationFileIOContext>, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<AnimationFile>
 		{
@@ -133,7 +135,6 @@ namespace SA3D.Modeling.File
 			return NJBlockUtility.FindBlockOffset(reader, AnimationBlockHeaders, out _);
 		}
 
-
 		/// <inheritdoc/>
 		public void Read(BinaryObjectReader reader, AnimationFileIOContext context)
 		{
@@ -196,10 +197,10 @@ namespace SA3D.Modeling.File
 					context = new()
 					{
 						ShortRotations = (fileNodeCount & shortRotMask) != 0,
-						KeyframeSetCount = fileNodeCount & ~shortRotMask
+						KeyframeSetCount = fileNodeCount & ~shortRotMask,
+						BAMSFAngles = context.BAMSFAngles
 					};
 				}
-
 			}
 
 			if(context.KeyframeSetCount <= 0)
@@ -271,15 +272,15 @@ namespace SA3D.Modeling.File
 		{
 			if(NJFile)
 			{
-				WriteNJ(writer);
+				WriteNJ(writer, context);
 			}
 			else
 			{
-				WriteSA(writer);
+				WriteSA(writer, context);
 			}
 		}
 
-		private void WriteSA(BinaryObjectWriter writer)
+		private void WriteSA(BinaryObjectWriter writer, AnimationFileIOContext context)
 		{
 			writer.WriteUInt64(SAANIMVer);
 
@@ -293,7 +294,8 @@ namespace SA3D.Modeling.File
 				FileContext = new()
 				{
 					KeyframeSetCount = (uint)Animation.KeyframeSets.Length,
-					ShortRotations = Animation.ShortRotations
+					ShortRotations = Animation.ShortRotations,
+					BAMSFAngles = context.BAMSFAngles
 				}
 			};
 
@@ -311,9 +313,40 @@ namespace SA3D.Modeling.File
 			MetaData.Write(writer, ioContext.BaseContext.PointerLUT.Labels, metadataToken, null);
 		}
 
-		private void WriteNJ(BinaryObjectWriter writer)
+		private void WriteNJ(BinaryObjectWriter writer, AnimationFileIOContext context)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, AsciiIOContext context)
+		{
+			string type = "MOTION";
+
+			if(Animation.IsLightAnimation)
+			{
+				type = "LIGHT_MOTION";
+			}
+			else if(Animation.IsCameraAnimation)
+			{
+				type = "CAMERA_MOTION";
+			}
+			else if(Animation.IsShapeAnimation)
+			{
+				type = "SHAPE";
+			}
+
+			writer.WriteLine($"/* {AsciiHeader} Motion */", 2);
+			writer.WriteLine($"/* {type} : {Animation.Label} */", 2);
+
+			writer.WriteObject(Animation, context);
+
+			using(writer.WriteObjectBlock("DEFAULT"))
+			{
+				writer.WriteLine("#ifndef DEFAULT_MOTION_NAME");
+				writer.WriteObjectPropertyLine($"#define DEFAULT_{type}_NAME", Animation);
+				writer.WriteLine("#endif", 2);
+			}
 		}
 	}
 }

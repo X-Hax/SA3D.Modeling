@@ -1,4 +1,6 @@
-﻿namespace SA3D.Modeling.File
+﻿using SA3D.Modeling.Structs;
+
+namespace SA3D.Modeling.File
 {
 	/// <summary>
 	/// Animation file specific IO context
@@ -11,8 +13,37 @@
 		public uint KeyframeSetCount { init; get; }
 
 		/// <summary>
-		/// Rotations are 16 bit instead of 32
+		/// Rotation angles are 16 bit
 		/// </summary>
 		public bool ShortRotations { init; get; }
+
+		/// <summary>
+		/// Angles use 0xFFFF for 360°, not 0x10000
+		/// </summary>
+		public bool BAMSFAngles { init; get; }
+
+		/// <summary>
+		/// IO Type for angles
+		/// </summary>
+		public FloatIOType AngleType
+			=> BAMSFAngles ? FloatIOType.BAMSF32 : FloatIOType.BAMS32;
+
+		/// <summary>
+		/// IO Type for rotation angles
+		/// </summary>
+		public FloatIOType RotationAngleType
+		{
+			get
+			{
+				if(ShortRotations)
+				{
+					return BAMSFAngles ? FloatIOType.BAMSF16 : FloatIOType.BAMS16;
+				}
+				else
+				{
+					return BAMSFAngles ? FloatIOType.BAMSF32 : FloatIOType.BAMS32;
+				}
+			}
+		}
 	}
 }

@@ -6,7 +6,7 @@ namespace SA3D.Modeling.AnimationData
 	/// <summary>
 	/// Animation specific IO context
 	/// </summary>
-	public struct AnimationIOContext
+	public readonly struct AnimationIOContext
 	{
 		/// <summary>
 		/// Base IO context
@@ -21,6 +21,6 @@ namespace SA3D.Modeling.AnimationData
 		/// <summary>
 		/// Keyframe type
 		/// </summary>
-		public KeyframeAttributes KeyframeType { get; set; }
+		public KeyframeAttributes KeyframeType { init; get; }
 	}
 }

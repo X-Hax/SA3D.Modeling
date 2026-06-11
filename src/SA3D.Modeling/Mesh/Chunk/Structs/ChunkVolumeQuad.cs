@@ -273,7 +273,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		}
 
 		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer, (ModelAsciiContext context, int attributeCount) context)
+		public readonly void Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
 		{
 			writer.Write($"\t\t{Index1}, {Index2}, {Index3}, {Index4}, ");
 			writer.WritePolygonUserflags(context.attributeCount, Attribute1, Attribute2, Attribute3, context.context.BaseContext.PolygonAttributesAsColor);

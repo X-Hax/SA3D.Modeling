@@ -250,19 +250,13 @@ namespace SA3D.Modeling.Mesh.Basic
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiContext context)
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			writer.WriteArray("MATERIAL", Materials, 1);
 
 			foreach(BasicMeshSet meshSet in MeshSets)
 			{
-				string polyType = meshSet.PolygonType == Polygon.BasicPolygonType.TriangleStrips ? "STRIP" : "POLY";
-
-				writer.WriteArray("POLYGON", meshSet.Polygons, 0);
-				writer.WriteArray(polyType + "ATTR", meshSet.PolygonAttributes, 0, (w, v) => w.WriteLine($"\tNORM( {v.ToAsciiHex()} ),"));
-				writer.WriteArray(polyType + "NORMAL", meshSet.Normals, 0, (w, v) => w.WriteLine($"\tPNORM( {v.ToAscii()} ),"));
-				writer.WriteArray("VERTCOLOR", meshSet.Colors, 0, (w, v) => w.WriteLine($"\tARGB( {v.Alpha}, {v.Red}, {v.Green}, {v.Blue} ),"));
-				writer.WriteArray("VERTUV", meshSet.TextureCoordinates, 0, (w, v) => w.WriteLine($"\tUV( {(int)v.X}, {(int)v.Y} ),"));
+				meshSet.WritePolygons(writer);
 			}
 
 			writer.WriteArray("MESHSET", MeshSets, 1);

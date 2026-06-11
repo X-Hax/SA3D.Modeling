@@ -651,10 +651,10 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <param name="type"></param>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public static Action<AsciiWriter, ChunkVertex, ModelAsciiContext> GetAsciiWriteCallback(VertexChunkType type, ModelAsciiContext context)
+		public static Action<AsciiWriter, ChunkVertex, ModelAsciiIOContext> GetAsciiWriteCallback(VertexChunkType type, ModelAsciiIOContext context)
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WritePosition(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WritePosition(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				string comment = string.Empty;
 				if(context.BaseContext.WriteComments)
@@ -666,7 +666,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WritePosition4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WritePosition4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				string comment = string.Empty;
 				if(context.BaseContext.WriteComments)
@@ -678,7 +678,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteNormal(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				string comment = string.Empty;
 				if(context.BaseContext.WriteComments)
@@ -690,7 +690,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteNormal4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				string comment = string.Empty;
 				if(context.BaseContext.WriteComments)
@@ -702,7 +702,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteNormal32(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteNormal32(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				string comment = string.Empty;
 				if(context.BaseContext.WriteComments)
@@ -714,37 +714,37 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuse(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteDiffuse(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				writer.WriteLine($"D8888( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuseSpecular5(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteDiffuseSpecular5(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				writer.WriteLine($"D565S565( {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteDiffuseSpecular4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteDiffuseSpecular4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				writer.WriteLine($"D4444S565( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteIntensity(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteIntensity(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				writer.WriteLine($"D16S16( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteSpecular(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteSpecular(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				writer.WriteLine($"S888( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteUserattributes(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteUserattributes(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				if(context.BaseContext.VertexUserAttributesAsColor)
 				{
@@ -763,7 +763,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex, ModelAsciiContext context)
+			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
 			{
 				float weight;
 				string type;

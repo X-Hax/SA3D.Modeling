@@ -21,7 +21,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Polychunk base class.
 	/// </summary>
 	[JsonConverter(typeof(BaseJsonConverter))]
-	public abstract class PolyChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiContext>
+	public abstract class PolyChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		internal class BaseJsonConverter : ParentJsonObjectConverter<PolyChunkType, PolyChunk>
 		{
@@ -303,14 +303,14 @@ namespace SA3D.Modeling.Mesh.Chunk
 		protected abstract string GetAsciiAttributes();
 
 		/// <inheritdoc/>
-		public virtual void Write(AsciiWriter writer, ModelAsciiContext context)
+		public virtual void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			string chunkType = AsciiMaps.PolyChunkTypeMap.FindKey(Type);
 			string attributes = GetAsciiAttributes();
 			writer.Write($"\t{chunkType}( {attributes} ),");
 		}
 
-		internal static void WriteArray(AsciiWriter writer, LabeledArray<PolyChunk>? chunks, ModelAsciiContext context)
+		internal static void WriteArray(AsciiWriter writer, LabeledArray<PolyChunk>? chunks, ModelAsciiIOContext context)
 		{
 			if(chunks == null)
 			{

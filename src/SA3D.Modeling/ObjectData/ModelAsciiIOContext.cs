@@ -8,12 +8,12 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Ascii context for when serializing a model
 	/// </summary>
-	public readonly struct ModelAsciiContext
+	public readonly struct ModelAsciiIOContext
 	{
 		/// <summary>
 		/// Base context
 		/// </summary>
-		public AsciiContext BaseContext { init; get; }
+		public AsciiIOContext BaseContext { init; get; }
 
 		/// <summary>
 		/// Format that data is serialized with
@@ -37,7 +37,7 @@ namespace SA3D.Modeling.ObjectData
 		/// <param name="model"></param>
 		/// <param name="baseContext"></param>
 		/// <returns></returns>
-		public static ModelAsciiContext FromModel(Format? format, Node model, AsciiContext baseContext)
+		public static ModelAsciiIOContext FromModel(Format? format, Node model, AsciiIOContext baseContext)
 		{
 			format ??= model.GetMeshFormat()?.ToFormat() ?? Format.Chunk;
 			bool hasQuaternions = model.GetTreeNodeEnumerable().Any(x => x.UseQuaternionRotation);

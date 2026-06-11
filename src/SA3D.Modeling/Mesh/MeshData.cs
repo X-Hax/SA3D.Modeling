@@ -17,7 +17,7 @@ namespace SA3D.Modeling.Mesh
 	/// 3D mesh data. Its possible for multiple attaches to make up one full mesh.
 	/// </summary>
 	[JsonConverter(typeof(BaseJsonConverter))]
-	public abstract class MeshData : ICloneable, ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiContext>
+	public abstract class MeshData : ICloneable, ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		internal class BaseJsonConverter : ParentJsonObjectConverter<MeshFormat, MeshData>
 		{
@@ -149,7 +149,7 @@ namespace SA3D.Modeling.Mesh
 		public abstract void Write(BinaryObjectWriter writer, IOContext context);
 
 		/// <inheritdoc/>
-		public abstract void Write(AsciiWriter writer, ModelAsciiContext context);
+		public abstract void Write(AsciiWriter writer, ModelAsciiIOContext context);
 
 
 		object ICloneable.Clone()

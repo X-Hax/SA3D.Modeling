@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 	/// Chunk volume polygon interface.
 	/// </summary>
 	[JsonConverter(typeof(InterfaceJsonSerializer<IChunkVolumePolygon>))]
-	public interface IChunkVolumePolygon : ICloneable, IBinarySerializable<int>, IAsciiSerializable<(ModelAsciiContext context, int attributeCount)>
+	public interface IChunkVolumePolygon : ICloneable, IBinarySerializable<int>, IAsciiSerializable<(ModelAsciiIOContext context, int attributeCount)>
 	{
 		/// <summary>
 		/// Number of indices in the polygon.
