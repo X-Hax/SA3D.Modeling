@@ -351,6 +351,7 @@ SA3D.Modeling.File.AnimationFile.NJFile.get -> bool
 SA3D.Modeling.File.AnimationFile.NJFile.set -> void
 SA3D.Modeling.File.AnimationFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.AnimationFileIOContext context) -> void
 SA3D.Modeling.File.AnimationFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.AnimationFileIOContext context) -> void
+SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.Structs.AsciiIOContext context) -> void
 SA3D.Modeling.File.AnimationFileIOContext
 SA3D.Modeling.File.AnimationFileIOContext.AngleType.get -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.File.AnimationFileIOContext.AnimationFileIOContext() -> void
@@ -361,10 +362,6 @@ SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.init -> void
 SA3D.Modeling.File.AnimationFileIOContext.RotationAngleType.get -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.get -> bool
 SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.init -> void
-SA3D.Modeling.File.FileUtil
-SA3D.Modeling.File.IFileSerializable
-SA3D.Modeling.File.IFileSerializable.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
-SA3D.Modeling.File.IFileSerializable<T>
 SA3D.Modeling.File.LevelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
 SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.Level!
 SA3D.Modeling.File.LevelFile.Level.set -> void
@@ -1166,21 +1163,6 @@ static readonly SA3D.Modeling.Mesh.Ginja.Parameters.GinjaTexGenParameter.Environ
 static SA3D.Modeling.AnimationData.EnumExtensions.ChannelCount(this SA3D.Modeling.AnimationData.KeyframeAttributes attributes) -> int
 static SA3D.Modeling.AnimationData.Spotlight.Distance(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to) -> float
 static SA3D.Modeling.AnimationData.Spotlight.Lerp(SA3D.Modeling.AnimationData.Spotlight from, SA3D.Modeling.AnimationData.Spotlight to, float time) -> SA3D.Modeling.AnimationData.Spotlight
-static SA3D.Modeling.File.FileUtil.CheckBytes<T>(byte[]! data) -> bool
-static SA3D.Modeling.File.FileUtil.CheckFile<T>(string! filepath) -> bool
-static SA3D.Modeling.File.FileUtil.CheckStream<T>(System.IO.Stream! stream) -> bool
-static SA3D.Modeling.File.FileUtil.ReadFromBytes<T, C>(byte[]! data, C context) -> T
-static SA3D.Modeling.File.FileUtil.ReadFromBytes<T>(byte[]! data) -> T
-static SA3D.Modeling.File.FileUtil.ReadFromFile<T, C>(string! filepath, C context) -> T
-static SA3D.Modeling.File.FileUtil.ReadFromFile<T>(string! filepath) -> T
-static SA3D.Modeling.File.FileUtil.ReadFromStream<T, C>(System.IO.Stream! stream, C context) -> T
-static SA3D.Modeling.File.FileUtil.ReadFromStream<T>(System.IO.Stream! stream) -> T
-static SA3D.Modeling.File.FileUtil.WriteToBytes<T, C>(this T file, C context) -> byte[]!
-static SA3D.Modeling.File.FileUtil.WriteToBytes<T>(this T file) -> byte[]!
-static SA3D.Modeling.File.FileUtil.WriteToFile<T, C>(this T file, C context, string! filepath) -> void
-static SA3D.Modeling.File.FileUtil.WriteToFile<T>(this T file, string! filepath) -> void
-static SA3D.Modeling.File.FileUtil.WriteToStream<T, C>(this T file, C context, System.IO.Stream! stream) -> void
-static SA3D.Modeling.File.FileUtil.WriteToStream<T>(this T file, System.IO.Stream! stream) -> void
 static SA3D.Modeling.File.MetaData.MetaDataBlocks.ReserveWrite(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> Amicitia.IO.Streams.SeekToken
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator !=(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
 static SA3D.Modeling.File.MetaData.Weights.MetaWeight.operator ==(SA3D.Modeling.File.MetaData.Weights.MetaWeight left, SA3D.Modeling.File.MetaData.Weights.MetaWeight right) -> bool
