@@ -221,12 +221,7 @@ namespace SA3D.Modeling.AnimationData
 			ushort attributes = reader.ReadUInt16();
 			InterpolationMode = (InterpolationMode)((attributes >> 6) & 0x3);
 
-			context = new()
-			{
-				BaseContext = context.BaseContext,
-				FileContext = context.FileContext,
-				KeyframeType = ManualKeyframeTypes
-			};
+			context.KeyframeType = ManualKeyframeTypes;
 
 			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
 				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
@@ -235,12 +230,7 @@ namespace SA3D.Modeling.AnimationData
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
-			context = new()
-			{
-				BaseContext = context.BaseContext,
-				FileContext = context.FileContext,
-				KeyframeType = KeyframeTypes
-			};
+			context.KeyframeType = KeyframeTypes;
 
 			if(context.KeyframeType == default)
 			{

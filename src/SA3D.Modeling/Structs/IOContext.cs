@@ -3,21 +3,21 @@
 	/// <summary>
 	/// General read/write context
 	/// </summary>
-	public readonly struct IOContext
+	public struct IOContext
 	{
 		/// <summary>
 		/// Format that the mesh data is serialized with
 		/// </summary>
-		public Format MeshFormat { init;  get; }
+		public Format MeshFormat { get; set; }
 
 		/// <summary>
 		/// Format that the level data is serialized with
 		/// </summary>
-		public Format LevelFormat { init; get; }
+		public Format LevelFormat { get; set; }
 
 		/// <summary>
 		/// Pointer lookup table
 		/// </summary>
-		public PointerLUT PointerLUT { init; get; }
+		public PointerLUT PointerLUT { get; set; }
 	}
 }

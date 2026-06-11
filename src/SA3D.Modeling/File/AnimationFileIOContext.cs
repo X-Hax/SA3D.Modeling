@@ -5,22 +5,22 @@ namespace SA3D.Modeling.File
 	/// <summary>
 	/// Animation file specific IO context
 	/// </summary>
-	public readonly struct AnimationFileIOContext
+	public struct AnimationFileIOContext
 	{
 		/// <summary>
 		/// Number of keyframe sets in the animation (one for e.g. each node in a model)
 		/// </summary>
-		public uint KeyframeSetCount { init; get; }
+		public uint KeyframeSetCount { get; set; }
 
 		/// <summary>
 		/// Rotation angles are 16 bit
 		/// </summary>
-		public bool ShortRotations { init; get; }
+		public bool ShortRotations { get; set; }
 
 		/// <summary>
 		/// Angles use 0xFFFF for 360°, not 0x10000
 		/// </summary>
-		public bool BAMSFAngles { init; get; }
+		public bool BAMSFAngles { get; set; }
 
 		/// <summary>
 		/// IO Type for angles

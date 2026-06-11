@@ -8,27 +8,27 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Ascii context for when serializing a model
 	/// </summary>
-	public readonly struct ModelAsciiIOContext
+	public struct ModelAsciiIOContext
 	{
 		/// <summary>
 		/// Base context
 		/// </summary>
-		public AsciiIOContext BaseContext { init; get; }
+		public AsciiIOContext BaseContext { get; set; }
 
 		/// <summary>
 		/// Format that data is serialized with
 		/// </summary>
-		public Format Format { init; get; }
+		public Format Format { get; set; }
 
 		/// <summary>
 		/// Whether any node in the model has quaternions
 		/// </summary>
-		public bool HasQuaternions { init; get; }
+		public bool HasQuaternions { get; set; }
 
 		/// <summary>
 		/// Whether any chunk mesh in the model uses version 2 weights
 		/// </summary>
-		public bool UseVersion2Weights { init; get; }
+		public bool UseVersion2Weights { get; set; }
 
 		/// <summary>
 		/// Create a model ascii context from a model

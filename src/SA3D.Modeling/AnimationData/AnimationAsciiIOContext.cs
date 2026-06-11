@@ -10,7 +10,7 @@ namespace SA3D.Modeling.AnimationData
 		/// <summary>
 		/// Base IO Context
 		/// </summary>
-		public AsciiIOContext BaseContext { init; get; }
+		public AsciiIOContext BaseContext { get; set; }
 
 		/// <summary>
 		/// Keyframe type
