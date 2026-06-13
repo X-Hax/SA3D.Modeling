@@ -75,7 +75,7 @@ namespace SA3D.Modeling.File
 		public const string ModelMotionBlockHeader = "NMDM";
 		public const string ShapeMotionBlockHeader = "NSSM";
 		public const string CameraMotionBlockHeader = "NCAM";
-
+		public const string LightMotionBlockHeader = "NLIM";
 
 		public static readonly HashSet<string> TextureListBlockHeaders =
 		[
@@ -96,6 +96,7 @@ namespace SA3D.Modeling.File
 			ModelMotionBlockHeader,
 			ShapeMotionBlockHeader,
 			CameraMotionBlockHeader,
+			LightMotionBlockHeader
 		];
 
 		#endregion

@@ -284,6 +284,9 @@ namespace SA3D.Modeling.File
 		{
 			writer.WriteUInt64(SAANIMVer);
 
+			context.KeyframeSetCount = (uint)Animation.KeyframeSets.Length;
+			context.ShortRotations = Animation.ShortRotations;
+
 			AnimationIOContext ioContext = new()
 			{
 				BaseContext = new()
@@ -291,12 +294,7 @@ namespace SA3D.Modeling.File
 					PointerLUT = new()
 				},
 
-				FileContext = new()
-				{
-					KeyframeSetCount = (uint)Animation.KeyframeSets.Length,
-					ShortRotations = Animation.ShortRotations,
-					BAMSFAngles = context.BAMSFAngles
-				}
+				FileContext = context
 			};
 
 			writer.WriteObjectOffset(Animation, ioContext);
@@ -315,7 +313,53 @@ namespace SA3D.Modeling.File
 
 		private void WriteNJ(BinaryObjectWriter writer, AnimationFileIOContext context)
 		{
-			throw new NotImplementedException();
+			string header = ModelMotionBlockHeader;
+
+			if(Animation.IsLightAnimation)
+			{
+				header = LightMotionBlockHeader;
+			}
+			else if(Animation.IsCameraAnimation)
+			{
+				header = CameraMotionBlockHeader;
+			}
+			else if(Animation.IsShapeAnimation)
+			{
+				header = ShapeMotionBlockHeader;
+			}
+
+			writer.WriteString(StringBinaryFormat.FixedLength, header, 4);
+
+			SeekToken fileSizeOffset = writer.At();
+			writer.WriteUInt32(0);
+
+			context.KeyframeSetCount = (uint)Animation.KeyframeSets.Length;
+			context.ShortRotations = Animation.ShortRotations;
+
+			AnimationIOContext ioContext = new()
+			{
+				BaseContext = new()
+				{
+					PointerLUT = new()
+				},
+
+				FileContext = context
+			};
+
+			long animationStart = writer.Position;
+
+			using(writer.WithOffsetOrigin())
+			{
+				writer.WriteObject(Animation, ioContext, ioContext.BaseContext.PointerLUT);
+			}
+
+			uint byteSize = (uint)(writer.Position - animationStart);
+
+			using(writer.At())
+			{
+				fileSizeOffset.Dispose();
+				writer.WriteUInt32(byteSize);
+			}
 		}
 
 		/// <inheritdoc/>
