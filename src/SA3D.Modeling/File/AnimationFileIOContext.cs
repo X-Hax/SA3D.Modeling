@@ -25,13 +25,13 @@ namespace SA3D.Modeling.File
 		/// <summary>
 		/// IO Type for angles
 		/// </summary>
-		public FloatIOType AngleType
+		public readonly FloatIOType AngleType
 			=> BAMSFAngles ? FloatIOType.BAMSF32 : FloatIOType.BAMS32;
 
 		/// <summary>
 		/// IO Type for rotation angles
 		/// </summary>
-		public FloatIOType RotationAngleType
+		public readonly FloatIOType RotationAngleType
 		{
 			get
 			{

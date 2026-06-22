@@ -191,17 +191,17 @@ SA3D.Modeling.AnimationData.Animation.Write(SA3D.Common.Ascii.AsciiWriter! write
 SA3D.Modeling.AnimationData.AnimationAsciiIOContext
 SA3D.Modeling.AnimationData.AnimationAsciiIOContext.AnimationAsciiIOContext() -> void
 SA3D.Modeling.AnimationData.AnimationAsciiIOContext.BaseContext.get -> SA3D.Modeling.Structs.AsciiIOContext
-SA3D.Modeling.AnimationData.AnimationAsciiIOContext.BaseContext.init -> void
+SA3D.Modeling.AnimationData.AnimationAsciiIOContext.BaseContext.set -> void
 SA3D.Modeling.AnimationData.AnimationAsciiIOContext.KeyframeType.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
 SA3D.Modeling.AnimationData.AnimationAsciiIOContext.KeyframeType.set -> void
 SA3D.Modeling.AnimationData.AnimationIOContext
 SA3D.Modeling.AnimationData.AnimationIOContext.AnimationIOContext() -> void
 SA3D.Modeling.AnimationData.AnimationIOContext.BaseContext.get -> SA3D.Modeling.Structs.IOContext
-SA3D.Modeling.AnimationData.AnimationIOContext.BaseContext.init -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.BaseContext.set -> void
 SA3D.Modeling.AnimationData.AnimationIOContext.FileContext.get -> SA3D.Modeling.File.AnimationFileIOContext
-SA3D.Modeling.AnimationData.AnimationIOContext.FileContext.init -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.FileContext.set -> void
 SA3D.Modeling.AnimationData.AnimationIOContext.KeyframeType.get -> SA3D.Modeling.AnimationData.KeyframeAttributes
-SA3D.Modeling.AnimationData.AnimationIOContext.KeyframeType.init -> void
+SA3D.Modeling.AnimationData.AnimationIOContext.KeyframeType.set -> void
 SA3D.Modeling.AnimationData.EnumExtensions
 SA3D.Modeling.AnimationData.Frame
 SA3D.Modeling.AnimationData.Frame.Angle.get -> float?
@@ -345,32 +345,36 @@ SA3D.Modeling.File.AnimationFile.Animation.set -> void
 SA3D.Modeling.File.AnimationFile.AnimationFile() -> void
 SA3D.Modeling.File.AnimationFile.AnimationFile(SA3D.Modeling.AnimationData.Animation! animation) -> void
 SA3D.Modeling.File.AnimationFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.AnimationFile.Filepath.get -> string?
+SA3D.Modeling.File.AnimationFile.Filepath.set -> void
 SA3D.Modeling.File.AnimationFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
 SA3D.Modeling.File.AnimationFile.MetaData.set -> void
 SA3D.Modeling.File.AnimationFile.NJFile.get -> bool
 SA3D.Modeling.File.AnimationFile.NJFile.set -> void
-SA3D.Modeling.File.AnimationFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Modeling.File.AnimationFileIOContext context) -> void
-SA3D.Modeling.File.AnimationFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.File.AnimationFileIOContext context) -> void
+SA3D.Modeling.File.AnimationFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Common.IO.FileContext<SA3D.Modeling.File.AnimationFileIOContext> context) -> void
+SA3D.Modeling.File.AnimationFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Common.IO.FileContext<SA3D.Modeling.File.AnimationFileIOContext> context) -> void
 SA3D.Modeling.File.AnimationFile.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.Structs.AsciiIOContext context) -> void
 SA3D.Modeling.File.AnimationFileIOContext
 SA3D.Modeling.File.AnimationFileIOContext.AngleType.get -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.File.AnimationFileIOContext.AnimationFileIOContext() -> void
 SA3D.Modeling.File.AnimationFileIOContext.BAMSFAngles.get -> bool
-SA3D.Modeling.File.AnimationFileIOContext.BAMSFAngles.init -> void
+SA3D.Modeling.File.AnimationFileIOContext.BAMSFAngles.set -> void
 SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.get -> uint
-SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.init -> void
+SA3D.Modeling.File.AnimationFileIOContext.KeyframeSetCount.set -> void
 SA3D.Modeling.File.AnimationFileIOContext.RotationAngleType.get -> SA3D.Modeling.Structs.FloatIOType
 SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.get -> bool
-SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.init -> void
+SA3D.Modeling.File.AnimationFileIOContext.ShortRotations.set -> void
 SA3D.Modeling.File.LevelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.LevelFile.Filepath.get -> string?
+SA3D.Modeling.File.LevelFile.Filepath.set -> void
 SA3D.Modeling.File.LevelFile.Level.get -> SA3D.Modeling.ObjectData.Level!
 SA3D.Modeling.File.LevelFile.Level.set -> void
 SA3D.Modeling.File.LevelFile.LevelFile() -> void
 SA3D.Modeling.File.LevelFile.LevelFile(SA3D.Modeling.ObjectData.Level! level) -> void
 SA3D.Modeling.File.LevelFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
 SA3D.Modeling.File.LevelFile.MetaData.set -> void
-SA3D.Modeling.File.LevelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
-SA3D.Modeling.File.LevelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.LevelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Common.IO.FileContext fileContext) -> void
+SA3D.Modeling.File.LevelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Common.IO.FileContext fileContext) -> void
 SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock
 SA3D.Modeling.File.MetaData.Blocks.ActionNameMetaDataBlock.ActionNameMetaDataBlock() -> void
 SA3D.Modeling.File.MetaData.Blocks.AnimationFilesMetaDataBlock
@@ -468,6 +472,8 @@ SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Weights.get -> SA3D.Modelin
 SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Weights.set -> void
 SA3D.Modeling.File.MetaData.Weights.MetaWeightVertex.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
 SA3D.Modeling.File.ModelFile.Check(Amicitia.IO.Binary.BinaryObjectReader! reader) -> bool
+SA3D.Modeling.File.ModelFile.Filepath.get -> string?
+SA3D.Modeling.File.ModelFile.Filepath.set -> void
 SA3D.Modeling.File.ModelFile.Format.get -> SA3D.Modeling.Structs.Format
 SA3D.Modeling.File.ModelFile.Format.set -> void
 SA3D.Modeling.File.ModelFile.MetaData.get -> SA3D.Modeling.File.MetaData.MetaDataBlocks!
@@ -476,9 +482,9 @@ SA3D.Modeling.File.ModelFile.Model.set -> void
 SA3D.Modeling.File.ModelFile.ModelFile() -> void
 SA3D.Modeling.File.ModelFile.ModelFile(SA3D.Modeling.ObjectData.Node! model) -> void
 SA3D.Modeling.File.ModelFile.NJFile.set -> void
-SA3D.Modeling.File.ModelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader) -> void
+SA3D.Modeling.File.ModelFile.Read(Amicitia.IO.Binary.BinaryObjectReader! reader, SA3D.Common.IO.FileContext context) -> void
 SA3D.Modeling.File.ModelFile.TextureNames.set -> void
-SA3D.Modeling.File.ModelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer) -> void
+SA3D.Modeling.File.ModelFile.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Common.IO.FileContext context) -> void
 SA3D.Modeling.File.ModelFile.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.Modeling.Structs.AsciiIOContext context) -> void
 SA3D.Modeling.Mesh.AlphaMode
 SA3D.Modeling.Mesh.AlphaMode.Opaque = 0 -> SA3D.Modeling.Mesh.AlphaMode
@@ -1081,14 +1087,14 @@ SA3D.Modeling.ObjectData.LevelModel.UpdateBounds() -> void
 SA3D.Modeling.ObjectData.LevelModel.Write(Amicitia.IO.Binary.BinaryObjectWriter! writer, SA3D.Modeling.Structs.IOContext context) -> void
 SA3D.Modeling.ObjectData.ModelAsciiIOContext
 SA3D.Modeling.ObjectData.ModelAsciiIOContext.BaseContext.get -> SA3D.Modeling.Structs.AsciiIOContext
-SA3D.Modeling.ObjectData.ModelAsciiIOContext.BaseContext.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiIOContext.BaseContext.set -> void
 SA3D.Modeling.ObjectData.ModelAsciiIOContext.Format.get -> SA3D.Modeling.Structs.Format
-SA3D.Modeling.ObjectData.ModelAsciiIOContext.Format.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiIOContext.Format.set -> void
 SA3D.Modeling.ObjectData.ModelAsciiIOContext.HasQuaternions.get -> bool
-SA3D.Modeling.ObjectData.ModelAsciiIOContext.HasQuaternions.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiIOContext.HasQuaternions.set -> void
 SA3D.Modeling.ObjectData.ModelAsciiIOContext.ModelAsciiIOContext() -> void
 SA3D.Modeling.ObjectData.ModelAsciiIOContext.UseVersion2Weights.get -> bool
-SA3D.Modeling.ObjectData.ModelAsciiIOContext.UseVersion2Weights.init -> void
+SA3D.Modeling.ObjectData.ModelAsciiIOContext.UseVersion2Weights.set -> void
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.get -> bool
 SA3D.Modeling.ObjectData.Node.ApplyCachedRotation.set -> void
 SA3D.Modeling.ObjectData.Node.CacheRotation.get -> bool
@@ -1117,15 +1123,15 @@ SA3D.Modeling.ObjectData.Node.Write(SA3D.Common.Ascii.AsciiWriter! writer, SA3D.
 SA3D.Modeling.Structs.AsciiIOContext
 SA3D.Modeling.Structs.AsciiIOContext.AsciiIOContext() -> void
 SA3D.Modeling.Structs.AsciiIOContext.NoQuaternionAppendix.get -> bool
-SA3D.Modeling.Structs.AsciiIOContext.NoQuaternionAppendix.init -> void
+SA3D.Modeling.Structs.AsciiIOContext.NoQuaternionAppendix.set -> void
 SA3D.Modeling.Structs.AsciiIOContext.PolygonAttributesAsColor.get -> bool
-SA3D.Modeling.Structs.AsciiIOContext.PolygonAttributesAsColor.init -> void
+SA3D.Modeling.Structs.AsciiIOContext.PolygonAttributesAsColor.set -> void
 SA3D.Modeling.Structs.AsciiIOContext.VertexUserAttributesAsColor.get -> bool
-SA3D.Modeling.Structs.AsciiIOContext.VertexUserAttributesAsColor.init -> void
+SA3D.Modeling.Structs.AsciiIOContext.VertexUserAttributesAsColor.set -> void
 SA3D.Modeling.Structs.AsciiIOContext.WeightFormat.get -> SA3D.Modeling.Structs.AsciiWeightFormat
-SA3D.Modeling.Structs.AsciiIOContext.WeightFormat.init -> void
+SA3D.Modeling.Structs.AsciiIOContext.WeightFormat.set -> void
 SA3D.Modeling.Structs.AsciiIOContext.WriteComments.get -> bool
-SA3D.Modeling.Structs.AsciiIOContext.WriteComments.init -> void
+SA3D.Modeling.Structs.AsciiIOContext.WriteComments.set -> void
 SA3D.Modeling.Structs.AsciiMaps
 SA3D.Modeling.Structs.AsciiWeightFormat
 SA3D.Modeling.Structs.AsciiWeightFormat.Automatic = 0 -> SA3D.Modeling.Structs.AsciiWeightFormat
@@ -1146,11 +1152,11 @@ SA3D.Modeling.Structs.Format.Ginja = 3 -> SA3D.Modeling.Structs.Format
 SA3D.Modeling.Structs.IOContext
 SA3D.Modeling.Structs.IOContext.IOContext() -> void
 SA3D.Modeling.Structs.IOContext.LevelFormat.get -> SA3D.Modeling.Structs.Format
-SA3D.Modeling.Structs.IOContext.LevelFormat.init -> void
+SA3D.Modeling.Structs.IOContext.LevelFormat.set -> void
 SA3D.Modeling.Structs.IOContext.MeshFormat.get -> SA3D.Modeling.Structs.Format
-SA3D.Modeling.Structs.IOContext.MeshFormat.init -> void
+SA3D.Modeling.Structs.IOContext.MeshFormat.set -> void
 SA3D.Modeling.Structs.IOContext.PointerLUT.get -> SA3D.Modeling.Structs.PointerLUT!
-SA3D.Modeling.Structs.IOContext.PointerLUT.init -> void
+SA3D.Modeling.Structs.IOContext.PointerLUT.set -> void
 SA3D.Modeling.Structs.PointerLUT.MeshData.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.Mesh.MeshData!>!
 SA3D.Modeling.Structs.PointerLUT.Motions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.Animation!>!
 SA3D.Modeling.Structs.PointerLUT.NodeMotions.get -> SA3D.Common.Lookup.PointerDictionary<SA3D.Modeling.AnimationData.ModelAnimation!>!

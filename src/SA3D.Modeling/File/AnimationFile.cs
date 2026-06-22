@@ -86,6 +86,11 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <summary>
+		/// Original filepath
+		/// </summary>
+		public string? Filepath { get; set; }
+
+		/// <summary>
 		/// Whether the file is an NJ binary.
 		/// </summary>
 		public bool NJFile { get; set; }
@@ -136,15 +141,17 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, AnimationFileIOContext context)
+		public void Read(BinaryObjectReader reader, FileContext<AnimationFileIOContext> context)
 		{
+			Filepath = context.Filepath;
+
 			if(CheckIsSAAnimFile(reader))
 			{
-				ReadSA(reader, context);
+				ReadSA(reader, context.Context);
 			}
 			else if(CheckIsNJAnimFile(reader))
 			{
-				ReadNJ(reader, context);
+				ReadNJ(reader, context.Context);
 			}
 			else
 			{
@@ -268,15 +275,15 @@ namespace SA3D.Modeling.File
 
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, AnimationFileIOContext context)
+		public void Write(BinaryObjectWriter writer, FileContext<AnimationFileIOContext> context)
 		{
 			if(NJFile)
 			{
-				WriteNJ(writer, context);
+				WriteNJ(writer, context.Context);
 			}
 			else
 			{
-				WriteSA(writer, context);
+				WriteSA(writer, context.Context);
 			}
 		}
 

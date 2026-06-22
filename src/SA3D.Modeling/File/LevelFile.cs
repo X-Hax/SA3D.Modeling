@@ -73,6 +73,11 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <summary>
+		/// Original filepath
+		/// </summary>
+		public string? Filepath { get; set; }
+
+		/// <summary>
 		/// Landtable of the file.
 		/// </summary>
 		public Level Level { get; set; }
@@ -113,8 +118,10 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		public void Read(BinaryObjectReader reader, FileContext fileContext)
 		{
+			Filepath = fileContext.Filepath;
+
 			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
 
 			ulong headerVersion = reader.ReadUInt64();
@@ -162,7 +169,7 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		public void Write(BinaryObjectWriter writer, FileContext fileContext)
 		{
 			ulong header = Level.Format switch
 			{

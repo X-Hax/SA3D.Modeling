@@ -122,6 +122,11 @@ namespace SA3D.Modeling.File
 		}
 
 		/// <summary>
+		/// Original filepath
+		/// </summary>
+		public string? Filepath { get; set; }
+
+		/// <summary>
 		/// Whether the file is an NJ binary.
 		/// </summary>
 		public bool NJFile { get; set; }
@@ -197,8 +202,10 @@ namespace SA3D.Modeling.File
 		#region Reading
 
 		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		public void Read(BinaryObjectReader reader, FileContext context)
 		{
+			Filepath = context.Filepath;
+
 			if(CheckIsSAFile(reader))
 			{
 				ReadSA(reader);
@@ -368,7 +375,7 @@ namespace SA3D.Modeling.File
 		#region Writing
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		public void Write(BinaryObjectWriter writer, FileContext context)
 		{
 			if(NJFile)
 			{
