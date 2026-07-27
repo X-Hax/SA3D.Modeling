@@ -17,7 +17,7 @@ using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.ObjectData;
 using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
-using SA3D.Texturing.Texname;
+using SA3D.Modeling.TexName;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

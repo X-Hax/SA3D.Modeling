@@ -23,11 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<PackageReference Include="SA3D.Texturing" Version="1.4.0" />-->
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\..\SA3D.Texturing\src\SA3D.Texturing\SA3D.Texturing.csproj" />
+	  <ProjectReference Include="..\..\..\SA3D.Common\src\SA3D.Common\SA3D.Common.csproj" />
 	</ItemGroup>
 
 </Project>
