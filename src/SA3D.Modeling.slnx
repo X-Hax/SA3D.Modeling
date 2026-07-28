@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/.solutionitems/">
+    <File Path="../LICENSE" />
+    <File Path="../README.md" />
+  </Folder>
+  <Project Path="SA3D.Modeling/SA3D.Modeling.csproj" />
+</Solution>
