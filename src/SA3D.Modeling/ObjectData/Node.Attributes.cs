@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace SA3D.Modeling.ObjectData
 {
-	public partial class Node
+	public sealed partial class Node
 	{
 		/// <summary>
 		/// Various additional info for the node.
@@ -40,7 +40,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Node should be skipped for attach related evaluations. Required if node has no attach.
+		/// Node should be skipped for meshdata related evaluations. Required if node has no meshdata.
 		/// </summary>
 		public bool SkipDraw
 		{
@@ -116,8 +116,8 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public bool CacheRotation
 		{
-			get => GetNodeAttribute(NodeAttributes.CacheRotation);
-			set => SetNodeAttribute(NodeAttributes.CacheRotation, value);
+			get => GetNodeAttribute(NodeAttributes.CacheMatrix);
+			set => SetNodeAttribute(NodeAttributes.CacheMatrix, value);
 		}
 
 		/// <summary>
@@ -125,8 +125,8 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public bool ApplyCachedRotation
 		{
-			get => GetNodeAttribute(NodeAttributes.ApplyCachedRotation);
-			set => SetNodeAttribute(NodeAttributes.ApplyCachedRotation, value);
+			get => GetNodeAttribute(NodeAttributes.ApplyCachedMatrix);
+			set => SetNodeAttribute(NodeAttributes.ApplyCachedMatrix, value);
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace SA3D.Modeling.ObjectData
 			NoScale = (overrideExisting && NoScale) || Scale.IsDistanceApproximate(Vector3.One);
 			NoRotation = (overrideExisting && NoRotation) || EulerRotation.IsDistanceApproximate(Vector3.Zero);
 			SkipChildren = (overrideExisting && SkipChildren) || Child == null;
-			SkipDraw = (overrideExisting && SkipDraw) || Attach == null;
+			SkipDraw = (overrideExisting && SkipDraw) || MeshData == null;
 		}
 
 		/// <summary>

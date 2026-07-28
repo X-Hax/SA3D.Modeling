@@ -1,20 +1,155 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
-using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
 	/// <summary>
 	/// Material information for the following strip chunks
 	/// </summary>
-	public class MaterialChunk : SizedChunk
+	[JsonConverter(typeof(JsonConverter))]
+	public sealed class MaterialChunk : SizedChunk
 	{
-		private Color? _diffuse;
-		private Color? _ambient;
-		private Color? _specular;
+		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, MaterialChunk, PolyChunk>
+		{
+			private const string _sourceBlendMode = nameof(SourceBlendMode);
+			private const string _destinationBlendMode = nameof(DestinationBlendMode);
+			private const string _sourceSelect = nameof(SourceSelect);
+			private const string _destinationSelect = nameof(DestinationSelect);
+			private const string _diffuse = nameof(Diffuse);
+			private const string _ambient = nameof(Ambient);
+			private const string _specular = nameof(Specular);
+			private const string _specularExponent = nameof(SpecularExponent);
+
+
+			/// <inheritdoc/>
+			protected override ParentJsonObjectConverter<PolyChunkType, PolyChunk> ParentConverter => BaseJsonConverter.instance;
+
+			/// <inheritdoc/>
+			protected override ReadOnlyDictionary<string, PropertyDefinition> TargetPropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _sourceBlendMode, new(PropertyTokenType.String, BlendMode.Zero) },
+				{ _destinationBlendMode, new(PropertyTokenType.String, BlendMode.Zero) },
+				{ _sourceSelect, new(PropertyTokenType.Bool, false) },
+				{ _destinationSelect, new(PropertyTokenType.Bool, false) },
+				{ _diffuse, new(PropertyTokenType.String, null, true) },
+				{ _ambient, new(PropertyTokenType.String, null, true) },
+				{ _specular, new(PropertyTokenType.String, null, true) },
+				{ _specularExponent, new(PropertyTokenType.Number, (byte)0) },
+			});
+
+
+			/// <inheritdoc/>
+			protected override bool CheckTypeMatches(PolyChunkType key)
+			{
+				return key is not PolyChunkType.Material_Bump
+					and >= PolyChunkType.Material_Diffuse
+					and <= PolyChunkType.Material_DiffuseAmbientSpecular2;
+			}
+
+			/// <inheritdoc/>
+			protected override object? ReadTargetValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _sourceBlendMode:
+					case _destinationBlendMode:
+						return JsonSerializer.Deserialize<BlendMode>(ref reader, options);
+					case _sourceSelect:
+					case _destinationSelect:
+						return reader.GetBoolean();
+					case _diffuse:
+					case _ambient:
+					case _specular:
+						return JsonSerializer.Deserialize<Color?>(ref reader, options);
+					case _specularExponent:
+						return reader.GetByte();
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override MaterialChunk CreateTarget(ReadOnlyDictionary<string, object?> values)
+			{
+				PolyChunkType type = (PolyChunkType)values[BaseJsonConverter._type]!;
+
+				bool second = type
+					is PolyChunkType.Material_Diffuse2
+					or PolyChunkType.Material_Ambient2
+					or PolyChunkType.Material_DiffuseAmbient2
+					or PolyChunkType.Material_Specular2
+					or PolyChunkType.Material_DiffuseSpecular2
+					or PolyChunkType.Material_AmbientSpecular2
+					or PolyChunkType.Material_DiffuseAmbientSpecular2;
+
+				return new()
+				{
+					SourceBlendMode = (BlendMode)values[_sourceBlendMode]!,
+					DestinationBlendMode = (BlendMode)values[_destinationBlendMode]!,
+					SourceSelect = (bool)values[_sourceSelect]!,
+					DestinationSelect = (bool)values[_destinationSelect]!,
+					Diffuse = (Color?)values[_diffuse]!,
+					Ambient = (Color?)values[_ambient]!,
+					Specular = (Color?)values[_specular]!,
+					SpecularExponent = (byte)values[_specularExponent]!,
+					Second = second,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteTargetValues(Utf8JsonWriter writer, MaterialChunk value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_sourceBlendMode);
+				JsonSerializer.Serialize(writer, value.SourceBlendMode, options);
+
+				writer.WritePropertyName(_destinationBlendMode);
+				JsonSerializer.Serialize(writer, value.DestinationBlendMode, options);
+
+				if(value.SourceSelect)
+				{
+					writer.WriteBoolean(_sourceSelect, value.SourceSelect);
+				}
+
+				if(value.DestinationSelect)
+				{
+					writer.WriteBoolean(_destinationSelect, value.DestinationSelect);
+				}
+
+				if(value.Diffuse != null)
+				{
+					writer.WritePropertyName(_diffuse);
+					JsonSerializer.Serialize(writer, value.Diffuse, options);
+				}
+
+				if(value.Ambient != null)
+				{
+					writer.WritePropertyName(_ambient);
+					JsonSerializer.Serialize(writer, value.Ambient, options);
+				}
+
+				if(value.Specular != null)
+				{
+					writer.WritePropertyName(_specular);
+					JsonSerializer.Serialize(writer, value.Specular, options);
+				}
+
+				if(value.SpecularExponent != 0)
+				{
+					writer.WriteNumber(_specularExponent, value.SpecularExponent);
+				}
+			}
+		}
 
 		/// <summary>
-		/// Whether the material type is a second type
+		/// Whether the chunk is for the second material slot
 		/// </summary>
 		public bool Second
 		{
@@ -29,17 +164,18 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 			{
 				byte type = (byte)Type;
 
-				return (ushort)(2 *
-					((type & 1)
+				return (ushort)(2 * (
+					(type & 1)
 					+ ((type >> 1) & 1)
-					+ ((type >> 2) & 1)));
+					+ ((type >> 2) & 1)
+				));
 			}
 		}
 
 		/// <summary>
 		/// Source blendmode
 		/// </summary>
-		public BlendMode SourceAlpha
+		public BlendMode SourceBlendMode
 		{
 			get => (BlendMode)((Attributes >> 3) & 7);
 			set => Attributes = (byte)((Attributes & ~0x38) | ((byte)value << 3));
@@ -48,10 +184,28 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// <summary>
 		/// Destination blendmode
 		/// </summary>
-		public BlendMode DestinationAlpha
+		public BlendMode DestinationBlendMode
 		{
 			get => (BlendMode)(Attributes & 7);
 			set => Attributes = (byte)((Attributes & ~7) | (byte)value);
+		}
+
+		/// <summary>
+		/// Source select flag
+		/// </summary>
+		public bool SourceSelect
+		{
+			get => (Attributes & (byte)Flag8.B7) != 0;
+			set => Attributes = (byte)(value ? (Attributes | (byte)Flag8.B7) : (Attributes & ~(byte)Flag8.B7));
+		}
+
+		/// <summary>
+		/// Source select flag
+		/// </summary>
+		public bool DestinationSelect
+		{
+			get => (Attributes & (byte)Flag8.B6) != 0;
+			set => Attributes = (byte)(value ? (Attributes | (byte)Flag8.B6) : (Attributes & ~(byte)Flag8.B6));
 		}
 
 		/// <summary>
@@ -59,11 +213,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Diffuse
 		{
-			get => _diffuse;
+			get;
 			set
 			{
 				TypeAttribute(0x01, value.HasValue);
-				_diffuse = value;
+				field = value;
 			}
 		}
 
@@ -72,11 +226,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Ambient
 		{
-			get => _ambient;
+			get;
 			set
 			{
 				TypeAttribute(0x02, value.HasValue);
-				_ambient = value;
+				field = value;
 			}
 		}
 
@@ -85,11 +239,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public Color? Specular
 		{
-			get => _specular;
+			get;
 			set
 			{
 				TypeAttribute(0x04, value.HasValue);
-				_specular = value;
+				field = value;
 			}
 		}
 
@@ -99,12 +253,17 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		/// </summary>
 		public byte SpecularExponent { get; set; }
 
+
 		/// <summary>
-		/// Creates a new material chunk. Defaults to <see cref="PolyChunkType.Material_Diffuse"/> with a white diffuse color.
+		/// Creates a new, empty material chunk.
 		/// </summary>
-		public MaterialChunk() : base(PolyChunkType.Material_Diffuse)
+		public MaterialChunk() : base(PolyChunkType.Material_Empty) { }
+
+
+		/// <inheritdoc/>
+		protected override bool IsTypeApplicable(PolyChunkType type)
 		{
-			_diffuse = Color.ColorWhite;
+			return type is >= PolyChunkType.Material_Empty and <= PolyChunkType.Material_DiffuseAmbientSpecular2;
 		}
 
 		private void TypeAttribute(byte val, bool state)
@@ -115,66 +274,94 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 				: type & ~val);
 		}
 
-		internal static MaterialChunk Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public override void Read(BinaryObjectReader reader)
 		{
-			ushort header = reader.ReadUShort(address);
-			PolyChunkType type = (PolyChunkType)(header & 0xFF);
-			// skipping size
-			address += 4;
+			base.Read(reader);
 
-			MaterialChunk mat = new()
+			byte type = (byte)Type;
+			if((type & 0x01) != 0)
 			{
-				Attributes = (byte)(header >> 8)
-			};
-
-			if(((byte)type & 0x01) != 0)
-			{
-				mat.Diffuse = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
+				Diffuse = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
 			}
 
-			if(((byte)type & 0x02) != 0)
+			if((type & 0x02) != 0)
 			{
-				mat.Ambient = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
+				Ambient = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
 			}
 
-			if(((byte)type & 0x04) != 0)
+			if((type & 0x04) != 0)
 			{
-				Color spec = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
-				mat.SpecularExponent = spec.Alpha;
+				Color spec = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_16);
+				SpecularExponent = spec.Alpha;
 				spec.Alpha = 255;
-				mat.Specular = spec;
+				Specular = spec;
 			}
 
-			mat.Second = ((byte)type & 0x08) != 0;
-
-			return mat;
 		}
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		public override void Write(BinaryObjectWriter writer)
 		{
-			if(_diffuse == null && _specular == null && _ambient == null)
+			base.Write(writer);
+
+			if(Diffuse.HasValue)
 			{
-				throw new InvalidOperationException("Material has no colors and thus no valid type!");
+				writer.WriteObject(Diffuse.Value, ColorIOType.ARGB8_16);
 			}
 
-			base.InternalWrite(writer);
-
-			if(_diffuse.HasValue)
+			if(Ambient.HasValue)
 			{
-				writer.WriteColor(_diffuse.Value, ColorIOType.ARGB8_16);
+				writer.WriteObject(Ambient.Value, ColorIOType.ARGB8_16);
 			}
 
-			if(_ambient.HasValue)
+			if(Specular.HasValue)
 			{
-				writer.WriteColor(_ambient.Value, ColorIOType.ARGB8_16);
-			}
-
-			if(_specular.HasValue)
-			{
-				Color wSpecular = _specular.Value;
+				Color wSpecular = Specular.Value;
 				wSpecular.Alpha = SpecularExponent;
-				writer.WriteColor(wSpecular, ColorIOType.ARGB8_16);
+				writer.WriteObject(wSpecular, ColorIOType.ARGB8_16);
+			}
+		}
+
+		/// <inheritdoc/>
+		protected override string GetAsciiAttributes()
+		{
+			string result =
+				AsciiMaps.SourceBlendModeMap.FindKey(SourceBlendMode)
+				+ "|" + AsciiMaps.DestinationBlendModeMap.FindKey(DestinationBlendMode);
+
+			if(SourceSelect)
+			{
+				result += "|FBS_SEL";
+			}
+
+			if(DestinationSelect)
+			{
+				result += "|FBD_SEL";
+			}
+
+			return result;
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		{
+			base.Write(writer, context);
+			writer.WriteLine();
+
+			if(Diffuse.HasValue)
+			{
+				writer.WriteLine($"\tMDiff( {Diffuse.Value.Alpha}, {Diffuse.Value.Red}, {Diffuse.Value.Green}, {Diffuse.Value.Blue} ),");
+			}
+
+			if(Ambient.HasValue)
+			{
+				writer.WriteLine($"\tMAmbi( {Ambient.Value.Alpha}, {Ambient.Value.Red}, {Ambient.Value.Green}, {Ambient.Value.Blue} ),");
+			}
+
+			if(Specular.HasValue)
+			{
+				writer.WriteLine($"\tMSpec( {SpecularExponent}, {Specular.Value.Red}, {Specular.Value.Green}, {Specular.Value.Blue} ),");
 			}
 		}
 	}

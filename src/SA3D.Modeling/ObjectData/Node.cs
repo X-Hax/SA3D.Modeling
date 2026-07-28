@@ -1,7 +1,13 @@
-﻿using SA3D.Common;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common;
+using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
+using SA3D.Modeling.Mesh.Basic;
+using SA3D.Modeling.Mesh.Chunk;
+using SA3D.Modeling.Mesh.Ginja;
 using SA3D.Modeling.ObjectData.Enums;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -12,15 +18,13 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Hierarchy object making up models.
 	/// </summary>
-	public partial class Node : ILabel
+	public sealed partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
-		/// <summary>
-		/// Byte size of a node structure.
-		/// </summary>
-		public const uint StructSize = 0x34;
-
 		/// <inheritdoc/>
 		public string Label { get; set; }
+
+		/// <inheritdoc/>
+		public string LabelPrefix => "object_";
 
 
 		/// <summary>
@@ -28,121 +32,136 @@ namespace SA3D.Modeling.ObjectData
 		/// </summary>
 		public Node()
 		{
-			Label = "object_" + StringExtensions.GenerateIdentifier();
+			Label = LabelPrefix.GenerateIdentifier();
 		}
 
 
-		/// <summary>
-		/// Writes the node and its contents to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="format">Format to write the model in.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The address at which the node was written.</returns>
-		/// <exception cref="NullReferenceException"></exception>
-		public uint Write(EndianStackWriter writer, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, IOContext context)
 		{
-			uint onWrite()
+			SetAllNodeAttributes((NodeAttributes)reader.ReadUInt32(), RotationUpdateMode.Keep);
+
+			MeshData = context.MeshFormat switch
 			{
-				uint childAddress = Child?.Write(writer, format, lut) ?? 0;
-				uint nextAddress = Next?.Write(writer, format, lut) ?? 0;
-				uint attachAddress = Attach?.Write(writer, format, lut) ?? 0;
+				Format.Basic
+				or Format.BasicDX => reader.ReadObjectOffset<BasicMesh, IOContext>(context, context.PointerLUT),
+				Format.Chunk => reader.ReadObjectOffset<ChunkMesh, IOContext>(context, context.PointerLUT),
+				Format.Ginja => reader.ReadObjectOffset<GinjaMesh, IOContext>(context, context.PointerLUT),
+				_ => throw new InvalidOperationException(),
+			};
 
-				uint result = writer.PointerPosition;
+			Vector3 position = reader.ReadVector3();
+			Vector3 rotation = reader.ReadVector3(UseQuaternionRotation ? FloatIOType.Float : FloatIOType.BAMS32);
+			Vector3 scale = reader.ReadVector3();
 
-				writer.WriteUInt((uint)Attributes);
-				writer.WriteUInt(attachAddress);
+			long childOffset = reader.ReadOffsetValue();
+			long siblingOffset = reader.ReadOffsetValue();
 
-				writer.WriteVector3(Position);
+			Quaternion quaternion = new(rotation, reader.ReadSingle());
 
-				if(UseQuaternionRotation)
-				{
-					writer.WriteFloat(QuaternionRotation.X);
-					writer.WriteFloat(QuaternionRotation.Y);
-					writer.WriteFloat(QuaternionRotation.Z);
-				}
-				else
-				{
-					writer.WriteVector3(EulerRotation, FloatIOType.BAMS32);
-				}
+			UpdateTransforms(
+				position,
+				UseQuaternionRotation ? null : rotation,
+				UseQuaternionRotation ? quaternion : null,
+				scale,
+				RotationUpdateMode.Keep
+			);
 
-				writer.WriteVector3(Scale);
-
-				writer.WriteUInt(childAddress);
-				writer.WriteUInt(nextAddress);
-
-				if(UseQuaternionRotation)
-				{
-					writer.WriteFloat(QuaternionRotation.W);
-				}
-				else
-				{
-					writer.WriteEmpty(4);
-				}
-
-				return result;
+			if(reader.ReadObjectAtOffset<Node, IOContext>(childOffset, context, context.PointerLUT) is Node child)
+			{
+				SetChild(child);
 			}
 
-			return lut.GetAddAddress(this, onWrite);
+			if(reader.ReadObjectAtOffset<Node, IOContext>(siblingOffset, context, context.PointerLUT) is Node next)
+			{
+				SetNext(next);
+			}
 		}
 
-		/// <summary>
-		/// Reads a node and its contents off an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="format">Format of the model to read.</param>
-		/// <param name="lut">Pointer references to utilize.</param>
-		/// <returns>The node that was read.</returns>
-		public static Node Read(EndianStackReader reader, uint address, ModelFormat format, PointerLUT lut)
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			Node onRead()
+			writer.WriteUInt32((uint)Attributes);
+			writer.WriteObjectOffset(MeshData, context, context.PointerLUT);
+
+			writer.WriteVector3(Position);
+
+			if(UseQuaternionRotation)
 			{
-				Node result = new();
-
-				NodeAttributes attributes = (NodeAttributes)reader.ReadUInt(address);
-				result.SetAllNodeAttributes(attributes, RotationUpdateMode.Keep);
-
-				if(reader.TryReadPointer(address + 4, out uint attachAddress))
-				{
-					result.Attach = Mesh.Attach.Read(reader, attachAddress, format, lut);
-				}
-
-				address += 8;
-				Vector3 position = reader.ReadVector3(ref address);
-				Vector3? eulerRotation = null;
-				Quaternion? quaternionRotation = null;
-
-				if(result.UseQuaternionRotation)
-				{
-					Vector3 vectorPart = reader.ReadVector3(ref address);
-					float scalaPart = reader.ReadFloat(address + 20);
-
-					quaternionRotation = new(vectorPart, scalaPart);
-				}
-				else
-				{
-					eulerRotation = reader.ReadVector3(ref address, FloatIOType.BAMS32);
-				}
-
-				Vector3 scale = reader.ReadVector3(ref address);
-
-				result.UpdateTransforms(position, eulerRotation, quaternionRotation, scale, RotationUpdateMode.Keep);
-
-				if(reader.TryReadPointer(address, out uint childAddr))
-				{
-					result.SetChild(Read(reader, childAddr, format, lut));
-				}
-
-				if(reader.TryReadPointer(address + 4, out uint siblingAddr))
-				{
-					result.SetNext(Read(reader, siblingAddr, format, lut));
-				}
-
-				return result;
+				writer.WriteVector3(
+					new(QuaternionRotation.X, QuaternionRotation.Y, QuaternionRotation.Z),
+					FloatIOType.Float
+				);
+			}
+			else
+			{
+				writer.WriteVector3(EulerRotation, FloatIOType.BAMS32);
 			}
 
-			return lut.GetAddLabeledValue(address, "object_", onRead);
+			writer.WriteVector3(Scale);
+
+			writer.WriteObjectOffset(Child, context, context.PointerLUT);
+			writer.WriteObjectOffset(Next, context, context.PointerLUT);
+
+			if(UseQuaternionRotation)
+			{
+				writer.WriteSingle(QuaternionRotation.W);
+			}
+			else
+			{
+				writer.WriteInt32(0);
+			}
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		{
+			writer.WriteObject(Next, context);
+			writer.WriteObject(Child, context);
+
+			string typePrefix = context.Format switch
+			{
+				Format.Chunk => "CNK",
+				Format.Ginja => "GJ",
+				_ => string.Empty,
+			};
+
+			string objectType = typePrefix + "OBJECT";
+
+
+			using(writer.WriteObjectBlock(objectType))
+			{
+				writer.WriteObject(MeshData, context);
+
+				using(writer.WriteStructBlock(objectType, this))
+				{
+					writer.WritePropertyLine("EvalFlags", $"( {Attributes.ToAscii(AsciiMaps.NodeAttributesMap)} )");
+					writer.WriteObjectPropertyLine($"{typePrefix}Model", MeshData);
+					writer.WritePropertyLine("OPosition", $"( {Position.ToAscii()} )");
+
+					if(UseQuaternionRotation)
+					{
+						writer.WritePropertyLine(
+							"OQuatIm",
+							$"( {QuaternionRotation.X.ToAsciiHex()}, {QuaternionRotation.Y.ToAsciiHex()}, {QuaternionRotation.Z.ToAsciiHex()} )",
+							context.BaseContext.WriteComments ? QuaternionRotation.AsVector4().AsVector3().ToAscii() : null
+						);
+					}
+					else
+					{
+						writer.WritePropertyLine("OAngle", $"( {EulerRotation.ToAsciiDegrees()} )");
+					}
+
+					writer.WritePropertyLine("OScale", $"( {Scale.ToAscii()} )");
+					writer.WriteObjectPropertyLine($"Child", Child);
+					writer.WriteObjectPropertyLine($"Sibling", Next);
+
+					if(context.HasQuaternions || !context.BaseContext.NoQuaternionAppendix)
+					{
+						writer.WritePropertyLine("OQuatRe", $"( {(UseQuaternionRotation ? QuaternionRotation.W : 0f).ToAscii()} )");
+					}
+				}
+			}
 		}
 
 
@@ -163,28 +182,17 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Creates a copy of the node with no relationships and a deep cloned attach.
+		/// Creates a copy of the node with no relationships and deep cloned meshdata.
 		/// </summary>
 		/// <returns>The cloned node.</returns>
-		public Node AttachCopy()
+		public Node MeshDataCopy()
 		{
 			Node result = SimpleCopy();
-			if(result.Attach != null)
+			if(result.MeshData != null)
 			{
-				result.Attach = result.Attach.Clone();
+				result.MeshData = result.MeshData.Clone();
 			}
 
-			return result;
-		}
-
-		/// <summary>
-		/// Duplicated the node in place and inserts it after the original node.
-		/// </summary>
-		public Node Duplicate()
-		{
-			Node result = SimpleCopy();
-			result.Label += "_Clone";
-			InsertAfter(result);
 			return result;
 		}
 
@@ -212,7 +220,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Clones the entire tree and returns the clone of the node that the calling node. Attaches are reused.
+		/// Clones the entire tree and returns the clone of the node that the calling node. Meshdata is reused.
 		/// </summary>
 		/// <returns>The cloned instance of the calling node</returns>
 		public Node DeepSimpleCopy()
@@ -221,19 +229,20 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 		/// <summary>
-		/// Clones the entire tree including attaches and returns the clone of the node that the calling node.
+		/// Clones the entire tree including meshdata and returns the clone of the node that the calling node.
 		/// </summary>
 		/// <returns>The cloned instance of the calling node</returns>
-		public Node DeepAttachCopy()
+		public Node DeepMeshDataCopy()
 		{
-			return BaseClone((n) => n.AttachCopy());
+			return BaseClone((n) => n.MeshDataCopy());
 		}
 
 
 		/// <inheritdoc/>
 		public override string ToString()
 		{
-			return Attach == null ? $"{Label} - /" : $"{Label} - {Attach}";
+			return MeshData == null ? $"{Label} - /" : $"{Label} - {MeshData}";
 		}
+
 	}
 }

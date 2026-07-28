@@ -55,7 +55,7 @@ namespace SA3D.Modeling.ObjectData.Enums
 		Clip = Flag32.B8,
 
 		/// <summary>
-		/// Unused
+		/// Node is a modifier volume. Only an identifier flag
 		/// </summary>
 		Modifier = Flag32.B9,
 
@@ -65,17 +65,17 @@ namespace SA3D.Modeling.ObjectData.Enums
 		UseQuaternionRotation = Flag32.B10,
 
 		/// <summary>
-		/// Cache rotation data before the object is processed
+		/// Cache current matrix before translating this node. Only one matrix can be actively cached at a time
 		/// </summary>
-		CacheRotation = Flag32.B11,
+		CacheMatrix = Flag32.B11,
 
 		/// <summary>
-		/// Use cached rotation data (see <see cref="CacheRotation"/>)
+		/// Set non-translation components of cached matrix to the current matrix, instead of rotating/scaling with node data
 		/// </summary>
-		ApplyCachedRotation = Flag32.B12,
+		ApplyCachedMatrix = Flag32.B12,
 
 		/// <summary>
-		/// Unused
+		/// Node has weight data / mesh data that is not self dependent. Only an identifier flag, not read by the game engine.
 		/// </summary>
 		Envelope = Flag32.B13,
 	}

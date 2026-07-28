@@ -1,4 +1,5 @@
-﻿using SA3D.Common.IO;
+﻿using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData.Structs;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
@@ -8,7 +9,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	public abstract class BitsChunk : PolyChunk
 	{
 		/// <inheritdoc/>
-		public override uint ByteSize => 2;
+		protected override bool AlignWithFour => false;
 
 		/// <summary>
 		/// Base constructor for bits chunks.
@@ -17,6 +18,11 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		protected BitsChunk(PolyChunkType type) : base(type) { }
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer) { }
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		{
+			base.Write(writer, context);
+			writer.WriteLine();
+		}
+
 	}
 }

@@ -1,56 +1,58 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using Amicitia.IO.Streams;
+using SA3D.Common.IO;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SA3D.Modeling.File
 {
 	internal static class NJBlockUtility
 	{
-		public static Dictionary<uint, uint> GetBlockAddresses(EndianStackReader reader, uint address)
+		public static Dictionary<long, string> GetBlockOffsets(BinaryObjectReader reader)
 		{
-			Dictionary<uint, uint> result = [];
-			reader.PushBigEndian(reader.CheckBigEndian32(address + 4));
+			Dictionary<long, string> result = [];
 
-			uint blockAddress = address;
-			while(blockAddress < reader.Length + 8)
+			using EndiannessToken endiannessToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
+			using SeekToken seekToken = reader.At();
+
+			while(reader.Position < reader.Length + 8)
 			{
-				reader.PushBigEndian(false);
-				uint blockHeader = reader.ReadUInt(blockAddress);
-				reader.PopEndian();
+				long offset = reader.Position;
+				string blockheader = reader.ReadString(StringBinaryFormat.FixedLength, 4);
+				uint blockSize = reader.ReadUInt32();
 
-				uint blockSize = reader.ReadUInt(blockAddress + 4);
-				if(blockHeader == 0 || blockSize == 0)
+				if(string.IsNullOrWhiteSpace(blockheader) || blockSize == 0)
 				{
 					break;
 				}
 
-				result.Add(blockAddress, blockHeader);
-				blockAddress += 8 + blockSize;
+				result.Add(offset, blockheader);
+				reader.Seek(blockSize, System.IO.SeekOrigin.Current);
 			}
 
-			reader.PopEndian();
 			return result;
 		}
 
-		public static bool FindBlockAddress(Dictionary<uint, uint> blocks, HashSet<uint> toFind, [MaybeNullWhen(false)] out uint? blockAddress)
+		public static bool FindBlockOffset(Dictionary<long, string> blocks, HashSet<string> toFind, [MaybeNullWhen(false)] out long? blockOffset)
 		{
-			foreach(KeyValuePair<uint, uint> block in blocks)
+			foreach(KeyValuePair<long, string> block in blocks)
 			{
 				if(toFind.Contains(block.Value))
 				{
-					blockAddress = block.Key;
+					blockOffset = block.Key;
 					return true;
 				}
 			}
 
-			blockAddress = null;
+			blockOffset = null;
 			return false;
 		}
 
-		public static bool FindBlockAddress(EndianStackReader reader, uint address, HashSet<uint> toFind, [MaybeNullWhen(false)] out uint? blockAddress)
+		public static bool FindBlockOffset(BinaryObjectReader reader, HashSet<string> toFind, [MaybeNullWhen(false)] out long? blockOffset)
 		{
-			Dictionary<uint, uint> blocks = GetBlockAddresses(reader, address);
-			return FindBlockAddress(blocks, toFind, out blockAddress);
+			Dictionary<long, string> blocks = GetBlockOffsets(reader);
+			return FindBlockOffset(blocks, toFind, out blockOffset);
 		}
 	}
 }

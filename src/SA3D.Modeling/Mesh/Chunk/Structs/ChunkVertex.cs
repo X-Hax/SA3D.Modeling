@@ -1,23 +1,115 @@
-﻿using SA3D.Modeling.Mesh.Buffer;
+﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Ascii;
+using SA3D.Common.Converters;
+using SA3D.Common.IO;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
 {
 	/// <summary>
 	/// Single vertex of a vertex chunk
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct ChunkVertex : IEquatable<ChunkVertex>
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ChunkVertex>
+		{
+			private const string _position = nameof(Position);
+			private const string _normal = nameof(Normal);
+			private const string _diffuse = nameof(Diffuse);
+			private const string _specular = nameof(Specular);
+			private const string _attributes = nameof(Attributes);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _position, new(PropertyTokenType.String, DefaultValues.Position) },
+				{ _normal, new(PropertyTokenType.String, DefaultValues.Normal) },
+				{ _diffuse, new(PropertyTokenType.String, DefaultValues.Diffuse) },
+				{ _specular, new(PropertyTokenType.String, DefaultValues.Specular) },
+				{ _attributes, new(PropertyTokenType.String, DefaultValues.Attributes) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _position:
+					case _normal:
+						return JsonSerializer.Deserialize<Vector3>(ref reader, options);
+					case _diffuse:
+					case _specular:
+						return JsonSerializer.Deserialize<Color>(ref reader, options);
+					case _attributes:
+						return UInt32HexConverter.ConvertFrom(reader.GetString()!, propertyName);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ChunkVertex Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					Position = (Vector3)values[_position]!,
+					Normal = (Vector3)values[_normal]!,
+					Diffuse = (Color)values[_diffuse]!,
+					Specular = (Color)values[_specular]!,
+					Attributes = (uint)values[_attributes]!,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ChunkVertex value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_position);
+				JsonSerializer.Serialize(writer, value.Position, options);
+
+				if(value.Normal != DefaultValues.Normal)
+				{
+					writer.WritePropertyName(_normal);
+					JsonSerializer.Serialize(writer, value.Normal, options);
+				}
+
+				if(value.Diffuse != DefaultValues.Diffuse)
+				{
+					writer.WritePropertyName(_diffuse);
+					JsonSerializer.Serialize(writer, value.Diffuse, options);
+				}
+
+				if(value.Specular != DefaultValues.Specular)
+				{
+					writer.WritePropertyName(_specular);
+					JsonSerializer.Serialize(writer, value.Specular, options);
+				}
+
+				if(value.Attributes != DefaultValues.Attributes)
+				{
+					writer.WriteString(_attributes, UInt32HexConverter.ConvertTo(value.Attributes));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Default chunk vertex values.
 		/// </summary>
 		public static readonly ChunkVertex DefaultValues = new()
 		{
-			Normal = BufferMesh.DefaultNormal,
-			Diffuse = BufferMesh.DefaultColor,
-			Specular = BufferMesh.DefaultColor,
+			Normal = Vector3.UnitY,
+			Diffuse = Color.ColorWhite,
+			Specular = Color.ColorWhite,
 		};
 
 		/// <summary>
@@ -55,7 +147,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		}
 
 		/// <summary>
-		/// Node influence.
+		/// Node influence
 		/// </summary>
 		public float Weight
 		{
@@ -63,64 +155,839 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			set => Attributes = (Attributes & 0xFFFFF) | ((uint)Math.Round(value * 255f) << 16);
 		}
 
+		/// <summary>
+		/// Node influence (Ninja version 2)
+		/// </summary>
+		public float Weight2
+		{
+			readonly get => (Attributes >> 16) / 65535f;
+			set => Attributes = (Attributes & 0xFFFFF) | ((uint)Math.Round(value * 65535f) << 16);
+		}
+
+		#region Constructors
 
 		/// <summary>
-		/// Creates a chunk vertex with a normal.
+		/// Creates new struct with <see cref="DefaultValues"/>
 		/// </summary>
-		/// <param name="position">Position in 3D space.</param>
-		/// <param name="normal">Normalized direction.</param>
-		public ChunkVertex(Vector3 position, Vector3 normal) : this()
+		public ChunkVertex()
 		{
-			Position = position;
-			Normal = normal;
-			Diffuse = DefaultValues.Diffuse;
-			Specular = DefaultValues.Specular;
+			Normal = Vector3.UnitY;
+			Diffuse = Color.ColorWhite;
+			Specular = Color.ColorWhite;
 		}
 
 		/// <summary>
-		/// Creates a chunk vertex with a normal and attributes.
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.BlankVec4"/>
+		/// <br/>- <see cref="VertexChunkType.Blank"/>
 		/// </summary>
-		/// <param name="position">Position in 3D space.</param>
-		/// <param name="normal">Normalized direction.</param>
-		/// <param name="attribs">Additional attributes.</param>
-		public ChunkVertex(Vector3 position, Vector3 normal, uint attribs) : this()
+		/// <param name="position">Vertex position</param>
+		public ChunkVertex(Vector3 position) : this()
 		{
 			Position = position;
-			Normal = normal;
-			Diffuse = DefaultValues.Diffuse;
-			Specular = DefaultValues.Specular;
-			Attributes = attribs;
 		}
 
 		/// <summary>
-		/// Creates a chunk vertex with a normal and weight info.
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.UserAttributes"/>
+		/// <br/>- <see cref="VertexChunkType.Attributes"/>
 		/// </summary>
-		/// <param name="position">Position in 3D space.</param>
-		/// <param name="normal">Normalized direction.</param>
-		/// <param name="index">Vertex cache index.</param>
-		/// <param name="weight">Node influence.</param>
-		public ChunkVertex(Vector3 position, Vector3 normal, ushort index, float weight) : this()
+		/// <param name="position">Vertex position</param>
+		/// <param name="attributes">Vertex attributes</param>
+		public ChunkVertex(Vector3 position, uint attributes) : this(position)
 		{
-			Position = position;
-			Normal = normal;
-			Diffuse = DefaultValues.Diffuse;
-			Specular = DefaultValues.Specular;
+			Attributes = attributes;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.Attributes"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="index">Weight vertex index</param>
+		/// <param name="weight">Vertex weight</param>
+		public ChunkVertex(Vector3 position, ushort index, float weight) : this(position)
+		{
 			Index = index;
 			Weight = weight;
 		}
 
 		/// <summary>
-		/// Creates a chunk with colors.
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.Diffuse"/>
 		/// </summary>
-		/// <param name="position">Position in 3D space.</param>
-		/// <param name="diffuse">Diffuse color.</param>
-		/// <param name="specular">Specular color.</param>
-		public ChunkVertex(Vector3 position, Color diffuse, Color specular) : this()
+		/// <param name="position">Vertex position</param>
+		/// <param name="diffuse">Diffuse vertex color</param>
+		public ChunkVertex(Vector3 position, Color diffuse) : this(position)
 		{
-			Position = position;
-			Normal = DefaultValues.Normal;
 			Diffuse = diffuse;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.DiffuseSpecular4"/>
+		/// <br/>- <see cref="VertexChunkType.DiffuseSpecular5"/>
+		/// <br/>- <see cref="VertexChunkType.DiffuseSpecular"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="diffuse">Diffuse vertex color</param>
+		/// <param name="specular">Specular vertex color</param>
+		public ChunkVertex(Vector3 position, Color diffuse, Color specular) : this(position, diffuse)
+		{
 			Specular = specular;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/>- <see cref="VertexChunkType.Intensity"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="diffuse">Diffuse vertex intensity</param>
+		/// <param name="specular">Specular vertex intensity</param>
+		public ChunkVertex(Vector3 position, float diffuse, float specular) : this(position)
+		{
+			Diffuse = new(diffuse, diffuse, diffuse);
+			Specular = new(specular, specular, specular);
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.NormalVec4"/>
+		/// <br/>- <see cref="VertexChunkType.Normal"/>
+		/// <br/>- <see cref="VertexChunkType.Normal32"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		public ChunkVertex(Vector3 position, Vector3 normal) : this(position)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.NormalUserAttributes"/>
+		/// <br/>- <see cref="VertexChunkType.NormalAttributes"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		/// <param name="attributes">Vertex attributes</param>
+		public ChunkVertex(Vector3 position, Vector3 normal, uint attributes) : this(position, attributes)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.NormalAttributes"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		/// <param name="index">Weight vertex index</param>
+		/// <param name="weight">Vertex weight</param>
+		public ChunkVertex(Vector3 position, Vector3 normal, ushort index, float weight) : this(position, index, weight)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.NormalDiffuse"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		/// <param name="diffuse">Diffuse vertex color</param>
+		public ChunkVertex(Vector3 position, Vector3 normal, Color diffuse) : this(position, diffuse)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.NormalDiffuseSpecular4"/>
+		/// <br/>- <see cref="VertexChunkType.NormalDiffuseSpecular5"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		/// <param name="diffuse">Diffuse vertex color</param>
+		/// <param name="specular">Specular vertex color</param>
+		public ChunkVertex(Vector3 position, Vector3 normal, Color diffuse, Color specular) : this(position, diffuse, specular)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/>- <see cref="VertexChunkType.NormalIntensity"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="normal">Vertex normal direction</param>
+		/// <param name="diffuse">Diffuse vertex intensity</param>
+		/// <param name="specular">Specular vertex intensity</param>
+		public ChunkVertex(Vector3 position, Vector3 normal, float diffuse, float specular) : this(position, diffuse, specular)
+		{
+			Normal = normal;
+		}
+
+		/// <summary>
+		/// Creates a new vertex. Uses <see cref="DefaultValues"/>.
+		/// <br/> Applicable for: 
+		/// <br/>- <see cref="VertexChunkType.AttributesDiffuse"/>
+		/// </summary>
+		/// <param name="position">Vertex position</param>
+		/// <param name="attributes">Vertex attributes</param>
+		/// <param name="diffuse">Diffuse vertex color</param>
+		public ChunkVertex(Vector3 position, uint attributes, Color diffuse) : this(position, attributes)
+		{
+			Diffuse = diffuse;
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Returns the appropriate <see cref="ChunkVertex"/> read callback for the given <see cref="VertexChunkType"/>
+		/// </summary>
+		/// <param name="type">The type to get the read callback for</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		public static Func<BinaryObjectReader, ChunkVertex> GetReadCallback(VertexChunkType type)
+		{
+			return type switch
+			{
+				VertexChunkType.BlankVec4 => r =>
+				{
+					Vector3 position = r.ReadVector3();
+					r.Skip(4); // always 1.0
+					return new(position);
+				}
+				,
+
+				VertexChunkType.NormalVec4 => r =>
+				{
+					Vector3 position = r.ReadVector3();
+					r.Skip(sizeof(float)); // always 1.0
+					Vector3 normal = r.ReadVector3();
+					r.Skip(sizeof(float)); // always 0.0
+					return new(position, normal);
+				}
+				,
+
+				VertexChunkType.Blank => r => new(
+					r.ReadVector3()
+				),
+
+				VertexChunkType.Diffuse => r => new(
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+				),
+
+				VertexChunkType.UserAttributes or VertexChunkType.Attributes => r => new(
+					r.ReadVector3(),
+					r.ReadUInt32()
+				),
+
+				VertexChunkType.DiffuseSpecular5 => r => new(
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+				),
+
+				VertexChunkType.DiffuseSpecular4 => r => new(
+						r.ReadVector3(),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB4),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+					),
+				VertexChunkType.Intensity => r => new(
+					r.ReadVector3(),
+					r.ReadUInt16() / ((float)ushort.MaxValue),
+					r.ReadUInt16() / ((float)ushort.MaxValue)
+				),
+
+				VertexChunkType.Normal => r => new(
+					r.ReadVector3(),
+					r.ReadVector3()
+				),
+
+				VertexChunkType.NormalDiffuse => r => new(
+					r.ReadVector3(),
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+				),
+
+				VertexChunkType.NormalUserAttributes or VertexChunkType.NormalAttributes => r => new(
+					r.ReadVector3(),
+					r.ReadVector3(),
+					r.ReadUInt32()
+				),
+
+				VertexChunkType.NormalDiffuseSpecular5 => r => new(
+					r.ReadVector3(),
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+				),
+
+				VertexChunkType.NormalDiffuseSpecular4 => r => new(
+					r.ReadVector3(),
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB4),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+				),
+
+				VertexChunkType.NormalIntensity => r => new(
+					r.ReadVector3(),
+					r.ReadVector3(),
+					r.ReadUInt16() / ((float)ushort.MaxValue),
+					r.ReadUInt16() / ((float)ushort.MaxValue)
+				),
+
+				VertexChunkType.Normal32 => r => new(
+					r.ReadVector3(),
+					DecompressNormal(r.ReadUInt32())
+				),
+
+				VertexChunkType.Normal32Diffuse => r => new(
+					r.ReadVector3(),
+					DecompressNormal(r.ReadUInt32()),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+				),
+
+				VertexChunkType.Normal32UserAttributes => r => new(
+					r.ReadVector3(),
+					DecompressNormal(r.ReadUInt32()),
+					r.ReadUInt32()
+				),
+
+				VertexChunkType.DiffuseSpecular => r => new(
+					r.ReadVector3(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+				),
+
+				VertexChunkType.AttributesDiffuse => r => new(
+					r.ReadVector3(),
+					r.ReadUInt32(),
+					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+				),
+
+				VertexChunkType.Null
+				or VertexChunkType.End
+				or _ => throw new ArgumentException($"Invalid vertex chunk type {type}"),
+			};
+		}
+
+		/// <summary>
+		/// Return the appropriate <see cref="ChunkVertex"/> write callback for the given <see cref="VertexChunkType"/>
+		/// </summary>
+		/// <param name="type">The type to get the write callback for</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		public static Action<BinaryObjectWriter, ChunkVertex> GetWriteCallback(VertexChunkType type)
+		{
+			return type switch
+			{
+				VertexChunkType.BlankVec4 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteSingle(1);
+				}
+				,
+
+				VertexChunkType.NormalVec4 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteSingle(1);
+					w.WriteVector3(v.Normal);
+					w.WriteSingle(0);
+				}
+				,
+
+				VertexChunkType.Blank => (w, v) => w.WriteVector3(v.Position),
+
+				VertexChunkType.Diffuse => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+				}
+				,
+
+				VertexChunkType.UserAttributes or VertexChunkType.Attributes => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt32(v.Attributes);
+				}
+				,
+
+				VertexChunkType.DiffuseSpecular5 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteObject(v.Diffuse, ColorIOType.RGB565);
+					w.WriteObject(v.Specular, ColorIOType.RGB565);
+				}
+				,
+
+				VertexChunkType.DiffuseSpecular4 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
+					w.WriteObject(v.Specular, ColorIOType.RGB565);
+				}
+				,
+				VertexChunkType.Intensity => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt16(ColorToIntensity(v.Diffuse));
+					w.WriteUInt16(ColorToIntensity(v.Specular));
+				}
+				,
+
+				VertexChunkType.Normal => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+				}
+				,
+
+				VertexChunkType.NormalDiffuse => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+				}
+				,
+
+				VertexChunkType.NormalUserAttributes or VertexChunkType.NormalAttributes => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+					w.WriteUInt32(v.Attributes);
+				}
+				,
+
+				VertexChunkType.NormalDiffuseSpecular5 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+					w.WriteObject(v.Diffuse, ColorIOType.RGB565);
+					w.WriteObject(v.Specular, ColorIOType.RGB565);
+				}
+				,
+
+				VertexChunkType.NormalDiffuseSpecular4 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
+					w.WriteObject(v.Specular, ColorIOType.RGB565);
+				}
+				,
+
+				VertexChunkType.NormalIntensity => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteVector3(v.Normal);
+					w.WriteUInt16(ColorToIntensity(v.Diffuse));
+					w.WriteUInt16(ColorToIntensity(v.Specular));
+				}
+				,
+
+				VertexChunkType.Normal32 => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt32(CompressNormal(v.Normal));
+				}
+				,
+
+				VertexChunkType.Normal32Diffuse => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt32(CompressNormal(v.Normal));
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+				}
+				,
+
+				VertexChunkType.Normal32UserAttributes => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt32(CompressNormal(v.Normal));
+					w.WriteUInt32(v.Attributes);
+				}
+				,
+
+				VertexChunkType.DiffuseSpecular => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+					w.WriteObject(v.Specular, ColorIOType.ARGB8_32);
+				}
+				,
+
+				VertexChunkType.AttributesDiffuse => (w, v) =>
+				{
+					w.WriteVector3(v.Position);
+					w.WriteUInt32(v.Attributes);
+					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+				}
+				,
+
+				VertexChunkType.Null
+				or VertexChunkType.End
+				or _ => throw new ArgumentException($"Invalid vertex chunk type {type}")
+			};
+		}
+
+		/// <summary>
+		/// Return the appropriate <see cref="ChunkVertex"/> ascii-write callback for the given <see cref="VertexChunkType"/>
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		public static Action<AsciiWriter, ChunkVertex, ModelAsciiIOContext> GetAsciiWriteCallback(VertexChunkType type, ModelAsciiIOContext context)
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WritePosition(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Position.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tVERT( {vertex.Position.ToAsciiHex()} ),{comment}");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WritePosition4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Position.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tVERT_SH( {vertex.Position.ToAsciiHex()} ),{comment}");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteNormal(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM( {vertex.Normal.ToAsciiHex()} ),{comment}");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteNormal4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM_SH( {vertex.Normal.ToAsciiHex()} ),{comment}");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteNormal32(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				string comment = string.Empty;
+				if(context.BaseContext.WriteComments)
+				{
+					comment = $" /* {vertex.Normal.ToAscii()} */";
+				}
+
+				writer.WriteLine($"\tNORM32( {CompressNormalComponent(vertex.Normal.X).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Y).ToAsciiHex()}, {CompressNormalComponent(vertex.Normal.Z).ToAsciiHex()} ),{comment}");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteDiffuse(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				writer.WriteLine($"D8888( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue} ),");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteDiffuseSpecular5(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				writer.WriteLine($"D565S565( {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteDiffuseSpecular4(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				writer.WriteLine($"D4444S565( {vertex.Diffuse.Alpha}, {vertex.Diffuse.Red}, {vertex.Diffuse.Green}, {vertex.Diffuse.Blue}, {vertex.Specular.Red}, {vertex.Specular.Green}, {vertex.Specular.Blue} ),");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteIntensity(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				writer.WriteLine($"D16S16( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteSpecular(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				writer.WriteLine($"S888( {ColorToIntensity(vertex.Diffuse)}, {ColorToIntensity(vertex.Specular)} ),");
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteUserattributes(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				if(context.BaseContext.VertexUserAttributesAsColor)
+				{
+					Color color = new()
+					{
+						ARGB = vertex.Attributes
+					};
+
+					writer.WriteLine($"D8888( {color.Alpha}, {color.Red}, {color.Green}, {color.Blue} ),");
+				}
+				else
+				{
+					writer.WriteLine($"\tUFlags( {vertex.Attributes.ToAsciiHex()} ),");
+				}
+
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			static void WriteWeights(AsciiWriter writer, ChunkVertex vertex, ModelAsciiIOContext context)
+			{
+				float weight;
+				string type;
+
+				if(context.UseVersion2Weights)
+				{
+					weight = vertex.Weight2;
+					type = "NFlagsW2";
+				}
+				else
+				{
+					weight = vertex.Weight;
+					type = "NFlagsW";
+				}
+
+				weight *= 100;
+
+				switch(context.BaseContext.WeightFormat)
+				{
+					case AsciiWeightFormat.Force1:
+						type = "NFlagsW";
+						break;
+					case AsciiWeightFormat.Force2:
+						type = "NFlagsW2";
+						break;
+				}
+
+				writer.WriteLine($"\t{type}( {vertex.Index}, {weight.ToAscii()} ),");
+			}
+
+			switch(type)
+			{
+				case VertexChunkType.BlankVec4:
+					return (w, v, c) => WritePosition4(w, v, c);
+
+				case VertexChunkType.NormalVec4:
+					return (w, v, c) =>
+					{
+						WritePosition4(w, v, c);
+						WriteNormal4(w, v, c);
+					};
+
+				case VertexChunkType.Blank:
+					return (w, v, c) => WritePosition(w, v, c);
+
+				case VertexChunkType.Diffuse:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteDiffuse(w, v, c);
+					};
+
+				case VertexChunkType.UserAttributes:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
+
+				case VertexChunkType.Attributes:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteWeights(w, v, c);
+					};
+
+				case VertexChunkType.DiffuseSpecular5:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteDiffuseSpecular5(w, v, c);
+					};
+
+				case VertexChunkType.DiffuseSpecular4:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteDiffuseSpecular4(w, v, c);
+					};
+
+				case VertexChunkType.Intensity:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteIntensity(w, v, c);
+					};
+
+				case VertexChunkType.Normal:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+					};
+
+				case VertexChunkType.NormalDiffuse:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuse(w, v, c);
+					};
+
+				case VertexChunkType.NormalUserAttributes:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
+
+				case VertexChunkType.NormalAttributes:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteWeights(w, v, c);
+					};
+
+				case VertexChunkType.NormalDiffuseSpecular5:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuseSpecular5(w, v, c);
+					};
+
+				case VertexChunkType.NormalDiffuseSpecular4:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteDiffuseSpecular4(w, v, c);
+					};
+
+				case VertexChunkType.NormalIntensity:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteIntensity(w, v, c);
+					};
+
+				case VertexChunkType.Normal32:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
+					};
+
+				case VertexChunkType.Normal32Diffuse:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
+						WriteDiffuse(w, v, c);
+					};
+
+				case VertexChunkType.Normal32UserAttributes:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal32(w, v, c);
+						WriteUserattributes(w, v, c);
+					};
+
+				case VertexChunkType.DiffuseSpecular:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteDiffuse(w, v, c);
+						WriteSpecular(w, v, c);
+					};
+
+				case VertexChunkType.AttributesDiffuse:
+					return (w, v, c) =>
+					{
+						WritePosition(w, v, c);
+						WriteNormal(w, v, c);
+						WriteWeights(w, v, c);
+					};
+
+				case VertexChunkType.Null:
+				case VertexChunkType.End:
+				default:
+					throw new ArgumentException($"Invalid vertex chunk type {type}");
+			}
+		}
+
+
+		private static ushort ColorToIntensity(Color color)
+		{
+			return (ushort)(float.Clamp(color.GetLuminance(), 0, 1) * ushort.MaxValue);
+		}
+
+		private static Vector3 DecompressNormal(uint value)
+		{
+			return new(
+				DecompressNormalComponent((value >> 20) & 0x3FFu),
+				DecompressNormalComponent((value >> 10) & 0x3FFu),
+				DecompressNormalComponent(value & 0x3FFu)
+			);
+		}
+
+		private static float DecompressNormalComponent(uint value)
+		{
+			uint number = ((value & 0x200) << 22) | (value & 0x1FF);
+			int signed = unchecked((int)number);
+			return signed / 512f;
+		}
+
+		private static uint CompressNormal(Vector3 normal)
+		{
+			uint x = CompressNormalComponent(normal.X);
+			uint y = CompressNormalComponent(normal.Y);
+			uint z = CompressNormalComponent(normal.Z);
+
+			return (x << 20) | (y << 10) | z;
+		}
+
+		private static uint CompressNormalComponent(float value)
+		{
+			int number = (int)(float.Clamp(value, -1, 1) * 512);
+			uint result = unchecked((uint)number);
+			return (result >> 22) | (result & 0x1FF);
 		}
 
 

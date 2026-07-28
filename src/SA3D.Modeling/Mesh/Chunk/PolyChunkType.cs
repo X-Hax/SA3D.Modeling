@@ -46,6 +46,11 @@
 		TextureID2 = ChunkTypeExtensions._tiny + 1,
 
 		/// <summary>
+		/// Material; Contains nothing.
+		/// </summary>
+		Material_Empty = ChunkTypeExtensions._material,
+
+		/// <summary>
 		/// Material; Contains diffuse color (ARGB32).
 		/// </summary>
 		Material_Diffuse = ChunkTypeExtensions._material + 1,
@@ -130,12 +135,12 @@
 		/// <summary>
 		/// Volume defined from triangles.
 		/// </summary>
-		Volume_Polygon3 = ChunkTypeExtensions._volume + 0,
+		Volume_Triangle = ChunkTypeExtensions._volume + 0,
 
 		/// <summary>
 		/// Volume defined from quads.
 		/// </summary>
-		Volume_Polygon4 = ChunkTypeExtensions._volume + 1,
+		Volume_Quad = ChunkTypeExtensions._volume + 1,
 
 		/// <summary>
 		/// Volume defined from triangle strips.

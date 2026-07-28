@@ -106,6 +106,16 @@
 		Normal32UserAttributes = ChunkTypeExtensions._vertex + 18,
 
 		/// <summary>
+		/// Contains: Diffuse colors (BGRA8), Specular colors (BGRA8)
+		/// </summary>
+		DiffuseSpecular = ChunkTypeExtensions._vertex + 19,
+
+		/// <summary>
+		/// Contains: System defined attributes, Diffuse colors (BGRA8)
+		/// </summary>
+		AttributesDiffuse = ChunkTypeExtensions._vertex + 20,
+
+		/// <summary>
 		/// End marker chunk.
 		/// </summary>
 		End = 255

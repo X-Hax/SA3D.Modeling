@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace SA3D.Modeling.ObjectData
 {
-	public partial class Node
+	public sealed partial class Node
 	{
 		private Vector3 _position;
 		private Vector3 _eulerRotation;

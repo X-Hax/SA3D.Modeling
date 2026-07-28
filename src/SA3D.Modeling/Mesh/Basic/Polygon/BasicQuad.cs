@@ -1,15 +1,52 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.Ascii;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
-	/// A polygon with four corners.
+	/// A polygon with four indices.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct BasicQuad : IBasicPolygon
 	{
+		private class JsonConverter : JsonConverter<BasicQuad>
+		{
+			/// <inheritdoc/>
+			public override BasicQuad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			{
+				if(reader.TokenType != JsonTokenType.StartArray)
+				{
+					throw new InvalidDataException("Expected an array for BasicQuad!");
+				}
+
+				ushort[] indices = JsonSerializer.Deserialize<ushort[]>(ref reader, options)!;
+
+				if(indices.Length < 4)
+				{
+					throw new InvalidDataException("BasicQuad has too few indices! At least 4 needed!");
+				}
+
+				return new(indices[0], indices[1], indices[2], indices[3]);
+			}
+
+			/// <inheritdoc/>
+			public override void Write(Utf8JsonWriter writer, BasicQuad value, JsonSerializerOptions options)
+			{
+				writer.WriteStartArray();
+				writer.WriteNumberValue(value.Index1);
+				writer.WriteNumberValue(value.Index2);
+				writer.WriteNumberValue(value.Index3);
+				writer.WriteNumberValue(value.Index4);
+				writer.WriteEndArray();
+			}
+		}
+
 		/// <inheritdoc/>
 		public readonly uint Size => 8;
 
@@ -18,22 +55,22 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 
 
 		/// <summary>
-		/// First vertex index.
+		/// First polygon index.
 		/// </summary>
 		public ushort Index1 { get; set; }
 
 		/// <summary>
-		/// Second vertex index.
+		/// Second polygon index.
 		/// </summary>
 		public ushort Index2 { get; set; }
 
 		/// <summary>
-		/// Third vertex index.
+		/// Third polygon index.
 		/// </summary>
 		public ushort Index3 { get; set; }
 
 		/// <summary>
-		/// Fourth vertex index.
+		/// Fourth polygon index.
 		/// </summary>
 		public ushort Index4 { get; set; }
 
@@ -89,32 +126,28 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 
 
 		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer)
+		public void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUShort(Index1);
-			writer.WriteUShort(Index2);
-			writer.WriteUShort(Index3);
-			writer.WriteUShort(Index4);
+			Index1 = reader.ReadUInt16();
+			Index2 = reader.ReadUInt16();
+			Index3 = reader.ReadUInt16();
+			Index4 = reader.ReadUInt16();
 		}
 
-		/// <summary>
-		/// Reads a quad off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">The Reader to read from.</param>
-		/// <param name="address">Address at which the quad is located.</param>
-		/// <returns>The quad that was read.</returns>
-		public static BasicQuad Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			BasicQuad t = new(
-				reader.ReadUShort(address),
-				reader.ReadUShort(address + 2),
-				reader.ReadUShort(address + 4),
-				reader.ReadUShort(address + 6));
-
-			address += 8;
-			return t;
+			writer.WriteUInt16(Index1);
+			writer.WriteUInt16(Index2);
+			writer.WriteUInt16(Index3);
+			writer.WriteUInt16(Index4);
 		}
 
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			writer.WriteLine($"\t{Index1}, {Index2}, {Index3}, {Index3}");
+		}
 
 		/// <inheritdoc/>
 		public readonly IEnumerator<ushort> GetEnumerator()

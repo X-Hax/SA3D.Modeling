@@ -1,14 +1,67 @@
-﻿using SA3D.Common.IO;
-using SA3D.Modeling.Structs;
+﻿using J113D.Json;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
 {
 	/// <summary>
 	/// Triangle string structure for strip chunks.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct ChunkStrip : ICloneable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ChunkStrip>
+		{
+			private const string _reversed = nameof(Reversed);
+			private const string _corners = nameof(Corners);
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _reversed, new(PropertyTokenType.Bool, false) },
+				{ _corners, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _reversed:
+						return reader.GetBoolean();
+					case _corners:
+						return JsonSerializer.Deserialize<ChunkCorner[]>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ChunkStrip Create(ReadOnlyDictionary<string, object?> values)
+			{
+				ChunkCorner[] corners = (ChunkCorner[]?)values[_corners]
+					?? throw new InvalidDataException($"Chunk strip requires \"{_corners}\" property!");
+
+				return new(corners, (bool)values[_reversed]!);
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ChunkStrip value, JsonSerializerOptions options)
+			{
+				if(value.Reversed)
+				{
+					writer.WriteBoolean(_reversed, value.Reversed);
+				}
+
+				writer.WritePropertyName(_corners);
+				JsonSerializer.Serialize(writer, value.Corners, options);
+			}
+		}
+
 		/// <summary>
 		/// Maximum allowed size of a (collection of) strip chunk(s)
 		/// </summary>
@@ -35,171 +88,6 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		{
 			Reversed = reverse;
 			Corners = corners;
-		}
-
-
-		/// <summary>
-		/// Calculates the size of the strip in bytes.
-		/// </summary>
-		/// <param name="texcoordCount">Number of texture coordinate sets in the strip.</param>
-		/// <param name="hasNormal">Whether the strip has normals.</param>
-		/// <param name="hasColor">Whether the strip has colors.</param>
-		/// <param name="triangleAttributeCount">Number of attribute sets for every triangle.</param>
-		/// <returns>The size of the strip in bytes.</returns>
-		public readonly uint Size(int texcoordCount, bool hasNormal, bool hasColor, int triangleAttributeCount)
-		{
-			uint structSize = (uint)(2u
-				+ (texcoordCount * 4u)
-				+ (hasNormal ? 12u : 0u)
-				+ (hasColor ? 4u : 0u));
-
-			return (uint)(
-				2u // strip header
-				+ (Corners.Length * structSize) // individual corners
-				+ ((Corners.Length - 2) * triangleAttributeCount * 2)); // triangle attributes
-		}
-
-		/// <summary>
-		/// Reads a strip off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="texcoordCount">Number of texture coordinate sets in the strip.</param>
-		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1024, instead of 0-256</param>
-		/// <param name="hasNormal">Whether the strip has normals.</param>
-		/// <param name="hasColor">Whether the strip has colors.</param>
-		/// <param name="triangleAttributeCount">Number of attribute sets for every triangle.</param>
-		/// <returns>The strip that was read.</returns>
-		public static ChunkStrip Read(EndianStackReader reader, ref uint address, int texcoordCount, bool hdTexcoord, bool hasNormal, bool hasColor, int triangleAttributeCount)
-		{
-			const float NormalFactor = 1f / short.MaxValue;
-
-			short header = reader.ReadShort(address);
-			bool reverse = header < 0;
-			ChunkCorner[] corners = new ChunkCorner[Math.Abs(header)];
-
-			bool hasUV = texcoordCount > 0;
-			bool hasUV2 = texcoordCount > 1;
-			float uvMultiplier = hdTexcoord ? 1f / 1024f : 1f / 256f;
-
-			bool flag1 = triangleAttributeCount > 0;
-			bool flag2 = triangleAttributeCount > 1;
-			bool flag3 = triangleAttributeCount > 2;
-
-			address += 2;
-
-			for(int i = 0; i < corners.Length; i++)
-			{
-				ChunkCorner c = ChunkCorner.DefaultValues;
-				c.Index = reader.ReadUShort(address);
-
-				address += 2;
-
-				if(hasUV)
-				{
-					c.Texcoord = reader.ReadVector2(ref address, FloatIOType.Short) * uvMultiplier;
-
-					if(hasUV2)
-					{
-						c.Texcoord2 = reader.ReadVector2(ref address, FloatIOType.Short) * uvMultiplier;
-					}
-				}
-
-				if(hasNormal)
-				{
-					c.Normal = reader.ReadVector3(ref address, FloatIOType.Short) * NormalFactor;
-				}
-				else if(hasColor)
-				{
-					c.Color = reader.ReadColor(ref address, ColorIOType.ARGB8_16);
-				}
-
-				if(flag1 && i > 1)
-				{
-					c.Attributes1 = reader.ReadUShort(address);
-					address += 2;
-					if(flag2)
-					{
-						c.Attributes2 = reader.ReadUShort(address);
-						address += 2;
-						if(flag3)
-						{
-							c.Attributes3 = reader.ReadUShort(address);
-							address += 2;
-						}
-					}
-				}
-
-				corners[i] = c;
-			}
-
-			return new ChunkStrip(corners, reverse);
-		}
-
-		/// <summary>
-		/// Writes the strip to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		/// <param name="texcoordCount">Number of texture coordinate sets in the strip.</param>
-		/// <param name="hdTexcoord">Whether the texture coordinate data ranges from 0-1024, instead of 0-256</param>
-		/// <param name="hasNormal">Whether the strip has normals.</param>
-		/// <param name="hasColor">Whether the strip has colors.</param>
-		/// <param name="triangleAttributeCount">Number of attribute sets for every triangle.</param>
-		public readonly void Write(EndianStackWriter writer, int texcoordCount, bool hdTexcoord, bool hasNormal, bool hasColor, int triangleAttributeCount)
-		{
-			if(Corners.Length > short.MaxValue)
-			{
-				throw new InvalidOperationException("Strip has too many corners!");
-			}
-
-			writer.WriteShort(Reversed
-				? (short)-Corners.Length
-				: (short)Corners.Length);
-
-			bool hasUV = texcoordCount > 0;
-			bool hasUV2 = texcoordCount > 1;
-			float uvMultiplier = hdTexcoord ? 1024f : 256f;
-
-			bool flag1 = triangleAttributeCount > 0;
-			bool flag2 = triangleAttributeCount > 1;
-			bool flag3 = triangleAttributeCount > 2;
-
-			for(int i = 0; i < Corners.Length; i++)
-			{
-				ChunkCorner c = Corners[i];
-				writer.WriteUShort(c.Index);
-				if(hasUV)
-				{
-					writer.WriteVector2(c.Texcoord * uvMultiplier, FloatIOType.Short);
-
-					if(hasUV2)
-					{
-						writer.WriteVector2(c.Texcoord2 * uvMultiplier, FloatIOType.Short);
-					}
-				}
-
-				if(hasNormal)
-				{
-					writer.WriteVector3(c.Normal * short.MaxValue, FloatIOType.Short);
-				}
-				else if(hasColor)
-				{
-					writer.WriteColor(c.Color, ColorIOType.ARGB8_16);
-				}
-
-				if(flag1 && i > 1)
-				{
-					writer.WriteUShort(c.Attributes1);
-					if(flag2)
-					{
-						writer.WriteUShort(c.Attributes2);
-						if(flag3)
-						{
-							writer.WriteUShort(c.Attributes3);
-						}
-					}
-				}
-			}
 		}
 
 

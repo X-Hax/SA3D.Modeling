@@ -1,14 +1,205 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Ascii;
 using SA3D.Modeling.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic
 {
 	/// <summary>
 	/// BASIC format material
 	/// </summary>
-	public struct BasicMaterial
+	[JsonConverter(typeof(JsonConverter))]
+	public struct BasicMaterial : IBinarySerializable, IAsciiSerializable
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<BasicMaterial>
+		{
+			private const string _diffuseColor = nameof(DiffuseColor);
+			private const string _specularColor = nameof(SpecularColor);
+			private const string _specularExponent = nameof(SpecularExponent);
+			private const string _textureID = nameof(TextureID);
+			private const string _userAttributes = nameof(UserAttributes);
+			private const string _pickStatus = nameof(PickStatus);
+			private const string _mipmapDistanceMultiplier = nameof(MipmapDistanceMultiplier);
+			private const string _superSample = nameof(SuperSample);
+			private const string _filterMode = nameof(FilterMode);
+			private const string _clampV = nameof(ClampV);
+			private const string _clampU = nameof(ClampU);
+			private const string _mirrorV = nameof(MirrorV);
+			private const string _mirrorU = nameof(MirrorU);
+			private const string _ignoreSpecular = nameof(IgnoreSpecular);
+			private const string _useAlpha = nameof(UseAlpha);
+			private const string _useTexture = nameof(UseTexture);
+			private const string _environmentMap = nameof(EnvironmentMap);
+			private const string _doubleSided = nameof(DoubleSided);
+			private const string _flatShading = nameof(FlatShading);
+			private const string _ignoreLighting = nameof(IgnoreLighting);
+			private const string _destinationAlpha = nameof(DestinationAlpha);
+			private const string _sourceAlpha = nameof(SourceAlpha);
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+		{
+			{ _diffuseColor, new(PropertyTokenType.String, DefaultValues.DiffuseColor ) },
+			{ _specularColor, new(PropertyTokenType.String, DefaultValues.SpecularColor) },
+			{ _specularExponent, new(PropertyTokenType.Number, DefaultValues.SpecularExponent) },
+			{ _textureID, new(PropertyTokenType.Number, DefaultValues.TextureID) },
+			{ _userAttributes, new(PropertyTokenType.Number, DefaultValues.UserAttributes) },
+			{ _pickStatus, new(PropertyTokenType.Bool, DefaultValues.PickStatus) },
+			{ _mipmapDistanceMultiplier, new(PropertyTokenType.Number, DefaultValues.MipmapDistanceMultiplier) },
+			{ _superSample, new(PropertyTokenType.Bool, DefaultValues.SuperSample) },
+			{ _filterMode, new(PropertyTokenType.String, DefaultValues.FilterMode) },
+			{ _clampV, new(PropertyTokenType.Bool, DefaultValues.ClampV) },
+			{ _clampU, new(PropertyTokenType.Bool, DefaultValues.ClampU) },
+			{ _mirrorV, new(PropertyTokenType.Bool, DefaultValues.MirrorV) },
+			{ _mirrorU, new(PropertyTokenType.Bool, DefaultValues.MirrorU) },
+			{ _ignoreSpecular, new(PropertyTokenType.Bool, DefaultValues.IgnoreSpecular) },
+			{ _useAlpha, new(PropertyTokenType.Bool, DefaultValues.UseAlpha) },
+			{ _useTexture, new(PropertyTokenType.Bool, DefaultValues.UseTexture) },
+			{ _environmentMap, new(PropertyTokenType.Bool, DefaultValues.EnvironmentMap) },
+			{ _doubleSided, new(PropertyTokenType.Bool, DefaultValues.DoubleSided) },
+			{ _flatShading, new(PropertyTokenType.Bool, DefaultValues.FlatShading) },
+			{ _ignoreLighting, new(PropertyTokenType.Bool, DefaultValues.IgnoreLighting) },
+			{ _destinationAlpha, new(PropertyTokenType.String, DefaultValues.DestinationAlpha) },
+			{ _sourceAlpha, new(PropertyTokenType.String, DefaultValues.SourceAlpha) },
+		});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				return propertyName switch
+				{
+					_diffuseColor
+					or _specularColor => JsonSerializer.Deserialize<Color>(ref reader, options),
+
+					_textureID => reader.GetUInt32(),
+					_userAttributes => reader.GetByte(),
+
+					_specularExponent
+					or _mipmapDistanceMultiplier => reader.GetSingle(),
+
+					_filterMode => JsonSerializer.Deserialize<FilterMode>(ref reader, options),
+
+					_pickStatus
+					or _superSample
+					or _clampV
+					or _clampU
+					or _mirrorV
+					or _mirrorU
+					or _ignoreSpecular
+					or _useAlpha
+					or _useTexture
+					or _environmentMap
+					or _doubleSided
+					or _flatShading
+					or _ignoreLighting => reader.GetBoolean(),
+
+					_destinationAlpha
+					or _sourceAlpha => JsonSerializer.Deserialize<BlendMode>(ref reader, options),
+					_ => throw new InvalidPropertyException(),
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override BasicMaterial Create(ReadOnlyDictionary<string, object?> values)
+			{
+				return new()
+				{
+					DiffuseColor = (Color)values[_diffuseColor]!,
+					SpecularColor = (Color)values[_specularColor]!,
+					SpecularExponent = (float)values[_specularExponent]!,
+					TextureID = (uint)values[_textureID]!,
+					UserAttributes = (byte)values[_userAttributes]!,
+					PickStatus = (bool)values[_pickStatus]!,
+					MipmapDistanceMultiplier = (float)values[_mipmapDistanceMultiplier]!,
+					SuperSample = (bool)values[_superSample]!,
+					FilterMode = (FilterMode)values[_filterMode]!,
+					ClampV = (bool)values[_clampV]!,
+					ClampU = (bool)values[_clampU]!,
+					MirrorV = (bool)values[_mirrorV]!,
+					MirrorU = (bool)values[_mirrorU]!,
+					IgnoreSpecular = (bool)values[_ignoreSpecular]!,
+					UseAlpha = (bool)values[_useAlpha]!,
+					UseTexture = (bool)values[_useTexture]!,
+					EnvironmentMap = (bool)values[_environmentMap]!,
+					DoubleSided = (bool)values[_doubleSided]!,
+					FlatShading = (bool)values[_flatShading]!,
+					IgnoreLighting = (bool)values[_ignoreLighting]!,
+					DestinationAlpha = (BlendMode)values[_destinationAlpha]!,
+					SourceAlpha = (BlendMode)values[_sourceAlpha]!,
+				};
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, BasicMaterial value, JsonSerializerOptions options)
+			{
+				void serialize<T>(string name, T value, T def) where T : notnull
+				{
+					if(!value.Equals(def))
+					{
+						writer.WritePropertyName(name);
+						JsonSerializer.Serialize<T>(writer, value, options);
+					}
+				}
+
+				void writeBoolean(string name, bool value, bool def)
+				{
+					if(value != def)
+					{
+						writer.WriteBoolean(name, value);
+					}
+				}
+
+				serialize(_diffuseColor, value.DiffuseColor, DefaultValues.DiffuseColor);
+				serialize(_specularColor, value.SpecularColor, DefaultValues.SpecularColor);
+
+				if(value.SpecularExponent != DefaultValues.SpecularExponent)
+				{
+					writer.WriteNumber(_specularExponent, value.SpecularExponent);
+				}
+
+				if(value.TextureID != DefaultValues.TextureID)
+				{
+					writer.WriteNumber(_textureID, value.TextureID);
+				}
+
+				if(value.UserAttributes != DefaultValues.UserAttributes)
+				{
+					writer.WriteNumber(_userAttributes, value.UserAttributes);
+				}
+
+				writeBoolean(_pickStatus, value.PickStatus, DefaultValues.PickStatus);
+
+				if(value.MipmapDistanceMultiplier != DefaultValues.MipmapDistanceMultiplier)
+				{
+					writer.WriteNumber(_mipmapDistanceMultiplier, value.MipmapDistanceMultiplier);
+				}
+
+				writeBoolean(_superSample, value.SuperSample, DefaultValues.SuperSample);
+
+				serialize(_filterMode, value.FilterMode, DefaultValues.FilterMode);
+
+				writeBoolean(_clampV, value.ClampV, DefaultValues.ClampV);
+				writeBoolean(_clampU, value.ClampU, DefaultValues.ClampU);
+				writeBoolean(_mirrorV, value.MirrorV, DefaultValues.MirrorV);
+				writeBoolean(_mirrorU, value.MirrorU, DefaultValues.MirrorU);
+				writeBoolean(_ignoreSpecular, value.IgnoreSpecular, DefaultValues.IgnoreSpecular);
+				writeBoolean(_useAlpha, value.UseAlpha, DefaultValues.UseAlpha);
+				writeBoolean(_useTexture, value.UseTexture, DefaultValues.UseTexture);
+				writeBoolean(_environmentMap, value.EnvironmentMap, DefaultValues.EnvironmentMap);
+				writeBoolean(_doubleSided, value.DoubleSided, DefaultValues.DoubleSided);
+				writeBoolean(_flatShading, value.FlatShading, DefaultValues.FlatShading);
+				writeBoolean(_ignoreLighting, value.IgnoreLighting, DefaultValues.IgnoreLighting);
+
+				serialize(_destinationAlpha, value.DestinationAlpha, DefaultValues.DestinationAlpha);
+				serialize(_sourceAlpha, value.SourceAlpha, DefaultValues.SourceAlpha);
+			}
+		}
+
 		/// <summary>
 		/// Number of bytes the structure occupies.
 		/// </summary>
@@ -46,14 +237,38 @@ namespace SA3D.Modeling.Mesh.Basic
 		public float SpecularExponent { get; set; }
 
 		/// <summary>
-		/// Texture ID.
+		/// Texture attributes (unused) and ID
 		/// </summary>
-		public uint TextureID { get; set; }
+		public uint TextureData { get; set; }
 
 		/// <summary>
 		/// Attributes containing various information.
 		/// </summary>
 		public uint Attributes { get; set; }
+
+
+		#region Texture data
+
+		/// <summary>
+		/// Texture ID.
+		/// </summary>
+		public uint TextureID
+		{
+			readonly get => TextureData & 0x1FFFFFFFu;
+			set => TextureData = (TextureData & ~0x1FFFFFFFu) | (value & 0x1FFFFFFFu);
+		}
+
+		/// <summary>
+		/// Texture attributes (3 bits, unused)
+		/// </summary>
+		public byte TextureAttributes
+		{
+			readonly get => (byte)(TextureData >> 29);
+			set => TextureData = (TextureData & 0x1FFFFFFFu) | ((uint)value << 29);
+		}
+
+		#endregion
+
 
 		#region Attribute Properties
 
@@ -256,56 +471,37 @@ namespace SA3D.Modeling.Mesh.Basic
 
 		#endregion
 
-
-		/// <summary>
-		/// Creates a new basic material from a template.
-		/// </summary>
-		/// <param name="template">The template.</param>
-		public BasicMaterial(BasicMaterial template)
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader)
 		{
-			DiffuseColor = template.DiffuseColor;
-			SpecularColor = template.SpecularColor;
-			SpecularExponent = template.SpecularExponent;
-			TextureID = template.TextureID;
-			Attributes = template.Attributes;
+			DiffuseColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
+			SpecularColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
+			SpecularExponent = reader.ReadSingle();
+			TextureID = reader.ReadUInt32();
+			Attributes = reader.ReadUInt32();
 		}
 
-
-		/// <summary>
-		/// Reads a material from an endian stack reader.
-		/// </summary>
-		/// <param name="reader">The reader to read from.</param>
-		/// <param name="address">Address at which the material is located.</param>
-		/// <returns>The read material.</returns>
-		public static BasicMaterial Read(EndianStackReader reader, uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			Color dif = reader.ReadColor(ref address, ColorIOType.ARGB8_32);
-			Color spec = reader.ReadColor(ref address, ColorIOType.ARGB8_32);
-			float exp = reader.ReadFloat(address);
-			uint texID = reader.ReadUInt(address + 4);
-			uint attribs = reader.ReadUInt(address + 8);
+			writer.WriteObject(DiffuseColor, ColorIOType.ARGB8_32);
+			writer.WriteObject(SpecularColor, ColorIOType.ARGB8_32);
+			writer.WriteSingle(SpecularExponent);
+			writer.WriteUInt32(TextureID);
+			writer.WriteUInt32(Attributes);
+		}
 
-			return new BasicMaterial()
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			using(writer.WriteBlock("MAT"))
 			{
-				DiffuseColor = dif,
-				SpecularColor = spec,
-				SpecularExponent = exp,
-				TextureID = texID,
-				Attributes = attribs
-			};
-		}
-
-		/// <summary>
-		/// Writes the materials structure to an endian stack writer.
-		/// </summary>
-		/// <param name="writer">The writer to write to.</param>
-		public readonly void Write(EndianStackWriter writer)
-		{
-			writer.WriteColor(DiffuseColor, ColorIOType.ARGB8_32);
-			writer.WriteColor(SpecularColor, ColorIOType.ARGB8_32);
-			writer.WriteFloat(SpecularExponent);
-			writer.WriteUInt(TextureID);
-			writer.WriteUInt(Attributes);
+				writer.WritePropertyLine("Diffuse", $"( {DiffuseColor.Alpha}, {DiffuseColor.Red}, {DiffuseColor.Green}, {DiffuseColor.Blue} )");
+				writer.WritePropertyLine("Specular", $"( {SpecularColor.Alpha}, {SpecularColor.Red}, {SpecularColor.Green}, {SpecularColor.Blue} )");
+				writer.WritePropertyLine("Exponent", $"( {SpecularExponent.ToAscii()} )");
+				writer.WritePropertyLine("AttrTexId", $"( {(TextureData & ~0x1FFFFFFFu).ToAsciiHex()}, {TextureID} )");
+				writer.WritePropertyLine("AttrFlags", $"( {Attributes.ToAsciiHex()} )");
+			}
 		}
 
 

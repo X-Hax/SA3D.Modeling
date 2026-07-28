@@ -1,13 +1,97 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Ascii;
+using SA3D.Common.Converters;
+using SA3D.Modeling.ObjectData.Structs;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Chunk.Structs
 {
 	/// <summary>
 	/// Triangle polygon for volume chunks.
 	/// </summary>
+
+	[JsonConverter(typeof(JsonConverter))]
 	public struct ChunkVolumeTriangle : IChunkVolumePolygon
 	{
+		private class JsonConverter : SimpleJsonObjectConverter<ChunkVolumeTriangle>
+		{
+			private const string _indices = "Indices";
+			private const string _attributes = "Attributes";
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _indices, new(PropertyTokenType.Array, null) },
+				{ _attributes, new(PropertyTokenType.Array, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _indices:
+						return JsonSerializer.Deserialize<ushort[]>(ref reader, options);
+					case _attributes:
+						string[] attributes = JsonSerializer.Deserialize<string[]>(ref reader, options)!;
+
+						ushort[] result = new ushort[3];
+						for(int i = 0; i < attributes.Length && i < 3; i++)
+						{
+							result[i] = UInt16HexConverter.ConvertFrom(attributes[i], $"{propertyName}[{i}]");
+						}
+
+						return result;
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override ChunkVolumeTriangle Create(ReadOnlyDictionary<string, object?> values)
+			{
+				ushort[] indices = (ushort[]?)values[_indices]
+					?? throw new InvalidDataException("Chunk volume triangle requires indices!");
+
+				if(indices.Length < 3)
+				{
+					throw new InvalidDataException("Chunk volume triangle requires 3 indices!");
+				}
+
+				ChunkVolumeTriangle result = new(indices[0], indices[1], indices[2]);
+
+				if(values[_attributes] is ushort[] attributes)
+				{
+					result.Attribute1 = attributes[0];
+					result.Attribute2 = attributes[1];
+					result.Attribute3 = attributes[2];
+				}
+
+				return result;
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, ChunkVolumeTriangle value, JsonSerializerOptions options)
+			{
+				writer.WritePropertyName(_indices);
+				JsonSerializer.Serialize(writer, new ushort[] { value.Index1, value.Index2, value.Index3 }, options);
+
+				if(value.Attribute1 != 0 || value.Attribute2 != 0 || value.Attribute3 != 0)
+				{
+					writer.WritePropertyName(_attributes);
+					ushort[] attributes = [value.Attribute1, value.Attribute2, value.Attribute3];
+					JsonSerializer.Serialize(writer, attributes.Select(x => UInt16HexConverter.ConvertTo(x)), options);
+				}
+			}
+		}
+
 		/// <inheritdoc/>
 		public readonly int NumIndices => 3;
 
@@ -108,69 +192,58 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 
 
 		/// <inheritdoc/>
-		public readonly ushort Size(int polygonAttributeCount)
+		public void Read(BinaryObjectReader reader, int polygonAttributeCount)
 		{
-			return (ushort)(6u + (polygonAttributeCount * 2u));
-		}
-
-		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer, int polygonAttributeCount)
-		{
-			writer.WriteUShort(Index1);
-			writer.WriteUShort(Index2);
-			writer.WriteUShort(Index3);
+			Index1 = reader.ReadUInt16();
+			Index2 = reader.ReadUInt16();
+			Index3 = reader.ReadUInt16();
 
 			if(polygonAttributeCount > 0)
 			{
-				writer.WriteUShort(Attribute1);
-				if(polygonAttributeCount > 1)
-				{
-					writer.WriteUShort(Attribute2);
-					if(polygonAttributeCount > 0)
-					{
-						writer.WriteUShort(Attribute3);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Reads a chunk volume triangle off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">Reader to read from.</param>
-		/// <param name="address">Address at which to start reading.</param>
-		/// <param name="polygonAttributeCount">Number of attributes to read for the triangle.</param>
-		/// <returns>The triangle that was read.</returns>
-		public static ChunkVolumeTriangle Read(EndianStackReader reader, ref uint address, int polygonAttributeCount)
-		{
-			ChunkVolumeTriangle result = new(
-				reader.ReadUShort(address),
-				reader.ReadUShort(address + 2),
-				reader.ReadUShort(address + 4));
-
-			address += 6;
-
-			if(polygonAttributeCount > 0)
-			{
-				result.Attribute1 = reader.ReadUShort(address);
-				address += 2;
+				Attribute1 = reader.ReadUInt16();
 
 				if(polygonAttributeCount > 1)
 				{
-					result.Attribute2 = reader.ReadUShort(address);
-					address += 2;
+					Attribute2 = reader.ReadUInt16();
 
 					if(polygonAttributeCount > 2)
 					{
-						result.Attribute3 = reader.ReadUShort(address);
-						address += 2;
+						Attribute3 = reader.ReadUInt16();
 					}
 				}
 			}
-
-			return result;
 		}
 
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer, int polygonAttributeCount)
+		{
+			writer.WriteUInt16(Index1);
+			writer.WriteUInt16(Index2);
+			writer.WriteUInt16(Index3);
+
+			if(polygonAttributeCount > 0)
+			{
+				writer.WriteUInt16(Attribute1);
+
+				if(polygonAttributeCount > 1)
+				{
+					writer.WriteUInt16(Attribute2);
+
+					if(polygonAttributeCount > 0)
+					{
+						writer.WriteUInt16(Attribute3);
+					}
+				}
+			}
+		}
+
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
+		{
+			writer.Write($"\t\t{Index1}, {Index2}, {Index3}, ");
+			writer.WritePolygonUserflags(context.attributeCount, Attribute1, Attribute2, Attribute3, context.context.BaseContext.PolygonAttributesAsColor);
+			writer.WriteLine();
+		}
 
 		readonly object ICloneable.Clone()
 		{

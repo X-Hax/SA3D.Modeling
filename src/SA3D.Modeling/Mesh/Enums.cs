@@ -1,29 +1,24 @@
 ﻿namespace SA3D.Modeling.Mesh
 {
 	/// <summary>
-	/// The different available Attach formats.
+	/// The different available meshdata formats.
 	/// </summary>
-	public enum AttachFormat
+	public enum MeshFormat
 	{
-		/// <summary>
-		/// Buffer format; Exclusive to this library.
-		/// </summary>
-		Buffer,
-
 		/// <summary>
 		/// BASIC format.
 		/// </summary>
-		BASIC,
+		Basic,
 
 		/// <summary>
 		/// CHUNK format.
 		/// </summary>
-		CHUNK,
+		Chunk,
 
 		/// <summary>
 		/// GC format.
 		/// </summary>
-		GC
+		Ginja
 	}
 
 	/// <summary>
@@ -96,13 +91,39 @@
 		Bilinear = 1,
 
 		/// <summary>
-		/// Linearly interpolates between the pixels and mitpmaps.
+		/// Mode A for linearly interpolating between mipmap levels
 		/// </summary>
-		Trilinear = 2,
+		TrilinearA = 2,
 
 		/// <summary>
-		/// Mix between bilinear and trilinear (?).
+		/// Mode B for linearly interpolating between mipmap levels
 		/// </summary>
-		Blend = 3,
+		TrilinearB = 3,
+	}
+
+	/// <summary>
+	/// Stripchunk alpha modes
+	/// </summary>
+	public enum AlphaMode
+	{
+		/// <summary>
+		/// No transparency
+		/// </summary>
+		Opaque,
+
+		/// <summary>
+		/// Transparency. Alpha clip mode is sourced from texture
+		/// </summary>
+		Transparent,
+
+		/// <summary>
+		/// Transparency. Forces alpha clipping off (Renderfix only)
+		/// </summary>
+		TransparentForceAlphaClipOff,
+
+		/// <summary>
+		/// Transparency. Forces alpha clipping on (SA2B &amp; Renderfix only)
+		/// </summary>
+		TransparentForceAlphaClipOn
 	}
 }

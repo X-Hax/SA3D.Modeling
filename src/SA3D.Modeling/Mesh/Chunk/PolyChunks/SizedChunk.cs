@@ -1,4 +1,6 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.Ascii;
+using SA3D.Modeling.ObjectData.Structs;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {
@@ -13,7 +15,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public abstract ushort Size { get; }
 
 		/// <inheritdoc/>
-		public sealed override uint ByteSize => (Size * 2u) + 4u;
+		protected override bool AlignWithFour => true;
 
 		/// <summary>
 		/// Base constructor for sized chunks.
@@ -22,9 +24,24 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public SizedChunk(PolyChunkType type) : base(type) { }
 
 		/// <inheritdoc/>
-		protected override void InternalWrite(EndianStackWriter writer)
+		public override void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUShort(Size);
+			base.Read(reader);
+			reader.Skip(sizeof(ushort));
+		}
+
+		/// <inheritdoc/>
+		public override void Write(BinaryObjectWriter writer)
+		{
+			base.Write(writer);
+			writer.WriteUInt16(Size);
+		}
+
+		/// <inheritdoc/>
+		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		{
+			base.Write(writer, context);
+			writer.Write($" {Size},");
 		}
 	}
 }

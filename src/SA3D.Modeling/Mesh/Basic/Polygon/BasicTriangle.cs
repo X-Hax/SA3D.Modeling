@@ -1,15 +1,51 @@
-﻿using SA3D.Common.IO;
+﻿using Amicitia.IO.Binary;
+using SA3D.Common.Ascii;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SA3D.Modeling.Mesh.Basic.Polygon
 {
 	/// <summary>
-	/// A polygon with three corners.
+	/// A polygon with three index.
 	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
 	public struct BasicTriangle : IBasicPolygon
 	{
+		private class JsonConverter : JsonConverter<BasicTriangle>
+		{
+			/// <inheritdoc/>
+			public override BasicTriangle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			{
+				if(reader.TokenType != JsonTokenType.StartArray)
+				{
+					throw new InvalidDataException("Expected an array for BasicTriangle!");
+				}
+
+				ushort[] indices = JsonSerializer.Deserialize<ushort[]>(ref reader, options)!;
+
+				if(indices.Length < 3)
+				{
+					throw new InvalidDataException("BasicTriangle has too few indices! At least 3 needed!");
+				}
+
+				return new(indices[0], indices[1], indices[2]);
+			}
+
+			/// <inheritdoc/>
+			public override void Write(Utf8JsonWriter writer, BasicTriangle value, JsonSerializerOptions options)
+			{
+				writer.WriteStartArray();
+				writer.WriteNumberValue(value.Index1);
+				writer.WriteNumberValue(value.Index2);
+				writer.WriteNumberValue(value.Index3);
+				writer.WriteEndArray();
+			}
+		}
+
 		/// <inheritdoc/>
 		public readonly uint Size => 6;
 
@@ -77,28 +113,25 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 
 
 		/// <inheritdoc/>
-		public readonly void Write(EndianStackWriter writer)
+		public void Read(BinaryObjectReader reader)
 		{
-			writer.WriteUShort(Index1);
-			writer.WriteUShort(Index2);
-			writer.WriteUShort(Index3);
+			Index1 = reader.ReadUInt16();
+			Index2 = reader.ReadUInt16();
+			Index3 = reader.ReadUInt16();
 		}
 
-		/// <summary>
-		/// Reads a quad off an endian stack reader. Advances the address by the number of bytes read.
-		/// </summary>
-		/// <param name="reader">The Reader to read from.</param>
-		/// <param name="address">Address at which the quad is located.</param>
-		/// <returns>The quad that was read.</returns>
-		public static BasicTriangle Read(EndianStackReader reader, ref uint address)
+		/// <inheritdoc/>
+		public readonly void Write(BinaryObjectWriter writer)
 		{
-			BasicTriangle t = new(
-				reader.ReadUShort(address),
-				reader.ReadUShort(address + 2),
-				reader.ReadUShort(address + 4));
+			writer.WriteUInt16(Index1);
+			writer.WriteUInt16(Index2);
+			writer.WriteUInt16(Index3);
+		}
 
-			address += 6;
-			return t;
+		/// <inheritdoc/>
+		public readonly void Write(AsciiWriter writer)
+		{
+			writer.WriteLine($"\t{Index1}, {Index2}, {Index3},");
 		}
 
 
@@ -126,6 +159,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		{
 			return $"Triangle: [{Index1}, {Index2}, {Index3}]";
 		}
+
 
 	}
 }

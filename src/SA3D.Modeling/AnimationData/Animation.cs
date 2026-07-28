@@ -1,0 +1,306 @@
+﻿using Amicitia.IO.Binary;
+using J113D.Json;
+using SA3D.Common.Ascii;
+using SA3D.Common.IO;
+using SA3D.Common.Lookup;
+using SA3D.Modeling.Structs;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static SA3D.Common.StringExtensions;
+
+namespace SA3D.Modeling.AnimationData
+{
+	/// <summary>
+	/// Animation data for various targets.
+	/// </summary>
+	[JsonConverter(typeof(JsonConverter))]
+	public sealed class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
+	{
+		private class JsonConverter : SimpleJsonObjectConverter<Animation>
+		{
+			private const string _label = nameof(Label);
+			private const string _interpolationMode = nameof(InterpolationMode);
+			private const string _shortRotations = nameof(ShortRotations);
+			private const string _keyframeSets = nameof(KeyframeSets);
+			private const string _manualKeyframeTypes = nameof(ManualKeyframeTypes);
+
+
+			/// <inheritdoc/>
+			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
+			{
+				{ _label, new(PropertyTokenType.String, string.Empty) },
+				{ _interpolationMode, new(PropertyTokenType.String, InterpolationMode.Linear) },
+				{ _shortRotations, new(PropertyTokenType.Bool, false) },
+				{ _manualKeyframeTypes, new(PropertyTokenType.String | PropertyTokenType.Number, default(KeyframeAttributes)) },
+				{ _keyframeSets, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
+			});
+
+			/// <inheritdoc/>
+			protected override object? ReadValue(ref Utf8JsonReader reader, string propertyName, ReadOnlyDictionary<string, object?> values, JsonSerializerOptions options)
+			{
+				switch(propertyName)
+				{
+					case _label:
+						return reader.GetString();
+					case _interpolationMode:
+						return JsonSerializer.Deserialize<InterpolationMode>(ref reader, options);
+					case _shortRotations:
+						return reader.GetBoolean();
+					case _manualKeyframeTypes:
+						return JsonSerializer.Deserialize<KeyframeAttributes>(ref reader, options);
+					case _keyframeSets:
+						return JsonSerializer.Deserialize<LabeledArray<KeyframeSet>>(ref reader, options);
+					default:
+						throw new InvalidPropertyException();
+				}
+			}
+
+			/// <inheritdoc/>
+			protected override Animation Create(ReadOnlyDictionary<string, object?> values)
+			{
+				LabeledArray<KeyframeSet> keyframeSets = (LabeledArray<KeyframeSet>?)values[_keyframeSets]
+					?? throw new InvalidDataException($"Animation requires property \"{_keyframeSets}\"!");
+
+				Animation result = new()
+				{
+					Label = (string)values[_label]!,
+					InterpolationMode = (InterpolationMode)values[_interpolationMode]!,
+					ShortRotations = (bool)values[_shortRotations]!,
+					ManualKeyframeTypes = (KeyframeAttributes)values[_manualKeyframeTypes]!,
+					KeyframeSets = keyframeSets,
+				};
+
+				return result;
+			}
+
+			/// <inheritdoc/>
+			protected override void WriteValues(Utf8JsonWriter writer, Animation value, JsonSerializerOptions options)
+			{
+				writer.WriteString(_label, value.Label);
+
+				if(value.InterpolationMode != InterpolationMode.Linear)
+				{
+					writer.WritePropertyName(_interpolationMode);
+					JsonSerializer.Serialize(writer, value.InterpolationMode, options);
+				}
+
+				if(value.ShortRotations)
+				{
+					writer.WriteBoolean(_shortRotations, value.ShortRotations);
+				}
+
+				if(value.ManualKeyframeTypes != default)
+				{
+					writer.WritePropertyName(_manualKeyframeTypes);
+					JsonSerializer.Serialize(writer, value.ManualKeyframeTypes, options);
+				}
+
+				writer.WritePropertyName(_keyframeSets);
+				JsonSerializer.Serialize(writer, value.KeyframeSets, options);
+			}
+		}
+
+
+		/// <summary>
+		/// Label prefix for <see cref="KeyframeSets"/>
+		/// </summary>
+		public const string KeyframeSetLabelPrefix = "keyframes_";
+
+		/// <inheritdoc/>
+		public string LabelPrefix => "animation_";
+
+		/// <inheritdoc/>
+		public string Label { get; set; }
+
+		/// <summary>
+		/// Intepolation mode between keyframes.
+		/// </summary>
+		public InterpolationMode InterpolationMode { get; set; }
+
+		/// <summary>
+		/// Whether to use 16-bit for euler rotation BAMS values.
+		/// </summary>
+		public bool ShortRotations { get; set; }
+
+		/// <summary>
+		/// Animation keyframe sets. The index of a keyframe set corresponds to the index of the node it belongs to
+		/// </summary>
+		public LabeledArray<KeyframeSet> KeyframeSets { get; set; }
+
+		/// <summary>
+		/// Types of keyframe stored in this animation.
+		/// </summary>
+		public KeyframeAttributes KeyframeTypes
+		{
+			get
+			{
+				KeyframeAttributes type = ManualKeyframeTypes;
+				foreach(KeyframeSet kf in KeyframeSets)
+				{
+					type |= kf.Type;
+				}
+
+				return type;
+			}
+		}
+
+		/// <summary>
+		/// Manually enforced keyframe types.
+		/// </summary>
+		public KeyframeAttributes ManualKeyframeTypes { get; set; }
+
+
+		/// <summary>
+		/// Whether the motion transforms nodes.
+		/// </summary>
+		public bool IsNodeAnimation
+			=> !IsShapeAnimation && !IsCameraAnimation && !IsLightAnimation;
+
+		/// <summary>
+		/// Whether the motion alters vertex positions and/or normals of meshes.
+		/// </summary>
+		public bool IsShapeAnimation
+			=> HasAnyAttributes(KeyframeAttributes.Vertex | KeyframeAttributes.Normal);
+
+		/// <summary>
+		/// Whether the motion transforms a camera. 
+		/// </summary>
+		public bool IsCameraAnimation
+			=> HasAnyAttributes(KeyframeAttributes.Angle | KeyframeAttributes.Roll | KeyframeAttributes.Target);
+
+		/// <summary>
+		/// Whether the motion targets lights
+		/// </summary>
+		public bool IsLightAnimation
+			=> HasAnyAttributes(KeyframeAttributes.Intensity | KeyframeAttributes.LightColor | KeyframeAttributes.Vector | KeyframeAttributes.Spot);
+
+
+		/// <summary>
+		/// Creates a new empty motion.
+		/// </summary>
+		public Animation()
+		{
+			string identifier = GenerateIdentifier();
+			Label = LabelPrefix + identifier;
+			KeyframeSets = new(KeyframeSetLabelPrefix + identifier, 0);
+		}
+
+
+		private bool HasAnyAttributes(KeyframeAttributes attributes)
+		{
+			return (KeyframeTypes & attributes) != 0;
+		}
+
+		/// <summary>
+		/// Returns the number of frames in this motion.
+		/// </summary>
+		/// <returns></returns>
+		public uint GetFrameCount()
+		{
+			if(KeyframeSets.Length == 0)
+			{
+				return 0;
+			}
+
+			return KeyframeSets.Max(x => x.KeyframeCount);
+		}
+
+		/// <inheritdoc/>
+		public void Read(BinaryObjectReader reader, AnimationIOContext context)
+		{
+			ShortRotations = context.FileContext.ShortRotations;
+
+			long keyframeOffset = reader.ReadOffsetValue();
+
+			int framecount = reader.ReadInt32();
+			ManualKeyframeTypes = (KeyframeAttributes)reader.ReadUInt16();
+			ushort attributes = reader.ReadUInt16();
+			InterpolationMode = (InterpolationMode)((attributes >> 6) & 0x3);
+
+			context.KeyframeType = ManualKeyframeTypes;
+
+			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
+				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
+		}
+
+		/// <inheritdoc/>
+		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
+		{
+			context.KeyframeType = KeyframeTypes;
+
+			if(context.KeyframeType == default)
+			{
+				// just to have some valid pointer here, as i think that is necessary(?)
+				writer.WriteOffsetValue(writer.GetPositionOffset() + (sizeof(uint) * 2));
+			}
+			else
+			{
+				writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.PointerLUT);
+			}
+
+			int channels = context.KeyframeType.ChannelCount();
+			writer.WriteUInt32(GetFrameCount());
+			writer.WriteUInt16((ushort)context.KeyframeType);
+			writer.WriteUInt16((ushort)((channels & 0xF) | ((int)InterpolationMode << 6)));
+		}
+
+		/// <inheritdoc/>
+		public void Write(AsciiWriter writer, AsciiIOContext context)
+		{
+			string prefix = string.Empty;
+			string type = string.Empty;
+
+			if(IsLightAnimation)
+			{
+				prefix = "L";
+				type = "LIGHT_";
+			}
+			else if(IsCameraAnimation)
+			{
+				prefix = "C";
+				type = "CAMERA_";
+			}
+			else if(IsShapeAnimation)
+			{
+				type = "SHAPE_";
+			}
+
+			using(writer.WriteObjectBlock(type + "MOTION"))
+			{
+				foreach(KeyframeSet set in KeyframeSets)
+				{
+					set.WriteKeyframes(writer, prefix);
+				}
+
+				AnimationAsciiIOContext animationContext = new()
+				{
+					BaseContext = context,
+					KeyframeType = KeyframeTypes
+				};
+
+				int channels = animationContext.KeyframeType.ChannelCount();
+
+				writer.WriteArray("MDATA" + channels, KeyframeSets, animationContext, 0);
+
+				using(writer.WriteStructBlock("MOTION", this))
+				{
+					writer.WriteObjectPropertyLine("MdataArray", KeyframeSets);
+					writer.WritePropertyLine("MFrameNum", GetFrameCount().ToString());
+					writer.WritePropertyLine("MotionBitF", $"({animationContext.KeyframeType.ToAscii(AsciiMaps.KeyframeAttributesMap)})");
+					writer.WritePropertyLine("InterpolFctF", $"({InterpolationMode.ToAscii(AsciiMaps.InterpolationModeMap)}|FMD_{channels})");
+				}
+			}
+
+		}
+
+		/// <inheritdoc/>
+		public override string ToString()
+		{
+			return $"{Label} - {KeyframeSets.Length}";
+		}
+	}
+}
