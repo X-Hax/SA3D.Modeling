@@ -15,13 +15,13 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         submodules: 'recursive'
 
     - name: "Setup Library SDKs & Components"
-      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@net8_fix
+      uses: X-Hax/SA3D.ProjectConfigurations/.github/actions/setup-sdks-components@main
 
     - name: Build
       run: dotnet build -c Release ./src
