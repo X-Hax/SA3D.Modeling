@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata container containing the actions name
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ActionNameMetaDataBlock : StringMetaDataBlock
+	public sealed class ActionNameMetaDataBlock : StringMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<ActionNameMetaDataBlock>
 		{

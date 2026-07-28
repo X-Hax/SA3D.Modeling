@@ -13,7 +13,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing unknown data
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class UnknownMetaDataBlock : MetaDataBlock
+	public sealed class UnknownMetaDataBlock : MetaDataBlock
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<MetaDataBlockType, UnknownMetaDataBlock, MetaDataBlock>
 		{

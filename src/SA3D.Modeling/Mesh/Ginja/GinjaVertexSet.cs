@@ -22,7 +22,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 	/// A vertex data set, which can hold various types of data
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class GinjaVertexSet : ICloneable, IBinarySerializable<IOContext>
+	public sealed class GinjaVertexSet : ICloneable, IBinarySerializable<IOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<GinjaVertexSet>
 		{

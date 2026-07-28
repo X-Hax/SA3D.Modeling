@@ -3,7 +3,7 @@ using SA3D.Modeling.Structs;
 using SA3D.Modeling.Mesh;
 using System.Linq;
 
-namespace SA3D.Modeling.ObjectData
+namespace SA3D.Modeling.ObjectData.Structs
 {
 	/// <summary>
 	/// Ascii context for when serializing a model

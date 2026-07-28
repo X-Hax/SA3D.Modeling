@@ -4,7 +4,7 @@ using SA3D.Common;
 using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Chunk holding polygon data for rendering.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class StripChunk : SizedChunk
+	public sealed class StripChunk : SizedChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, StripChunk, PolyChunk>
 		{

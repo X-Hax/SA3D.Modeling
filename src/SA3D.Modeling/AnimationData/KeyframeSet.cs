@@ -20,7 +20,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Keyframe storage for an animation.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class KeyframeSet : IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AnimationAsciiIOContext>
+	public sealed class KeyframeSet : IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AnimationAsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<KeyframeSet>
 		{

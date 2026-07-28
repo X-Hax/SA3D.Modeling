@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Sets the specular exponent of the following strip chunks
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class SpecularExponentChunk : BitsChunk
+	public sealed class SpecularExponentChunk : BitsChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, SpecularExponentChunk, PolyChunk>
 		{

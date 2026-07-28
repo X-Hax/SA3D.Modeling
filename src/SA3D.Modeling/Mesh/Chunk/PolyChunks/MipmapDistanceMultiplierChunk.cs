@@ -11,7 +11,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Adjusts the mipmap distance of the following strip chunks
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class MipmapDistanceMultiplierChunk : BitsChunk
+	public sealed class MipmapDistanceMultiplierChunk : BitsChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, MipmapDistanceMultiplierChunk, PolyChunk>
 		{

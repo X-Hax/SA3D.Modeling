@@ -19,7 +19,7 @@ namespace SA3D.Modeling.TexName
 	/// Stores a texture name list.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class TextureNameList : ILabel, IBinarySerializable<BaseLUT>, IAsciiSerializable
+	public sealed class TextureNameList : ILabel, IBinarySerializable<BaseLUT>, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<TextureNameList>
 		{

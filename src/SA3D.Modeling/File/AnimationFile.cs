@@ -23,7 +23,7 @@ namespace SA3D.Modeling.File
 	/// Animation file contents.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class AnimationFile : IFileSerializable<AnimationFileIOContext>, IAsciiSerializable<AsciiIOContext>
+	public sealed class AnimationFile : IFileSerializable<AnimationFileIOContext>, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<AnimationFile>
 		{

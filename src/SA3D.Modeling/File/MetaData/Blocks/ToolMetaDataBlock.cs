@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing the tool with which the file was created
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ToolMetaDataBlock : StringMetaDataBlock
+	public sealed class ToolMetaDataBlock : StringMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<ToolMetaDataBlock>
 		{

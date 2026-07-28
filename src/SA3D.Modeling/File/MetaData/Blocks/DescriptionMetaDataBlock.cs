@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing file description
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class DescriptionMetaDataBlock : StringMetaDataBlock
+	public sealed class DescriptionMetaDataBlock : StringMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<DescriptionMetaDataBlock>
 		{

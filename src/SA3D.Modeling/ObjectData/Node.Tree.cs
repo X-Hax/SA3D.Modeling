@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SA3D.Modeling.ObjectData
 {
-	public partial class Node
+	public sealed partial class Node
 	{
 		/// <summary>
 		/// Direct child of the node.

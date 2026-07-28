@@ -2,7 +2,7 @@
 using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.Ascii;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Contains texture information.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class TextureChunk : PolyChunk
+	public sealed class TextureChunk : PolyChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, TextureChunk, PolyChunk>
 		{

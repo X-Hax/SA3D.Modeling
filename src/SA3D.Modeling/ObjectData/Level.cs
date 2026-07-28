@@ -21,7 +21,7 @@ namespace SA3D.Modeling.ObjectData
 	/// Stage geometry information
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class Level : ILabel, IBinarySerializable<IOContext>
+	public sealed class Level : ILabel, IBinarySerializable<IOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<Level>
 		{

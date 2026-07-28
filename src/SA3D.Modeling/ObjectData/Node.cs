@@ -7,6 +7,7 @@ using SA3D.Modeling.Mesh.Basic;
 using SA3D.Modeling.Mesh.Chunk;
 using SA3D.Modeling.Mesh.Ginja;
 using SA3D.Modeling.ObjectData.Enums;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace SA3D.Modeling.ObjectData
 	/// <summary>
 	/// Hierarchy object making up models.
 	/// </summary>
-	public partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
+	public sealed partial class Node : ILabel, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		/// <inheritdoc/>
 		public string Label { get; set; }

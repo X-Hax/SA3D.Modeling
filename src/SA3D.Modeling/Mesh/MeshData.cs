@@ -2,7 +2,7 @@
 using J113D.Json;
 using SA3D.Common.Ascii;
 using SA3D.Common.Lookup;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;

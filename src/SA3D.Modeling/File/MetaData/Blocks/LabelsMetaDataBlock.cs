@@ -15,7 +15,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing structure labels
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class LabelsMetaDataBlock : MetaDataBlock
+	public sealed class LabelsMetaDataBlock : MetaDataBlock
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<MetaDataBlockType, LabelsMetaDataBlock, MetaDataBlock>
 		{

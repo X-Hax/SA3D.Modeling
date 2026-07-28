@@ -1,6 +1,6 @@
 ﻿using Amicitia.IO.Binary;
 using SA3D.Common.Ascii;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 
 namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 {

@@ -23,7 +23,7 @@ namespace SA3D.Modeling.Mesh.Basic
 	/// BASIC format mesh structure for holding polygon information.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class BasicMeshSet : ICloneable, IBinarySerializable<IOContext>, IAsciiSerializable
+	public sealed class BasicMeshSet : ICloneable, IBinarySerializable<IOContext>, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<BasicMeshSet>
 		{

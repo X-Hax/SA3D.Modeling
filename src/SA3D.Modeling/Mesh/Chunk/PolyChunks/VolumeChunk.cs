@@ -5,7 +5,7 @@ using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Modeling.Mesh.Chunk.Structs;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +21,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Chunk containing a volume build from polygons.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class VolumeChunk : SizedChunk
+	public sealed class VolumeChunk : SizedChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, VolumeChunk, PolyChunk>
 		{

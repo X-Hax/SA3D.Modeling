@@ -6,7 +6,7 @@ namespace SA3D.Modeling.ObjectData.Events
 	/// <summary>
 	/// Arguments for the <see cref="MeshDataUpdatedEventHandler"/>.
 	/// </summary>
-	public class MeshDataUpdatedEventArgs : EventArgs
+	public sealed class MeshDataUpdatedEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Meshdata before changing.

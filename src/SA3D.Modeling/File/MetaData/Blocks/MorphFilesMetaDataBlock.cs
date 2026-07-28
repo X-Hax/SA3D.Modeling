@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing file paths to morph animations associated with this file
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class MorphFilesMetaDataBlock : StringListMetaDataBlock
+	public sealed class MorphFilesMetaDataBlock : StringListMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<MorphFilesMetaDataBlock>
 		{

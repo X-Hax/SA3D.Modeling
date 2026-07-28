@@ -20,7 +20,7 @@ namespace SA3D.Modeling.File
 	/// Level geometry file contents.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class LevelFile : IFileSerializable
+	public sealed class LevelFile : IFileSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<LevelFile>
 		{

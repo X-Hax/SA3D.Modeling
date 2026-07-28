@@ -6,6 +6,7 @@ using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Mesh.Ginja.Parameters;
+using SA3D.Modeling.Mesh.Ginja.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,7 +21,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 	/// A single mesh, with its own parameter and primitive data <br/>
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class GinjaMeshSet : ICloneable, IBinarySerializable<GinjaIOContext>
+	public sealed class GinjaMeshSet : ICloneable, IBinarySerializable<GinjaIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<GinjaMeshSet>
 		{

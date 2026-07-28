@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing the file authors name
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class AuthorMetaDataBlock : StringMetaDataBlock
+	public sealed class AuthorMetaDataBlock : StringMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<AuthorMetaDataBlock>
 		{

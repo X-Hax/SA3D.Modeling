@@ -1,12 +1,12 @@
 ﻿using SA3D.Modeling.Mesh.Ginja.Enums;
 using SA3D.Modeling.Structs;
 
-namespace SA3D.Modeling.Mesh.Ginja
+namespace SA3D.Modeling.Mesh.Ginja.Structs
 {
 	/// <summary>
 	/// Ginja specific context
 	/// </summary>
-	public class GinjaIOContext
+	public sealed class GinjaIOContext
 	{
 		/// <summary>
 		/// Base context

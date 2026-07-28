@@ -16,7 +16,7 @@ namespace SA3D.Modeling.AnimationData
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	[JsonConverter(typeof(KeyframeArrayJsonConverterFactory))]
-	public class KeyframeArray<T> : SortedDictionary<uint, T>, ILabel
+	public sealed class KeyframeArray<T> : SortedDictionary<uint, T>, ILabel
 	{
 		private const string _labelPrefix = "keyframes_";
 

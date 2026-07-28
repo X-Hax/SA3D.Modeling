@@ -14,7 +14,7 @@ namespace SA3D.Modeling.TexName
 	/// Stores a texture name and its attributes
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class TextureName : IBinarySerializable, IAsciiSerializable
+	public sealed class TextureName : IBinarySerializable, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<TextureName>
 		{

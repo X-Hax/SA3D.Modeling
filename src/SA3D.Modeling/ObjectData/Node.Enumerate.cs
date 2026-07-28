@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SA3D.Modeling.ObjectData
 {
-	public partial class Node : IEnumerable<Node>
+	public sealed partial class Node : IEnumerable<Node>
 	{
 		#region Base
 

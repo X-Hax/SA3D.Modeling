@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing the object name
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ObjectNameMetaDataBlock : StringMetaDataBlock
+	public sealed class ObjectNameMetaDataBlock : StringMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<ObjectNameMetaDataBlock>
 		{

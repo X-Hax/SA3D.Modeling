@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace SA3D.Modeling.ObjectData
 {
-	public partial class Node
+	public sealed partial class Node
 	{
 		/// <summary>
 		/// Various additional info for the node.

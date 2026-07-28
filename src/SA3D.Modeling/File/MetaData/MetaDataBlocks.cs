@@ -18,7 +18,7 @@ namespace SA3D.Modeling.File.MetaData
 	/// Metadata block container
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class MetaDataBlocks : IBinarySerializable<MetaDataIOContext>
+	public sealed class MetaDataBlocks : IBinarySerializable<MetaDataIOContext>
 	{
 		private class JsonConverter : JsonConverter<MetaDataBlocks>
 		{

@@ -7,7 +7,7 @@ using SA3D.Common.Converters;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.Structs;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Set of vertex data of a chunk model
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
+	public sealed class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<VertexChunk>
 		{

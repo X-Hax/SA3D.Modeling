@@ -14,7 +14,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing vertex welding information
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class WeightsMetaDataBlock : MetaDataBlock
+	public sealed class WeightsMetaDataBlock : MetaDataBlock
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<MetaDataBlockType, WeightsMetaDataBlock, MetaDataBlock>
 		{

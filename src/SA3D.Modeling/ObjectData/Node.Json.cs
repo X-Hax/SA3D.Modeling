@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace SA3D.Modeling.ObjectData
 {
 	[JsonConverter(typeof(JsonConverter))]
-	public partial class Node
+	public sealed partial class Node
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<Node>
 		{

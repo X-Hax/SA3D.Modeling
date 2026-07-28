@@ -34,7 +34,7 @@ namespace SA3D.Modeling.File
 	/// Node model with meshdata.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ModelFile : IFileSerializable, IAsciiSerializable<AsciiIOContext>
+	public sealed class ModelFile : IFileSerializable, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<ModelFile>
 		{

@@ -16,7 +16,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Level geometry animation (only used in sa1)
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class LevelModelAnimation : IBinarySerializable<IOContext>
+	public sealed class LevelModelAnimation : IBinarySerializable<IOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<LevelModelAnimation>
 		{

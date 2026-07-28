@@ -6,7 +6,7 @@ namespace SA3D.Modeling.File.MetaData.Blocks
 	/// Metadata block containing file paths to animations associated with this file
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class AnimationFilesMetaDataBlock : StringListMetaDataBlock
+	public sealed class AnimationFilesMetaDataBlock : StringListMetaDataBlock
 	{
 		internal class JsonConverter : Base2JsonConverter<AnimationFilesMetaDataBlock>
 		{

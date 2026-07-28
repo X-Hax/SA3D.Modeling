@@ -2,7 +2,7 @@
 using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.Ascii;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Material information for the following strip chunks
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class MaterialChunk : SizedChunk
+	public sealed class MaterialChunk : SizedChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, MaterialChunk, PolyChunk>
 		{

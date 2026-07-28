@@ -10,7 +10,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Draws the polygon chunks cached by a specific index.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class DrawListChunk : BitsChunk
+	public sealed class DrawListChunk : BitsChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, DrawListChunk, PolyChunk>
 		{

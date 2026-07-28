@@ -12,7 +12,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Sets the blendmode of the following strip chunks.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class BlendAlphaChunk : BitsChunk
+	public sealed class BlendAlphaChunk : BitsChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, BlendAlphaChunk, PolyChunk>
 		{

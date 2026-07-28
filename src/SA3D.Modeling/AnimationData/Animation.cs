@@ -18,7 +18,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Animation data for various targets.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
+	public sealed class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<Animation>
 		{

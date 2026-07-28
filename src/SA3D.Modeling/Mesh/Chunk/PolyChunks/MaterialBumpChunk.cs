@@ -3,7 +3,7 @@
 using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common.Ascii;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Polychunk with unknown usage.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class MaterialBumpChunk : SizedChunk
+	public sealed class MaterialBumpChunk : SizedChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, MaterialBumpChunk, PolyChunk>
 		{

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SA3D.Modeling.Mesh.Ginja
+namespace SA3D.Modeling.Mesh.Ginja.Structs
 {
 	/// <summary>
 	/// A single corner of a polygon, called loop

@@ -17,7 +17,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Pairs a node and motion together.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class ModelAnimation : ILabel, IBinarySerializable<IOContext>
+	public sealed class ModelAnimation : ILabel, IBinarySerializable<IOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<ModelAnimation>
 		{

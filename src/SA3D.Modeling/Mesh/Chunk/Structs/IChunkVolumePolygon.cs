@@ -1,7 +1,7 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common.Ascii;
-using SA3D.Modeling.ObjectData;
+using SA3D.Modeling.ObjectData.Structs;
 using System;
 using System.Text.Json.Serialization;
 

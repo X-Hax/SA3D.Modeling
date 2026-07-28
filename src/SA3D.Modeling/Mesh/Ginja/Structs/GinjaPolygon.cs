@@ -10,7 +10,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SA3D.Modeling.Mesh.Ginja
+namespace SA3D.Modeling.Mesh.Ginja.Structs
 {
 	/// <summary>
 	/// A collection of corners forming polygons

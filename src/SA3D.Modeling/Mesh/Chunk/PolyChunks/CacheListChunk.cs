@@ -10,7 +10,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	/// Caches the succeeding polygon chunks of the same attach into specified index.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public class CacheListChunk : BitsChunk
+	public sealed class CacheListChunk : BitsChunk
 	{
 		internal class JsonConverter : ChildJsonObjectConverter<PolyChunkType, CacheListChunk, PolyChunk>
 		{
