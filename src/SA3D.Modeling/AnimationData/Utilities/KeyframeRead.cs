@@ -108,7 +108,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			return result;
 		}
 
-		public static KeyframeArray<LabeledArray<Vector3>> ReadVector3ArraySet(this BinaryObjectReader reader, int count, string labelPrefix, PointerLUT lut)
+		public static KeyframeArray<LabeledArray<Vector3>> ReadVector3ArraySet(this BinaryObjectReader reader, int count, string labelPrefix, ModelOffsetLUT lut)
 		{
 			KeyframeArray<LabeledArray<Vector3>> result = [];
 

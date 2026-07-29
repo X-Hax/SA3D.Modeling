@@ -415,7 +415,7 @@ namespace SA3D.Modeling.AnimationData
 
 			int[] keyframeCounts = reader.ReadArray<int>(channelCount);
 
-			PointerLUT lut = context.BaseContext.PointerLUT;
+			ModelOffsetLUT lut = context.BaseContext.PointerLUT;
 
 			int index = 0;
 			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
@@ -484,7 +484,7 @@ namespace SA3D.Modeling.AnimationData
 		{
 			List<int> frameCounts = [];
 
-			PointerLUT lut = context.BaseContext.PointerLUT;
+			ModelOffsetLUT lut = context.BaseContext.PointerLUT;
 
 			foreach((KeyframeAttributes type, IEnumerable<uint>? keys) in GetTypeKeyEnumerable())
 			{

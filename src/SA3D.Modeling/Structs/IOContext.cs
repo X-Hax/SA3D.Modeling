@@ -18,6 +18,6 @@
 		/// <summary>
 		/// Pointer lookup table
 		/// </summary>
-		public PointerLUT PointerLUT { get; set; }
+		public ModelOffsetLUT PointerLUT { get; set; }
 	}
 }

@@ -182,7 +182,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			Attributes = (byte)(header >> 8);
 		}
 
-		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader, PointerLUT lut)
+		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader, ModelOffsetLUT lut)
 		{
 			PolyChunkType peekType()
 			{
@@ -285,7 +285,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteUInt16((ushort)((byte)Type | (Attributes << 8)));
 		}
 
-		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks, PointerLUT lut)
+		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks, ModelOffsetLUT lut)
 		{
 			long start = writer.Position;
 

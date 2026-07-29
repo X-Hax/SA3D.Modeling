@@ -47,7 +47,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			}
 		}
 
-		public static void WriteVector3ArrayData(this BinaryObjectWriter writer, KeyframeArray<LabeledArray<Vector3>> dict, PointerLUT lut)
+		public static void WriteVector3ArrayData(this BinaryObjectWriter writer, KeyframeArray<LabeledArray<Vector3>> dict, ModelOffsetLUT lut)
 		{
 			foreach(KeyValuePair<uint, LabeledArray<Vector3>> pair in dict)
 			{

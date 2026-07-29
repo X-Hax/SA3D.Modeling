@@ -10,7 +10,7 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// Pointer Lookup Table.
 	/// </summary>
-	public class PointerLUT : OffsetLUT
+	public class ModelOffsetLUT : OffsetLUT
 	{
 		/// <summary>
 		/// Pointer dictionary for nodes.
@@ -37,12 +37,12 @@ namespace SA3D.Modeling.Structs
 		/// Creates a new LUT with preexisting labels.
 		/// </summary>
 		/// <param name="labels">The labels to populate the LUT with.</param>
-		public PointerLUT(Dictionary<long, string> labels) : base(labels) { }
+		public ModelOffsetLUT(Dictionary<long, string> labels) : base(labels) { }
 
 		/// <summary>
 		/// Creates a new empty LUT.
 		/// </summary>
-		public PointerLUT() : base() { }
+		public ModelOffsetLUT() : base() { }
 
 
 		/// <inheritdoc/>

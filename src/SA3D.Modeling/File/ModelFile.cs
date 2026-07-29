@@ -277,7 +277,7 @@ namespace SA3D.Modeling.File
 			NJFile = false;
 		}
 
-		private static void CreateWeldings(IEnumerable<MetaWeightNode> weights, PointerLUT lut)
+		private static void CreateWeldings(IEnumerable<MetaWeightNode> weights, ModelOffsetLUT lut)
 		{
 			foreach(MetaWeightNode metaWeightNode in weights)
 			{
@@ -456,7 +456,7 @@ namespace SA3D.Modeling.File
 			MetaData.Write(writer, context.PointerLUT.Labels, null, () => CreateMetaWeights(context.PointerLUT));
 		}
 
-		private void CreateMetaWeights(PointerLUT lut)
+		private void CreateMetaWeights(ModelOffsetLUT lut)
 		{
 			MetaData.Blocks.RemoveAll(x => x.Type is MetaDataBlockType.Weight);
 			Node[] nodes = Model.GetTreeNodes();
