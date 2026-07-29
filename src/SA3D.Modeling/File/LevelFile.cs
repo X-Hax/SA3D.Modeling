@@ -161,10 +161,10 @@ namespace SA3D.Modeling.File
 			{
 				LevelFormat = format,
 				MeshFormat = format,
-				PointerLUT = new(labels)
+				OffsetLUT = new(labels)
 			};
 
-			Level = reader.ReadObjectOffset<Level, IOContext>(context, context.PointerLUT)
+			Level = reader.ReadObjectOffset<Level, IOContext>(context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(LevelFile), nameof(Level));
 		}
 
@@ -186,11 +186,11 @@ namespace SA3D.Modeling.File
 			{
 				MeshFormat = Level.Format,
 				LevelFormat = Level.Format,
-				PointerLUT = new()
+				OffsetLUT = new()
 			};
 
-			writer.WriteObjectOffset(Level, context, context.PointerLUT);
-			MetaData.Write(writer, context.PointerLUT.Labels, null, null);
+			writer.WriteObjectOffset(Level, context, context.OffsetLUT);
+			MetaData.Write(writer, context.OffsetLUT.Labels, null, null);
 		}
 	}
 }

@@ -16,8 +16,8 @@
 		public Format LevelFormat { get; set; }
 
 		/// <summary>
-		/// Pointer lookup table
+		/// Offset lookup table
 		/// </summary>
-		public ModelOffsetLUT PointerLUT { get; set; }
+		public ModelOffsetLUT OffsetLUT { get; set; }
 	}
 }

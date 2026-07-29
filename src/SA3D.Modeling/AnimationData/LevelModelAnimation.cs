@@ -25,7 +25,7 @@ namespace SA3D.Modeling.AnimationData
 			private const string _maxFrame = nameof(MaxFrame);
 			private const string _model = nameof(Model);
 			private const string _animation = nameof(Animation);
-			private const string _textureListPointer = nameof(TextureListPointer);
+			private const string _textureListAddress = nameof(TextureListAddress);
 
 
 			/// <inheritdoc/>
@@ -36,7 +36,7 @@ namespace SA3D.Modeling.AnimationData
 				{ _maxFrame, new(PropertyTokenType.Number, 0f) },
 				{ _model, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
 				{ _animation, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
-				{ _textureListPointer, new(PropertyTokenType.String, 0u) },
+				{ _textureListAddress, new(PropertyTokenType.String, 0u) },
 			});
 
 			/// <inheritdoc/>
@@ -52,7 +52,7 @@ namespace SA3D.Modeling.AnimationData
 						return JsonSerializer.Deserialize<Node>(ref reader, options);
 					case _animation:
 						return JsonSerializer.Deserialize<ModelAnimation>(ref reader, options);
-					case _textureListPointer:
+					case _textureListAddress:
 						return UInt32HexConverter.ConvertFrom(reader.GetString()!, propertyName);
 					default:
 						throw new InvalidPropertyException();
@@ -75,7 +75,7 @@ namespace SA3D.Modeling.AnimationData
 					MaxFrame = (float)values[_maxFrame]!,
 					Model = model,
 					Animation = animation,
-					TextureListPointer = (uint)values[_textureListPointer]!
+					TextureListAddress = (uint)values[_textureListAddress]!
 				};
 			}
 
@@ -86,9 +86,9 @@ namespace SA3D.Modeling.AnimationData
 				writer.WriteNumber(_step, value.Step);
 				writer.WriteNumber(_maxFrame, value.MaxFrame);
 
-				if(value.TextureListPointer != 0)
+				if(value.TextureListAddress != 0)
 				{
-					writer.WriteString(_textureListPointer, UInt32HexConverter.ConvertTo(value.TextureListPointer));
+					writer.WriteString(_textureListAddress, UInt32HexConverter.ConvertTo(value.TextureListAddress));
 				}
 
 				writer.WritePropertyName(_model);
@@ -128,7 +128,7 @@ namespace SA3D.Modeling.AnimationData
 		/// <summary>
 		/// Texture list address to use.
 		/// </summary>
-		public uint TextureListPointer { get; set; }
+		public uint TextureListAddress { get; set; }
 
 		/// <summary>
 		/// Creates a blank level model animation
@@ -155,14 +155,14 @@ namespace SA3D.Modeling.AnimationData
 			}
 			else
 			{
-				Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+				Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
 					?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Model));
 
-				Animation = reader.ReadObjectOffset<ModelAnimation, IOContext>(context, context.PointerLUT)
+				Animation = reader.ReadObjectOffset<ModelAnimation, IOContext>(context, context.OffsetLUT)
 					?? throw reader.ReadNullReference(nameof(LevelModelAnimation), nameof(Animation));
 			}
 
-			TextureListPointer = reader.ReadUInt32();
+			TextureListAddress = reader.ReadUInt32();
 		}
 
 		/// <inheritdoc/>
@@ -178,11 +178,11 @@ namespace SA3D.Modeling.AnimationData
 			}
 			else
 			{
-				writer.WriteObjectOffset(Model, context, context.PointerLUT);
-				writer.WriteObjectOffset(Animation, context, context.PointerLUT);
+				writer.WriteObjectOffset(Model, context, context.OffsetLUT);
+				writer.WriteObjectOffset(Animation, context, context.OffsetLUT);
 			}
 
-			writer.WriteUInt32(TextureListPointer);
+			writer.WriteUInt32(TextureListAddress);
 		}
 	}
 }

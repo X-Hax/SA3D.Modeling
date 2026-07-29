@@ -195,7 +195,7 @@ namespace SA3D.Modeling.ObjectData
 				reader.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(LevelModel), nameof(Model));
 
 			if(context.LevelFormat >= Format.Chunk)
@@ -221,7 +221,7 @@ namespace SA3D.Modeling.ObjectData
 				writer.Skip(sizeof(float) * 2); // SA1 has unused radius y and radius z values
 			}
 
-			writer.WriteObjectOffset(Model, context, context.PointerLUT);
+			writer.WriteObjectOffset(Model, context, context.OffsetLUT);
 
 			if(context.LevelFormat >= Format.Chunk)
 			{

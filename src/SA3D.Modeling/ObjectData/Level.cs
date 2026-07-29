@@ -29,7 +29,7 @@ namespace SA3D.Modeling.ObjectData
 			private const string _format = nameof(Format);
 			private const string _drawDistance = nameof(DrawDistance);
 			private const string _textureFileName = nameof(TextureFileName);
-			private const string _texListPtr = nameof(TexListPtr);
+			private const string _textureListOffset = nameof(TextureListAddress);
 			private const string _attributes = nameof(Attributes);
 			private const string _models = nameof(Models);
 			private const string _modelAnimations = nameof(ModelAnimations);
@@ -42,7 +42,7 @@ namespace SA3D.Modeling.ObjectData
 				{ _format, new(PropertyTokenType.String, null) },
 				{ _drawDistance, new(PropertyTokenType.Number, 0f) },
 				{ _textureFileName, new(PropertyTokenType.String, null, true) },
-				{ _texListPtr, new(PropertyTokenType.String, 0) },
+				{ _textureListOffset, new(PropertyTokenType.String, 0) },
 				{ _attributes, new(PropertyTokenType.String, default(LevelAttributes)) },
 				{ _models, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
 				{ _modelAnimations, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
@@ -62,8 +62,8 @@ namespace SA3D.Modeling.ObjectData
 						return reader.GetSingle();
 					case _textureFileName:
 						return reader.GetString();
-					case _texListPtr:
-						return UInt32HexConverter.ConvertFrom(reader.GetString()!, _texListPtr);
+					case _textureListOffset:
+						return UInt32HexConverter.ConvertFrom(reader.GetString()!, _textureListOffset);
 					case _attributes:
 						return JsonSerializer.Deserialize<LevelAttributes>(ref reader, options);
 					case _models:
@@ -92,7 +92,7 @@ namespace SA3D.Modeling.ObjectData
 					Attributes = (LevelAttributes)values[_attributes]!,
 					DrawDistance = (float)values[_drawDistance]!,
 					TextureFileName = (string?)values[_textureFileName],
-					TexListPtr = (uint)values[_texListPtr]!,
+					TextureListAddress = (uint)values[_textureListOffset]!,
 				};
 
 				if(values[_modelAnimations] is LabeledArray<LevelModelAnimation> anims)
@@ -118,9 +118,9 @@ namespace SA3D.Modeling.ObjectData
 					writer.WriteString(_textureFileName, value.TextureFileName);
 				}
 
-				if(value.TexListPtr != 0)
+				if(value.TextureListAddress != 0)
 				{
-					writer.WriteString(_texListPtr, UInt32HexConverter.ConvertTo(value.TexListPtr));
+					writer.WriteString(_textureListOffset, UInt32HexConverter.ConvertTo(value.TextureListAddress));
 				}
 
 				if(value.Attributes != default)
@@ -185,9 +185,9 @@ namespace SA3D.Modeling.ObjectData
 		public string? TextureFileName { get; set; }
 
 		/// <summary>
-		/// Texture list pointer
+		/// Texture list address
 		/// </summary>
-		public uint TexListPtr { get; set; }
+		public uint TextureListAddress { get; set; }
 
 		/// <summary>
 		/// Format of the landtable
@@ -256,7 +256,7 @@ namespace SA3D.Modeling.ObjectData
 			reader.ReadAtOffset(modelsOffset, () =>
 			{
 				short baseCount = Format is Format.Chunk or Format.Ginja ? displayCount : modelCount;
-				Models = reader.ReadLabeledObjectArray<LevelModel, IOContext>(baseCount, ModelsLabelPrefix, context, context.PointerLUT);
+				Models = reader.ReadLabeledObjectArray<LevelModel, IOContext>(baseCount, ModelsLabelPrefix, context, context.OffsetLUT);
 
 				if(Format is Format.Chunk or Format.Ginja)
 				{
@@ -266,7 +266,7 @@ namespace SA3D.Modeling.ObjectData
 					{
 						LevelFormat = Format,
 						MeshFormat = Format.Basic,
-						PointerLUT = context.PointerLUT
+						OffsetLUT = context.OffsetLUT
 					};
 
 					LevelModel[] collisionModels = reader.ReadObjectArray<LevelModel, IOContext>(collisionCount, collisionModelContext);
@@ -274,10 +274,10 @@ namespace SA3D.Modeling.ObjectData
 				}
 			});
 
-			ModelAnimations = reader.ReadLabeledObjectArrayOffset<LevelModelAnimation, IOContext>(modelAnimationCount, ModelAnimationsLabelPrefix, context, context.PointerLUT);
+			ModelAnimations = reader.ReadLabeledObjectArrayOffset<LevelModelAnimation, IOContext>(modelAnimationCount, ModelAnimationsLabelPrefix, context, context.OffsetLUT);
 
 			TextureFileName = reader.ReadStringOffset();
-			TexListPtr = reader.ReadUInt32();
+			TextureListAddress = reader.ReadUInt32();
 		}
 
 		/// <inheritdoc/>
@@ -326,11 +326,11 @@ namespace SA3D.Modeling.ObjectData
 			writer.WriteInt16(0); // "is loaded" (runtime field)
 			writer.WriteSingle(DrawDistance);
 
-			writer.WriteObjectArrayOffset(Models, context, context.PointerLUT);
-			writer.WriteObjectArrayOffset(ModelAnimations, context, context.PointerLUT);
+			writer.WriteObjectArrayOffset(Models, context, context.OffsetLUT);
+			writer.WriteObjectArrayOffset(ModelAnimations, context, context.OffsetLUT);
 
 			writer.WriteStringOffset(StringBinaryFormat.NullTerminated, TextureFileName);
-			writer.WriteUInt32(TexListPtr);
+			writer.WriteUInt32(TextureListAddress);
 
 		}
 

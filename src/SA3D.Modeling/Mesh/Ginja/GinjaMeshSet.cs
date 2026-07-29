@@ -134,12 +134,12 @@ namespace SA3D.Modeling.Mesh.Ginja
 			long polygonsOffset = reader.ReadOffsetValue();
 			int polygonsSize = reader.ReadInt32();
 
-			Parameters = reader.ReadLabeledObjectArrayAtOffset(IGinjaParameter.ReadParameter, parametersOffset, parametersCount, ParametersLabelPrefix, context.BaseContext.PointerLUT)
+			Parameters = reader.ReadLabeledObjectArrayAtOffset(IGinjaParameter.ReadParameter, parametersOffset, parametersCount, ParametersLabelPrefix, context.BaseContext.OffsetLUT)
 				?? new(ParametersLabelPrefix + identifier, 0);
 
 			context.IndexFormat = GetIndexFormat() ?? context.IndexFormat;
 
-			Polygons = reader.ReadLUTItemAtOffset(polygonsOffset, context.BaseContext.PointerLUT, PolygonsLabelPrefix,
+			Polygons = reader.ReadLUTItemAtOffset(polygonsOffset, context.BaseContext.OffsetLUT, PolygonsLabelPrefix,
 				(r) => GinjaPolygon.ReadArray(r, polygonsSize, context.IndexFormat))
 				?? new(PolygonsLabelPrefix + identifier, 0);
 		}
@@ -155,7 +155,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 				long alignOrigin = w.Position;
 				w.WriteObjectArray(v);
 				w.Align(0x20, alignOrigin);
-			}, context.BaseContext.PointerLUT);
+			}, context.BaseContext.OffsetLUT);
 
 			writer.WriteInt32(Parameters.Length);
 
@@ -164,7 +164,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 				long alignOrigin = w.Position;
 				w.WriteObjectArray(v, currentIndexFormat);
 				w.Align(0x20, alignOrigin);
-			}, context.BaseContext.PointerLUT);
+			}, context.BaseContext.OffsetLUT);
 
 			int cornerSize = GinjaPolygon.GetIndexSizes(currentIndexFormat).Sum();
 			int size = Polygons.Sum(x => (x.Corners.Length * cornerSize) + 3);

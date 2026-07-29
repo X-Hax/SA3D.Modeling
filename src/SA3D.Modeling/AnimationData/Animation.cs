@@ -223,7 +223,7 @@ namespace SA3D.Modeling.AnimationData
 
 			context.KeyframeType = ManualKeyframeTypes;
 
-			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.PointerLUT)
+			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
 		}
 
@@ -239,7 +239,7 @@ namespace SA3D.Modeling.AnimationData
 			}
 			else
 			{
-				writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.PointerLUT);
+				writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.OffsetLUT);
 			}
 
 			int channels = context.KeyframeType.ChannelCount();

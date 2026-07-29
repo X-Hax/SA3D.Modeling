@@ -415,7 +415,7 @@ namespace SA3D.Modeling.AnimationData
 
 			int[] keyframeCounts = reader.ReadArray<int>(channelCount);
 
-			ModelOffsetLUT lut = context.BaseContext.PointerLUT;
+			ModelOffsetLUT lut = context.BaseContext.OffsetLUT;
 
 			int index = 0;
 			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
@@ -484,7 +484,7 @@ namespace SA3D.Modeling.AnimationData
 		{
 			List<int> frameCounts = [];
 
-			ModelOffsetLUT lut = context.BaseContext.PointerLUT;
+			ModelOffsetLUT lut = context.BaseContext.OffsetLUT;
 
 			foreach((KeyframeAttributes type, IEnumerable<uint>? keys) in GetTypeKeyEnumerable())
 			{
@@ -516,10 +516,10 @@ namespace SA3D.Modeling.AnimationData
 						writer.WriteObjectOffset(Vector, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Vertex:
-						writer.WriteObjectOffset(Vertex, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.PointerLUT), lut);
+						writer.WriteObjectOffset(Vertex, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.OffsetLUT), lut);
 						break;
 					case KeyframeAttributes.Normal:
-						writer.WriteObjectOffset(Normal, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.PointerLUT), lut);
+						writer.WriteObjectOffset(Normal, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.OffsetLUT), lut);
 						break;
 					case KeyframeAttributes.Target:
 						writer.WriteObjectOffset(Target, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);

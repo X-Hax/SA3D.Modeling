@@ -263,15 +263,15 @@ namespace SA3D.Modeling.File
 			IOContext context = new()
 			{
 				MeshFormat = Format,
-				PointerLUT = new(labels)
+				OffsetLUT = new(labels)
 			};
 
-			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(ModelFile), nameof(Model));
 
 			if(MetaData.TryGetBlock(out WeightsMetaDataBlock? weightsBlock))
 			{
-				CreateWeldings(weightsBlock!.Weights, context.PointerLUT);
+				CreateWeldings(weightsBlock!.Weights, context.OffsetLUT);
 			}
 
 			NJFile = false;
@@ -283,7 +283,7 @@ namespace SA3D.Modeling.File
 			{
 				if(!lut.Nodes.TryGetValue(metaWeightNode.NodeOffset, out Node? node))
 				{
-					throw new InvalidDataException($"Metadata has weights for a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that address!");
+					throw new InvalidDataException($"Metadata has weights for a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that offset!");
 				}
 
 				VertexWelding[] vertexWelds = new VertexWelding[metaWeightNode.VertexWeights.Length];
@@ -300,7 +300,7 @@ namespace SA3D.Modeling.File
 
 						if(!lut.Nodes.TryGetValue(metaWeight.NodeOffset, out Node? sourceNode))
 						{
-							throw new InvalidDataException($"Metadata draws weight influence from a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that address!");
+							throw new InvalidDataException($"Metadata draws weight influence from a node at {metaWeightNode.NodeOffset:X8}, but no node has been read at that offset!");
 						}
 
 						welds[j] = new(sourceNode, metaWeight.VertexIndex, metaWeight.Weight);
@@ -324,18 +324,18 @@ namespace SA3D.Modeling.File
 
 			Model = ReadNJModel(reader, blocks, out IOContext context);
 			Format = context.MeshFormat;
-			TextureNames = ReadNJTextureList(reader, blocks, context.PointerLUT);
+			TextureNames = ReadNJTextureList(reader, blocks, context.OffsetLUT);
 			NJFile = true;
 		}
 
 		private static Node ReadNJModel(BinaryObjectReader reader, Dictionary<long, string> blocks, out IOContext context)
 		{
-			if(!NJBlockUtility.FindBlockOffset(blocks, ModelBlockHeaders, out long? modelBlockAddress))
+			if(!NJBlockUtility.FindBlockOffset(blocks, ModelBlockHeaders, out long? modelBlockOffset))
 			{
 				throw new InvalidOperationException("NJ model file has no model block!");
 			}
 
-			string blockHeader = blocks[modelBlockAddress!.Value];
+			string blockHeader = blocks[modelBlockOffset!.Value];
 			Format format = blockHeader[2..] switch
 			{
 				BasicModelBlockType => Format.Basic,
@@ -343,17 +343,17 @@ namespace SA3D.Modeling.File
 				_ => throw new UnreachableException()
 			};
 
-			long modelOffset = modelBlockAddress!.Value + (sizeof(uint) * 2);
+			long modelOffset = modelBlockOffset!.Value + (sizeof(uint) * 2);
 			using SeekToken seekToken = reader.At(modelOffset, SeekOrigin.Begin);
 			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin();
 
 			context = new()
 			{
 				MeshFormat = format,
-				PointerLUT = new()
+				OffsetLUT = new()
 			};
 
-			return reader.ReadObject<Node, IOContext>(context, context.PointerLUT);
+			return reader.ReadObject<Node, IOContext>(context, context.OffsetLUT);
 		}
 
 		private static TextureNameList? ReadNJTextureList(BinaryObjectReader reader, Dictionary<long, string> blocks, OffsetLUT lut)
@@ -412,14 +412,14 @@ namespace SA3D.Modeling.File
 			{
 				MeshFormat = Format,
 				LevelFormat = Format,
-				PointerLUT = new()
+				OffsetLUT = new()
 			};
 
 			long modelStart = writer.Position;
 
 			using(writer.WithOffsetOrigin())
 			{
-				writer.WriteObject(Model, context, context.PointerLUT);
+				writer.WriteObject(Model, context, context.OffsetLUT);
 			}
 
 			uint byteSize = (uint)(writer.Position - modelStart);
@@ -449,11 +449,11 @@ namespace SA3D.Modeling.File
 			{
 				MeshFormat = Format,
 				LevelFormat = Format,
-				PointerLUT = new()
+				OffsetLUT = new()
 			};
 
 			writer.WriteObjectOffset(Model, context);
-			MetaData.Write(writer, context.PointerLUT.Labels, null, () => CreateMetaWeights(context.PointerLUT));
+			MetaData.Write(writer, context.OffsetLUT.Labels, null, () => CreateMetaWeights(context.OffsetLUT));
 		}
 
 		private void CreateMetaWeights(ModelOffsetLUT lut)
@@ -469,7 +469,7 @@ namespace SA3D.Modeling.File
 					continue;
 				}
 
-				long nodeOffset = lut.Nodes.GetAddress(node)!.Value;
+				long nodeOffset = lut.Nodes.GetOffset(node)!.Value;
 				MetaWeightVertex[] metaWeightVertices = new MetaWeightVertex[node.Welding.Length];
 
 				for(int i = 0; i < metaWeightVertices.Length; i++)
@@ -481,7 +481,7 @@ namespace SA3D.Modeling.File
 					{
 						Weld weld = vertexWelding.Welds[j];
 
-						if(!lut.Nodes.TryGetAddress(weld.SourceNode, out long sourceNodeOffset))
+						if(!lut.Nodes.TryGetOffset(weld.SourceNode, out long sourceNodeOffset))
 						{
 							throw new InvalidDataException($"Source node \"{weld.SourceNode.Label}\" is not part of the model that is being written!");
 						}

@@ -8,22 +8,22 @@ using System.Collections.Generic;
 namespace SA3D.Modeling.Structs
 {
 	/// <summary>
-	/// Pointer Lookup Table.
+	/// Model Offset Lookup Table.
 	/// </summary>
 	public class ModelOffsetLUT : OffsetLUT
 	{
 		/// <summary>
-		/// Pointer dictionary for nodes.
+		/// Offset dictionary for nodes.
 		/// </summary>
 		public OffsetDictionary<Node> Nodes { get; } = new();
 
 		/// <summary>
-		/// Pointer dictionary for attaches.
+		/// Offset dictionary for attaches.
 		/// </summary>
 		public OffsetDictionary<MeshData> MeshData { get; } = new();
 
 		/// <summary>
-		/// Pointer dictionary for motions.
+		/// Offset dictionary for motions.
 		/// </summary>
 		public OffsetDictionary<Animation> Motions { get; } = new();
 
@@ -46,18 +46,18 @@ namespace SA3D.Modeling.Structs
 
 
 		/// <inheritdoc/>
-		protected override void OnAddEntry(long address, object value)
+		protected override void OnAddEntry(long offset, object value)
 		{
 			switch(value)
 			{
 				case Node node:
-					Nodes.Add(address, node);
+					Nodes.Add(offset, node);
 					break;
 				case MeshData attach:
-					MeshData.Add(address, attach);
+					MeshData.Add(offset, attach);
 					break;
 				case Animation motion:
-					Motions.Add(address, motion);
+					Motions.Add(offset, motion);
 					break;
 			}
 		}

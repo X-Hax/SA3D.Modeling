@@ -44,9 +44,9 @@ namespace SA3D.Modeling.ObjectData
 			MeshData = context.MeshFormat switch
 			{
 				Format.Basic
-				or Format.BasicDX => reader.ReadObjectOffset<BasicMesh, IOContext>(context, context.PointerLUT),
-				Format.Chunk => reader.ReadObjectOffset<ChunkMesh, IOContext>(context, context.PointerLUT),
-				Format.Ginja => reader.ReadObjectOffset<GinjaMesh, IOContext>(context, context.PointerLUT),
+				or Format.BasicDX => reader.ReadObjectOffset<BasicMesh, IOContext>(context, context.OffsetLUT),
+				Format.Chunk => reader.ReadObjectOffset<ChunkMesh, IOContext>(context, context.OffsetLUT),
+				Format.Ginja => reader.ReadObjectOffset<GinjaMesh, IOContext>(context, context.OffsetLUT),
 				_ => throw new InvalidOperationException(),
 			};
 
@@ -67,12 +67,12 @@ namespace SA3D.Modeling.ObjectData
 				RotationUpdateMode.Keep
 			);
 
-			if(reader.ReadObjectAtOffset<Node, IOContext>(childOffset, context, context.PointerLUT) is Node child)
+			if(reader.ReadObjectAtOffset<Node, IOContext>(childOffset, context, context.OffsetLUT) is Node child)
 			{
 				SetChild(child);
 			}
 
-			if(reader.ReadObjectAtOffset<Node, IOContext>(siblingOffset, context, context.PointerLUT) is Node next)
+			if(reader.ReadObjectAtOffset<Node, IOContext>(siblingOffset, context, context.OffsetLUT) is Node next)
 			{
 				SetNext(next);
 			}
@@ -82,7 +82,7 @@ namespace SA3D.Modeling.ObjectData
 		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteUInt32((uint)Attributes);
-			writer.WriteObjectOffset(MeshData, context, context.PointerLUT);
+			writer.WriteObjectOffset(MeshData, context, context.OffsetLUT);
 
 			writer.WriteVector3(Position);
 
@@ -100,8 +100,8 @@ namespace SA3D.Modeling.ObjectData
 
 			writer.WriteVector3(Scale);
 
-			writer.WriteObjectOffset(Child, context, context.PointerLUT);
-			writer.WriteObjectOffset(Next, context, context.PointerLUT);
+			writer.WriteObjectOffset(Child, context, context.OffsetLUT);
+			writer.WriteObjectOffset(Next, context, context.OffsetLUT);
 
 			if(UseQuaternionRotation)
 			{

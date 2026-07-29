@@ -68,7 +68,7 @@ namespace SA3D.Modeling.File.MetaData.Weights
 
 
 		/// <summary>
-		/// Pointer to the node that is weighted to.
+		/// Offset to the node that is weighted to.
 		/// </summary>
 		public long NodeOffset { get; set; }
 

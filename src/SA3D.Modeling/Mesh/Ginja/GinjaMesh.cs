@@ -178,18 +178,18 @@ namespace SA3D.Modeling.Mesh.Ginja
 			short transparentCount = reader.ReadInt16();
 			MeshBounds = reader.ReadObject<Bounds>();
 
-			VertexData = reader.ReadLUTItemAtOffset(vertexOffset, context.PointerLUT, VertexDataLabelPrefix, (r) => GinjaVertexSet.ReadArray(r, context));
-			OpaqueMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(opaqueOffset, opaqueCount, OpaqueMeshesLabelPrefix, new(context), context.PointerLUT);
-			TransparentMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(transparentOffset, transparentCount, TransparentMeshesLabelPrefix, new(context), context.PointerLUT);
+			VertexData = reader.ReadLUTItemAtOffset(vertexOffset, context.OffsetLUT, VertexDataLabelPrefix, (r) => GinjaVertexSet.ReadArray(r, context));
+			OpaqueMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(opaqueOffset, opaqueCount, OpaqueMeshesLabelPrefix, new(context), context.OffsetLUT);
+			TransparentMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(transparentOffset, transparentCount, TransparentMeshesLabelPrefix, new(context), context.OffsetLUT);
 		}
 
 		/// <inheritdoc/>
 		public override void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectOffset(VertexData.EmptyNull(), (w, v) => GinjaVertexSet.WriteArray(w, v, context), context.PointerLUT);
+			writer.WriteObjectOffset(VertexData.EmptyNull(), (w, v) => GinjaVertexSet.WriteArray(w, v, context), context.OffsetLUT);
 			writer.WriteOffsetValue(0);
-			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(OpaqueMeshes.EmptyNull(), new(context), context.PointerLUT);
-			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(TransparentMeshes.EmptyNull(), new(context), context.PointerLUT);
+			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(OpaqueMeshes.EmptyNull(), new(context), context.OffsetLUT);
+			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(TransparentMeshes.EmptyNull(), new(context), context.OffsetLUT);
 			writer.WriteInt16((short)(OpaqueMeshes?.Length ?? 0));
 			writer.WriteInt16((short)(TransparentMeshes?.Length ?? 0));
 			writer.WriteObject(MeshBounds);

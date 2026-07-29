@@ -519,13 +519,13 @@ namespace SA3D.Modeling.Mesh.Ginja
 
 			Data = DataType switch
 			{
-				GinjaDataType.Unsigned8 => reader.ReadLabeledArrayAtOffset<byte>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
-				GinjaDataType.Signed8 => reader.ReadLabeledArrayAtOffset<sbyte>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
-				GinjaDataType.Unsigned16 => reader.ReadLabeledArrayAtOffset<ushort>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
-				GinjaDataType.Signed16 => reader.ReadLabeledArrayAtOffset<short>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
-				GinjaDataType.Float32 => reader.ReadLabeledArrayAtOffset<float>(dataOffset, arraySize, labelPrefix, context.PointerLUT),
-				GinjaDataType.RGB565 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGB565, context.PointerLUT),
-				GinjaDataType.RGBA8 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGBA8, context.PointerLUT),
+				GinjaDataType.Unsigned8 => reader.ReadLabeledArrayAtOffset<byte>(dataOffset, arraySize, labelPrefix, context.OffsetLUT),
+				GinjaDataType.Signed8 => reader.ReadLabeledArrayAtOffset<sbyte>(dataOffset, arraySize, labelPrefix, context.OffsetLUT),
+				GinjaDataType.Unsigned16 => reader.ReadLabeledArrayAtOffset<ushort>(dataOffset, arraySize, labelPrefix, context.OffsetLUT),
+				GinjaDataType.Signed16 => reader.ReadLabeledArrayAtOffset<short>(dataOffset, arraySize, labelPrefix, context.OffsetLUT),
+				GinjaDataType.Float32 => reader.ReadLabeledArrayAtOffset<float>(dataOffset, arraySize, labelPrefix, context.OffsetLUT),
+				GinjaDataType.RGB565 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGB565, context.OffsetLUT),
+				GinjaDataType.RGBA8 => reader.ReadLabeledObjectArrayAtOffset<Color, ColorIOType>(dataOffset, arraySize, labelPrefix, ColorIOType.RGBA8, context.OffsetLUT),
 				GinjaDataType.RGB8 or GinjaDataType.RGBX8 or GinjaDataType.RGBA4 or GinjaDataType.RGBA6 => throw new NotImplementedException($"Data type \"{DataType}\" is not implemented"),
 				_ => throw new InvalidDataException($"Invalid data type \"{DataType}\"!"),
 			};
@@ -566,25 +566,25 @@ namespace SA3D.Modeling.Mesh.Ginja
 			switch(DataType)
 			{
 				case GinjaDataType.Unsigned8:
-					writer.WriteArrayOffset(Unsigned8Data, context.PointerLUT, 4);
+					writer.WriteArrayOffset(Unsigned8Data, context.OffsetLUT, 4);
 					break;
 				case GinjaDataType.Signed8:
-					writer.WriteArrayOffset(Signed8Data, context.PointerLUT, 4);
+					writer.WriteArrayOffset(Signed8Data, context.OffsetLUT, 4);
 					break;
 				case GinjaDataType.Unsigned16:
-					writer.WriteArrayOffset(Unsigned16Data, context.PointerLUT, 4);
+					writer.WriteArrayOffset(Unsigned16Data, context.OffsetLUT, 4);
 					break;
 				case GinjaDataType.Signed16:
-					writer.WriteArrayOffset(Signed16Data, context.PointerLUT, 4);
+					writer.WriteArrayOffset(Signed16Data, context.OffsetLUT, 4);
 					break;
 				case GinjaDataType.Float32:
-					writer.WriteArrayOffset(Float32Data, context.PointerLUT);
+					writer.WriteArrayOffset(Float32Data, context.OffsetLUT);
 					break;
 				case GinjaDataType.RGB565:
-					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGB565, context.PointerLUT, 4);
+					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGB565, context.OffsetLUT, 4);
 					break;
 				case GinjaDataType.RGBA8:
-					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGBA8, context.PointerLUT);
+					writer.WriteObjectArrayOffset(ColorData, ColorIOType.RGBA8, context.OffsetLUT);
 					break;
 				case GinjaDataType.RGB8:
 				case GinjaDataType.RGBX8:

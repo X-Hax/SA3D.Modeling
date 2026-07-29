@@ -310,16 +310,16 @@ namespace SA3D.Modeling.Mesh.Basic
 
 			ushort polyCount = reader.ReadUInt16();
 
-			Polygons = reader.ReadLabeledObjectArrayOffset(IBasicPolygon.GetReader(PolygonType), polyCount, "poly_", context.PointerLUT)
+			Polygons = reader.ReadLabeledObjectArrayOffset(IBasicPolygon.GetReader(PolygonType), polyCount, "poly_", context.OffsetLUT)
 				?? new(PolygonLabelPrefix.GenerateIdentifier(), 0);
 
 			int polygonCount = GetPolygonCount();
 			int cornerCount = GetPolygonCornerCount();
 
-			PolygonAttributes = reader.ReadLabeledObjectArrayOffset(r => r.ReadUInt32(), polygonCount, PolygonAttributesLabelPrefix, context.PointerLUT);
-			Normals = reader.ReadLabeledObjectArrayOffset(StructBinaryHelper.ReadVector3, polygonCount, NormalsLabelPrefix, context.PointerLUT);
-			Colors = reader.ReadLabeledObjectArrayOffset(r => r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32), cornerCount, ColorsLabelPrefix, context.PointerLUT);
-			TextureCoordinates = reader.ReadLabeledObjectArrayOffset(FloatIOType.Short.GetVector2Reader(), cornerCount, TextureCoordinatesLabelPrefix, context.PointerLUT);
+			PolygonAttributes = reader.ReadLabeledObjectArrayOffset(r => r.ReadUInt32(), polygonCount, PolygonAttributesLabelPrefix, context.OffsetLUT);
+			Normals = reader.ReadLabeledObjectArrayOffset(StructBinaryHelper.ReadVector3, polygonCount, NormalsLabelPrefix, context.OffsetLUT);
+			Colors = reader.ReadLabeledObjectArrayOffset(r => r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32), cornerCount, ColorsLabelPrefix, context.OffsetLUT);
+			TextureCoordinates = reader.ReadLabeledObjectArrayOffset(FloatIOType.Short.GetVector2Reader(), cornerCount, TextureCoordinatesLabelPrefix, context.OffsetLUT);
 		}
 
 		/// <inheritdoc/>
@@ -330,11 +330,11 @@ namespace SA3D.Modeling.Mesh.Basic
 			ushort header = (ushort)((MaterialIndex & 0x3FFFu) | (ushort)((int)PolygonType << 14));
 			writer.WriteUInt16(header);
 			writer.WriteUInt16((ushort)Polygons.Length);
-			writer.WriteObjectArrayOffset(Polygons.EmptyNull(), context.PointerLUT);
-			writer.WriteObjectArrayOffset((w, v) => w.WriteUInt32(v), PolygonAttributes, context.PointerLUT);
-			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
-			writer.WriteObjectArrayOffset((w, v) => w.WriteObject(v, ColorIOType.ARGB8_32), Colors.EmptyNull(), context.PointerLUT);
-			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates.EmptyNull(), context.PointerLUT);
+			writer.WriteObjectArrayOffset(Polygons.EmptyNull(), context.OffsetLUT);
+			writer.WriteObjectArrayOffset((w, v) => w.WriteUInt32(v), PolygonAttributes, context.OffsetLUT);
+			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.OffsetLUT);
+			writer.WriteObjectArrayOffset((w, v) => w.WriteObject(v, ColorIOType.ARGB8_32), Colors.EmptyNull(), context.OffsetLUT);
+			writer.WriteObjectArrayOffset(FloatIOType.Short.GetVector2Writer(), TextureCoordinates.EmptyNull(), context.OffsetLUT);
 		}
 
 		/// <summary>

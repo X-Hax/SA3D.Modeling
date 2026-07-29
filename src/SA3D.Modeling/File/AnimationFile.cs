@@ -225,13 +225,13 @@ namespace SA3D.Modeling.File
 			{
 				BaseContext = new()
 				{
-					PointerLUT = new()
+					OffsetLUT = new()
 				},
 
 				FileContext = context
 			};
 
-			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.PointerLUT)
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(AnimationFile), nameof(Animation));
 
 			NJFile = false;
@@ -247,12 +247,12 @@ namespace SA3D.Modeling.File
 			using EndiannessToken endiannesToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
 			Dictionary<long, string> blocks = NJBlockUtility.GetBlockOffsets(reader);
 
-			if(!NJBlockUtility.FindBlockOffset(blocks, AnimationBlockHeaders, out long? animationBlockAddress))
+			if(!NJBlockUtility.FindBlockOffset(blocks, AnimationBlockHeaders, out long? animationBlockOffset))
 			{
 				throw new InvalidOperationException("NJ animation file has no animation block!");
 			}
 
-			long modelOffset = animationBlockAddress!.Value + (sizeof(uint) * 2);
+			long modelOffset = animationBlockOffset!.Value + (sizeof(uint) * 2);
 			using SeekToken seekToken = reader.At(modelOffset, SeekOrigin.Begin);
 			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin();
 
@@ -260,13 +260,13 @@ namespace SA3D.Modeling.File
 			{
 				BaseContext = new()
 				{
-					PointerLUT = new()
+					OffsetLUT = new()
 				},
 
 				FileContext = context
 			};
 
-			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.PointerLUT)
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(AnimationFile), nameof(Animation));
 
 			NJFile = true;
@@ -298,7 +298,7 @@ namespace SA3D.Modeling.File
 			{
 				BaseContext = new()
 				{
-					PointerLUT = new()
+					OffsetLUT = new()
 				},
 
 				FileContext = context
@@ -315,7 +315,7 @@ namespace SA3D.Modeling.File
 
 			writer.WriteUInt32(animFileInfo);
 
-			MetaData.Write(writer, ioContext.BaseContext.PointerLUT.Labels, metadataToken, null);
+			MetaData.Write(writer, ioContext.BaseContext.OffsetLUT.Labels, metadataToken, null);
 		}
 
 		private void WriteNJ(BinaryObjectWriter writer, AnimationFileIOContext context)
@@ -347,7 +347,7 @@ namespace SA3D.Modeling.File
 			{
 				BaseContext = new()
 				{
-					PointerLUT = new()
+					OffsetLUT = new()
 				},
 
 				FileContext = context
@@ -357,7 +357,7 @@ namespace SA3D.Modeling.File
 
 			using(writer.WithOffsetOrigin())
 			{
-				writer.WriteObject(Animation, ioContext, ioContext.BaseContext.PointerLUT);
+				writer.WriteObject(Animation, ioContext, ioContext.BaseContext.OffsetLUT);
 			}
 
 			uint byteSize = (uint)(writer.Position - animationStart);

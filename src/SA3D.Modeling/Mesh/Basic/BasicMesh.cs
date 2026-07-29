@@ -215,7 +215,7 @@ namespace SA3D.Modeling.Mesh.Basic
 					return new($"{labelPrefix}{offset:X8}", 0);
 				}
 
-				LabeledArray<T>? result = reader.ReadLabeledObjectArrayAtOffset(read, offset, count, labelPrefix, context.PointerLUT);
+				LabeledArray<T>? result = reader.ReadLabeledObjectArrayAtOffset(read, offset, count, labelPrefix, context.OffsetLUT);
 
 				if(result == null && !allowNull)
 				{
@@ -234,11 +234,11 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// <inheritdoc/>
 		public override void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Positions, context.PointerLUT);
-			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.PointerLUT);
+			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Positions, context.OffsetLUT);
+			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.OffsetLUT);
 			writer.WriteInt32(Positions.Length);
-			writer.WriteObjectArrayOffset(MeshSets, context, context.PointerLUT);
-			writer.WriteObjectArrayOffset(Materials, context.PointerLUT);
+			writer.WriteObjectArrayOffset(MeshSets, context, context.OffsetLUT);
+			writer.WriteObjectArrayOffset(Materials, context.OffsetLUT);
 			writer.WriteUInt16((ushort)MeshSets.Length);
 			writer.WriteUInt16((ushort)Materials.Length);
 			writer.WriteObject(MeshBounds);

@@ -114,7 +114,7 @@ namespace SA3D.Modeling.AnimationData
 		/// <inheritdoc/>
 		public void Read(BinaryObjectReader reader, IOContext context)
 		{
-			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.PointerLUT)
+			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Model));
 
 			AnimationIOContext animationContext = new()
@@ -126,14 +126,14 @@ namespace SA3D.Modeling.AnimationData
 				}
 			};
 
-			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(animationContext, context.PointerLUT)
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(animationContext, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Animation));
 		}
 
 		/// <inheritdoc/>
 		public void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectOffset(Model, context, context.PointerLUT);
+			writer.WriteObjectOffset(Model, context, context.OffsetLUT);
 
 			AnimationIOContext animationContext = new()
 			{
@@ -144,7 +144,7 @@ namespace SA3D.Modeling.AnimationData
 				}
 			};
 
-			writer.WriteObjectOffset(Animation, animationContext, context.PointerLUT);
+			writer.WriteObjectOffset(Animation, animationContext, context.OffsetLUT);
 		}
 	}
 }

@@ -67,7 +67,7 @@ namespace SA3D.Modeling.File.MetaData.Weights
 		}
 
 		/// <summary>
-		/// Address of the node being weighted.
+		/// Offset to the node being weighted.
 		/// </summary>
 		public long NodeOffset { get; set; }
 
@@ -80,7 +80,7 @@ namespace SA3D.Modeling.File.MetaData.Weights
 		/// <summary>
 		/// Creates a new meta weight node.
 		/// </summary>
-		/// <param name="nodeOffset">Address of the node being weighted.</param>
+		/// <param name="nodeOffset">Offset to the node being weighted.</param>
 		/// <param name="vertexWeights">Weight influences.</param>
 		public MetaWeightNode(long nodeOffset, MetaWeightVertex[] vertexWeights)
 		{
