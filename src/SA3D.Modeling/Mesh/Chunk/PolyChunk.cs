@@ -1,4 +1,5 @@
-﻿using Amicitia.IO.Binary;
+﻿using Amicitia.IO;
+using Amicitia.IO.Binary;
 using Amicitia.IO.Streams;
 using J113D.Json;
 using SA3D.Common;
@@ -181,7 +182,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			Attributes = (byte)(header >> 8);
 		}
 
-		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader)
+		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader, PointerLUT lut)
 		{
 			PolyChunkType peekType()
 			{
@@ -194,6 +195,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			while(true)
 			{
 				PolyChunk chunk;
+				long offset = reader.ReadOffsetValue();
 				switch(peekType())
 				{
 					case PolyChunkType.BlendAlpha:
@@ -265,6 +267,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 				}
 
 				chunks.Add(chunk);
+				lut.PolyChunks.Add(offset, chunk);
 			}
 
 			End:
@@ -282,10 +285,19 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteUInt16((ushort)((byte)Type | (Attributes << 8)));
 		}
 
-		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks)
+		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks, PointerLUT lut)
 		{
 			long start = writer.Position;
-			writer.WriteObjectArray(chunks);
+
+			foreach(PolyChunk chunk in chunks)
+			{
+				long offset = chunk.AlignWithFour
+					? AlignmentHelper.Align(writer.Position, 4)
+					: writer.Position;
+
+				writer.WriteObject(chunk);
+				lut.PolyChunks.Add(offset, chunk);
+			}
 
 			// End chunk
 			writer.WriteUInt16((ushort)PolyChunkType.End);
