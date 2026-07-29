@@ -1,6 +1,7 @@
 ﻿using SA3D.Common.Lookup;
 using SA3D.Modeling.AnimationData;
 using SA3D.Modeling.Mesh;
+using SA3D.Modeling.Mesh.Chunk;
 using SA3D.Modeling.ObjectData;
 using System.Collections.Generic;
 
@@ -9,53 +10,43 @@ namespace SA3D.Modeling.Structs
 	/// <summary>
 	/// Pointer Lookup Table.
 	/// </summary>
-	public class PointerLUT : BaseLUT
+	public class PointerLUT : OffsetLUT
 	{
 		/// <summary>
 		/// Pointer dictionary for nodes.
 		/// </summary>
-		public PointerDictionary<Node> Nodes { get; }
+		public OffsetDictionary<Node> Nodes { get; } = new();
 
 		/// <summary>
 		/// Pointer dictionary for attaches.
 		/// </summary>
-		public PointerDictionary<MeshData> MeshData { get; }
+		public OffsetDictionary<MeshData> MeshData { get; } = new();
 
 		/// <summary>
 		/// Pointer dictionary for motions.
 		/// </summary>
-		public PointerDictionary<Animation> Motions { get; }
+		public OffsetDictionary<Animation> Motions { get; } = new();
 
 		/// <summary>
-		/// Pointer dictionary for nodemotions.
+		/// Offset dictionary for polychunks; Not actually tied to the offset lut, has to be manually added to
 		/// </summary>
-		public PointerDictionary<ModelAnimation> NodeMotions { get; }
+		public OffsetDictionary<PolyChunk> PolyChunks { get; } = new();
 
-		/// <summary>
-		/// Pointer dictionary for other objects.
-		/// </summary>
-		public PointerDictionary<object> Other { get; }
 
 		/// <summary>
 		/// Creates a new LUT with preexisting labels.
 		/// </summary>
 		/// <param name="labels">The labels to populate the LUT with.</param>
-		public PointerLUT(Dictionary<long, string> labels) : base(labels)
-		{
-			Nodes = new();
-			MeshData = new();
-			Motions = new();
-			NodeMotions = new();
-			Other = new();
-		}
+		public PointerLUT(Dictionary<long, string> labels) : base(labels) { }
 
 		/// <summary>
 		/// Creates a new empty LUT.
 		/// </summary>
-		public PointerLUT() : this([]) { }
+		public PointerLUT() : base() { }
+
 
 		/// <inheritdoc/>
-		protected override void AddEntry(long address, object value)
+		protected override void OnAddEntry(long address, object value)
 		{
 			switch(value)
 			{
@@ -67,12 +58,6 @@ namespace SA3D.Modeling.Structs
 					break;
 				case Animation motion:
 					Motions.Add(address, motion);
-					break;
-				case ModelAnimation action:
-					NodeMotions.Add(address, action);
-					break;
-				default:
-					Other.Add(address, value);
 					break;
 			}
 		}

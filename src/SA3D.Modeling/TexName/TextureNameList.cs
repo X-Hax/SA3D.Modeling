@@ -19,7 +19,7 @@ namespace SA3D.Modeling.TexName
 	/// Stores a texture name list.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public sealed class TextureNameList : ILabel, IBinarySerializable<BaseLUT>, IAsciiSerializable
+	public sealed class TextureNameList : ILabel, IBinarySerializable<OffsetLUT>, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<TextureNameList>
 		{
@@ -111,7 +111,7 @@ namespace SA3D.Modeling.TexName
 
 
 		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, BaseLUT? lut)
+		public void Read(BinaryObjectReader reader, OffsetLUT? lut)
 		{
 			lut.NullReferenceCheck();
 
@@ -160,7 +160,7 @@ namespace SA3D.Modeling.TexName
 
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, BaseLUT? lut)
+		public void Write(BinaryObjectWriter writer, OffsetLUT? lut)
 		{
 			lut.NullReferenceCheck();
 			writer.WriteObjectArrayOffset(TextureNames, lut);

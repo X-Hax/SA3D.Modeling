@@ -356,7 +356,7 @@ namespace SA3D.Modeling.File
 			return reader.ReadObject<Node, IOContext>(context, context.PointerLUT);
 		}
 
-		private static TextureNameList? ReadNJTextureList(BinaryObjectReader reader, Dictionary<long, string> blocks, BaseLUT lut)
+		private static TextureNameList? ReadNJTextureList(BinaryObjectReader reader, Dictionary<long, string> blocks, OffsetLUT lut)
 		{
 			if(!NJBlockUtility.FindBlockOffset(blocks, TextureListBlockHeaders, out long? texturelistBlockOffset))
 			{
@@ -367,7 +367,7 @@ namespace SA3D.Modeling.File
 			using SeekToken seekToken = reader.At(textureListOffset, SeekOrigin.Begin);
 			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin();
 
-			return reader.ReadObject<TextureNameList, BaseLUT>(lut);
+			return reader.ReadObject<TextureNameList, OffsetLUT>(lut);
 		}
 
 		#endregion

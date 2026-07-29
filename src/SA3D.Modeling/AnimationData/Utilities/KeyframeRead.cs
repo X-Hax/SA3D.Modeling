@@ -11,7 +11,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 {
 	internal static class KeyframeRead
 	{
-		public static KeyframeArray<T>? ReadKeyframeArrayAtOffset<T>(this BinaryObjectReader reader, long offset, int count, string labelPrefix, BaseLUT lut, Func<BinaryObjectReader, KeyframeArray<T>> read)
+		public static KeyframeArray<T>? ReadKeyframeArrayAtOffset<T>(this BinaryObjectReader reader, long offset, int count, string labelPrefix, OffsetLUT lut, Func<BinaryObjectReader, KeyframeArray<T>> read)
 		{
 			if(count == 0)
 			{
