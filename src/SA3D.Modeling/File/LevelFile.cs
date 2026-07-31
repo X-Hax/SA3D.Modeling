@@ -105,7 +105,7 @@ namespace SA3D.Modeling.File
 
 
 		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader)
+		public bool Check(BinaryObjectReader reader, FileContext fileContext)
 		{
 			using SeekToken seekToken = reader.At();
 			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);

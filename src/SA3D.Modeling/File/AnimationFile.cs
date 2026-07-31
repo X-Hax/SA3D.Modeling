@@ -123,7 +123,7 @@ namespace SA3D.Modeling.File
 
 
 		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader)
+		public bool Check(BinaryObjectReader reader, FileContext<AnimationFileIOContext> context)
 		{
 			return CheckIsSAAnimFile(reader) || CheckIsNJAnimFile(reader);
 		}

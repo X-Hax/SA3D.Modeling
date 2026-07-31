@@ -173,7 +173,7 @@ namespace SA3D.Modeling.File
 
 
 		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader)
+		public bool Check(BinaryObjectReader reader, FileContext context)
 		{
 			return CheckIsSAFile(reader) || CheckIsNJFile(reader);
 		}
