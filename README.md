@@ -1,3 +1,6 @@
+[![NuGet](https://img.shields.io/nuget/v/SA3D.Modeling)](https://www.nuget.org/packages/SA3D.Modeling) 
+[![downloads](https://img.shields.io/nuget/dt/SA3D.Modeling)](https://www.nuget.org/packages/SA3D.Modeling)
+
 # SA3D.Modeling
 A Sonic Adventure modeling library with support for all game related model formats. Also contains support for various other SEGA based games, although support is not guaranteed.
 
