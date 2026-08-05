@@ -131,15 +131,13 @@ namespace SA3D.Modeling.Structs
 
 		#region I/O
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			Position = reader.ReadVector3();
 			Radius = reader.ReadSingle();
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer)
+		readonly void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteVector3(Position);
 			writer.WriteSingle(Radius);

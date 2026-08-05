@@ -112,24 +112,21 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			Index1 = reader.ReadUInt16();
 			Index2 = reader.ReadUInt16();
 			Index3 = reader.ReadUInt16();
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer)
+		readonly void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteUInt16(Index1);
 			writer.WriteUInt16(Index2);
 			writer.WriteUInt16(Index3);
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer)
+		readonly void IAsciiSerializable.Write(AsciiWriter writer)
 		{
 			writer.WriteLine($"\t{Index1}, {Index2}, {Index3},");
 		}

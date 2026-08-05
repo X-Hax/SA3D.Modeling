@@ -94,6 +94,7 @@ namespace SA3D.Modeling.AnimationData
 		/// </summary>
 		public Animation Animation { get; set; }
 
+
 		/// <summary>
 		/// Creates a new, blank node animation
 		/// </summary>
@@ -111,37 +112,30 @@ namespace SA3D.Modeling.AnimationData
 			Animation = animation;
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Model));
 
 			AnimationIOContext animationContext = new()
 			{
-				BaseContext = context,
-				FileContext = new()
-				{
-					KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
-				}
+				OffsetLUT = context.OffsetLUT,
+				KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
 			};
 
 			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(animationContext, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(ModelAnimation), nameof(Animation));
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteObjectOffset(Model, context, context.OffsetLUT);
 
 			AnimationIOContext animationContext = new()
 			{
-				BaseContext = context,
-				FileContext = new()
-				{
-					KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
-				}
+				OffsetLUT = context.OffsetLUT,
+				KeyframeSetCount = (uint)Model.GetAnimTreeNodeCount()
 			};
 
 			writer.WriteObjectOffset(Animation, animationContext, context.OffsetLUT);

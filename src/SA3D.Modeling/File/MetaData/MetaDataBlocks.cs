@@ -103,8 +103,8 @@ namespace SA3D.Modeling.File.MetaData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, MetaDataIOContext context)
+
+		void IBinarySerializable<MetaDataIOContext>.Read(BinaryObjectReader reader, MetaDataIOContext context)
 		{
 			using OffsetOriginToken offsetOriginToken = reader.WithOffsetOrigin(0);
 
@@ -122,8 +122,7 @@ namespace SA3D.Modeling.File.MetaData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, MetaDataIOContext context)
+		void IBinarySerializable<MetaDataIOContext>.Write(BinaryObjectWriter writer, MetaDataIOContext context)
 		{
 			writer.WriteOffset(() =>
 			{
@@ -140,7 +139,7 @@ namespace SA3D.Modeling.File.MetaData
 		/// <param name="newLabels">Labels to insert into the metadata</param>
 		/// <param name="metadataPosition">Seektoken to the position at which the metadata should be written</param>
 		/// <param name="metadataUpdate">Update to perform after flushing the writer and before writing the metadata</param>
-		public void Write(BinaryObjectWriter writer, LabelDictionary? newLabels, SeekToken? metadataPosition, Action? metadataUpdate)
+		public void UpdateAndWrite(BinaryObjectWriter writer, LabelDictionary? newLabels, SeekToken? metadataPosition, Action? metadataUpdate)
 		{
 			metadataPosition ??= ReserveWrite(writer);
 			writer.Flush();
@@ -162,6 +161,7 @@ namespace SA3D.Modeling.File.MetaData
 				writer.WriteObject(this);
 			}
 		}
+
 
 		/// <summary>
 		/// Reserves writing space for metadata and returns a <see cref="SeekToken"/> to the reserved spot

@@ -338,6 +338,11 @@ namespace SA3D.Modeling.ObjectData
 				throw new InvalidOperationException("The node you are trying to set has a previous node, only root siblings can be set as a direct child!");
 			}
 
+			if(node?.Parent != null)
+			{
+				throw new InvalidOperationException("The node you are trying to set already has a parent, please unparent the node first!");
+			}
+
 			if(node != null)
 			{
 				CheckMeshDataCompatibility(node);

@@ -13,7 +13,13 @@ namespace SA3D.Modeling.File
 		{
 			Dictionary<long, string> result = [];
 
-			using EndiannessToken endiannessToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
+			Endianness endian;
+			using(reader.At(4, SeekOrigin.Begin))
+			{
+				endian = reader.CheckEndianness32();
+			}
+
+			using EndiannessToken endiannessToken = reader.WithEndian(endian);
 			using SeekToken seekToken = reader.At();
 
 			while(reader.Position < reader.Length + 8)

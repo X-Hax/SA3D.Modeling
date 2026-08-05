@@ -1,18 +1,14 @@
-﻿using Amicitia.IO;
-using Amicitia.IO.Binary;
-using Amicitia.IO.Streams;
+﻿using Amicitia.IO.Binary;
 using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.Ascii;
 using SA3D.Common.IO;
-using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.PolyChunks;
 using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -151,7 +147,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <summary>
 		/// Whether the polygon chunk position and size needs to be a multiple of 4
 		/// </summary>
-		protected abstract bool AlignWithFour { get; }
+		public abstract bool AlignWithFour { get; }
 
 		/// <summary>
 		/// Base constructor for every poly chunk.
@@ -174,108 +170,40 @@ namespace SA3D.Modeling.Mesh.Chunk
 			return Type == default || type == Type;
 		}
 
-		/// <inheritdoc/>
-		public virtual void Read(BinaryObjectReader reader)
+		/// <summary>
+		/// Retrieve chunk header flags
+		/// </summary>
+		/// <returns></returns>
+		protected abstract string GetAsciiAttributes();
+
+
+		void IBinarySerializable.Read(BinaryObjectReader reader)
+		{
+			Read(reader);
+		}
+
+		/// <summary>
+		/// Overridable implementation for <see cref="IBinarySerializable.Read(BinaryObjectReader)"/>
+		/// </summary>
+		/// <param name="reader"></param>
+		protected virtual void Read(BinaryObjectReader reader)
 		{
 			ushort header = reader.ReadUInt16();
 			Type = (PolyChunkType)(header & 0xFF);
 			Attributes = (byte)(header >> 8);
 		}
 
-		internal static LabeledArray<PolyChunk> ReadArray(BinaryObjectReader reader, ModelOffsetLUT lut)
+
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
-			PolyChunkType peekType()
-			{
-				using SeekToken token = reader.At();
-				return (PolyChunkType)(reader.ReadUInt16() & 0xFF);
-			}
-
-			List<PolyChunk> chunks = [];
-
-			while(true)
-			{
-				PolyChunk chunk;
-				long offset = reader.ReadOffsetValue();
-				switch(peekType())
-				{
-					case PolyChunkType.BlendAlpha:
-						chunk = reader.ReadObject<BlendAlphaChunk>();
-						break;
-					case PolyChunkType.MipmapDistanceMultiplier:
-						chunk = reader.ReadObject<MipmapDistanceMultiplierChunk>();
-						break;
-					case PolyChunkType.SpecularExponent:
-						chunk = reader.ReadObject<SpecularExponentChunk>();
-						break;
-					case PolyChunkType.CacheList:
-						chunk = reader.ReadObject<CacheListChunk>();
-						break;
-					case PolyChunkType.DrawList:
-						chunk = reader.ReadObject<DrawListChunk>();
-						break;
-					case PolyChunkType.TextureID:
-					case PolyChunkType.TextureID2:
-						chunk = reader.ReadObject<TextureChunk>();
-						break;
-					case PolyChunkType.Material_Empty:
-					case PolyChunkType.Material_Diffuse:
-					case PolyChunkType.Material_Ambient:
-					case PolyChunkType.Material_DiffuseAmbient:
-					case PolyChunkType.Material_Specular:
-					case PolyChunkType.Material_DiffuseSpecular:
-					case PolyChunkType.Material_AmbientSpecular:
-					case PolyChunkType.Material_DiffuseAmbientSpecular:
-					case PolyChunkType.Material_Diffuse2:
-					case PolyChunkType.Material_Ambient2:
-					case PolyChunkType.Material_DiffuseAmbient2:
-					case PolyChunkType.Material_Specular2:
-					case PolyChunkType.Material_DiffuseSpecular2:
-					case PolyChunkType.Material_AmbientSpecular2:
-					case PolyChunkType.Material_DiffuseAmbientSpecular2:
-						chunk = reader.ReadObject<MaterialChunk>();
-						break;
-					case PolyChunkType.Material_Bump:
-						chunk = reader.ReadObject<MaterialBumpChunk>();
-						break;
-					case PolyChunkType.Volume_Triangle:
-					case PolyChunkType.Volume_Quad:
-					case PolyChunkType.Volume_Strip:
-						chunk = reader.ReadObject<VolumeChunk>();
-						break;
-					case PolyChunkType.Strip_Blank:
-					case PolyChunkType.Strip_Tex:
-					case PolyChunkType.Strip_HDTex:
-					case PolyChunkType.Strip_Normal:
-					case PolyChunkType.Strip_TexNormal:
-					case PolyChunkType.Strip_HDTexNormal:
-					case PolyChunkType.Strip_Color:
-					case PolyChunkType.Strip_TexColor:
-					case PolyChunkType.Strip_HDTexColor:
-					case PolyChunkType.Strip_BlankDouble:
-					case PolyChunkType.Strip_TexDouble:
-					case PolyChunkType.Strip_HDTexDouble:
-						chunk = reader.ReadObject<StripChunk>();
-						break;
-					case PolyChunkType.Null:
-						reader.Skip(sizeof(ushort));
-						continue;
-					case PolyChunkType.End:
-						reader.Skip(sizeof(ushort));
-						goto End;
-					default:
-						throw new InvalidOperationException(); // cant be reached
-				}
-
-				chunks.Add(chunk);
-				lut.PolyChunks.Add(offset, chunk);
-			}
-
-			End:
-			return new([.. chunks]);
+			Write(writer);
 		}
 
-		/// <inheritdoc/>
-		public virtual void Write(BinaryObjectWriter writer)
+		/// <summary>
+		/// Overridable implementation for <see cref="IBinarySerializable.Write(BinaryObjectWriter)"/>
+		/// </summary>
+		/// <param name="writer"></param>
+		protected virtual void Write(BinaryObjectWriter writer)
 		{
 			if(AlignWithFour)
 			{
@@ -285,83 +213,22 @@ namespace SA3D.Modeling.Mesh.Chunk
 			writer.WriteUInt16((ushort)((byte)Type | (Attributes << 8)));
 		}
 
-		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<PolyChunk> chunks, ModelOffsetLUT lut)
+
+		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
-			long start = writer.Position;
-
-			foreach(PolyChunk chunk in chunks)
-			{
-				long offset = chunk.AlignWithFour
-					? AlignmentHelper.Align(writer.Position, 4)
-					: writer.Position;
-
-				writer.WriteObject(chunk);
-				lut.PolyChunks.Add(offset, chunk);
-			}
-
-			// End chunk
-			writer.WriteUInt16((ushort)PolyChunkType.End);
-
-			if((writer.Position - start) % 4 == 2)
-			{
-				writer.WriteUInt16(0);
-			}
+			Write(writer, context);
 		}
 
 		/// <summary>
-		/// Retrieve chunk header flags
+		/// Overridable implementation for <see cref="IAsciiSerializable{ModelAsciiIOContext}.Write(AsciiWriter, ModelAsciiIOContext)"/>
 		/// </summary>
-		/// <returns></returns>
-		protected abstract string GetAsciiAttributes();
-
-		/// <inheritdoc/>
-		public virtual void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		/// <param name="writer"></param>
+		/// <param name="context"></param>
+		protected virtual void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			string chunkType = AsciiMaps.PolyChunkTypeMap.FindKey(Type);
 			string attributes = GetAsciiAttributes();
 			writer.Write($"\t{chunkType}( {attributes} ),");
-		}
-
-		internal static void WriteArray(AsciiWriter writer, LabeledArray<PolyChunk>? chunks, ModelAsciiIOContext context)
-		{
-			if(chunks == null)
-			{
-				return;
-			}
-
-			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("PLIST", chunks))
-			{
-				if(block == null)
-				{
-					return;
-				}
-
-				int offset = 0;
-
-				foreach(PolyChunk chunk in chunks)
-				{
-					if(chunk.AlignWithFour && offset % 4 != 0)
-					{
-						offset += 2;
-						writer.WriteLine("\tCnkNull(),");
-					}
-
-					chunk.Write(writer, context);
-					offset += 2;
-
-					if(chunk is not BitsChunk)
-					{
-						offset += 2;
-
-						if(chunk is SizedChunk sizedChunk)
-						{
-							offset += sizedChunk.Size * 2;
-						}
-					}
-				}
-
-				writer.WriteLine("\tCnkEnd()");
-			}
 		}
 
 

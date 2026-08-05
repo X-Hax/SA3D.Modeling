@@ -1,6 +1,4 @@
-﻿using SA3D.Modeling.Structs;
-
-namespace SA3D.Modeling.File
+﻿namespace SA3D.Modeling.File
 {
 	/// <summary>
 	/// Animation file specific IO context
@@ -21,29 +19,5 @@ namespace SA3D.Modeling.File
 		/// Angles use 0xFFFF for 360°, not 0x10000
 		/// </summary>
 		public bool BAMSFAngles { get; set; }
-
-		/// <summary>
-		/// IO Type for angles
-		/// </summary>
-		public readonly FloatIOType AngleType
-			=> BAMSFAngles ? FloatIOType.BAMSF32 : FloatIOType.BAMS32;
-
-		/// <summary>
-		/// IO Type for rotation angles
-		/// </summary>
-		public readonly FloatIOType RotationAngleType
-		{
-			get
-			{
-				if(ShortRotations)
-				{
-					return BAMSFAngles ? FloatIOType.BAMSF16 : FloatIOType.BAMS16;
-				}
-				else
-				{
-					return BAMSFAngles ? FloatIOType.BAMSF32 : FloatIOType.BAMS32;
-				}
-			}
-		}
 	}
 }

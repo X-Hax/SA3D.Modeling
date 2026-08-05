@@ -1,11 +1,9 @@
 ﻿using Amicitia.IO.Binary;
-using Amicitia.IO.Streams;
 using J113D.Json;
 using SA3D.Common;
 using SA3D.Common.Ascii;
 using SA3D.Common.Converters;
 using SA3D.Common.IO;
-using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Chunk.Structs;
 using SA3D.Modeling.ObjectData.Structs;
 using SA3D.Modeling.Structs;
@@ -175,8 +173,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			Vertices = [];
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			uint header1 = reader.ReadUInt32();
 			Attributes = (byte)((header1 >> 8) & 0xFF);
@@ -187,25 +184,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 			ushort vertexCount = (ushort)(header2 >> 16);
 
 			Vertices = reader.ReadObjectArray(ChunkVertex.GetReadCallback(Type), vertexCount);
-		}
-
-		internal static LabeledArray<VertexChunk> ReadArray(BinaryObjectReader reader)
-		{
-			VertexChunkType peekType()
-			{
-				using SeekToken token = reader.At();
-				return (VertexChunkType)(reader.ReadUInt32() & 0xFF);
-			}
-
-			List<VertexChunk> chunks = [];
-			while(peekType() != VertexChunkType.End)
-			{
-				chunks.Add(reader.ReadObject<VertexChunk>());
-			}
-
-			reader.Skip(sizeof(int) * 2);
-
-			return new([.. chunks]);
 		}
 
 		private void SplitWrite(Action<ushort, ushort, ushort, ushort> write)
@@ -231,8 +209,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			uint header1Base = (uint)Type | (uint)(Attributes << 8);
 			Action<BinaryObjectWriter, ChunkVertex> vertexWrite = ChunkVertex.GetWriteCallback(Type);
@@ -245,18 +222,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			});
 		}
 
-		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<VertexChunk> chunks)
-		{
-			writer.WriteObjectArray(chunks);
-
-			// End chunk
-			writer.WriteUInt32((uint)VertexChunkType.End);
-			writer.WriteUInt32(0);
-		}
-
-
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			string chunkType = AsciiMaps.VertexChunkTypeMap.FindKey(Type);
 			string chunkFlags = string.Empty;
@@ -290,29 +256,6 @@ namespace SA3D.Modeling.Mesh.Chunk
 					vertexWrite(writer, vertex, context);
 				}
 			});
-		}
-
-		internal static void WriteArray(AsciiWriter writer, LabeledArray<VertexChunk>? chunks, ModelAsciiIOContext context)
-		{
-			if(chunks == null)
-			{
-				return;
-			}
-
-			using(AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("VLIST", chunks))
-			{
-				if(block == null)
-				{
-					return;
-				}
-
-				foreach(VertexChunk chunk in chunks)
-				{
-					chunk.Write(writer, context);
-				}
-
-				writer.WriteLine("\tCnkEnd()");
-			}
 		}
 
 

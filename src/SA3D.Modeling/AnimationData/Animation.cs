@@ -18,7 +18,7 @@ namespace SA3D.Modeling.AnimationData
 	/// Animation data for various targets.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public sealed class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
+	public class Animation : ILabel, IBinarySerializable<AnimationIOContext>, IAsciiSerializable<AsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<Animation>
 		{
@@ -111,7 +111,7 @@ namespace SA3D.Modeling.AnimationData
 		public const string KeyframeSetLabelPrefix = "keyframes_";
 
 		/// <inheritdoc/>
-		public string LabelPrefix => "animation_";
+		public virtual string LabelPrefix => "animation_";
 
 		/// <inheritdoc/>
 		public string Label { get; set; }
@@ -209,10 +209,20 @@ namespace SA3D.Modeling.AnimationData
 			return KeyframeSets.Max(x => x.KeyframeCount);
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, AnimationIOContext context)
+
+		void IBinarySerializable<AnimationIOContext>.Read(BinaryObjectReader reader, AnimationIOContext context)
 		{
-			ShortRotations = context.FileContext.ShortRotations;
+			Read(reader, context);
+		}
+
+		/// <summary>
+		/// Overridable read implementation for <see cref="IBinarySerializable{AnimationIOContext}.Read"/>
+		/// </summary>
+		/// <param name="reader"></param>
+		/// <param name="context"></param>
+		protected virtual void Read(BinaryObjectReader reader, AnimationIOContext context)
+		{
+			ShortRotations = context.ShortRotations;
 
 			long keyframeOffset = reader.ReadOffsetValue();
 
@@ -223,12 +233,22 @@ namespace SA3D.Modeling.AnimationData
 
 			context.KeyframeType = ManualKeyframeTypes;
 
-			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.FileContext.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.BaseContext.OffsetLUT)
+			KeyframeSets = reader.ReadLabeledObjectArrayAtOffset<KeyframeSet, AnimationIOContext>(keyframeOffset, (int)context.KeyframeSetCount, KeyframeSetLabelPrefix, context, context.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(Animation), nameof(KeyframeSets));
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
+
+		void IBinarySerializable<AnimationIOContext>.Write(BinaryObjectWriter writer, AnimationIOContext context)
+		{
+			Write(writer, context);
+		}
+
+		/// <summary>
+		/// Overridable implementation for <see cref="IBinarySerializable{AnimationIOContext}.Write"/>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="context"></param>
+		protected virtual void Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
 			context.KeyframeType = KeyframeTypes;
 
@@ -239,7 +259,7 @@ namespace SA3D.Modeling.AnimationData
 			}
 			else
 			{
-				writer.WriteObjectArrayOffset(KeyframeSets, context, context.BaseContext.OffsetLUT);
+				writer.WriteObjectArrayOffset(KeyframeSets, context, context.OffsetLUT);
 			}
 
 			int channels = context.KeyframeType.ChannelCount();
@@ -248,8 +268,18 @@ namespace SA3D.Modeling.AnimationData
 			writer.WriteUInt16((ushort)((channels & 0xF) | ((int)InterpolationMode << 6)));
 		}
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, AsciiIOContext context)
+
+		void IAsciiSerializable<AsciiIOContext>.Write(AsciiWriter writer, AsciiIOContext context)
+		{
+			Write(writer, context);
+		}
+
+		/// <summary>
+		/// Overridable implementation for <see cref="IAsciiSerializable{AsciiIOContext}.Write"/>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="context"></param>
+		protected virtual void Write(AsciiWriter writer, AsciiIOContext context)
 		{
 			string prefix = string.Empty;
 			string type = string.Empty;
@@ -296,6 +326,7 @@ namespace SA3D.Modeling.AnimationData
 			}
 
 		}
+
 
 		/// <inheritdoc/>
 		public override string ToString()

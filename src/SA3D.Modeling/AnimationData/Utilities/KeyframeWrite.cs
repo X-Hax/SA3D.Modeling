@@ -70,7 +70,7 @@ namespace SA3D.Modeling.AnimationData.Utilities
 			foreach(KeyValuePair<uint, Spotlight> pair in dict)
 			{
 				writer.WriteUInt32(pair.Key);
-				pair.Value.Write(writer);
+				writer.WriteObject(pair.Value);
 			}
 		}
 

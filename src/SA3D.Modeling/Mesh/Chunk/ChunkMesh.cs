@@ -1,6 +1,5 @@
 ﻿using Amicitia.IO.Binary;
 using J113D.Json;
-using SA3D.Common;
 using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
@@ -52,9 +51,9 @@ namespace SA3D.Modeling.Mesh.Chunk
 				switch(propertyName)
 				{
 					case _vertexChunks:
-						return JsonSerializer.Deserialize<LabeledArray<VertexChunk>?>(ref reader, options);
+						return JsonSerializer.Deserialize<VertexChunkArray?>(ref reader, options);
 					case _polyChunks:
-						return JsonSerializer.Deserialize<LabeledArray<PolyChunk>?>(ref reader, options);
+						return JsonSerializer.Deserialize<PolyChunkArray?>(ref reader, options);
 					default:
 						throw new InvalidPropertyException();
 				}
@@ -67,8 +66,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 				{
 					Label = (string)values[BaseJsonConverter._label]!,
 					MeshBounds = (Bounds)values[BaseJsonConverter._meshBounds]!,
-					VertexChunks = (LabeledArray<VertexChunk>?)values[_vertexChunks],
-					PolyChunks = (LabeledArray<PolyChunk>?)values[_polyChunks]
+					VertexChunks = (VertexChunkArray?)values[_vertexChunks],
+					PolyChunks = (PolyChunkArray?)values[_polyChunks]
 				};
 			}
 
@@ -102,12 +101,12 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <summary>
 		/// Vertex data blocks.
 		/// </summary>
-		public LabeledArray<VertexChunk>? VertexChunks { get; set; }
+		public VertexChunkArray? VertexChunks { get; set; }
 
 		/// <summary>
 		/// Polygon data blocks.
 		/// </summary>
-		public LabeledArray<PolyChunk>? PolyChunks { get; set; }
+		public PolyChunkArray? PolyChunks { get; set; }
 
 		/// <inheritdoc/>
 		public override MeshFormat MeshFormat
@@ -179,26 +178,26 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 
 		/// <inheritdoc/>
-		public override void Read(BinaryObjectReader reader, IOContext context)
+		protected override void Read(BinaryObjectReader reader, IOContext context)
 		{
-			VertexChunks = reader.ReadLUTItemAtOffset(reader.ReadOffsetValue(), context.OffsetLUT, VertexChunksLabelPrefix, VertexChunk.ReadArray);
-			PolyChunks = reader.ReadLUTItemAtOffset(reader.ReadOffsetValue(), context.OffsetLUT, PolyChunksLabelPrefix, (r) => PolyChunk.ReadArray(r, context.OffsetLUT));
+			VertexChunks = reader.ReadObjectOffset<VertexChunkArray>(context.OffsetLUT);
+			PolyChunks = reader.ReadObjectOffset<PolyChunkArray, IOContext>(context, context.OffsetLUT);
 			MeshBounds = reader.ReadObject<Bounds>();
 		}
 
 		/// <inheritdoc/>
-		public override void Write(BinaryObjectWriter writer, IOContext context)
+		protected override void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectOffset(VertexChunks.EmptyNull(), VertexChunk.WriteArray, context.OffsetLUT);
-			writer.WriteObjectOffset(PolyChunks.EmptyNull(), (w, v) => PolyChunk.WriteArray(w, v, context.OffsetLUT), context.OffsetLUT);
+			writer.WriteObjectOffset(VertexChunks.EmptyNull(), context.OffsetLUT);
+			writer.WriteObjectOffset(PolyChunks.EmptyNull(), context, context.OffsetLUT);
 			writer.WriteObject(MeshBounds);
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
-			PolyChunk.WriteArray(writer, PolyChunks, context);
-			VertexChunk.WriteArray(writer, VertexChunks, context);
+			writer.WriteObject(PolyChunks, context);
+			writer.WriteObject(VertexChunks, context);
 
 			using(writer.WriteStructBlock("CNKMODEL", this))
 			{
@@ -216,8 +215,8 @@ namespace SA3D.Modeling.Mesh.Chunk
 			return new()
 			{
 				Label = Label,
-				VertexChunks = VertexChunks?.ContentClone(),
-				PolyChunks = PolyChunks?.ContentClone(),
+				VertexChunks = VertexChunks == null ? null : new(VertexChunks.Select(x => x.Clone())) { Label = VertexChunks.Label },
+				PolyChunks = PolyChunks == null ? null : new(PolyChunks.Select(x => x.Clone())) { Label = PolyChunks.Label },
 				MeshBounds = MeshBounds
 			};
 		}

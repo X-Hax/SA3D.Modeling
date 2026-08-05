@@ -199,8 +199,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, int polygonAttributeCount)
+		void IBinarySerializable<int>.Read(BinaryObjectReader reader, int polygonAttributeCount)
 		{
 			short header = reader.ReadInt16();
 			Reversed = header < 0;
@@ -221,8 +220,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer, int polygonAttributeCount)
+		readonly void IBinarySerializable<int>.Write(BinaryObjectWriter writer, int polygonAttributeCount)
 		{
 			VerifyPolygonData();
 
@@ -242,8 +240,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
+		readonly void IAsciiSerializable<(ModelAsciiIOContext context, int attributeCount)>.Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
 		{
 			writer.Write($"\tStrip{(Reversed ? 'R' : 'L')}({Indices.Length}), ");
 

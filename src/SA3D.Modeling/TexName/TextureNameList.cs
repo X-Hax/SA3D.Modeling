@@ -19,7 +19,7 @@ namespace SA3D.Modeling.TexName
 	/// Stores a texture name list.
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public sealed class TextureNameList : ILabel, IBinarySerializable<OffsetLUT>, IAsciiSerializable
+	public sealed class TextureNameList : ILabel, IBinarySerializable<OffsetLUT>, IFileSerializable, IAsciiSerializable
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<TextureNameList>
 		{
@@ -111,10 +111,8 @@ namespace SA3D.Modeling.TexName
 
 
 		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, OffsetLUT? lut)
+		public void Read(BinaryObjectReader reader, OffsetLUT lut)
 		{
-			lut.NullReferenceCheck();
-
 			long texturesOffset = reader.ReadOffsetValue();
 			int texturesCount = reader.ReadInt32();
 
@@ -160,9 +158,8 @@ namespace SA3D.Modeling.TexName
 
 
 		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, OffsetLUT? lut)
+		public void Write(BinaryObjectWriter writer, OffsetLUT lut)
 		{
-			lut.NullReferenceCheck();
 			writer.WriteObjectArrayOffset(TextureNames, lut);
 			writer.WriteInt32(TextureNames.Length);
 		}
@@ -247,6 +244,18 @@ namespace SA3D.Modeling.TexName
 		}
 
 
+
+		/// <inheritdoc/>
+		void IBinarySerializable.Read(BinaryObjectReader reader)
+		{
+			Read(reader, new OffsetLUT());
+		}
+
+		/// <inheritdoc/>
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
+		{
+			Write(writer, new OffsetLUT());
+		}
 
 	}
 }

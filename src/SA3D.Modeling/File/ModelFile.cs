@@ -171,17 +171,15 @@ namespace SA3D.Modeling.File
 
 		#region Checking
 
-
-		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader, FileContext context)
+		bool IFileSerializable.CheckCanReadFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
 		{
-			return CheckIsSAFile(reader) || CheckIsNJFile(reader);
+			return CheckIsSAFile(reader, ref fileInfo) || CheckIsNJFile(reader, ref fileInfo);
 		}
 
-		private bool CheckIsSAFile(BinaryObjectReader reader)
+		private bool CheckIsSAFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
 		{
 			using SeekToken seekToken = reader.At();
-			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
+			using EndiannessToken endiannessToken = reader.WithEndian(fileInfo.Endianness ?? Endianness.Little);
 
 			bool result = (reader.ReadUInt64() & HeaderMask) switch
 			{
@@ -189,28 +187,48 @@ namespace SA3D.Modeling.File
 				_ => false,
 			};
 
+			if(result)
+			{
+				fileInfo.Endianness ??= Endianness.Little;
+			}
+
 			return result;
 		}
 
-		private bool CheckIsNJFile(BinaryObjectReader reader)
+		private bool CheckIsNJFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
 		{
-			return NJBlockUtility.FindBlockOffset(reader, ModelBlockHeaders, out _);
+			if(NJBlockUtility.FindBlockOffset(reader, ModelBlockHeaders, out _))
+			{
+				using(reader.At(4, SeekOrigin.Begin))
+				{
+					fileInfo.Endianness ??= reader.CheckEndianness32();
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		#endregion
 
 		#region Reading
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, FileContext context)
+		void IFileSerializable.ReadFile(BinaryObjectReader fileReader, FileIOInfo fileInfo)
 		{
-			Filepath = context.Filepath;
+			Filepath = fileInfo.Filepath;
+			ModelFile file = this;
+			fileReader.ReadObject(ref file);
+		}
 
-			if(CheckIsSAFile(reader))
+		void IBinarySerializable.Read(BinaryObjectReader reader)
+		{
+			FileIOInfo dummy = default;
+			if(CheckIsSAFile(reader, ref dummy))
 			{
 				ReadSA(reader);
 			}
-			else if(CheckIsNJFile(reader))
+			else if(CheckIsNJFile(reader, ref dummy))
 			{
 				ReadNJ(reader);
 			}
@@ -223,8 +241,6 @@ namespace SA3D.Modeling.File
 
 		private void ReadSA(BinaryObjectReader reader)
 		{
-			using EndiannessToken endiannesToken = reader.WithEndian(Endianness.Little);
-
 			ulong headerVersion = reader.ReadUInt64();
 
 			Format = (headerVersion & HeaderMask) switch
@@ -319,7 +335,6 @@ namespace SA3D.Modeling.File
 
 		private void ReadNJ(BinaryObjectReader reader)
 		{
-			using EndiannessToken endiannesToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
 			Dictionary<long, string> blocks = NJBlockUtility.GetBlockOffsets(reader);
 
 			Model = ReadNJModel(reader, blocks, out IOContext context);
@@ -374,8 +389,7 @@ namespace SA3D.Modeling.File
 
 		#region Writing
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, FileContext context)
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			if(NJFile)
 			{
@@ -386,7 +400,6 @@ namespace SA3D.Modeling.File
 				WriteSA(writer);
 			}
 		}
-
 
 		private void WriteNJ(BinaryObjectWriter writer)
 		{
@@ -420,6 +433,7 @@ namespace SA3D.Modeling.File
 			using(writer.WithOffsetOrigin())
 			{
 				writer.WriteObject(Model, context, context.OffsetLUT);
+				writer.Flush();
 			}
 
 			uint byteSize = (uint)(writer.Position - modelStart);
@@ -430,7 +444,6 @@ namespace SA3D.Modeling.File
 				writer.WriteUInt32(byteSize);
 			}
 		}
-
 
 		private void WriteSA(BinaryObjectWriter writer)
 		{
@@ -453,7 +466,7 @@ namespace SA3D.Modeling.File
 			};
 
 			writer.WriteObjectOffset(Model, context);
-			MetaData.Write(writer, context.OffsetLUT.Labels, null, () => CreateMetaWeights(context.OffsetLUT));
+			MetaData.UpdateAndWrite(writer, context.OffsetLUT.Labels, null, () => CreateMetaWeights(context.OffsetLUT));
 		}
 
 		private void CreateMetaWeights(ModelOffsetLUT lut)
@@ -500,8 +513,7 @@ namespace SA3D.Modeling.File
 		}
 
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, AsciiIOContext context)
+		void IAsciiSerializable<AsciiIOContext>.Write(AsciiWriter writer, AsciiIOContext context)
 		{
 			string format = Format switch
 			{

@@ -402,8 +402,7 @@ namespace SA3D.Modeling.AnimationData
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, AnimationIOContext context)
+		void IBinarySerializable<AnimationIOContext>.Read(BinaryObjectReader reader, AnimationIOContext context)
 		{
 			int channelCount = context.KeyframeType.ChannelCount();
 
@@ -415,7 +414,7 @@ namespace SA3D.Modeling.AnimationData
 
 			int[] keyframeCounts = reader.ReadArray<int>(channelCount);
 
-			ModelOffsetLUT lut = context.BaseContext.OffsetLUT;
+			ModelOffsetLUT lut = context.OffsetLUT;
 
 			int index = 0;
 			foreach(KeyframeAttributes flag in Enum.GetValues<KeyframeAttributes>())
@@ -432,46 +431,46 @@ namespace SA3D.Modeling.AnimationData
 				switch(flag)
 				{
 					case KeyframeAttributes.Position:
-						Position = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, PositionLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						Position = reader.ReadKeyframeArrayAtOffset<Vector3>(offset, keyframeCount, PositionLabelPrefix, lut, (r, dst) => r.ReadVector3Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.EulerRotation:
-						EulerRotation = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, EulerRotationLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, context.FileContext.RotationAngleType));
+						EulerRotation = reader.ReadKeyframeArrayAtOffset<Vector3>(offset, keyframeCount, EulerRotationLabelPrefix, lut, (r, dst) => r.ReadVector3Set(dst, keyframeCount, context.RotationAngleType));
 						break;
 					case KeyframeAttributes.Scale:
-						Scale = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, ScaleLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						Scale = reader.ReadKeyframeArrayAtOffset<Vector3>(offset, keyframeCount, ScaleLabelPrefix, lut, (r, dst) => r.ReadVector3Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Vector:
-						Vector = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, VectorLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						Vector = reader.ReadKeyframeArrayAtOffset<Vector3>(offset, keyframeCount, VectorLabelPrefix, lut, (r, dst) => r.ReadVector3Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Vertex:
-						Vertex = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, VertexLabelPrefix, lut, r => r.ReadVector3ArraySet(keyframeCount, "vertex_", lut));
+						Vertex = reader.ReadKeyframeArrayAtOffset<LabeledArray<Vector3>>(offset, keyframeCount, VertexLabelPrefix, lut, (r, dst) => r.ReadVector3ArraySet(dst, keyframeCount, "vertex_", lut));
 						break;
 					case KeyframeAttributes.Normal:
-						Normal = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, NormalLabelPrefix, lut, r => r.ReadVector3ArraySet(keyframeCount, "normal_", lut));
+						Normal = reader.ReadKeyframeArrayAtOffset<LabeledArray<Vector3>>(offset, keyframeCount, NormalLabelPrefix, lut, (r, dst) => r.ReadVector3ArraySet(dst, keyframeCount, "normal_", lut));
 						break;
 					case KeyframeAttributes.Target:
-						Target = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, TargetLabelPrefix, lut, r => r.ReadVector3Set(keyframeCount, FloatIOType.Float));
+						Target = reader.ReadKeyframeArrayAtOffset<Vector3>(offset, keyframeCount, TargetLabelPrefix, lut, (r, dst) => r.ReadVector3Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Roll:
-						Roll = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, RollLabelPrefix, lut, r => r.ReadFloatSet(keyframeCount, context.FileContext.AngleType));
+						Roll = reader.ReadKeyframeArrayAtOffset<float>(offset, keyframeCount, RollLabelPrefix, lut, (r, dst) => r.ReadFloatSet(dst, keyframeCount, context.AngleType));
 						break;
 					case KeyframeAttributes.Angle:
-						Angle = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, AngleLabelPrefix, lut, r => r.ReadFloatSet(keyframeCount, context.FileContext.AngleType));
+						Angle = reader.ReadKeyframeArrayAtOffset<float>(offset, keyframeCount, AngleLabelPrefix, lut, (r, dst) => r.ReadFloatSet(dst, keyframeCount, context.AngleType));
 						break;
 					case KeyframeAttributes.LightColor:
-						LightColor = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, LightColorLabelPrefix, lut, r => r.ReadColorSet(keyframeCount, ColorIOType.ARGB8_32));
+						LightColor = reader.ReadKeyframeArrayAtOffset<Color>(offset, keyframeCount, LightColorLabelPrefix, lut, (r, dst) => r.ReadColorSet(dst, keyframeCount, ColorIOType.ARGB8_32));
 						break;
 					case KeyframeAttributes.Intensity:
-						Intensity = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, IntensityLabelPrefix, lut, r => r.ReadVector2Set(keyframeCount, FloatIOType.Float));
+						Intensity = reader.ReadKeyframeArrayAtOffset<Vector2>(offset, keyframeCount, IntensityLabelPrefix, lut, (r, dst) => r.ReadVector2Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.Spot:
-						Spotlight = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, SpotlightLabelPrefix, lut, r => r.ReadSpotlightSet(keyframeCount));
+						Spotlight = reader.ReadKeyframeArrayAtOffset<Spotlight>(offset, keyframeCount, SpotlightLabelPrefix, lut, (r, dst) => r.ReadSpotlightSet(dst, keyframeCount));
 						break;
 					case KeyframeAttributes.Point:
-						Point = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, PointLabelPrefix, lut, r => r.ReadVector2Set(keyframeCount, FloatIOType.Float));
+						Point = reader.ReadKeyframeArrayAtOffset<Vector2>(offset, keyframeCount, PointLabelPrefix, lut, (r, dst) => r.ReadVector2Set(dst, keyframeCount, FloatIOType.Float));
 						break;
 					case KeyframeAttributes.QuaternionRotation:
-						QuaternionRotation = reader.ReadKeyframeArrayAtOffset(offset, keyframeCount, QuaternionRotationLabelPrefix, lut, r => r.ReadQuaternionSet(keyframeCount));
+						QuaternionRotation = reader.ReadKeyframeArrayAtOffset<Quaternion>(offset, keyframeCount, QuaternionRotationLabelPrefix, lut, (r, dst) => r.ReadQuaternionSet(dst, keyframeCount));
 						break;
 					default:
 						throw new InvalidOperationException($"Invalid keyframe type {flag}!");
@@ -479,12 +478,11 @@ namespace SA3D.Modeling.AnimationData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, AnimationIOContext context)
+		void IBinarySerializable<AnimationIOContext>.Write(BinaryObjectWriter writer, AnimationIOContext context)
 		{
 			List<int> frameCounts = [];
 
-			ModelOffsetLUT lut = context.BaseContext.OffsetLUT;
+			ModelOffsetLUT lut = context.OffsetLUT;
 
 			foreach((KeyframeAttributes type, IEnumerable<uint>? keys) in GetTypeKeyEnumerable())
 			{
@@ -507,7 +505,7 @@ namespace SA3D.Modeling.AnimationData
 						writer.WriteObjectOffset(Position, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.EulerRotation:
-						writer.WriteObjectOffset(EulerRotation, (w, v) => w.WriteVector3Set(v, context.FileContext.RotationAngleType), lut);
+						writer.WriteObjectOffset(EulerRotation, (w, v) => w.WriteVector3Set(v, context.RotationAngleType), lut);
 						break;
 					case KeyframeAttributes.Scale:
 						writer.WriteObjectOffset(Scale, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
@@ -516,19 +514,19 @@ namespace SA3D.Modeling.AnimationData
 						writer.WriteObjectOffset(Vector, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Vertex:
-						writer.WriteObjectOffset(Vertex, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.OffsetLUT), lut);
+						writer.WriteObjectOffset(Vertex, (w, v) => w.WriteVector3ArrayData(v, context.OffsetLUT), lut);
 						break;
 					case KeyframeAttributes.Normal:
-						writer.WriteObjectOffset(Normal, (w, v) => w.WriteVector3ArrayData(v, context.BaseContext.OffsetLUT), lut);
+						writer.WriteObjectOffset(Normal, (w, v) => w.WriteVector3ArrayData(v, context.OffsetLUT), lut);
 						break;
 					case KeyframeAttributes.Target:
 						writer.WriteObjectOffset(Target, (w, v) => w.WriteVector3Set(v, FloatIOType.Float), lut);
 						break;
 					case KeyframeAttributes.Roll:
-						writer.WriteObjectOffset(Roll, (w, v) => w.WriteFloatSet(v, context.FileContext.AngleType), lut);
+						writer.WriteObjectOffset(Roll, (w, v) => w.WriteFloatSet(v, context.AngleType), lut);
 						break;
 					case KeyframeAttributes.Angle:
-						writer.WriteObjectOffset(Angle, (w, v) => w.WriteFloatSet(v, context.FileContext.AngleType), lut);
+						writer.WriteObjectOffset(Angle, (w, v) => w.WriteFloatSet(v, context.AngleType), lut);
 						break;
 					case KeyframeAttributes.LightColor:
 						writer.WriteObjectOffset(LightColor, (w, v) => w.WriteColorSet(v, ColorIOType.ARGB8_32), lut);
@@ -597,8 +595,7 @@ namespace SA3D.Modeling.AnimationData
 			WriteKeyframes(typePrefix + "QROTATION", QuaternionRotation, "MKEYQ", v => $"{v.W.ToAscii()}, {v.X.ToAscii()}, {v.Y.ToAscii()}, {v.Z.ToAscii()}");
 		}
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, AnimationAsciiIOContext context)
+		void IAsciiSerializable<AnimationAsciiIOContext>.Write(AsciiWriter writer, AnimationAsciiIOContext context)
 		{
 			List<int> frameCounts = [];
 

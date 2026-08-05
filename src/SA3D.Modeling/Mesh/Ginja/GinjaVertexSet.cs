@@ -485,8 +485,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			Type = (GinjaVertexType)reader.ReadByte();
 			int readStructSize = reader.ReadByte();
@@ -531,20 +530,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 			};
 		}
 
-		internal static LabeledArray<GinjaVertexSet> ReadArray(BinaryObjectReader reader, IOContext context)
-		{
-			List<GinjaVertexSet> result = [];
-
-			while(reader.ReadObject<GinjaVertexSet, IOContext>(context) is GinjaVertexSet vertexSet && vertexSet.Type != GinjaVertexType.End)
-			{
-				result.Add(vertexSet);
-			}
-
-			return new([.. result]);
-		}
-
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			int structComponentCount = StructType.GetStructComponentCount();
 			if(DataLength % structComponentCount != 0)
@@ -596,16 +582,6 @@ namespace SA3D.Modeling.Mesh.Ginja
 			}
 
 			writer.WriteUInt32((uint)(dataLength * structSize));
-		}
-
-		internal static void WriteArray(BinaryObjectWriter writer, IEnumerable<GinjaVertexSet> vertexSets, IOContext context)
-		{
-			foreach(GinjaVertexSet vertexSet in vertexSets)
-			{
-				writer.WriteObject(vertexSet, context);
-			}
-
-			writer.WriteObject(EndVertexSet);
 		}
 
 

@@ -230,6 +230,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			Polygons = new LabeledArray<IBasicPolygon>(PolygonLabelPrefix.GenerateIdentifier(), 0);
 		}
 
+
 		/// <summary>
 		/// Counts up the number of polygon corners in the mesh set
 		/// </summary>
@@ -301,8 +302,8 @@ namespace SA3D.Modeling.Mesh.Basic
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			ushort header = reader.ReadUInt16();
 			MaterialIndex = (ushort)(header & 0x3FFFu);
@@ -322,8 +323,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			TextureCoordinates = reader.ReadLabeledObjectArrayOffset(FloatIOType.Short.GetVector2Reader(), cornerCount, TextureCoordinatesLabelPrefix, context.OffsetLUT);
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			VerifyPolygonData();
 
@@ -352,8 +352,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteArray("VERTUV", TextureCoordinates, 0, (w, v) => w.WriteLine($"\tUV( {(int)v.X}, {(int)v.Y} ),"));
 		}
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer)
+		void IAsciiSerializable.Write(AsciiWriter writer)
 		{
 			using(writer.WriteBlock("MESH"))
 			{
@@ -366,6 +365,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				writer.WriteObjectPropertyLine("VertUV", TextureCoordinates.EmptyNull());
 			}
 		}
+
 
 		object ICloneable.Clone()
 		{

@@ -89,6 +89,7 @@ namespace SA3D.Modeling.AnimationData
 		/// </summary>
 		public float OutsideAngle { get; set; }
 
+
 		/// <summary>
 		/// Linearly interpolate between two spotlights.
 		/// </summary>
@@ -122,8 +123,8 @@ namespace SA3D.Modeling.AnimationData
 			);
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			Near = reader.ReadSingle();
 			Far = reader.ReadSingle();
@@ -131,8 +132,7 @@ namespace SA3D.Modeling.AnimationData
 			OutsideAngle = reader.ReadSingle(FloatIOType.BAMS32);
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer)
+		readonly void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteSingle(Near);
 			writer.WriteSingle(Far);

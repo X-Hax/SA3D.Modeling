@@ -415,8 +415,7 @@ namespace SA3D.Modeling.Structs
 
 		#region IO Methods
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, ColorIOType type)
+		void IBinarySerializable<ColorIOType>.Read(BinaryObjectReader reader, ColorIOType type)
 		{
 			switch(type)
 			{
@@ -442,8 +441,7 @@ namespace SA3D.Modeling.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer, ColorIOType type)
+		readonly void IBinarySerializable<ColorIOType>.Write(BinaryObjectWriter writer, ColorIOType type)
 		{
 			switch(type)
 			{

@@ -207,6 +207,7 @@ namespace SA3D.Modeling.ObjectData
 			Models = new(ModelsLabelPrefix + identifier, 0);
 		}
 
+
 		/// <summary>
 		/// Sorts land entries to be viable for SA2 / SA2B export.
 		/// </summary>
@@ -225,8 +226,8 @@ namespace SA3D.Modeling.ObjectData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			Format = context.LevelFormat;
 
@@ -280,8 +281,7 @@ namespace SA3D.Modeling.ObjectData
 			TextureListAddress = reader.ReadUInt32();
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			short displayCount = 0;
 
@@ -333,6 +333,7 @@ namespace SA3D.Modeling.ObjectData
 			writer.WriteUInt32(TextureListAddress);
 
 		}
+
 
 		/// <inheritdoc/>
 		public override string ToString()

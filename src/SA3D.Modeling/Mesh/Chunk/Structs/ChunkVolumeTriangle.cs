@@ -191,8 +191,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, int polygonAttributeCount)
+		void IBinarySerializable<int>.Read(BinaryObjectReader reader, int polygonAttributeCount)
 		{
 			Index1 = reader.ReadUInt16();
 			Index2 = reader.ReadUInt16();
@@ -214,8 +213,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer, int polygonAttributeCount)
+		readonly void IBinarySerializable<int>.Write(BinaryObjectWriter writer, int polygonAttributeCount)
 		{
 			writer.WriteUInt16(Index1);
 			writer.WriteUInt16(Index2);
@@ -237,8 +235,7 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
+		readonly void IAsciiSerializable<(ModelAsciiIOContext context, int attributeCount)>.Write(AsciiWriter writer, (ModelAsciiIOContext context, int attributeCount) context)
 		{
 			writer.Write($"\t\t{Index1}, {Index2}, {Index3}, ");
 			writer.WritePolygonUserflags(context.attributeCount, Attribute1, Attribute2, Attribute3, context.context.BaseContext.PolygonAttributesAsColor);

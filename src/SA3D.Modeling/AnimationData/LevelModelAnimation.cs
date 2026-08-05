@@ -130,6 +130,7 @@ namespace SA3D.Modeling.AnimationData
 		/// </summary>
 		public uint TextureListAddress { get; set; }
 
+
 		/// <summary>
 		/// Creates a blank level model animation
 		/// </summary>
@@ -140,8 +141,8 @@ namespace SA3D.Modeling.AnimationData
 			Animation = new(Model, new());
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			Frame = reader.ReadSingle();
 			Step = reader.ReadSingle();
@@ -165,8 +166,7 @@ namespace SA3D.Modeling.AnimationData
 			TextureListAddress = reader.ReadUInt32();
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteSingle(Frame);
 			writer.WriteSingle(Step);

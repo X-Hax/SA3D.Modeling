@@ -36,8 +36,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			SetAllNodeAttributes((NodeAttributes)reader.ReadUInt32(), RotationUpdateMode.Keep);
 
@@ -78,8 +77,7 @@ namespace SA3D.Modeling.ObjectData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteUInt32((uint)Attributes);
 			writer.WriteObjectOffset(MeshData, context, context.OffsetLUT);
@@ -113,8 +111,7 @@ namespace SA3D.Modeling.ObjectData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			writer.WriteObject(Next, context);
 			writer.WriteObject(Child, context);

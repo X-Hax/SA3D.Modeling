@@ -94,7 +94,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		public MaterialBumpChunk() : base(PolyChunkType.Material_Bump) { }
 
 		/// <inheritdoc/>
-		public override void Read(BinaryObjectReader reader)
+		protected override void Read(BinaryObjectReader reader)
 		{
 			base.Read(reader);
 
@@ -103,7 +103,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Write(BinaryObjectWriter writer)
+		protected override void Write(BinaryObjectWriter writer)
 		{
 			base.Write(writer);
 
@@ -118,7 +118,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			base.Write(writer, context);
 			writer.WriteLine();

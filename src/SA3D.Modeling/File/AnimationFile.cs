@@ -122,36 +122,57 @@ namespace SA3D.Modeling.File
 		}
 
 
-		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader, FileContext<AnimationFileIOContext> context)
+		bool IFileSerializable<AnimationFileIOContext>.CheckCanReadFile(BinaryObjectReader reader, AnimationFileIOContext context, ref FileIOInfo fileInfo)
 		{
-			return CheckIsSAAnimFile(reader) || CheckIsNJAnimFile(reader);
+			return CheckIsSAAnimFile(reader, ref fileInfo) || CheckIsNJAnimFile(reader, ref fileInfo);
 		}
 
-		private bool CheckIsSAAnimFile(BinaryObjectReader reader)
+		private bool CheckIsSAAnimFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
 		{
 			using SeekToken seekToken = reader.At();
-			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
-			return (reader.ReadUInt64() & HeaderMask) == SAANIM;
-		}
-
-		private bool CheckIsNJAnimFile(BinaryObjectReader reader)
-		{
-			return NJBlockUtility.FindBlockOffset(reader, AnimationBlockHeaders, out _);
-		}
-
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, FileContext<AnimationFileIOContext> context)
-		{
-			Filepath = context.Filepath;
-
-			if(CheckIsSAAnimFile(reader))
+			using EndiannessToken endiannessToken = reader.WithEndian(fileInfo.Endianness ?? Endianness.Little);
+			if((reader.ReadUInt64() & HeaderMask) == SAANIM)
 			{
-				ReadSA(reader, context.Context);
+				fileInfo.Endianness ??= Endianness.Little;
+				return true;
 			}
-			else if(CheckIsNJAnimFile(reader))
+
+			return false;
+		}
+
+		private bool CheckIsNJAnimFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
+		{
+			if(NJBlockUtility.FindBlockOffset(reader, AnimationBlockHeaders, out _))
 			{
-				ReadNJ(reader, context.Context);
+				using(reader.At(4, SeekOrigin.Begin))
+				{
+					fileInfo.Endianness ??= reader.CheckEndianness32();
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+
+		void IFileSerializable<AnimationFileIOContext>.ReadFile(BinaryObjectReader fileReader, AnimationFileIOContext context, FileIOInfo fileInfo)
+		{
+			Filepath = fileInfo.Filepath;
+			AnimationFile file = this;
+			fileReader.ReadObject(ref file, context);
+		}
+
+		void IBinarySerializable<AnimationFileIOContext>.Read(BinaryObjectReader reader, AnimationFileIOContext context)
+		{
+			FileIOInfo dummy = default;
+			if(CheckIsSAAnimFile(reader, ref dummy))
+			{
+				ReadSA(reader, context);
+			}
+			else if(CheckIsNJAnimFile(reader, ref dummy))
+			{
+				ReadNJ(reader, context);
 			}
 			else
 			{
@@ -161,8 +182,6 @@ namespace SA3D.Modeling.File
 
 		private void ReadSA(BinaryObjectReader reader, AnimationFileIOContext context)
 		{
-			using EndiannessToken endiannesToken = reader.WithEndian(Endianness.Little);
-
 			ulong headerVersion = reader.ReadUInt64();
 			byte version = (byte)(headerVersion >> 56);
 			if(version > CurrentModelVersion)
@@ -223,15 +242,11 @@ namespace SA3D.Modeling.File
 
 			AnimationIOContext ioContext = new()
 			{
-				BaseContext = new()
-				{
-					OffsetLUT = new()
-				},
-
+				OffsetLUT = new(),
 				FileContext = context
 			};
 
-			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.OffsetLUT)
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(AnimationFile), nameof(Animation));
 
 			NJFile = false;
@@ -244,7 +259,6 @@ namespace SA3D.Modeling.File
 				throw new ArgumentException("Cannot read NJ animations without providing node count!");
 			}
 
-			using EndiannessToken endiannesToken = reader.WithEndian(reader.CheckEndianness32(4, SeekOrigin.Current));
 			Dictionary<long, string> blocks = NJBlockUtility.GetBlockOffsets(reader);
 
 			if(!NJBlockUtility.FindBlockOffset(blocks, AnimationBlockHeaders, out long? animationBlockOffset))
@@ -258,32 +272,26 @@ namespace SA3D.Modeling.File
 
 			AnimationIOContext ioContext = new()
 			{
-				BaseContext = new()
-				{
-					OffsetLUT = new()
-				},
-
+				OffsetLUT = new(),
 				FileContext = context
 			};
 
-			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.BaseContext.OffsetLUT)
+			Animation = reader.ReadObjectOffset<Animation, AnimationIOContext>(ioContext, ioContext.OffsetLUT)
 				?? throw reader.ReadNullReference(nameof(AnimationFile), nameof(Animation));
 
 			NJFile = true;
 		}
 
 
-
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, FileContext<AnimationFileIOContext> context)
+		void IBinarySerializable<AnimationFileIOContext>.Write(BinaryObjectWriter writer, AnimationFileIOContext context)
 		{
 			if(NJFile)
 			{
-				WriteNJ(writer, context.Context);
+				WriteNJ(writer, context);
 			}
 			else
 			{
-				WriteSA(writer, context.Context);
+				WriteSA(writer, context);
 			}
 		}
 
@@ -296,11 +304,7 @@ namespace SA3D.Modeling.File
 
 			AnimationIOContext ioContext = new()
 			{
-				BaseContext = new()
-				{
-					OffsetLUT = new()
-				},
-
+				OffsetLUT = new(),
 				FileContext = context
 			};
 
@@ -315,7 +319,7 @@ namespace SA3D.Modeling.File
 
 			writer.WriteUInt32(animFileInfo);
 
-			MetaData.Write(writer, ioContext.BaseContext.OffsetLUT.Labels, metadataToken, null);
+			MetaData.UpdateAndWrite(writer, ioContext.OffsetLUT.Labels, metadataToken, null);
 		}
 
 		private void WriteNJ(BinaryObjectWriter writer, AnimationFileIOContext context)
@@ -345,11 +349,7 @@ namespace SA3D.Modeling.File
 
 			AnimationIOContext ioContext = new()
 			{
-				BaseContext = new()
-				{
-					OffsetLUT = new()
-				},
-
+				OffsetLUT = new(),
 				FileContext = context
 			};
 
@@ -357,7 +357,8 @@ namespace SA3D.Modeling.File
 
 			using(writer.WithOffsetOrigin())
 			{
-				writer.WriteObject(Animation, ioContext, ioContext.BaseContext.OffsetLUT);
+				writer.WriteObject(Animation, ioContext, ioContext.OffsetLUT);
+				writer.Flush();
 			}
 
 			uint byteSize = (uint)(writer.Position - animationStart);
@@ -399,5 +400,6 @@ namespace SA3D.Modeling.File
 				writer.WriteLine("#endif", 2);
 			}
 		}
+
 	}
 }

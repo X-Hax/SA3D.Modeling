@@ -104,8 +104,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			: this(new ushort[size], reversed) { }
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			ushort header = reader.ReadUInt16();
 			Indices = new ushort[header & 0x7FFF];
@@ -116,8 +115,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer)
+		readonly void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteUInt16((ushort)((Indices.Length & 0x7FFF) | (Reversed ? 0x8000 : 0)));
 			for(int i = 0; i < Indices.Length; i++)
@@ -126,8 +124,7 @@ namespace SA3D.Modeling.Mesh.Basic.Polygon
 			}
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer)
+		readonly void IAsciiSerializable.Write(AsciiWriter writer)
 		{
 			writer.Write($"\tStrip(0x{(Reversed ? "8000" : "0")}, {Indices.Length}), ");
 

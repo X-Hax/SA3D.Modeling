@@ -9,7 +9,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 	public abstract class BitsChunk : PolyChunk
 	{
 		/// <inheritdoc/>
-		protected override bool AlignWithFour => false;
+		public override bool AlignWithFour => false;
 
 		/// <summary>
 		/// Base constructor for bits chunks.
@@ -18,7 +18,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		protected BitsChunk(PolyChunkType type) : base(type) { }
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			base.Write(writer, context);
 			writer.WriteLine();

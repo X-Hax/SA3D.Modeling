@@ -43,7 +43,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 					case _parameters:
 						return JsonSerializer.Deserialize<LabeledArray<IGinjaParameter>>(ref reader, options);
 					case _polygons:
-						return JsonSerializer.Deserialize<LabeledArray<GinjaPolygon>>(ref reader, options);
+						return JsonSerializer.Deserialize<GinjaPolygonArray>(ref reader, options);
 					default:
 						throw new InvalidPropertyException();
 				}
@@ -55,7 +55,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 				LabeledArray<IGinjaParameter> parameters = (LabeledArray<IGinjaParameter>?)values[_parameters]
 					?? throw new InvalidDataException($"GinjaMeshSet requires property \"{_parameters}\"!");
 
-				LabeledArray<GinjaPolygon> polygons = (LabeledArray<GinjaPolygon>?)values[_polygons]
+				GinjaPolygonArray polygons = (GinjaPolygonArray?)values[_polygons]
 					?? throw new InvalidDataException($"GinjaMeshSet requires property \"{_polygons}\"!");
 
 				return new()
@@ -89,12 +89,12 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <summary>
 		/// The data parameters.
 		/// </summary>
-		public LabeledArray<IGinjaParameter> Parameters { get; set; }
+		public LabeledArray<IGinjaParameter>? Parameters { get; set; }
 
 		/// <summary>
 		/// The polygon data.
 		/// </summary>
-		public LabeledArray<GinjaPolygon> Polygons { get; set; }
+		public GinjaPolygonArray? Polygons { get; set; }
 
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 			string identifier = StringExtensions.GenerateIdentifier();
 
 			Parameters = new(ParametersLabelPrefix + identifier, 0);
-			Polygons = new(PolygonsLabelPrefix + identifier, 0);
+			Polygons = new() { Label = PolygonsLabelPrefix + identifier };
 		}
 
 		/// <summary>
@@ -114,6 +114,11 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <returns></returns>
 		public GinjaIndexFormat? GetIndexFormat()
 		{
+			if(Parameters == null)
+			{
+				return null;
+			}
+
 			foreach(GinjaIndexFormatParameter param in Parameters.OfType<GinjaIndexFormatParameter>())
 			{
 				return param.IndexFormat;
@@ -123,8 +128,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, GinjaIOContext context)
+		void IBinarySerializable<GinjaIOContext>.Read(BinaryObjectReader reader, GinjaIOContext context)
 		{
 			string identifier = StringExtensions.GenerateIdentifier();
 
@@ -134,18 +138,14 @@ namespace SA3D.Modeling.Mesh.Ginja
 			long polygonsOffset = reader.ReadOffsetValue();
 			int polygonsSize = reader.ReadInt32();
 
-			Parameters = reader.ReadLabeledObjectArrayAtOffset(IGinjaParameter.ReadParameter, parametersOffset, parametersCount, ParametersLabelPrefix, context.BaseContext.OffsetLUT)
-				?? new(ParametersLabelPrefix + identifier, 0);
+			Parameters = reader.ReadLabeledObjectArrayAtOffset(IGinjaParameter.ReadParameter, parametersOffset, parametersCount, ParametersLabelPrefix, context.BaseContext.OffsetLUT);
 
 			context.IndexFormat = GetIndexFormat() ?? context.IndexFormat;
 
-			Polygons = reader.ReadLUTItemAtOffset(polygonsOffset, context.BaseContext.OffsetLUT, PolygonsLabelPrefix,
-				(r) => GinjaPolygon.ReadArray(r, polygonsSize, context.IndexFormat))
-				?? new(PolygonsLabelPrefix + identifier, 0);
+			Polygons = reader.ReadObjectAtOffset<GinjaPolygonArray, (GinjaIndexFormat format, int size)>(polygonsOffset, (context.IndexFormat, polygonsSize), context.BaseContext.OffsetLUT);
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, GinjaIOContext context)
+		void IBinarySerializable<GinjaIOContext>.Write(BinaryObjectWriter writer, GinjaIOContext context)
 		{
 			context.IndexFormat = GetIndexFormat() ?? context.IndexFormat;
 			GinjaIndexFormat currentIndexFormat = context.IndexFormat;
@@ -157,17 +157,17 @@ namespace SA3D.Modeling.Mesh.Ginja
 				w.Align(0x20, alignOrigin);
 			}, context.BaseContext.OffsetLUT);
 
-			writer.WriteInt32(Parameters.Length);
+			writer.WriteInt32(Parameters?.Length ?? 0);
 
 			writer.WriteObjectOffset(Polygons.EmptyNull(), (w, v) =>
 			{
 				long alignOrigin = w.Position;
-				w.WriteObjectArray(v, currentIndexFormat);
+				w.WriteObject(v, (currentIndexFormat, 0));
 				w.Align(0x20, alignOrigin);
 			}, context.BaseContext.OffsetLUT);
 
-			int cornerSize = GinjaPolygon.GetIndexSizes(currentIndexFormat).Sum();
-			int size = Polygons.Sum(x => (x.Corners.Length * cornerSize) + 3);
+			int cornerSize = GinjaPolygonArray.GetIndexSizes(currentIndexFormat).Sum();
+			int size = Polygons?.Sum(x => (x.Corners.Length * cornerSize) + 3) ?? 0;
 			size = AlignmentHelper.Align(size, 0x20);
 
 			writer.WriteInt32(size);
@@ -187,8 +187,8 @@ namespace SA3D.Modeling.Mesh.Ginja
 		{
 			return new()
 			{
-				Parameters = Parameters.Clone(),
-				Polygons = Polygons.ContentClone()
+				Parameters = Parameters?.Clone(),
+				Polygons = Polygons == null ? null : new(Polygons.Select(x => x.Clone())) { Label = Polygons.Label }
 			};
 		}
 
@@ -196,7 +196,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		public override string ToString()
 		{
 			GinjaIndexFormat? format = GetIndexFormat();
-			return (format.HasValue ? ((uint)format.Value).ToString("X8") : "NULL") + $" - {Parameters.Length} - {Polygons.Length}";
+			return (format.HasValue ? ((uint)format.Value).ToString("X8") : "NULL") + $" - {Parameters?.Length ?? 0} - {Polygons?.Length ?? 0}";
 		}
 
 

@@ -185,8 +185,7 @@ namespace SA3D.Modeling.ObjectData
 		}
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, IOContext context)
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			ModelBounds = reader.ReadObject<Bounds>();
 
@@ -211,8 +210,7 @@ namespace SA3D.Modeling.ObjectData
 			}
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, IOContext context)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteObject(ModelBounds);
 

@@ -184,8 +184,9 @@ namespace SA3D.Modeling.Mesh.Basic
 			return format is Structs.Format.Basic or Structs.Format.BasicDX;
 		}
 
+
 		/// <inheritdoc/>
-		public override void Read(BinaryObjectReader reader, IOContext context)
+		protected override void Read(BinaryObjectReader reader, IOContext context)
 		{
 			long positionsOffset = reader.ReadOffsetValue();
 			long normalsOffset = reader.ReadOffsetValue();
@@ -232,7 +233,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		}
 
 		/// <inheritdoc/>
-		public override void Write(BinaryObjectWriter writer, IOContext context)
+		protected override void Write(BinaryObjectWriter writer, IOContext context)
 		{
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Positions, context.OffsetLUT);
 			writer.WriteObjectArrayOffset(StructBinaryHelper.WriteVector3, Normals.EmptyNull(), context.OffsetLUT);
@@ -250,7 +251,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			writer.WriteArray("MATERIAL", Materials, 1);
 

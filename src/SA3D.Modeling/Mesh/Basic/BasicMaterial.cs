@@ -471,8 +471,7 @@ namespace SA3D.Modeling.Mesh.Basic
 
 		#endregion
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			DiffuseColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
 			SpecularColor = reader.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32);
@@ -481,8 +480,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			Attributes = reader.ReadUInt32();
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(BinaryObjectWriter writer)
+		readonly void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteObject(DiffuseColor, ColorIOType.ARGB8_32);
 			writer.WriteObject(SpecularColor, ColorIOType.ARGB8_32);
@@ -491,8 +489,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			writer.WriteUInt32(Attributes);
 		}
 
-		/// <inheritdoc/>
-		public readonly void Write(AsciiWriter writer)
+		readonly void IAsciiSerializable.Write(AsciiWriter writer)
 		{
 			using(writer.WriteBlock("MAT"))
 			{

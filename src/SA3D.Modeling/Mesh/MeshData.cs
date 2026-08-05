@@ -142,14 +142,41 @@ namespace SA3D.Modeling.Mesh
 		public abstract bool CanWrite(Format format);
 
 
-		/// <inheritdoc/>
-		public abstract void Read(BinaryObjectReader reader, IOContext context);
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
+		{
+			Read(reader, context);
+		}
 
-		/// <inheritdoc/>
-		public abstract void Write(BinaryObjectWriter writer, IOContext context);
+		/// <summary>
+		/// Abstract implementation for <see cref="IBinarySerializable{IOContext}.Read"/>
+		/// </summary>
+		/// <param name="reader"></param>
+		/// <param name="context"></param>
+		protected abstract void Read(BinaryObjectReader reader, IOContext context);
 
-		/// <inheritdoc/>
-		public abstract void Write(AsciiWriter writer, ModelAsciiIOContext context);
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
+		{
+			Write(writer, context);
+		}
+
+		/// <summary>
+		/// Abstract implementation for <see cref="IBinarySerializable{IOContext}.Write"/>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="context"></param>
+		protected abstract void Write(BinaryObjectWriter writer, IOContext context);
+
+		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
+		{
+			Write(writer, context);
+		}
+
+		/// <summary>
+		/// Abstract implementation for <see cref="IAsciiSerializable{IOContext}.Write"/>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="context"></param>
+		protected abstract void Write(AsciiWriter writer, ModelAsciiIOContext context);
 
 
 		object ICloneable.Clone()
@@ -168,5 +195,6 @@ namespace SA3D.Modeling.Mesh
 		{
 			return $"{Label} - Buffer";
 		}
+
 	}
 }

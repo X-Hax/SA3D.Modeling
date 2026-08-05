@@ -235,7 +235,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Read(BinaryObjectReader reader)
+		protected override void Read(BinaryObjectReader reader)
 		{
 			base.Read(reader);
 
@@ -253,7 +253,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Write(BinaryObjectWriter writer)
+		protected override void Write(BinaryObjectWriter writer)
 		{
 			WriteCheck();
 			VerifyPolygonData();
@@ -275,7 +275,7 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			WriteCheck();
 			VerifyPolygonData();

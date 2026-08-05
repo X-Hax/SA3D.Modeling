@@ -108,24 +108,21 @@ namespace SA3D.Modeling.TexName
 		public TextureName() : this(null, 0, 0) { }
 
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader)
+		void IBinarySerializable.Read(BinaryObjectReader reader)
 		{
 			Name = reader.ReadStringOffset(StringBinaryFormat.NullTerminated);
 			Attributes = reader.ReadUInt32();
 			TextureAddress = reader.ReadUInt32();
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer)
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			writer.WriteStringOffset(StringBinaryFormat.NullTerminated, Name, alignment: 4);
 			writer.WriteUInt32(Attributes);
 			writer.WriteUInt32(TextureAddress);
 		}
 
-		/// <inheritdoc/>
-		public void Write(AsciiWriter writer)
+		void IAsciiSerializable.Write(AsciiWriter writer)
 		{
 			writer.WriteLine($"\tTEXN( \"{Name}\" ),");
 		}

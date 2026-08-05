@@ -104,26 +104,34 @@ namespace SA3D.Modeling.File
 		}
 
 
-		/// <inheritdoc/>
-		public bool Check(BinaryObjectReader reader, FileContext fileContext)
+		bool IFileSerializable.CheckCanReadFile(BinaryObjectReader reader, ref FileIOInfo fileInfo)
 		{
 			using SeekToken seekToken = reader.At();
-			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
+			using EndiannessToken endiannessToken = reader.WithEndian(fileInfo.Endianness ?? Endianness.Little);
 
-			return (reader.ReadUInt64() & HeaderMask) switch
+			bool result = (reader.ReadUInt64() & HeaderMask) switch
 			{
 				SA1LVL or SADXLVL or SA2LVL or SA2BLVL => true,
 				_ => false,
 			};
+
+			if(result)
+			{
+				fileInfo.Endianness ??= Endianness.Little;
+			}
+
+			return result;
 		}
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, FileContext fileContext)
+		void IFileSerializable.ReadFile(BinaryObjectReader fileReader, FileIOInfo fileInfo)
 		{
-			Filepath = fileContext.Filepath;
+			Filepath = fileInfo.Filepath;
+			LevelFile file = this;
+			fileReader.ReadObject(ref file);
+		}
 
-			using EndiannessToken endiannessToken = reader.WithEndian(Endianness.Little);
-
+		void IBinarySerializable.Read(BinaryObjectReader reader)
+		{
 			ulong headerVersion = reader.ReadUInt64();
 
 			Format format = (headerVersion & HeaderMask) switch
@@ -168,8 +176,7 @@ namespace SA3D.Modeling.File
 				?? throw reader.ReadNullReference(nameof(LevelFile), nameof(Level));
 		}
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, FileContext fileContext)
+		void IBinarySerializable.Write(BinaryObjectWriter writer)
 		{
 			ulong header = Level.Format switch
 			{
@@ -190,7 +197,7 @@ namespace SA3D.Modeling.File
 			};
 
 			writer.WriteObjectOffset(Level, context, context.OffsetLUT);
-			MetaData.Write(writer, context.OffsetLUT.Labels, null, null);
+			MetaData.UpdateAndWrite(writer, context.OffsetLUT.Labels, null, null);
 		}
 	}
 }

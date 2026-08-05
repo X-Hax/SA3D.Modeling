@@ -100,8 +100,8 @@ namespace SA3D.Modeling.File.MetaData
 		/// </summary>
 		public abstract MetaDataBlockType Type { get; }
 
-		/// <inheritdoc/>
-		public void Read(BinaryObjectReader reader, MetaDataIOContext context)
+
+		void IBinarySerializable<MetaDataIOContext>.Read(BinaryObjectReader reader, MetaDataIOContext context)
 		{
 			if(context.Version < 2)
 			{
@@ -134,8 +134,8 @@ namespace SA3D.Modeling.File.MetaData
 		/// <param name="reader">Reader to read from</param>
 		protected abstract void ReadContents(BinaryObjectReader reader);
 
-		/// <inheritdoc/>
-		public void Write(BinaryObjectWriter writer, MetaDataIOContext context)
+
+		void IBinarySerializable<MetaDataIOContext>.Write(BinaryObjectWriter writer, MetaDataIOContext context)
 		{
 			writer.WriteUInt32((uint)Type);
 			SeekToken blockSizeOffset = writer.At();

@@ -11,12 +11,10 @@ using SA3D.Modeling.Structs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using static SA3D.Common.StringExtensions;
 
 namespace SA3D.Modeling.Mesh.Ginja
 {
@@ -57,10 +55,10 @@ namespace SA3D.Modeling.Mesh.Ginja
 				switch(propertyName)
 				{
 					case _vertexData:
-						return JsonSerializer.Deserialize<LabeledArray<GinjaVertexSet>>(ref reader, options);
+						return JsonSerializer.Deserialize<GinjaVertexSetArray>(ref reader, options);
 					case _opaqueMeshes:
 					case _transparentMeshes:
-						return JsonSerializer.Deserialize< LabeledArray<GinjaMeshSet>>(ref reader, options);
+						return JsonSerializer.Deserialize<LabeledArray<GinjaMeshSet>>(ref reader, options);
 					default:
 						throw new InvalidPropertyException();
 				}
@@ -69,14 +67,11 @@ namespace SA3D.Modeling.Mesh.Ginja
 			/// <inheritdoc/>
 			protected override GinjaMesh CreateTarget(ReadOnlyDictionary<string, object?> values)
 			{
-				LabeledArray<GinjaVertexSet> vertexData = (LabeledArray<GinjaVertexSet>?)values[_vertexData]
-					?? throw new InvalidDataException("GinjaMesh requires Vertexdata!");
-
 				return new()
 				{
 					Label = (string)values[BaseJsonConverter._label]!,
 					MeshBounds = (Bounds)values[BaseJsonConverter._meshBounds]!,
-					VertexData = vertexData,
+					VertexData = (GinjaVertexSetArray?)values[_vertexData],
 					OpaqueMeshes = (LabeledArray<GinjaMeshSet>?)values[_opaqueMeshes],
 					TransparentMeshes = (LabeledArray<GinjaMeshSet>?)values[_transparentMeshes],
 				};
@@ -103,11 +98,6 @@ namespace SA3D.Modeling.Mesh.Ginja
 		}
 
 		/// <summary>
-		/// Label prefix for <see cref="VertexData"/>
-		/// </summary>
-		public const string VertexDataLabelPrefix = "vertex_";
-
-		/// <summary>
 		/// Label prefix for <see cref="OpaqueMeshes"/>
 		/// </summary>
 		public const string OpaqueMeshesLabelPrefix = "opaque_";
@@ -120,7 +110,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// <summary>
 		/// Seperate sets of vertex data in this attach.
 		/// </summary>
-		public LabeledArray<GinjaVertexSet>? VertexData { get; set; }
+		public GinjaVertexSetArray? VertexData { get; set; }
 
 		/// <summary>
 		/// Meshes with opaque rendering properties.
@@ -145,7 +135,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		/// </summary>
 		public GinjaMesh() : base()
 		{
-			VertexData = new(VertexDataLabelPrefix.GenerateIdentifier(), 0);
+			VertexData = new();
 			OpaqueMeshes = null;
 			TransparentMeshes = null;
 		}
@@ -167,7 +157,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 
 
 		/// <inheritdoc/>
-		public override void Read(BinaryObjectReader reader, IOContext context)
+		protected override void Read(BinaryObjectReader reader, IOContext context)
 		{
 			long vertexOffset = reader.ReadOffsetValue();
 			_ = reader.ReadOffsetValue(); // vertex weights; we dont support it
@@ -178,15 +168,15 @@ namespace SA3D.Modeling.Mesh.Ginja
 			short transparentCount = reader.ReadInt16();
 			MeshBounds = reader.ReadObject<Bounds>();
 
-			VertexData = reader.ReadLUTItemAtOffset(vertexOffset, context.OffsetLUT, VertexDataLabelPrefix, (r) => GinjaVertexSet.ReadArray(r, context));
+			VertexData = reader.ReadObjectAtOffset<GinjaVertexSetArray, IOContext>(vertexOffset, context, context.OffsetLUT);
 			OpaqueMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(opaqueOffset, opaqueCount, OpaqueMeshesLabelPrefix, new(context), context.OffsetLUT);
 			TransparentMeshes = reader.ReadLabeledObjectArrayAtOffset<GinjaMeshSet, GinjaIOContext>(transparentOffset, transparentCount, TransparentMeshesLabelPrefix, new(context), context.OffsetLUT);
 		}
 
 		/// <inheritdoc/>
-		public override void Write(BinaryObjectWriter writer, IOContext context)
+		protected override void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectOffset(VertexData.EmptyNull(), (w, v) => GinjaVertexSet.WriteArray(w, v, context), context.OffsetLUT);
+			writer.WriteObjectOffset(VertexData.EmptyNull(), context, context.OffsetLUT);
 			writer.WriteOffsetValue(0);
 			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(OpaqueMeshes.EmptyNull(), new(context), context.OffsetLUT);
 			writer.WriteObjectArrayOffset<GinjaMeshSet, GinjaIOContext>(TransparentMeshes.EmptyNull(), new(context), context.OffsetLUT);
@@ -196,7 +186,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 		}
 
 		/// <inheritdoc/>
-		public override void Write(AsciiWriter writer, ModelAsciiIOContext context)
+		protected override void Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
 			throw new NotImplementedException();
 		}
@@ -209,7 +199,7 @@ namespace SA3D.Modeling.Mesh.Ginja
 			{
 				Label = Label,
 				MeshBounds = MeshBounds,
-				VertexData = VertexData?.ContentClone(),
+				VertexData = VertexData == null ? null : new(VertexData.Select(x => x.Clone())) { Label = VertexData.Label },
 				OpaqueMeshes = OpaqueMeshes?.ContentClone(),
 				TransparentMeshes = TransparentMeshes?.ContentClone(),
 			};
