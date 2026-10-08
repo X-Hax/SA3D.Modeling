@@ -67,7 +67,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
-			using AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("VLIST", this);
+			using AsciiWriterBlockToken? block = writer.WriteStructBlock("VLIST", this);
 
 			if(block == null)
 			{

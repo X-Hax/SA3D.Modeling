@@ -159,7 +159,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 
 		void IAsciiSerializable<ModelAsciiIOContext>.Write(AsciiWriter writer, ModelAsciiIOContext context)
 		{
-			using AsciiWriterBlockToken? block = writer.WriteStructBlockWithReference("PLIST", this);
+			using AsciiWriterBlockToken? block = writer.WriteStructBlock("PLIST", this);
 
 			if(block == null)
 			{
