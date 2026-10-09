@@ -245,9 +245,9 @@ namespace SA3D.Modeling.Mesh.Chunk.PolyChunks
 
 			Polygons = Type switch
 			{
-				PolyChunkType.Volume_Triangle => reader.ReadObjectArray<ChunkVolumeTriangle>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
-				PolyChunkType.Volume_Quad => reader.ReadObjectArray<ChunkVolumeQuad>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
-				PolyChunkType.Volume_Strip => reader.ReadObjectArray<ChunkVolumeStrip>(polygonCount).Cast<IChunkVolumePolygon>().ToArray(),
+				PolyChunkType.Volume_Triangle => reader.ReadObjectArray<ChunkVolumeTriangle, int>(polygonCount, PolygonAttributeCount).Cast<IChunkVolumePolygon>().ToArray(),
+				PolyChunkType.Volume_Quad => reader.ReadObjectArray<ChunkVolumeQuad, int>(polygonCount, PolygonAttributeCount).Cast<IChunkVolumePolygon>().ToArray(),
+				PolyChunkType.Volume_Strip => reader.ReadObjectArray<ChunkVolumeStrip, int>(polygonCount, PolygonAttributeCount).Cast<IChunkVolumePolygon>().ToArray(),
 				_ => throw new InvalidOperationException(),
 			};
 		}
