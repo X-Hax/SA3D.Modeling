@@ -32,13 +32,8 @@ namespace SA3D.Modeling.Mesh.Ginja.Enums
 		MirrorU = Flag8.B3,
 
 		/// <summary>
-		/// Unknown functionality.
-		/// </summary>
-		Unknown = Flag8.B4,
-
-		/// <summary>
 		/// Mask for all valid values.
 		/// </summary>
-		Mask = RepeatV | MirrorV | RepeatU | MirrorU | Unknown
+		Mask = RepeatV | MirrorV | RepeatU | MirrorU
 	}
 }
