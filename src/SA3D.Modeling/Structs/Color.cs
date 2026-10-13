@@ -593,10 +593,10 @@ namespace SA3D.Modeling.Structs
 		public override readonly bool Equals(object? obj)
 		{
 			return obj is Color color &&
-				   Red == color.Red &&
-				   Green == color.Green &&
-				   Blue == color.Blue &&
-				   Alpha == color.Alpha;
+				   RedF == color.RedF &&
+				   GreenF == color.GreenF &&
+				   BlueF == color.BlueF &&
+				   AlphaF == color.AlphaF;
 		}
 
 		/// <inheritdoc/>
