@@ -447,10 +447,10 @@ namespace SA3D.Modeling.Mesh.Ginja
 					Signed8Data = new(label, [.. processedData.Select(x => (sbyte)x)]);
 					break;
 				case GinjaDataType.Unsigned16:
-					Unsigned16Data = new(label, [.. processedData.Select(x => (byte)x)]);
+					Unsigned16Data = new(label, [.. processedData.Select(x => (ushort)x)]);
 					break;
 				case GinjaDataType.Signed16:
-					Signed16Data = new(label, [.. processedData.Select(x => (byte)x)]);
+					Signed16Data = new(label, [.. processedData.Select(x => (short)x)]);
 					break;
 				case GinjaDataType.Float32:
 					Float32Data = new(label, processedData);

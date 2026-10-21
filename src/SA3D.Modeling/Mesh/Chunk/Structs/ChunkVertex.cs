@@ -408,8 +408,8 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 					),
 				VertexChunkType.Intensity => r => new(
 					r.ReadVector3(),
-					r.ReadUInt16() / ((float)ushort.MaxValue),
-					r.ReadUInt16() / ((float)ushort.MaxValue)
+					IntensityToColor(r.ReadUInt16()),
+					IntensityToColor(r.ReadUInt16())
 				),
 
 				VertexChunkType.Normal => r => new(
@@ -446,8 +446,8 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 				VertexChunkType.NormalIntensity => r => new(
 					r.ReadVector3(),
 					r.ReadVector3(),
-					r.ReadUInt16() / ((float)ushort.MaxValue),
-					r.ReadUInt16() / ((float)ushort.MaxValue)
+					IntensityToColor(r.ReadUInt16()),
+					IntensityToColor(r.ReadUInt16())
 				),
 
 				VertexChunkType.Normal32 => r => new(
@@ -953,9 +953,26 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		}
 
 
-		private static ushort ColorToIntensity(Color color)
+		/// <summary>
+		/// Converts a color into a 16 bit intensity value
+		/// </summary>
+		/// <param name="color">Color to convert</param>
+		/// <returns></returns>
+		public static ushort ColorToIntensity(Color color)
 		{
 			return (ushort)(float.Clamp(color.GetLuminance(), 0, 1) * ushort.MaxValue);
+		}
+
+		/// <summary>
+		/// Converts a 16 bit intensity value into a color
+		/// </summary>
+		/// <param name="intensity">Intensity to convert</param>
+		/// <returns></returns>
+		public static Color IntensityToColor(ushort intensity)
+		{
+			const float factor = 1f / ushort.MaxValue;
+			float floatIntensity = intensity * factor;
+			return new(floatIntensity, floatIntensity, floatIntensity);
 		}
 
 		private static Vector3 DecompressNormal(uint value)
