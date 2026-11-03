@@ -22,7 +22,7 @@ namespace SA3D.Modeling.File
 			using EndiannessToken endiannessToken = reader.WithEndian(endian);
 			using SeekToken seekToken = reader.At();
 
-			while(reader.Position < reader.Length + 8)
+			while(reader.Position + 8 < reader.Length)
 			{
 				long offset = reader.Position;
 				string blockheader = reader.ReadString(StringBinaryFormat.FixedLength, 4);
