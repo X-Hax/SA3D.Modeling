@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 
 namespace SA3D.Modeling.File
 {
 	internal class FileHeaders
 	{
-		public static readonly string AsciiHeader = $"Ninja Ascii by SA3D {Assembly.GetCallingAssembly().GetName().Version}";
+		public static readonly string AsciiHeader = $"Ninja Ascii by SA3D {typeof(FileHeaders).Assembly.GetName().Version}";
 
 		public const ulong HeaderMask = ~((ulong)0xFF << 56);
 
