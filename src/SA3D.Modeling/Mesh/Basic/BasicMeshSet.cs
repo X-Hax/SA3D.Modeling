@@ -91,9 +91,7 @@ namespace SA3D.Modeling.Mesh.Basic
 
 						return new LabeledArray<IBasicPolygon>(label, polygons);
 					case _polygonAttributes:
-						JsonSerializerOptions polygonAttributeOptions = new(options);
-						polygonAttributeOptions.Converters.Add(new UInt32HexJsonConverter());
-						return JsonSerializer.Deserialize<LabeledArray<uint>>(ref reader, polygonAttributeOptions);
+						return JsonSerializer.Deserialize<LabeledArray<BasicMaterialAttributes>>(ref reader, options);
 					case _normals:
 						return JsonSerializer.Deserialize<LabeledArray<Vector3>>(ref reader, options);
 					case _colors:
@@ -116,7 +114,7 @@ namespace SA3D.Modeling.Mesh.Basic
 					Normals = (LabeledArray<Vector3>?)values[_normals],
 					Colors = (LabeledArray<Color>?)values[_colors],
 					TextureCoordinates = (LabeledArray<Vector2>?)values[_textureCoordinates],
-					PolygonAttributes = (LabeledArray<uint>?)values[_polygonAttributes]!
+					PolygonAttributes = (LabeledArray<BasicMaterialAttributes>?)values[_polygonAttributes]!
 				};
 			}
 
@@ -135,9 +133,7 @@ namespace SA3D.Modeling.Mesh.Basic
 				{
 					writer.WritePropertyName(_polygonAttributes);
 
-					JsonSerializerOptions polygonAttributeOptions = new(options);
-					polygonAttributeOptions.Converters.Add(new UInt32HexJsonConverter());
-					JsonSerializer.Serialize(writer, value.PolygonAttributes, polygonAttributeOptions);
+					JsonSerializer.Serialize(writer, value.PolygonAttributes, options);
 				}
 
 				if(value.Normals != null)
@@ -204,7 +200,7 @@ namespace SA3D.Modeling.Mesh.Basic
 		/// <summary>
 		/// Polygon corner attributes
 		/// </summary>
-		public LabeledArray<uint>? PolygonAttributes { get; set; }
+		public LabeledArray<BasicMaterialAttributes>? PolygonAttributes { get; set; }
 
 		/// <summary>
 		/// Polygon corner normals
@@ -317,7 +313,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			int polygonCount = GetPolygonCount();
 			int cornerCount = GetPolygonCornerCount();
 
-			PolygonAttributes = reader.ReadLabeledObjectArrayOffset(r => r.ReadUInt32(), polygonCount, PolygonAttributesLabelPrefix, context.OffsetLUT);
+			PolygonAttributes = reader.ReadLabeledObjectArrayOffset(r => (BasicMaterialAttributes)r.ReadUInt32(), polygonCount, PolygonAttributesLabelPrefix, context.OffsetLUT);
 			Normals = reader.ReadLabeledObjectArrayOffset(StructBinaryHelper.ReadVector3, polygonCount, NormalsLabelPrefix, context.OffsetLUT);
 			Colors = reader.ReadLabeledObjectArrayOffset(r => r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32), cornerCount, ColorsLabelPrefix, context.OffsetLUT);
 			TextureCoordinates = reader.ReadLabeledObjectArrayOffset(FloatIOType.Short.GetVector2Reader(), cornerCount, TextureCoordinatesLabelPrefix, context.OffsetLUT);
@@ -346,7 +342,7 @@ namespace SA3D.Modeling.Mesh.Basic
 			string polyType = PolygonType == BasicPolygonType.TriangleStrips ? "STRIP" : "POLY";
 
 			writer.WriteArray("POLYGON", Polygons, 0);
-			writer.WriteArray(polyType + "ATTR", PolygonAttributes, 0, (w, v) => w.WriteLine($"\tNORM( {v.ToAsciiHex()} ),"));
+			writer.WriteArray(polyType + "ATTR", PolygonAttributes, 0, (w, v) => w.WriteLine($"\tNORM( {v.Data.ToAsciiHex()} ),"));
 			writer.WriteArray(polyType + "NORMAL", Normals, 0, (w, v) => w.WriteLine($"\tPNORM( {v.ToAscii()} ),"));
 			writer.WriteArray("VERTCOLOR", Colors, 0, (w, v) => w.WriteLine($"\tARGB( {v.Alpha}, {v.Red}, {v.Green}, {v.Blue} ),"));
 			writer.WriteArray("VERTUV", TextureCoordinates, 0, (w, v) => w.WriteLine($"\tUV( {(int)v.X}, {(int)v.Y} ),"));
