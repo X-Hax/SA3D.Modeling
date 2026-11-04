@@ -153,11 +153,11 @@ namespace SA3D.Modeling.Structs
 		/// </summary>
 		public float GreenF
 		{
-			readonly get => _blueF;
+			readonly get => _greenF;
 			set
 			{
-				_blueF = value;
-				_blue = FromFloat(value);
+				_greenF = value;
+				_green = FromFloat(value);
 			}
 		}
 
@@ -166,11 +166,11 @@ namespace SA3D.Modeling.Structs
 		/// </summary>
 		public float BlueF
 		{
-			readonly get => _greenF;
+			readonly get => _blueF;
 			set
 			{
-				_greenF = value;
-				_green = FromFloat(value);
+				_blueF = value;
+				_blue = FromFloat(value);
 			}
 		}
 
