@@ -279,7 +279,8 @@ namespace SA3D.Modeling.File
 			IOContext context = new()
 			{
 				MeshFormat = Format,
-				OffsetLUT = new(labels)
+				OffsetLUT = new(labels),
+				ChaoChunk = MetaData.Blocks.Any(x => x is FlagMetaDataBlock flag && flag.Value == MetaDataFlags.ChaoChunk)
 			};
 
 			Model = reader.ReadObjectOffset<Node, IOContext>(context, context.OffsetLUT)
@@ -425,7 +426,8 @@ namespace SA3D.Modeling.File
 			{
 				MeshFormat = Format,
 				LevelFormat = Format,
-				OffsetLUT = new()
+				OffsetLUT = new(),
+				ChaoChunk = MetaData.Blocks.Any(x => x is FlagMetaDataBlock flag && flag.Value == MetaDataFlags.ChaoChunk)
 			};
 
 			long modelStart = writer.Position;
@@ -462,7 +464,8 @@ namespace SA3D.Modeling.File
 			{
 				MeshFormat = Format,
 				LevelFormat = Format,
-				OffsetLUT = new()
+				OffsetLUT = new(),
+				ChaoChunk = MetaData.Blocks.Any(x => x is FlagMetaDataBlock flag && flag.Value == MetaDataFlags.ChaoChunk)
 			};
 
 			writer.WriteObjectOffset(Model, context);

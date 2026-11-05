@@ -92,6 +92,7 @@ namespace SA3D.Modeling.File.MetaData
 					MetaDataBlockType.ActionName => reader.ReadObject<ActionNameMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.ObjectName => reader.ReadObject<ObjectNameMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.Weight => reader.ReadObject<WeightsMetaDataBlock, MetaDataIOContext>(context),
+					MetaDataBlockType.Flag => reader.ReadObject<FlagMetaDataBlock, MetaDataIOContext>(context),
 					MetaDataBlockType.End => throw new UnreachableException(),
 					_ => reader.ReadObject<UnknownMetaDataBlock, MetaDataIOContext>(context),
 				});

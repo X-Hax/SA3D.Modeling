@@ -91,6 +91,7 @@ namespace SA3D.Modeling.File.MetaData
 					{ MetaDataBlockType.ActionName, new ActionNameMetaDataBlock.JsonConverter() },
 					{ MetaDataBlockType.ObjectName, new ObjectNameMetaDataBlock.JsonConverter() },
 					{ MetaDataBlockType.Weight, new WeightsMetaDataBlock.JsonConverter() },
+					{ MetaDataBlockType.Flag, new FlagMetaDataBlock.JsonConverter() },
 				};
 			}
 		}

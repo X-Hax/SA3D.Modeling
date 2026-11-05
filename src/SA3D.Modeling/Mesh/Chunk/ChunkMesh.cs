@@ -180,7 +180,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <inheritdoc/>
 		protected override void Read(BinaryObjectReader reader, IOContext context)
 		{
-			VertexChunks = reader.ReadObjectOffset<VertexChunkArray>(context.OffsetLUT);
+			VertexChunks = reader.ReadObjectOffset<VertexChunkArray, IOContext>(context, context.OffsetLUT);
 			PolyChunks = reader.ReadObjectOffset<PolyChunkArray, IOContext>(context, context.OffsetLUT);
 			MeshBounds = reader.ReadObject<Bounds>();
 		}
@@ -188,7 +188,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		/// <inheritdoc/>
 		protected override void Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectOffset(VertexChunks.EmptyNull(), context.OffsetLUT);
+			writer.WriteObjectOffset(VertexChunks.EmptyNull(), context, context.OffsetLUT);
 			writer.WriteObjectOffset(PolyChunks.EmptyNull(), context, context.OffsetLUT);
 			writer.WriteObject(MeshBounds);
 		}

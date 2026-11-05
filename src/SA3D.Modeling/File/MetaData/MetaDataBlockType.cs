@@ -56,6 +56,11 @@
 		Weight = 0x54484757,
 
 		/// <summary>
+		/// File flags
+		/// </summary>
+		Flag = 0x47414c46,
+
+		/// <summary>
 		/// End marker.
 		/// </summary>
 		End = 0x444E45

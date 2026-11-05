@@ -19,5 +19,10 @@
 		/// Offset lookup table
 		/// </summary>
 		public ModelOffsetLUT OffsetLUT { get; set; }
+
+		/// <summary>
+		/// Whether chunk models are chao chunk models
+		/// </summary>
+		public bool ChaoChunk { get; set; }
 	}
 }

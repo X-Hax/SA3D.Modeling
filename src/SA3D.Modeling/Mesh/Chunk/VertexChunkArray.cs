@@ -5,6 +5,7 @@ using SA3D.Common.Ascii;
 using SA3D.Common.IO;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.ObjectData.Structs;
+using SA3D.Modeling.Structs;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// <summary>
 	/// Vertex chunk array
 	/// </summary>
-	public class VertexChunkArray : LabeledArray<VertexChunk>, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
+	public class VertexChunkArray : LabeledArray<VertexChunk>, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		private const string _labelPrefix = "vertex_";
 
@@ -37,7 +38,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 		public VertexChunkArray(IEnumerable<VertexChunk> chunks) : base(_labelPrefix.GenerateIdentifier(), [.. chunks]) { }
 
 
-		void IBinarySerializable.Read(BinaryObjectReader reader)
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			VertexChunkType peekType()
 			{
@@ -48,7 +49,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			List<VertexChunk> chunks = [];
 			while(peekType() != VertexChunkType.End)
 			{
-				chunks.Add(reader.ReadObject<VertexChunk>());
+				chunks.Add(reader.ReadObject<VertexChunk, IOContext>(context));
 			}
 
 			reader.Skip(sizeof(int) * 2);
@@ -56,9 +57,9 @@ namespace SA3D.Modeling.Mesh.Chunk
 			Array = [.. chunks];
 		}
 
-		void IBinarySerializable.Write(BinaryObjectWriter writer)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
-			writer.WriteObjectArray(this);
+			writer.WriteObjectArray(this, context);
 
 			// End chunk
 			writer.WriteUInt32((uint)VertexChunkType.End);

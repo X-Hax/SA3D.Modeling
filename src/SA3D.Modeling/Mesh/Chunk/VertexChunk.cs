@@ -22,7 +22,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 	/// Set of vertex data of a chunk model
 	/// </summary>
 	[JsonConverter(typeof(JsonConverter))]
-	public sealed class VertexChunk : ICloneable, IBinarySerializable, IAsciiSerializable<ModelAsciiIOContext>
+	public sealed class VertexChunk : ICloneable, IBinarySerializable<IOContext>, IAsciiSerializable<ModelAsciiIOContext>
 	{
 		private class JsonConverter : SimpleJsonObjectConverter<VertexChunk>
 		{
@@ -173,7 +173,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			Vertices = [];
 		}
 
-		void IBinarySerializable.Read(BinaryObjectReader reader)
+		void IBinarySerializable<IOContext>.Read(BinaryObjectReader reader, IOContext context)
 		{
 			uint header1 = reader.ReadUInt32();
 			Attributes = (byte)((header1 >> 8) & 0xFF);
@@ -183,7 +183,7 @@ namespace SA3D.Modeling.Mesh.Chunk
 			IndexOffset = (ushort)(header2 & 0xFFFF);
 			ushort vertexCount = (ushort)(header2 >> 16);
 
-			Vertices = reader.ReadObjectArray(ChunkVertex.GetReadCallback(Type), vertexCount);
+			Vertices = reader.ReadObjectArray(ChunkVertex.GetReadCallback(Type, context), vertexCount);
 		}
 
 		private void SplitWrite(Action<ushort, ushort, ushort, ushort> write)
@@ -209,10 +209,10 @@ namespace SA3D.Modeling.Mesh.Chunk
 			}
 		}
 
-		void IBinarySerializable.Write(BinaryObjectWriter writer)
+		void IBinarySerializable<IOContext>.Write(BinaryObjectWriter writer, IOContext context)
 		{
 			uint header1Base = (uint)Type | (uint)(Attributes << 8);
-			Action<BinaryObjectWriter, ChunkVertex> vertexWrite = ChunkVertex.GetWriteCallback(Type);
+			Action<BinaryObjectWriter, ChunkVertex> vertexWrite = ChunkVertex.GetWriteCallback(Type, context);
 
 			SplitWrite((size, indexOffset, vertCount, offset) =>
 			{

@@ -359,130 +359,206 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <param name="type">The type to get the read callback for</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
-		public static Func<BinaryObjectReader, ChunkVertex> GetReadCallback(VertexChunkType type)
+		public static Func<BinaryObjectReader, ChunkVertex> GetReadCallback(VertexChunkType type, IOContext context)
 		{
-			return type switch
+			switch(type)
 			{
-				VertexChunkType.BlankVec4 => r =>
-				{
-					Vector3 position = r.ReadVector3();
-					r.Skip(4); // always 1.0
-					return new(position);
-				}
-				,
+				case VertexChunkType.BlankVec4:
+					;
+					return r =>
+					{
+						Vector3 position = r.ReadVector3();
+						r.Skip(4); // always 1.0
+						return new(position);
+					}
+					;
 
-				VertexChunkType.NormalVec4 => r =>
-				{
-					Vector3 position = r.ReadVector3();
-					r.Skip(sizeof(float)); // always 1.0
-					Vector3 normal = r.ReadVector3();
-					r.Skip(sizeof(float)); // always 0.0
-					return new(position, normal);
-				}
-				,
+				case VertexChunkType.NormalVec4:
+					return r =>
+					{
+						Vector3 position = r.ReadVector3();
+						r.Skip(sizeof(float)); // always 1.0
+						Vector3 normal = r.ReadVector3();
+						r.Skip(sizeof(float)); // always 0.0
+						return new(position, normal);
+					};
 
-				VertexChunkType.Blank => r => new(
-					r.ReadVector3()
-				),
+				case VertexChunkType.Blank:
+					return r => new(
+						r.ReadVector3()
+					);
 
-				VertexChunkType.Diffuse => r => new(
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
-				),
+				case VertexChunkType.Diffuse:
+					if(context.ChaoChunk)
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8)
+						);
+					}
+					else
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+						);
+					}
 
-				VertexChunkType.UserAttributes or VertexChunkType.Attributes => r => new(
-					r.ReadVector3(),
-					r.ReadUInt32()
-				),
+				case VertexChunkType.UserAttributes:
+				case VertexChunkType.Attributes:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadUInt32()
+					);
 
-				VertexChunkType.DiffuseSpecular5 => r => new(
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
-				),
+				case VertexChunkType.DiffuseSpecular5:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+					);
 
-				VertexChunkType.DiffuseSpecular4 => r => new(
+				case VertexChunkType.DiffuseSpecular4:
+					return r => new(
 						r.ReadVector3(),
 						r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB4),
 						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
-					),
-				VertexChunkType.Intensity => r => new(
-					r.ReadVector3(),
-					IntensityToColor(r.ReadUInt16()),
-					IntensityToColor(r.ReadUInt16())
-				),
+					);
 
-				VertexChunkType.Normal => r => new(
-					r.ReadVector3(),
-					r.ReadVector3()
-				),
+				case VertexChunkType.Intensity:
+					return r => new(
+						r.ReadVector3(),
+						IntensityToColor(r.ReadUInt16()),
+						IntensityToColor(r.ReadUInt16())
+					);
 
-				VertexChunkType.NormalDiffuse => r => new(
-					r.ReadVector3(),
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
-				),
+				case VertexChunkType.Normal:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadVector3()
+					);
 
-				VertexChunkType.NormalUserAttributes or VertexChunkType.NormalAttributes => r => new(
-					r.ReadVector3(),
-					r.ReadVector3(),
-					r.ReadUInt32()
-				),
+				case VertexChunkType.NormalDiffuse:
+					if(context.ChaoChunk)
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8)
+						);
+					}
+					else
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+						);
+					}
 
-				VertexChunkType.NormalDiffuseSpecular5 => r => new(
-					r.ReadVector3(),
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
-				),
+				case VertexChunkType.NormalUserAttributes:
+				case VertexChunkType.NormalAttributes:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadVector3(),
+						r.ReadUInt32()
+					);
 
-				VertexChunkType.NormalDiffuseSpecular4 => r => new(
-					r.ReadVector3(),
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB4),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
-				),
+				case VertexChunkType.NormalDiffuseSpecular5:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadVector3(),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+					);
 
-				VertexChunkType.NormalIntensity => r => new(
-					r.ReadVector3(),
-					r.ReadVector3(),
-					IntensityToColor(r.ReadUInt16()),
-					IntensityToColor(r.ReadUInt16())
-				),
+				case VertexChunkType.NormalDiffuseSpecular4:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadVector3(),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB4),
+						r.ReadObject<Color, ColorIOType>(ColorIOType.RGB565)
+					);
 
-				VertexChunkType.Normal32 => r => new(
-					r.ReadVector3(),
-					DecompressNormal(r.ReadUInt32())
-				),
+				case VertexChunkType.NormalIntensity:
+					return r => new(
+						r.ReadVector3(),
+						r.ReadVector3(),
+						IntensityToColor(r.ReadUInt16()),
+						IntensityToColor(r.ReadUInt16())
+					);
 
-				VertexChunkType.Normal32Diffuse => r => new(
-					r.ReadVector3(),
-					DecompressNormal(r.ReadUInt32()),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
-				),
+				case VertexChunkType.Normal32:
+					return r => new(
+						r.ReadVector3(),
+						DecompressNormal(r.ReadUInt32())
+					);
 
-				VertexChunkType.Normal32UserAttributes => r => new(
-					r.ReadVector3(),
-					DecompressNormal(r.ReadUInt32()),
-					r.ReadUInt32()
-				),
+				case VertexChunkType.Normal32Diffuse:
+					if(context.ChaoChunk)
+					{
+						return r => new(
+							r.ReadVector3(),
+							DecompressNormal(r.ReadUInt32()),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8)
+						);
+					}
+					else
+					{
+						return r => new(
+							r.ReadVector3(),
+							DecompressNormal(r.ReadUInt32()),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+						);
+					}
 
-				VertexChunkType.DiffuseSpecular => r => new(
-					r.ReadVector3(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
-				),
+				case VertexChunkType.Normal32UserAttributes:
+					return r => new(
+						r.ReadVector3(),
+						DecompressNormal(r.ReadUInt32()),
+						r.ReadUInt32()
+					);
 
-				VertexChunkType.AttributesDiffuse => r => new(
-					r.ReadVector3(),
-					r.ReadUInt32(),
-					r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
-				),
+				case VertexChunkType.DiffuseSpecular:
+					if(context.ChaoChunk)
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8)
+						);
+					}
+					else
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+						);
+					}
 
-				VertexChunkType.Null
-				or VertexChunkType.End
-				or _ => throw new ArgumentException($"Invalid vertex chunk type {type}"),
-			};
+				case VertexChunkType.AttributesDiffuse:
+					if(context.ChaoChunk)
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadUInt32(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.RGBA8)
+						);
+					}
+					else
+					{
+						return r => new(
+							r.ReadVector3(),
+							r.ReadUInt32(),
+							r.ReadObject<Color, ColorIOType>(ColorIOType.ARGB8_32)
+						);
+					}
+
+				default:
+					throw new ArgumentException($"Invalid vertex chunk type {type}");
+			}
+
 		}
 
 		/// <summary>
@@ -491,158 +567,220 @@ namespace SA3D.Modeling.Mesh.Chunk.Structs
 		/// <param name="type">The type to get the write callback for</param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
-		public static Action<BinaryObjectWriter, ChunkVertex> GetWriteCallback(VertexChunkType type)
+		public static Action<BinaryObjectWriter, ChunkVertex> GetWriteCallback(VertexChunkType type, IOContext context)
 		{
-			return type switch
+			switch(type)
 			{
-				VertexChunkType.BlankVec4 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteSingle(1);
-				}
-				,
+				case VertexChunkType.BlankVec4:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteSingle(1);
+					};
 
-				VertexChunkType.NormalVec4 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteSingle(1);
-					w.WriteVector3(v.Normal);
-					w.WriteSingle(0);
-				}
-				,
+				case VertexChunkType.NormalVec4:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteSingle(1);
+						w.WriteVector3(v.Normal);
+						w.WriteSingle(0);
+					};
 
-				VertexChunkType.Blank => (w, v) => w.WriteVector3(v.Position),
+				case VertexChunkType.Blank:
+					return (w, v) => w.WriteVector3(v.Position);
 
-				VertexChunkType.Diffuse => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
-				}
-				,
+				case VertexChunkType.Diffuse:
+					if(context.ChaoChunk)
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteObject(v.Diffuse, ColorIOType.RGBA8);
+						};
+					}
+					else
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+						};
+					}
 
-				VertexChunkType.UserAttributes or VertexChunkType.Attributes => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt32(v.Attributes);
-				}
-				,
+				case VertexChunkType.UserAttributes:
+				case VertexChunkType.Attributes:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteUInt32(v.Attributes);
+					};
 
-				VertexChunkType.DiffuseSpecular5 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteObject(v.Diffuse, ColorIOType.RGB565);
-					w.WriteObject(v.Specular, ColorIOType.RGB565);
-				}
-				,
+				case VertexChunkType.DiffuseSpecular5:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteObject(v.Diffuse, ColorIOType.RGB565);
+						w.WriteObject(v.Specular, ColorIOType.RGB565);
+					};
 
-				VertexChunkType.DiffuseSpecular4 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
-					w.WriteObject(v.Specular, ColorIOType.RGB565);
-				}
-				,
-				VertexChunkType.Intensity => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt16(ColorToIntensity(v.Diffuse));
-					w.WriteUInt16(ColorToIntensity(v.Specular));
-				}
-				,
+				case VertexChunkType.DiffuseSpecular4:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
+						w.WriteObject(v.Specular, ColorIOType.RGB565);
+					};
 
-				VertexChunkType.Normal => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-				}
-				,
+				case VertexChunkType.Intensity:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteUInt16(ColorToIntensity(v.Diffuse));
+						w.WriteUInt16(ColorToIntensity(v.Specular));
+					};
 
-				VertexChunkType.NormalDiffuse => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
-				}
-				,
+				case VertexChunkType.Normal:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteVector3(v.Normal);
+					};
 
-				VertexChunkType.NormalUserAttributes or VertexChunkType.NormalAttributes => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-					w.WriteUInt32(v.Attributes);
-				}
-				,
+				case VertexChunkType.NormalDiffuse:
+					if(context.ChaoChunk)
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteVector3(v.Normal);
+							w.WriteObject(v.Diffuse, ColorIOType.RGBA8);
+						};
+					}
+					else
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteVector3(v.Normal);
+							w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+						};
+					}
 
-				VertexChunkType.NormalDiffuseSpecular5 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-					w.WriteObject(v.Diffuse, ColorIOType.RGB565);
-					w.WriteObject(v.Specular, ColorIOType.RGB565);
-				}
-				,
+				case VertexChunkType.NormalUserAttributes:
+				case VertexChunkType.NormalAttributes:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteVector3(v.Normal);
+						w.WriteUInt32(v.Attributes);
+					};
 
-				VertexChunkType.NormalDiffuseSpecular4 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
-					w.WriteObject(v.Specular, ColorIOType.RGB565);
-				}
-				,
+				case VertexChunkType.NormalDiffuseSpecular5:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteVector3(v.Normal);
+						w.WriteObject(v.Diffuse, ColorIOType.RGB565);
+						w.WriteObject(v.Specular, ColorIOType.RGB565);
+					};
 
-				VertexChunkType.NormalIntensity => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteVector3(v.Normal);
-					w.WriteUInt16(ColorToIntensity(v.Diffuse));
-					w.WriteUInt16(ColorToIntensity(v.Specular));
-				}
-				,
+				case VertexChunkType.NormalDiffuseSpecular4:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteVector3(v.Normal);
+						w.WriteObject(v.Diffuse, ColorIOType.ARGB4);
+						w.WriteObject(v.Specular, ColorIOType.RGB565);
+					};
 
-				VertexChunkType.Normal32 => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt32(CompressNormal(v.Normal));
-				}
-				,
+				case VertexChunkType.NormalIntensity:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteVector3(v.Normal);
+						w.WriteUInt16(ColorToIntensity(v.Diffuse));
+						w.WriteUInt16(ColorToIntensity(v.Specular));
+					};
 
-				VertexChunkType.Normal32Diffuse => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt32(CompressNormal(v.Normal));
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
-				}
-				,
+				case VertexChunkType.Normal32:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteUInt32(CompressNormal(v.Normal));
+					};
 
-				VertexChunkType.Normal32UserAttributes => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt32(CompressNormal(v.Normal));
-					w.WriteUInt32(v.Attributes);
-				}
-				,
+				case VertexChunkType.Normal32Diffuse:
+					if(context.ChaoChunk)
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteUInt32(CompressNormal(v.Normal));
+							w.WriteObject(v.Diffuse, ColorIOType.RGBA8);
+						};
+					}
+					else
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteUInt32(CompressNormal(v.Normal));
+							w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+						};
+					}
 
-				VertexChunkType.DiffuseSpecular => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
-					w.WriteObject(v.Specular, ColorIOType.ARGB8_32);
-				}
-				,
+				case VertexChunkType.Normal32UserAttributes:
+					return (w, v) =>
+					{
+						w.WriteVector3(v.Position);
+						w.WriteUInt32(CompressNormal(v.Normal));
+						w.WriteUInt32(v.Attributes);
+					};
 
-				VertexChunkType.AttributesDiffuse => (w, v) =>
-				{
-					w.WriteVector3(v.Position);
-					w.WriteUInt32(v.Attributes);
-					w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
-				}
-				,
+				case VertexChunkType.DiffuseSpecular:
+					if(context.ChaoChunk)
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteObject(v.Diffuse, ColorIOType.RGBA8);
+							w.WriteObject(v.Specular, ColorIOType.RGBA8);
+						};
+					}
+					else
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+							w.WriteObject(v.Specular, ColorIOType.ARGB8_32);
+						};
+					}
 
-				VertexChunkType.Null
-				or VertexChunkType.End
-				or _ => throw new ArgumentException($"Invalid vertex chunk type {type}")
-			};
+				case VertexChunkType.AttributesDiffuse:
+					if(context.ChaoChunk)
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteUInt32(v.Attributes);
+							w.WriteObject(v.Diffuse, ColorIOType.RGBA8);
+						};
+					}
+					else
+					{
+						return (w, v) =>
+						{
+							w.WriteVector3(v.Position);
+							w.WriteUInt32(v.Attributes);
+							w.WriteObject(v.Diffuse, ColorIOType.ARGB8_32);
+						};
+					}
+
+				default:
+					throw new ArgumentException($"Invalid vertex chunk type {type}");
+			}
 		}
 
 		/// <summary>
