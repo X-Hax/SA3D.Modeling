@@ -10,165 +10,197 @@ namespace SA3D.Modeling.ObjectData.Enums
 	public enum SA1SurfaceAttributes : uint
 	{
 		/// <summary>
-		/// Makes the geometry collidable with.
+		/// Solid collision
 		/// </summary>
+		[IsCollisionAttribute]
 		Solid = Flag32.B0,
 
 		/// <summary>
-		/// Adds water ripple effect when passing through geometry.
+		/// Water flag (ripples, breath counter, heavy physics)
 		/// </summary>
+		[IsCollisionAttribute]
 		Water = Flag32.B1,
 
 		/// <summary>
-		/// Surface has no (or less) friction. Player will slip around, like on ice.
+		/// Ice behavior, friction is 0.1
 		/// </summary>
-		NoFriction = Flag32.B2,
+		[IsCollisionAttribute]
+		Ice = Flag32.B2,
 
 		/// <summary>
-		/// Reduces the players acceleration to 0.
+		/// Snowboard terrain, friction is 0.15
 		/// </summary>
-		NoAcceleration = Flag32.B3,
+		[IsCollisionAttribute]
+		Snow = Flag32.B3,
 
 		/// <summary>
-		/// Reduces the players acceleration.
+		/// Sandboard terrain, friction is 0.5
 		/// </summary>
-		LowAcceleration = Flag32.B4,
+		[IsCollisionAttribute]
+		Sand = Flag32.B4,
 
 		/// <summary>
-		/// Uses skybox drawdistance.
+		/// Uses the skybox draw distance instead of the level draw distance
 		/// </summary>
+		[IsDisplayAttribute]
 		UseSkyDrawDistance = Flag32.B5,
 
 		/// <summary>
-		/// Surface will prevent players from standing on it.
+		/// Surface will prevent players from standing on it
 		/// </summary>
+		[IsCollisionAttribute]
 		CannotLand = Flag32.B6,
 
 		/// <summary>
-		/// Increases the players acceleration.
+		/// Terrain friction is 1.5
 		/// </summary>
-		IncreasedAcceleration = Flag32.B7,
+		[IsCollisionAttribute]
+		HighFriction = Flag32.B7,
 
 		/// <summary>
-		/// Lets the player dig on the surface.
+		/// Knuckles can dig
 		/// </summary>
+		[IsCollisionAttribute]
 		Diggable = Flag32.B8,
 
 		/// <summary>
-		/// Unknown functionality.
+		/// Unused, but likely intended to be used for disabling collision with the camera
 		/// </summary>
-		Unknown9 = Flag32.B9,
+		[IsCollisionAttribute]
+		NoCameraCollision = Flag32.B9,
 
 		/// <summary>
-		/// Force alpha sorting; Disable Z Write when used together with Water; Force disable Z write in all levels except Lost World 2
+		/// Mystic Ruin waterfalls (Force alpha sorting; Disable Z Write when used together with Water; Force disable Z write in all levels except Lost World 2)
 		/// </summary>
+		[IsDisplayAttribute]
 		Waterfall = Flag32.B10,
 
 		/// <summary>
-		/// Unknown functionality.
+		/// Unused, but found on lost world waterslide 
 		/// </summary>
-		Unknown11 = Flag32.B11,
+		[IsCollisionAttribute]
+		Waterslide = Flag32.B11,
 
 		/// <summary>
-		/// Surface cannot be climbed by players.
+		/// Surface cannot be climbed by Knuckles
 		/// </summary>
+		[IsCollisionAttribute]
 		Unclimbable = Flag32.B12,
 
 		/// <summary>
 		/// Turns off Visible when Chaos 0 jumps up a pole
 		/// </summary>
+		[IsDisplayAttribute]
 		Chaos0Land = Flag32.B13,
 
 		/// <summary>
-		/// The player wont slip on the surface, regardless of how steep it is.
+		/// Stairs behavior (upward normal, high floor grip)
 		/// </summary>
+		[IsCollisionAttribute]
 		Stairs = Flag32.B14,
 
 		/// <summary>
-		/// Unknown functionality.
+		/// Unused, but likely intended to be used for lava surfaces
 		/// </summary>
-		Unknown15 = Flag32.B15,
+		[IsCollisionAttribute]
+		Lava = Flag32.B15,
 
 		/// <summary>
-		/// Damages the player on contact.
+		/// Collision inflicts damage on the player
 		/// </summary>
-		Hurt = Flag32.B16,
+		[IsCollisionAttribute]
+		ContactDamage = Flag32.B16,
 
 		/// <summary>
-		/// Tube acceleration (?).
+		/// Improves character rotation against floor and camera angles. Also has dedicated acceleration code, but its unused.
 		/// </summary>
-		TubeAcceleration = Flag32.B17,
+		[IsCollisionAttribute]
+		Tube = Flag32.B17,
 
 		/// <summary>
-		/// Affects drawing queue (?).
+		/// Higher priority in draw queue to improve some transparent elements
 		/// </summary>
-		LowDepth = Flag32.B18,
+		[IsDisplayAttribute]
+		RenderPriority = Flag32.B18,
 
 		/// <summary>
-		/// Unknown functionality.
+		/// Unused, but likely "ninja simple draw mode"
 		/// </summary>
-		Unknown19 = Flag32.B19,
+		[IsDisplayAttribute]
+		DrawSimple = Flag32.B19,
 
 		/// <summary>
-		/// Renders footprints when running on the surface.
+		/// Footprint behavior, only implemented in Emerald Coast
 		/// </summary>
+		[IsCollisionAttribute]
 		Footprints = Flag32.B20,
 
 		/// <summary>
-		/// Accelerates the player (?).
+		/// Barrier/border behavior, usually invisible
 		/// </summary>
-		Accelerate = Flag32.B21,
+		[IsCollisionAttribute]
+		Air = Flag32.B21,
 
 		/// <summary>
-		/// Changes player state to swimming when in contact.
+		/// Water flag with heavier physics
 		/// </summary>
-		WaterCollision = Flag32.B22,
+		[IsCollisionAttribute]
+		HeavyWater = Flag32.B22,
 
 		/// <summary>
 		/// Keeps the player stuck to surfaces by altering gravitional direction (?).
 		/// </summary>
-		Gravity = Flag32.B23,
+		[IsCollisionAttribute]
+		MovementSlopeGravity = Flag32.B23,
 
 		/// <summary>
-		/// Does not write to the Z buffer.
+		/// No Z write, used for shadow/decal meshes
 		/// </summary>
+		[IsDisplayAttribute]
 		NoZWrite = Flag32.B24,
 
 		/// <summary>
-		/// Sorts the transparent meshes within the attaches, instead of grouping them all together for sorting (?).
+		/// Sort and draw by mesh, intended to improve self transparency
 		/// </summary>
+		[IsDisplayAttribute]
 		DrawByMesh = Flag32.B25,
 
 		/// <summary>
-		/// Dont store vertices in buffer.
+		/// Landtable entry should not be prebuffered (allows mesh data manipulations)
 		/// </summary>
-		EnableManipulation = Flag32.B26,
+		[IsDisplayAttribute]
+		NoDirect = Flag32.B26,
 
 		/// <summary>
-		/// Allows for transforming collisions.
+		/// Collision should update every frame (for moving tasks)
 		/// </summary>
+		[IsCollisionAttribute]
 		DynamicCollision = Flag32.B27,
 
 		/// <summary>
-		/// Bounds center is offset from 0,0,0 and gets influenced by rotation and scale.
+		/// Collision should rotate with task (ZXY)
 		/// </summary>
-		TransformBounds = Flag32.B28,
+		[IsCollisionAttribute]
+		DynamicCollisionRotation = Flag32.B28,
 
 		/// <summary>
 		/// Bounds radius is &gt; 10 and &lt;= 20 units.
 		/// <br/> If combined with <see cref="BoundsRadiusTiny"/>, its &gt;= 3.
 		/// </summary>
+		[IsCollisionAttribute]
 		BoundsRadiusSmall = Flag32.B29,
 
 		/// <summary>
 		/// Bounds radius is &gt; 3 and &lt;= 10 units.
 		/// <br/> If combined with <see cref="BoundsRadiusSmall"/>, its &gt;= 3.
 		/// </summary>
+		[IsCollisionAttribute]
 		BoundsRadiusTiny = Flag32.B30,
 
 		/// <summary>
 		/// Enables rendering for the geometry.
 		/// </summary>
+		[IsDisplayAttribute]
 		Visible = Flag32.B31
 	}
 }

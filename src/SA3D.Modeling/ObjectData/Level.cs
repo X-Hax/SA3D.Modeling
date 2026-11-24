@@ -218,7 +218,7 @@ namespace SA3D.Modeling.ObjectData
 				return;
 			}
 
-			LevelModel[] newOrder = [.. Models.OrderByDescending(x => x.SurfaceAttributes.HasFlag(SurfaceAttributes.Visible))];
+			LevelModel[] newOrder = [.. Models.OrderByDescending(x => x.SA2SurfaceAttributes.HasFlag(SA2SurfaceAttributes.Visible))];
 
 			for(int i = 0; i < newOrder.Length; i++)
 			{

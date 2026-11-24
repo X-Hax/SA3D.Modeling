@@ -2,7 +2,6 @@
 using J113D.Json;
 using SA3D.Common.Ascii;
 using SA3D.Common.IO;
-using SA3D.Common.JsonConverters;
 using SA3D.Common.Lookup;
 using SA3D.Modeling.Mesh.Basic.Polygon;
 using SA3D.Modeling.Structs;

@@ -32,7 +32,7 @@ namespace SA3D.Modeling.ObjectData
 			{
 				{ _model, new(PropertyTokenType.Object | PropertyTokenType.String, null) },
 				{ _modelBounds, new(PropertyTokenType.Object, default(Bounds)) },
-				{ _surfaceAttributes, new(PropertyTokenType.String | PropertyTokenType.Number, default(SurfaceAttributes)) },
+				{ _surfaceAttributes, new(PropertyTokenType.String, 0) },
 				{ _blockBit, new(PropertyTokenType.String, 0u) },
 				{ _unknown, new(PropertyTokenType.Number, 0u) },
 
@@ -49,7 +49,6 @@ namespace SA3D.Modeling.ObjectData
 					case _modelBounds:
 						return JsonSerializer.Deserialize<Bounds>(ref reader, options);
 					case _surfaceAttributes:
-						return JsonSerializer.Deserialize<SurfaceAttributes>(ref reader, options);
 					case _blockBit:
 						return UInt32HexConverter.ConvertFrom(reader.GetString()!, $"{nameof(LevelModel)}.{_blockBit}");
 					case _unknown:
@@ -67,7 +66,7 @@ namespace SA3D.Modeling.ObjectData
 
 				return new(model)
 				{
-					SurfaceAttributes = (SurfaceAttributes)values[_surfaceAttributes]!,
+					SurfaceAttributes = (uint)values[_surfaceAttributes]!,
 					ModelBounds = (Bounds)values[_modelBounds]!,
 					BlockBit = (uint)values[_blockBit]!,
 					Unknown = (uint)values[_unknown]!
@@ -87,8 +86,7 @@ namespace SA3D.Modeling.ObjectData
 					writer.WriteNumber(_unknown, value.Unknown);
 				}
 
-				writer.WritePropertyName(_surfaceAttributes);
-				JsonSerializer.Serialize(writer, value.SurfaceAttributes, options);
+				writer.WriteString(_surfaceAttributes, UInt32HexConverter.ConvertTo(value.SurfaceAttributes));
 
 				writer.WritePropertyName(_modelBounds);
 				JsonSerializer.Serialize(writer, value.ModelBounds, options);
@@ -127,7 +125,25 @@ namespace SA3D.Modeling.ObjectData
 		/// <summary>
 		/// Geometry behavior attributes.
 		/// </summary>
-		public SurfaceAttributes SurfaceAttributes { get; set; }
+		public uint SurfaceAttributes { get; set; }
+
+		/// <summary>
+		/// SA1 geometry behavior attributes (from <see cref="SurfaceAttributes"/>
+		/// </summary>
+		public SA1SurfaceAttributes SA1SurfaceAttributes
+		{
+			get => (SA1SurfaceAttributes)SurfaceAttributes;
+			set => SurfaceAttributes = (uint)value;
+		}
+
+		/// <summary>
+		/// SA2 geometry behavior attributes (from <see cref="SurfaceAttributes"/>
+		/// </summary>
+		public SA2SurfaceAttributes SA2SurfaceAttributes
+		{
+			get => (SA2SurfaceAttributes)SurfaceAttributes;
+			set => SurfaceAttributes = (uint)value;
+		}
 
 		/// <summary>
 		/// Block mapping bits
@@ -201,12 +217,12 @@ namespace SA3D.Modeling.ObjectData
 			{
 				Unknown = reader.ReadUInt32();
 				BlockBit = reader.ReadUInt32();
-				SurfaceAttributes = ((SA2SurfaceAttributes)reader.ReadUInt32()).ToUniversal();
+				SurfaceAttributes = reader.ReadUInt32();
 			}
 			else
 			{
 				BlockBit = reader.ReadUInt32();
-				SurfaceAttributes = ((SA1SurfaceAttributes)reader.ReadUInt32()).ToUniversal();
+				SurfaceAttributes = reader.ReadUInt32();
 			}
 		}
 
@@ -225,12 +241,12 @@ namespace SA3D.Modeling.ObjectData
 			{
 				writer.WriteUInt32(Unknown);
 				writer.WriteUInt32(BlockBit);
-				writer.WriteUInt32((uint)SurfaceAttributes.ToSA2());
+				writer.WriteUInt32(SurfaceAttributes);
 			}
 			else
 			{
 				writer.WriteUInt32(BlockBit);
-				writer.WriteUInt32((uint)SurfaceAttributes.ToSA1());
+				writer.WriteUInt32(SurfaceAttributes);
 			}
 		}
 
