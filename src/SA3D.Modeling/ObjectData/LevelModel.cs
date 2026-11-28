@@ -26,7 +26,6 @@ namespace SA3D.Modeling.ObjectData
 			private const string _modelBounds = nameof(ModelBounds);
 			private const string _surfaceAttributes = nameof(SurfaceAttributes);
 			private const string _blockBit = nameof(BlockBit);
-			private const string _unknown = nameof(Unknown);
 
 			public override ReadOnlyDictionary<string, PropertyDefinition> PropertyDefinitions { get; } = new(new Dictionary<string, PropertyDefinition>()
 			{
@@ -34,7 +33,6 @@ namespace SA3D.Modeling.ObjectData
 				{ _modelBounds, new(PropertyTokenType.Object, default(Bounds)) },
 				{ _surfaceAttributes, new(PropertyTokenType.String, 0) },
 				{ _blockBit, new(PropertyTokenType.String, 0u) },
-				{ _unknown, new(PropertyTokenType.Number, 0u) },
 
 			});
 
@@ -51,8 +49,6 @@ namespace SA3D.Modeling.ObjectData
 					case _surfaceAttributes:
 					case _blockBit:
 						return UInt32HexConverter.ConvertFrom(reader.GetString()!, $"{nameof(LevelModel)}.{_blockBit}");
-					case _unknown:
-						return reader.GetUInt32();
 					default:
 						throw new InvalidPropertyException();
 				}
@@ -68,8 +64,7 @@ namespace SA3D.Modeling.ObjectData
 				{
 					SurfaceAttributes = (uint)values[_surfaceAttributes]!,
 					ModelBounds = (Bounds)values[_modelBounds]!,
-					BlockBit = (uint)values[_blockBit]!,
-					Unknown = (uint)values[_unknown]!
+					BlockBit = (uint)values[_blockBit]!
 				};
 			}
 
@@ -79,11 +74,6 @@ namespace SA3D.Modeling.ObjectData
 				if(value.BlockBit != 0)
 				{
 					writer.WriteString(_blockBit, UInt32HexConverter.ConvertTo(value.BlockBit));
-				}
-
-				if(value.Unknown != 0)
-				{
-					writer.WriteNumber(_unknown, value.Unknown);
 				}
 
 				writer.WriteString(_surfaceAttributes, UInt32HexConverter.ConvertTo(value.SurfaceAttributes));
@@ -151,11 +141,6 @@ namespace SA3D.Modeling.ObjectData
 		public uint BlockBit { get; set; }
 
 		/// <summary>
-		/// No idea what this does at all, might be unused
-		/// </summary>
-		public uint Unknown { get; set; }
-
-		/// <summary>
 		/// Creates a new, empty land entry
 		/// </summary>
 		public LevelModel() : this(new()) { }
@@ -215,7 +200,7 @@ namespace SA3D.Modeling.ObjectData
 
 			if(context.LevelFormat >= Format.Chunk)
 			{
-				Unknown = reader.ReadUInt32();
+				reader.Skip(sizeof(uint)); // runtime field for direct compiled objects
 				BlockBit = reader.ReadUInt32();
 				SurfaceAttributes = reader.ReadUInt32();
 			}
@@ -239,7 +224,7 @@ namespace SA3D.Modeling.ObjectData
 
 			if(context.LevelFormat >= Format.Chunk)
 			{
-				writer.WriteUInt32(Unknown);
+				writer.Skip(sizeof(uint)); // runtime field for direct compiled objects
 				writer.WriteUInt32(BlockBit);
 				writer.WriteUInt32(SurfaceAttributes);
 			}
@@ -262,7 +247,6 @@ namespace SA3D.Modeling.ObjectData
 			{
 				SurfaceAttributes = SurfaceAttributes,
 				BlockBit = BlockBit,
-				Unknown = Unknown,
 				ModelBounds = ModelBounds
 			};
 		}
