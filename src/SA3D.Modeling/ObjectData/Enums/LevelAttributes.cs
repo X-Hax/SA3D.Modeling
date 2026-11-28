@@ -1,7 +1,7 @@
 ﻿namespace SA3D.Modeling.ObjectData.Enums
 {
 	/// <summary>
-	/// Landtable attributes.
+	/// Level attributes.
 	/// </summary>
 	public enum LevelAttributes : uint
 	{
