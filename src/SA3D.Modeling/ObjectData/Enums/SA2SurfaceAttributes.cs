@@ -169,7 +169,7 @@ namespace SA3D.Modeling.ObjectData.Enums
 		/// Use SimpleDraw, else EasyDraw (Dreamcast/Ninja technology)
 		/// </summary>
 		[IsDisplayAttribute]
-		EasyDraw = Flag32.B24,
+		SimpleDraw = Flag32.B24,
 
 		/// <summary>
 		/// Use DirectDraw (internal) (Dreamcast/Ninja technology)
